@@ -138,6 +138,7 @@
   <ItemGroup>
     <ProjectReference Include="..\AVF.MemberManagement\AVF.MemberManagement.csproj">
       <Name>AVF.MemberManagement</Name>
+      <Project>{5FBAC065-134E-46BA-8181-C87E2D2AF1AF}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
