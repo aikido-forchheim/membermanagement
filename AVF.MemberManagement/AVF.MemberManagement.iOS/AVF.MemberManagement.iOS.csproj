@@ -102,6 +102,14 @@
       <Name>AVF.MemberManagement</Name>
       <Project>{5FBAC065-134E-46BA-8181-C87E2D2AF1AF}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\AVF.MemberManagement.PortableLibrary\AVF.MemberManagement.PortableLibrary.csproj">
+      <Project>{12EBB884-B4BF-4326-B730-46D589C2E069}</Project>
+      <Name>AVF.MemberManagement.PortableLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\AVF.MemberManagement.StandardLibrary\AVF.MemberManagement.StandardLibrary.csproj">
+      <Project>{93E9105C-2EF5-4BEC-8402-8D497C4B034A}</Project>
+      <Name>AVF.MemberManagement.StandardLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Default-568h%402x.png" />

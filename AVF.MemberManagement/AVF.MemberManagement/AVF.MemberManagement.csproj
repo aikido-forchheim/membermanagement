@@ -85,6 +85,16 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\AVF.MemberManagement.StandardLibrary\AVF.MemberManagement.StandardLibrary.csproj">
+      <Project>{93E9105C-2EF5-4BEC-8402-8D497C4B034A}</Project>
+      <Name>AVF.MemberManagement.StandardLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\AVF.MemberManagement.PortableLibrary\AVF.MemberManagement.PortableLibrary.csproj">
+      <Project>{12EBB884-B4BF-4326-B730-46D589C2E069}</Project>
+      <Name>AVF.MemberManagement.PortableLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\..\packages\Xamarin.Forms.2.3.4.231\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets" Condition="Exists('..\..\packages\Xamarin.Forms.2.3.4.231\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets')" />
 </Project>
