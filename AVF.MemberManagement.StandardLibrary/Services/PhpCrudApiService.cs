@@ -148,7 +148,7 @@ namespace AVF.MemberManagement.StandardLibrary.Services
 
         private async Task<string> GetTokenAsync()
         {
-            return await GetTokenAsync(_accountService.RestApiAccount.ApiUrl, _accountService.RestApiAccount.UserName, _accountService.RestApiAccount.Password);
+            return await GetTokenAsync(_accountService.RestApiAccount.ApiUrl, _accountService.RestApiAccount.Username, _accountService.RestApiAccount.Password);
         }
 
         private async Task<string> GetTokenAsync(string apiUrl, string userName, string password)

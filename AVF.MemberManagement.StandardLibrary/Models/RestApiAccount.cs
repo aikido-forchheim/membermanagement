@@ -2,17 +2,13 @@
 {
     public class RestApiAccount
 	{
-		public RestApiAccount()
-		{
-		}
-
-		public string ApiUrl
+	    public string ApiUrl
 		{
 			get;
 			set;
 		}
 
-		public string UserName
+		public string Username
 		{
 			get;
 			set;
