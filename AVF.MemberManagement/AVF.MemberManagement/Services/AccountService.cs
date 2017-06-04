@@ -13,15 +13,28 @@ namespace AVF.MemberManagement.Services
     public class AccountService : IAccountService
     {
         private readonly ILogger _logger;
-        private readonly RestApiAccount _restApiAccount;
+        private RestApiAccount _restApiAccount;
 
         public AccountService(ILogger logger)
         {
             _logger = logger;
+        }
 
-            var account = AccountStore.Create().FindAccountsForService(App.AppId)?.FirstOrDefault();
+        public void Init(RestApiAccount restApiAccount)
+        {
+            _restApiAccount = restApiAccount;
+        }
 
-            _restApiAccount = new RestApiAccount { ApiUrl = account?.Properties["ApiUrl"], Password = account?.Properties["Password"], Username = account?.Username };
+        public void InitWithAccountStore(string appId)
+        {
+            var account = AccountStore.Create().FindAccountsForService(appId)?.FirstOrDefault();
+
+            _restApiAccount = new RestApiAccount
+            {
+                ApiUrl = account?.Properties["ApiUrl"],
+                Password = account?.Properties["Password"],
+                Username = account?.Username
+            };
         }
 
         public RestApiAccount RestApiAccount

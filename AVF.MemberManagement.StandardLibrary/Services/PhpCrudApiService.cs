@@ -97,6 +97,8 @@ namespace AVF.MemberManagement.StandardLibrary.Services
         {
             if (_token == null) _token = await GetTokenAsync();
 
+            if (!uri.StartsWith("/")) uri = "/" + uri;
+
             var fullUri = _accountService.RestApiAccount.ApiUrl + uri;
             fullUri = AddCsrfToken(fullUri);
             return fullUri;

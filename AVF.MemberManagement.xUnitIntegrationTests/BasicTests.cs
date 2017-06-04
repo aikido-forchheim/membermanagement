@@ -5,11 +5,17 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AVF.MemberManagement.Services;
+using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Models;
+using AVF.MemberManagement.StandardLibrary.Proxies;
+using AVF.MemberManagement.StandardLibrary.Services;
+using FakeItEasy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Xunit;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace AVF.MemberManagement.xUnitIntegrationTests
 {
@@ -32,6 +38,27 @@ namespace AVF.MemberManagement.xUnitIntegrationTests
             var couldIntegrationTestSettingsBeLoaded = integrationTestSettings.RestApiAccount.Username != "username";
 
             Assert.True(couldIntegrationTestSettingsBeLoaded);
+        }
+
+        [Fact]
+        public async void TestPhpCrudApiService()
+        {
+            var integrationTestSettings = IntegrationTestSettings.Get();
+
+            var logger = A.Fake<ILogger>();
+
+            IAccountService accountService = new AccountService(logger);
+            accountService.Init(integrationTestSettings.RestApiAccount);
+
+            IPhpCrudApiService phpCrudApiService = new PhpCrudApiService(logger, accountService);
+
+            IUsersProxy usersProxy = new UsersProxy(logger, phpCrudApiService);
+
+            var users = await usersProxy.GetUsersAsync();
+
+            var couldReadUsers = users.Count > 0;
+
+            Assert.True(couldReadUsers);
         }
     }
 }

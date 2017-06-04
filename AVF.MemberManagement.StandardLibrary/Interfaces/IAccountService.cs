@@ -3,8 +3,12 @@
 namespace AVF.MemberManagement.StandardLibrary.Interfaces
 {
     public interface IAccountService
-	{
-		bool IsRestApiAccountSet { get; set; }
+    {
+        void Init(RestApiAccount restApiAccount);
+
+        void InitWithAccountStore(string appId);
+
+        bool IsRestApiAccountSet { get; set; }
 
 		void StoreRestApiAccount(string apiUrl, string userName, string password);
 
