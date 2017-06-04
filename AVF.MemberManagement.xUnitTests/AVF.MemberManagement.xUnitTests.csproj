@@ -136,7 +136,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="StandardLibrary\UserTest.cs" />
-    <Compile Include="Test.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

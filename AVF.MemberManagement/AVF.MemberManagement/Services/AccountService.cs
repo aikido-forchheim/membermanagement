@@ -21,7 +21,7 @@ namespace AVF.MemberManagement.Services
 
             var account = AccountStore.Create().FindAccountsForService(App.AppId)?.FirstOrDefault();
 
-            _restApiAccount = new RestApiAccount() { ApiUrl = account?.Properties["ApiUrl"], Password = account?.Properties["Password"], UserName = account?.Username };
+            _restApiAccount = new RestApiAccount { ApiUrl = account?.Properties["ApiUrl"], Password = account?.Properties["Password"], UserName = account?.Username };
         }
 
         public RestApiAccount RestApiAccount
@@ -42,7 +42,7 @@ namespace AVF.MemberManagement.Services
                 try
                 {
                     var account = AccountStore.Create().FindAccountsForService(App.AppId)?.FirstOrDefault();
-                    return (account != null);
+                    return account != null;
                 }
                 catch (Exception ex)
                 {
