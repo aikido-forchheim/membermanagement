@@ -13,7 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AVF.MemberManagement.xUnitIntegrationTests
 {
-    public class Class1
+    public class BasicTests
     {
         //[Fact()]
         //public void WriteIntegrationTestSettings()
@@ -24,16 +24,14 @@ namespace AVF.MemberManagement.xUnitIntegrationTests
         //    File.WriteAllText("C:\\temp\\IntegrationTestSettings.json", sampleSettingsToWrite, Encoding.UTF8);
         //}
 
-        [Fact()]
-        public void StartBasicTest()
+        [Fact]
+        public void CouldIntegrationTestSettingsBeLoaded()
         {
-            bool couldLogin;
-
             var integrationTestSettings = IntegrationTestSettings.Get();
 
-            couldLogin = integrationTestSettings.RestApiAccount.Username != "username";
+            var couldIntegrationTestSettingsBeLoaded = integrationTestSettings.RestApiAccount.Username != "username";
 
-            Assert.True(couldLogin);
+            Assert.True(couldIntegrationTestSettingsBeLoaded);
         }
     }
 }
