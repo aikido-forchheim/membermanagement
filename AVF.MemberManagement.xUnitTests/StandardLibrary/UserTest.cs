@@ -19,7 +19,7 @@ namespace AVF.MemberManagement.xUnitTests.StandardLibrary
                 Username = "Username",
                 Password = "Password",
                 Active = true,
-                UserID = 666
+                UserId = 666
             };
 
             var userBase = user;

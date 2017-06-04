@@ -26,7 +26,7 @@ namespace AVF.MemberManagement.StandardLibrary.Proxies
 
         public async Task UpdateUserAsync(User user)
         {
-            await _phpCrudApiService.UpdateDataAsync(_uri + "/" + user.UserID, user);
+            await _phpCrudApiService.UpdateDataAsync(_uri + "/" + user.UserId, user);
 
             await GetUsersAsync();
         }
@@ -41,13 +41,13 @@ namespace AVF.MemberManagement.StandardLibrary.Proxies
                 var userNames = (from u in _users select u.Username.ToLower()).ToList();
                 if (userNames.Contains(newUserName.ToLower())) return;
 
-                var maxUserId = (from u in _users select u.UserID).Max();
+                var maxUserId = (from u in _users select u.UserId).Max();
                 nextId = maxUserId + 1;
             }
 
             var newUser = new User
             {
-                UserID = nextId,
+                UserId = nextId,
                 Active = true,
                 Username = newUserName
             };
