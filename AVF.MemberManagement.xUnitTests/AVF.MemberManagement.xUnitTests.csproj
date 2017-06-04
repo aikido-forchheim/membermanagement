@@ -174,7 +174,7 @@
       <Name>AVF.MemberManagement.PortableLibrary</Name>
     </ProjectReference>
     <ProjectReference Include="..\AVF.MemberManagement.StandardLibrary\AVF.MemberManagement.StandardLibrary.csproj">
-      <Project>{b900104e-d6b5-4a65-85fd-57702e0f6d65}</Project>
+      <Project>{93E9105C-2EF5-4BEC-8402-8D497C4B034A}</Project>
       <Name>AVF.MemberManagement.StandardLibrary</Name>
     </ProjectReference>
   </ItemGroup>

@@ -11,9 +11,9 @@ namespace AVF.MemberManagement.xUnitIntegrationTests
 {
     public class IntegrationTestSettings
     {
-        public RestApiAccount RestApiAccount { get; set; } = new RestApiAccount() { Username = "username", Password = "password", ApiUrl = "https://www.homepage.com/api.php"};
+        public RestApiAccount RestApiAccount { get; set; } = new RestApiAccount { Username = "username", Password = "password", ApiUrl = "https://www.homepage.com/api.php"};
 
-        public User User { get; set; } = new User() {Username = "username", Password = "password"};
+        public User User { get; set; } = new User {Username = "username", Password = "password"};
         
         public static IntegrationTestSettings Get()
         {

@@ -46,7 +46,7 @@ namespace AVF.MemberManagement.xUnitIntegrationTests
         }
 
         [Fact]
-        public async void TestPhpCrudApiService()
+        public async Task TestPhpCrudApiService()
         {
             var usersProxy = Bootstrapper.Container.Resolve<IUsersProxy>();
 
@@ -58,7 +58,7 @@ namespace AVF.MemberManagement.xUnitIntegrationTests
         }
 
         [Fact]
-        public async void VerfiyPassword()
+        public async Task VerfiyPassword()
         {
             var usersProxy = Bootstrapper.Container.Resolve<IUsersProxy>();
 
