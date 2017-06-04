@@ -14,7 +14,7 @@ namespace AVF.MemberManagement.StandardLibrary.Proxies
         private readonly ILogger _logger;
         private readonly IPhpCrudApiService _phpCrudApiService;
 
-        private List<Setting> _settings = null;
+        private List<Setting> _settings;
 
         public SettingsProxy(ILogger logger, IPhpCrudApiService phpCrudApiService)
         {
