@@ -6,6 +6,8 @@ namespace AVF.MemberManagement
 {
     public partial class App : PrismApplication
     {
+        public const string AppId = "10bc9068-17ac-4f0f-a596-7fdfe20bc9f4";
+
         public App(IPlatformInitializer initializer = null) : base(initializer) { }
 
         protected override void OnInitialized()
