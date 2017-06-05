@@ -5,7 +5,15 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="AVF.MemberManagement.Views.MainPage"
              Title="MainPage">
-  <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
-    <Label Text="{Binding Title}" />
-  </StackLayout>
+    <ContentPage.Content>
+        <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+
+            <Button Text="Weiter" IsEnabled="{Binding IsRestApiAccountSet}" Command="{Binding StartCommand}"></Button>
+
+            <Label Text="RestAPI Login verfügbar:"></Label>
+            <Switch IsToggled="{Binding IsRestApiAccountSet}" IsEnabled="false"></Switch>
+
+            <Button Text="Einstellungen" Command="{Binding SettingsCommand}"></Button>
+        </StackLayout>
+    </ContentPage.Content>
 </ContentPage>

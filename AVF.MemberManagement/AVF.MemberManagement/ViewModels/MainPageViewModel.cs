@@ -4,37 +4,56 @@ using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Input;
+using AVF.MemberManagement.StandardLibrary.Interfaces;
 
 namespace AVF.MemberManagement.ViewModels
 {
-    public class MainPageViewModel : BindableBase, INavigationAware
+    public class MainPageViewModel
     {
-        private string _title;
-        public string Title
+        public ICommand SettingsCommand { get; private set; }
+        public ICommand StartCommand { get; private set; }
+
+        private readonly IAccountService _accountService;
+        private readonly INavigationService _navigationService;
+
+        public bool IsRestApiAccountSet
         {
-            get { return _title; }
-            set { SetProperty(ref _title, value); }
+            get
+            {
+                return _accountService.IsRestApiAccountSet;
+            }
+            set
+            {
+            }
         }
 
-        public MainPageViewModel()
+        public MainPageViewModel(IAccountService accountService, INavigationService navigationService)
         {
+            _accountService = accountService;
+            _navigationService = navigationService;
 
+            SettingsCommand = new DelegateCommand<object>(this.OnSettings, this.CanSettings);
+            StartCommand = new DelegateCommand<object>(this.OnStart, this.CanStart);
         }
 
-        public void OnNavigatedFrom(NavigationParameters parameters)
+        private void OnSettings(object state)
         {
-
+            //_navigationService.NavigateAsync(nameof(RestApiSettingsPage));
+        }
+        private bool CanSettings(object state)
+        {
+            return true;
         }
 
-        public void OnNavigatingTo(NavigationParameters parameters)
+        void OnStart(object obj)
         {
-
+            //_navigationService.NavigateAsync(nameof(StartPage));
         }
 
-        public void OnNavigatedTo(NavigationParameters parameters)
+        bool CanStart(object arg)
         {
-            if (parameters.ContainsKey("title"))
-                Title = (string)parameters["title"] + " and Prism";
+            return IsRestApiAccountSet;
         }
     }
 }
