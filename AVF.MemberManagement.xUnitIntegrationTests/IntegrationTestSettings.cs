@@ -21,6 +21,12 @@ namespace AVF.MemberManagement.xUnitIntegrationTests
                 Environment.GetEnvironmentVariable(
                     "AVF.MemberManagement.xUnitIntegrationTests.IntegrationTestSettings");
 
+            if (pathToIntegrationTestSettings == null) 
+            {
+				pathToIntegrationTestSettings = Environment.GetEnvironmentVariable(
+					"ITS");
+            }
+
             IntegrationTestSettings integrationTestSettings;
 
             if (pathToIntegrationTestSettings != null && File.Exists(pathToIntegrationTestSettings))
