@@ -36,7 +36,7 @@ namespace AVF.MemberManagement
 
             Container.RegisterTypeForNavigation<MainPage>();
             //Container.RegisterTypeForNavigation<StartPage>();
-            //Container.RegisterTypeForNavigation<RestApiSettingsPage>();
+            Container.RegisterTypeForNavigation<RestApiSettingsPage>();
             //Container.RegisterTypeForNavigation<UserAdministrationPage>();
             //Container.RegisterTypeForNavigation<EnterPasswordPage>();
 
@@ -46,6 +46,7 @@ namespace AVF.MemberManagement
             Container.RegisterType<IUsersProxy, UsersProxy>(new ContainerControlledLifetimeManager());
             Container.RegisterType<ISettingsProxy, SettingsProxy>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IPasswordService, PasswordService>(new ContainerControlledLifetimeManager());
+            Container.RegisterTypeForNavigation<RestApiSettingsPage>();
         }
 
         //protected override void OnStart()
