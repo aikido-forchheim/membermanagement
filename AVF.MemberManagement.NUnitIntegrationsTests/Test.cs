@@ -8,9 +8,9 @@ namespace AVF.MemberManagement.NUnitIntegrationsTests
         [Test()]
         public void TestCase()
         {
-            var x = xUnitIntegrationTests.IntegrationTestSettings.Get();
+            var integrationTestSettings = xUnitIntegrationTests.IntegrationTestSettings.Get();
 
-            Assert.IsNotNull(x);
+            Assert.IsNotNull(integrationTestSettings);
         }
     }
 }
