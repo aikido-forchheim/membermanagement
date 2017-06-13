@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Models;
+using AVF.MemberManagement.Views;
 using Microsoft.Extensions.Logging;
 using Prism.Commands;
 using Prism.Mvvm;
 using IT2media.Extensions.Logging.Abstractions;
+using Prism.Navigation;
 
 namespace AVF.MemberManagement.ViewModels
 {
@@ -17,6 +19,7 @@ namespace AVF.MemberManagement.ViewModels
     {
         private readonly ILogger _logger;
         private readonly IAccountService _accountService;
+        private readonly INavigationService _navigationService;
 
         public RestApiAccount RestApiAccount => _accountService.RestApiAccount;
 
@@ -30,12 +33,26 @@ namespace AVF.MemberManagement.ViewModels
 
         public ICommand SaveCommand { get; }
 
-        public RestApiSettingsPageViewModel(ILogger logger, IAccountService accountService)
+        public ICommand BackCommand { get; }
+
+        public RestApiSettingsPageViewModel(ILogger logger, IAccountService accountService, INavigationService navigationService)
         {
             _logger = logger;
             _accountService = accountService;
+            _navigationService = navigationService;
 
             SaveCommand = new DelegateCommand<object>(OnSave, CanSave);
+            BackCommand = new DelegateCommand(OnBack, CanBack);
+        }
+
+        private static bool CanBack()
+        {
+            return true;
+        }
+
+        private void OnBack()
+        {
+            _navigationService.NavigateAsync(nameof(MainPage));
         }
 
         private void OnSave(object state)
