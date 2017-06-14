@@ -14,14 +14,24 @@
     <ContentPage.Content>
         <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
 
-            <Entry Text="{Binding Username}"></Entry>
-            <Entry Text="{Binding Password}" IsPassword="True"></Entry>
+            <Image HorizontalOptions="Center" Margin="0,0,0,64">
+                <Image.Source>
+                    <UriImageSource CacheValidity="1" CachingEnabled="True" Uri="https://raw.githubusercontent.com/aikido-forchheim/assets/master/logo1024.jpg"></UriImageSource> 
+                </Image.Source>
+                <Image.HeightRequest>128</Image.HeightRequest>
+                <Image.WidthRequest>128</Image.WidthRequest>
+            </Image>
+            
+            <Label Text="Benutzername:"></Label>
+            <Entry Text="{Binding Username}" WidthRequest="256" IsEnabled="{Binding IsRestApiAccountSet}"></Entry>
+            <Label Text="Passwort:"></Label>
+            <Entry Text="{Binding Password}" WidthRequest="256" IsPassword="True" IsEnabled="{Binding CanEnterPassword}"></Entry>
             
             <Button Text="Weiter" Command="{Binding StartCommand}"></Button>
 
             <Label Text="Bitte erst Einstellungen setzen:" IsVisible="{Binding IsRestApiAccountSet, Converter={StaticResource BooleanNotConverter}}"></Label>
 
-            <Button Text="Einstellungen" Command="{Binding SettingsCommand}"></Button>
+            <Button Text="Einstellungen" Command="{Binding SettingsCommand}" Margin="0,128,0,0"></Button>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
