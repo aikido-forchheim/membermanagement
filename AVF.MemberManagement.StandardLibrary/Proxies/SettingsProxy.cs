@@ -14,7 +14,7 @@ namespace AVF.MemberManagement.StandardLibrary.Proxies
         private readonly ILogger _logger;
         private readonly IPhpCrudApiService _phpCrudApiService;
 
-        private List<Setting> _settings;
+        private List<Setting> _settingsCache;
 
         public SettingsProxy(ILogger logger, IPhpCrudApiService phpCrudApiService)
         {
@@ -22,26 +22,49 @@ namespace AVF.MemberManagement.StandardLibrary.Proxies
             _phpCrudApiService = phpCrudApiService;
         }
 
-        public async Task<Setting> GetSettingAsync(string key)
+        public async Task<List<Setting>> LoadSettingsCacheAsync()
         {
-            if (_settings == null) await GetSettingsAsync();
+            if (_settingsCache != null) return _settingsCache;
 
-            var setting = (from s in _settings where s.Key == key select s).SingleOrDefault();
+            var uri = $"Settings";
+
+            _settingsCache = (await _phpCrudApiService.GetDataAsync<SettingsWrapper>(uri)).Settings;
+
+            if (_settingsCache == null)
+            {
+                _settingsCache = new List<Setting>();
+                _logger.LogWarning("SettingsCache was initialized with null, loadin empty settings list");
+            }
+            else
+            {
+                _logger.LogInformation(_settingsCache.Count + " Settings loaded");
+            }
+
+            return _settingsCache;
+        }
+
+        public async Task<Setting> GetSettingAsync(string key, string defaultValue)
+        {
+            var setting = await GetSettingAsync(key);
+
+            if (setting == null)
+                return new Setting
+                {
+                    Key = key,
+                    Des = key,
+                    Value = defaultValue
+                };
 
             return setting;
         }
 
-        public async Task<List<Setting>> GetSettingsAsync()
+        public async Task<Setting> GetSettingAsync(string key)
         {
-            if (_settings != null) return _settings;
+            if (_settingsCache == null) await LoadSettingsCacheAsync();
 
-            var uri = $"Settings";
+            var setting = (from s in _settingsCache where s.Key == key select s).SingleOrDefault();
 
-            _settings = (await _phpCrudApiService.GetDataAsync<SettingsWrapper>(uri)).Settings;
-
-            _logger.LogInformation(_settings.Count + " Settings loaded");
-
-            return _settings;
+            return setting;
         }
     }
 }

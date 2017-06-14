@@ -8,6 +8,8 @@ namespace AVF.MemberManagement.StandardLibrary.Interfaces
 	{
 		Task<Setting> GetSettingAsync(string key);
 
-		Task<List<Setting>> GetSettingsAsync();
+	    Task<Setting> GetSettingAsync(string key, string defaultValue);
+
+        Task<List<Setting>> LoadSettingsCacheAsync();
 	}
 }

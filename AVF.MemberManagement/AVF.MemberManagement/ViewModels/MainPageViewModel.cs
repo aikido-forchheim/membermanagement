@@ -49,4 +49,5 @@ namespace AVF.MemberManagement.ViewModels
             return IsRestApiAccountSet;
         }
     }
+
 }
