@@ -41,7 +41,7 @@ namespace AVF.MemberManagement.ViewModels
 
         private void CheckCanEnterPassword(User serverUser)
         {
-            if (serverUser == null)
+            if (serverUser == null || serverUser.UserId == 0)
             {
                 CanEnterPassword = false;
                 _serverUser = null;

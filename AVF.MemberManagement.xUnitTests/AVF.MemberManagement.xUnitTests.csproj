@@ -177,6 +177,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Proxies\UsersProxyTest.cs" />
     <Compile Include="StandardLibrary\SettingsProxyTest.cs" />
     <Compile Include="StandardLibrary\UserTest.cs" />
   </ItemGroup>

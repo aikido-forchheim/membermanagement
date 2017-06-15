@@ -61,7 +61,17 @@ namespace AVF.MemberManagement.StandardLibrary.Proxies
         {
             var uri = $"{_uri}?filter=Username,eq,{username}";
 
-            _users = (await _phpCrudApiService.GetDataAsync<UsersWrapper>(uri)).Users;
+            try
+            {
+                _users = (await _phpCrudApiService.GetDataAsync<UsersWrapper>(uri)).Users;
+            }
+            catch (Exception e)
+            {
+                _logger.LogDebug(e.ToString());
+                return new User();
+            }
+
+            if (_users == null || _users.Count == 0) return new User();
 
             var user = _users.SingleOrDefault();
 
