@@ -30,6 +30,7 @@
         </Grid>
 
         <Button Text="Speichern" Command="{Binding SaveCommand}"></Button>
+        <Button Text="Zurück" Command="{Binding BackCommand}"></Button>
 
         <Label Text="{Binding Message}"></Label>
 

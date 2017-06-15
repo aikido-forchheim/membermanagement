@@ -2,18 +2,36 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             xmlns:converters="clr-namespace:DryLib.Xamarin.Converters;assembly=DryLib.Xamarin.Converters"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="AVF.MemberManagement.Views.MainPage"
              Title="MainPage">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:BooleanNotConverter x:Key="BooleanNotConverter"></converters:BooleanNotConverter>
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <ContentPage.Content>
         <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
 
-            <Button Text="Weiter" IsEnabled="{Binding IsRestApiAccountSet}" Command="{Binding StartCommand}"></Button>
+            <Image HorizontalOptions="Center" Margin="0,0,0,64">
+                <Image.Source>
+                    <UriImageSource CacheValidity="1" CachingEnabled="True" Uri="https://raw.githubusercontent.com/aikido-forchheim/assets/master/logo1024.jpg"></UriImageSource> 
+                </Image.Source>
+                <Image.HeightRequest>128</Image.HeightRequest>
+                <Image.WidthRequest>128</Image.WidthRequest>
+            </Image>
+            
+            <Label Text="Benutzername:"></Label>
+            <Entry Text="{Binding Username}" WidthRequest="256" IsEnabled="{Binding IsRestApiAccountSet}"></Entry>
+            <Label Text="Passwort:"></Label>
+            <Entry Text="{Binding Password}" WidthRequest="256" IsPassword="True" IsEnabled="{Binding CanEnterPassword}"></Entry>
+            
+            <Button Text="Weiter" Command="{Binding StartCommand}"></Button>
 
-            <Label Text="RestAPI Login verfügbar:"></Label>
-            <Switch IsToggled="{Binding IsRestApiAccountSet}" IsEnabled="false"></Switch>
+            <Label Text="Bitte erst Einstellungen setzen:" IsVisible="{Binding IsRestApiAccountSet, Converter={StaticResource BooleanNotConverter}}"></Label>
 
-            <Button Text="Einstellungen" Command="{Binding SettingsCommand}"></Button>
+            <Button Text="Einstellungen" Command="{Binding SettingsCommand}" Margin="0,128,0,0"></Button>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -17,15 +17,7 @@ namespace AVF.MemberManagement.xUnitIntegrationTests
         
         public static IntegrationTestSettings Get()
         {
-            var pathToIntegrationTestSettings =
-                Environment.GetEnvironmentVariable(
-                    "AVF.MemberManagement.xUnitIntegrationTests.IntegrationTestSettings");
-
-            if (pathToIntegrationTestSettings == null) 
-            {
-				pathToIntegrationTestSettings = Environment.GetEnvironmentVariable(
-					"ITS");
-            }
+            var pathToIntegrationTestSettings = Environment.GetEnvironmentVariable("AVF.MemberManagement.xUnitIntegrationTests.IntegrationTestSettings") ?? Environment.GetEnvironmentVariable("ITS");
 
             IntegrationTestSettings integrationTestSettings;
 
