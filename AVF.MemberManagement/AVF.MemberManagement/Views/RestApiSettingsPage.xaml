@@ -19,16 +19,17 @@
             </Grid.RowDefinitions>
 
             <Label Grid.Row="0" Grid.Column="0" Text="ApiUrl:" VerticalOptions="Center"></Label>
-            <Entry Grid.Row="0" Grid.Column="1" Text="{Binding RestApiAccount.ApiUrl}" Keyboard="Url"></Entry>
+            <Entry Grid.Row="0" Grid.Column="1" Text="{Binding AccountService.RestApiAccount.ApiUrl}" Keyboard="Url"></Entry>
 
             <Label Grid.Row="1" Grid.Column="0" Text="Username:" VerticalOptions="Center"></Label>
-            <Entry Grid.Row="1" Grid.Column="1" Text="{Binding RestApiAccount.Username}" Keyboard="Text"></Entry>
+            <Entry Grid.Row="1" Grid.Column="1" Text="{Binding AccountService.RestApiAccount.Username}" Keyboard="Text"></Entry>
 
             <Label Grid.Row="2" Grid.Column="0" Text="Password:" VerticalOptions="Center" ></Label>
-            <Entry Grid.Row="2" Grid.Column="1" Text="{Binding RestApiAccount.Password}" IsPassword="true" Keyboard="Text"></Entry>
+            <Entry Grid.Row="2" Grid.Column="1" Text="{Binding AccountService.RestApiAccount.Password}" IsPassword="true" Keyboard="Text"></Entry>
 
         </Grid>
 
+        <Button Text="Test" Command="{Binding ValidateCommand}"></Button>
         <Button Text="Speichern" Command="{Binding SaveCommand}"></Button>
         <Button Text="Zurück" Command="{Binding BackCommand}"></Button>
 

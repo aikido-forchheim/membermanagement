@@ -11,5 +11,7 @@ namespace AVF.MemberManagement.StandardLibrary.Interfaces
 	    Task<Setting> GetSettingAsync(string key, string defaultValue);
 
         Task<List<Setting>> LoadSettingsCacheAsync();
+
+	    Task<List<Setting>> LoadSettingsCacheAsync(bool forceCacheReload);
 	}
 }

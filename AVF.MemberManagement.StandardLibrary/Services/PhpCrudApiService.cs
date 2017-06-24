@@ -95,7 +95,7 @@ namespace AVF.MemberManagement.StandardLibrary.Services
 
         private async Task<string> GetFullUriWithCsrfToken(string uri)
         {
-            if (_token == null) _token = await GetTokenAsync();
+            if (_token == null || _accountService.RestApiAccount.HasChanged) _token = await GetTokenAsync();
 
             if (!uri.StartsWith("/")) uri = "/" + uri;
 
@@ -150,7 +150,9 @@ namespace AVF.MemberManagement.StandardLibrary.Services
 
         private async Task<string> GetTokenAsync()
         {
-            return await GetTokenAsync(_accountService.RestApiAccount.ApiUrl, _accountService.RestApiAccount.Username, _accountService.RestApiAccount.Password);
+            var tokenAsync = await GetTokenAsync(_accountService.RestApiAccount.ApiUrl, _accountService.RestApiAccount.Username, _accountService.RestApiAccount.Password);
+            _accountService.RestApiAccount.HasChanged = false;
+            return tokenAsync;
         }
 
         private async Task<string> GetTokenAsync(string apiUrl, string userName, string password)

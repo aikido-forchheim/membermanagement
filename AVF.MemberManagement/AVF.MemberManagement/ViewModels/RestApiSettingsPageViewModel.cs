@@ -15,15 +15,15 @@ using Prism.Navigation;
 
 namespace AVF.MemberManagement.ViewModels
 {
-    public class RestApiSettingsPageViewModel : BindableBase
+    public class RestApiSettingsPageViewModel : BindableBase, INavigatingAware
     {
         private readonly ILogger _logger;
-        private readonly IAccountService _accountService;
+        public IAccountService AccountService { get; }
         private readonly INavigationService _navigationService;
-
-        public RestApiAccount RestApiAccount => _accountService.RestApiAccount;
-
+        private readonly ISettingsProxy _settingsProxy;
+        
         private string _message;
+        private List<Setting> _settings;
 
         public string Message
         {
@@ -31,18 +31,33 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _message, value);
         }
 
+        public ICommand ValidateCommand { get; }
+
         public ICommand SaveCommand { get; }
 
         public ICommand BackCommand { get; }
 
-        public RestApiSettingsPageViewModel(ILogger logger, IAccountService accountService, INavigationService navigationService)
+        public RestApiSettingsPageViewModel(ILogger logger, IAccountService accountService, INavigationService navigationService, ISettingsProxy settingsProxy)
         {
             _logger = logger;
-            _accountService = accountService;
+            AccountService = accountService;
             _navigationService = navigationService;
+            _settingsProxy = settingsProxy;
 
-            SaveCommand = new DelegateCommand<object>(OnSave, CanSave);
+            SaveCommand = new DelegateCommand(OnSave, CanSave);
             BackCommand = new DelegateCommand(OnBack, CanBack);
+            ValidateCommand = new DelegateCommand(OnValidate, CanValidate);
+        }
+
+        private bool CanValidate()
+        {
+            //return !string.IsNullOrWhiteSpace(RestApiAccount?.Username) && !string.IsNullOrWhiteSpace(RestApiAccount.Password) && !string.IsNullOrWhiteSpace(RestApiAccount.ApiUrl);
+            return true;
+        }
+
+        private async void OnValidate()
+        {
+            await RunConnectionTest();
         }
 
         private static bool CanBack()
@@ -55,11 +70,11 @@ namespace AVF.MemberManagement.ViewModels
             _navigationService.NavigateAsync(nameof(MainPage));
         }
 
-        private void OnSave(object state)
+        private void OnSave()
         {
             try
             {
-                _accountService.StoreRestApiAccount(_accountService.RestApiAccount.ApiUrl, _accountService.RestApiAccount.Username, _accountService.RestApiAccount.Password);
+                AccountService.StoreRestApiAccount(AccountService.RestApiAccount.ApiUrl, AccountService.RestApiAccount.Username, AccountService.RestApiAccount.Password);
 
                 Message = "Account-Informationen erfolgreich gespeichert...";
 
@@ -73,9 +88,23 @@ namespace AVF.MemberManagement.ViewModels
             }
         }
 
-        private static bool CanSave(object state)
+        private bool CanSave()
         {
-            return true;
+            var canSave = _settings != null && _settings.Any();
+
+            return canSave;
+        }
+
+        public async void OnNavigatingTo(NavigationParameters parameters)
+        {
+            await RunConnectionTest();
+        }
+
+        private async Task RunConnectionTest()
+        {
+            _settings = await _settingsProxy.LoadSettingsCacheAsync(true);
+
+            ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
         }
     }
 }

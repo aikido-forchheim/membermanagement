@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Models;
+using IT2media.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Logging;
 
 namespace AVF.MemberManagement.StandardLibrary.Proxies
@@ -24,11 +25,25 @@ namespace AVF.MemberManagement.StandardLibrary.Proxies
 
         public async Task<List<Setting>> LoadSettingsCacheAsync()
         {
-            if (_settingsCache != null) return _settingsCache;
+            return await LoadSettingsCacheAsync(false);
+        }
+
+        public async Task<List<Setting>> LoadSettingsCacheAsync(bool forceCacheReload)
+        {
+            if (_settingsCache != null && !forceCacheReload) return _settingsCache;
 
             var uri = $"Settings";
 
-            _settingsCache = (await _phpCrudApiService.GetDataAsync<SettingsWrapper>(uri)).Settings;
+            try
+            {
+                _settingsCache = (await _phpCrudApiService.GetDataAsync<SettingsWrapper>(uri)).Settings;
+            }
+            catch (Exception e)
+            {
+                _settingsCache = null;
+
+                _logger.LogWarning(e);
+            }
 
             if (_settingsCache == null)
             {
