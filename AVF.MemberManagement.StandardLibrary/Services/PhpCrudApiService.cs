@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using AVF.MemberManagement.StandardLibrary.Factories;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -16,8 +18,6 @@ namespace AVF.MemberManagement.StandardLibrary.Services
     {
         private readonly IAccountService _accountService;
         private readonly ILogger _logger;
-
-        private readonly CookieContainer _cookieContainer = new CookieContainer();
 
         private string _token;
 
@@ -52,7 +52,7 @@ namespace AVF.MemberManagement.StandardLibrary.Services
         {
             var fullUri = await GetFullUriWithCsrfToken(uri);
 
-            var request = HttpWebRequestWithCookieContainer(fullUri);
+            var request = HttpWebRequestWithCookieContainer.Create(fullUri);
             request.ContentType = "application/json";
             request.Method = method;
 
@@ -85,22 +85,24 @@ namespace AVF.MemberManagement.StandardLibrary.Services
         {
             var fullUri = await GetFullUriWithCsrfToken(uri);
 
-            if (serverTransform) fullUri = AddParam(fullUri, "transform", "1");
+            if (serverTransform) fullUri = AddQueryOption(fullUri, "transform", "1");
 
-            var httpWebRequest = HttpWebRequestWithCookieContainer(fullUri);
+            var httpWebRequest = HttpWebRequestWithCookieContainer.Create(fullUri);
             httpWebRequest.Method = "GET";
 
-            return await GetStringAsync(httpWebRequest);
+            return await HttpWebRequestWithCookieContainer.GetStringAsync(httpWebRequest);
         }
 
-        private async Task<string> GetFullUriWithCsrfToken(string uri)
+        private async Task<string> GetFullUriWithCsrfToken(string resourcePathAndQueryOptions)
         {
-            if (_token == null || _accountService.RestApiAccount.HasChanged) _token = await GetTokenAsync();
+            if (_token == null || _accountService.RestApiAccount.HasChanged) _token = await TokenService.GetTokenAsync(_accountService.RestApiAccount);
 
-            if (!uri.StartsWith("/")) uri = "/" + uri;
+            if (!_accountService.RestApiAccount.ApiUrl.EndsWith("/") && !resourcePathAndQueryOptions.StartsWith("/")) resourcePathAndQueryOptions = "/" + resourcePathAndQueryOptions;
 
-            var fullUri = _accountService.RestApiAccount.ApiUrl + uri;
+            var fullUri = _accountService.RestApiAccount.ApiUrl + resourcePathAndQueryOptions;
+
             fullUri = AddCsrfToken(fullUri);
+
             return fullUri;
         }
 
@@ -132,96 +134,20 @@ namespace AVF.MemberManagement.StandardLibrary.Services
             return list;
         }
 
-        private string AddCsrfToken(string fullUri)
+        private string AddCsrfToken(string serviceRootUrlWithResourcePathAndQueryOptions)
         {
-            const string paramName = "csrf";
-
-            var paramValue = _token;
-            fullUri = AddParam(fullUri, paramName, paramValue);
-            return fullUri;
+            serviceRootUrlWithResourcePathAndQueryOptions = AddQueryOption(serviceRootUrlWithResourcePathAndQueryOptions, "csrf", _token);
+            return serviceRootUrlWithResourcePathAndQueryOptions;
         }
 
-        private static string AddParam(string uri, string paramName, string paramValue)
+        private static string AddQueryOption(string uri, string paramName, string paramValue)
         {
+            //UriBuilder uriBuilder = new UriBuilder();
+            //uriBuilder.
+
             if (!uri.Contains("?")) uri = uri + $"?{paramName}={paramValue}";
             else uri = uri + $"&{paramName}={paramValue}";
             return uri;
-        }
-
-        private async Task<string> GetTokenAsync()
-        {
-            var tokenAsync = await GetTokenAsync(_accountService.RestApiAccount.ApiUrl, _accountService.RestApiAccount.Username, _accountService.RestApiAccount.Password);
-            _accountService.RestApiAccount.HasChanged = false;
-            return tokenAsync;
-        }
-
-        private async Task<string> GetTokenAsync(string apiUrl, string userName, string password)
-        {
-            try
-            {
-                var httpWebReqeust = HttpWebRequestWithCookieContainer(apiUrl);
-
-                httpWebReqeust.Method = "POST";
-
-                var postData = $"username={userName}&password={password}";
-
-                var data = Encoding.UTF8.GetBytes(postData);
-
-                httpWebReqeust.ContentType = "application/x-www-form-urlencoded";
-
-                using (var stream = await Task.Factory.FromAsync<Stream>(httpWebReqeust.BeginGetRequestStream, httpWebReqeust.EndGetRequestStream, null))
-                {
-                    stream.Write(data, 0, data.Length);
-                }
-
-                return await GetStringAsync(httpWebReqeust);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.ToString());
-                throw;
-            }
-        }
-
-        private HttpWebRequest HttpWebRequestWithCookieContainer(string url)
-        {
-            var httpWebReqeust = (HttpWebRequest)WebRequest.Create(url);
-            httpWebReqeust.CookieContainer = _cookieContainer;
-            return httpWebReqeust;
-        }
-
-        private async Task<string> GetStringAsync(WebRequest httpWebRequest)
-        {
-            try
-            {
-                var response = await httpWebRequest.GetResponseAsync();
-                var responseStream = response.GetResponseStream();
-
-                var responseBytes = ReadFully(responseStream);
-                var responseString = Encoding.UTF8.GetString(responseBytes, 0, responseBytes.Length);
-
-                return responseString;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.ToString());
-                throw;
-            }
-        }
-
-        private static byte[] ReadFully(Stream stream)
-        {
-            var buffer = new byte[32768];
-            using (var ms = new MemoryStream())
-            {
-                while (true)
-                {
-                    var read = stream.Read(buffer, 0, buffer.Length);
-                    if (read <= 0)
-                        return ms.ToArray();
-                    ms.Write(buffer, 0, read);
-                }
-            }
         }
     }
 }

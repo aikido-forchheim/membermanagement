@@ -1,4 +1,5 @@
-﻿using AVF.MemberManagement.PortableLibrary.Services;
+﻿using System.Net;
+using AVF.MemberManagement.PortableLibrary.Services;
 using AVF.MemberManagement.Services;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Proxies;
@@ -33,6 +34,8 @@ namespace AVF.MemberManagement
             ILogger logger = loggerFactory.CreateLogger<App>();
             Container.RegisterInstance(loggerFactory);
             Container.RegisterInstance(logger);
+
+            Container.RegisterInstance(new CookieContainer());
 
             Container.RegisterTypeForNavigation<MainPage>();
             //Container.RegisterTypeForNavigation<UserAdministrationPage>();

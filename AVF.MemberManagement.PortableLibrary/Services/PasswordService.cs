@@ -48,7 +48,18 @@ namespace AVF.MemberManagement.PortableLibrary.Services
         public async Task<string> HashPasswordAsync(string password, string pepper, byte[] saltBytes = null)
         {
             //string pepper = App.AppId;
+
+            //TODO: Why is this throwing an execption sometimes when running the unit tests?
             _hashAlgorithmForSecureRandom = (await _settingsProxy.GetSettingAsync("HashAlgorithm")).Value;
+
+            try
+            {
+                
+            }
+            catch
+            {
+                // ignored
+            }
 
             if (saltBytes == null)
             {

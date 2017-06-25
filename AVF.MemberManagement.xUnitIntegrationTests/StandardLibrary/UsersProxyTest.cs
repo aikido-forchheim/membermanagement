@@ -25,13 +25,13 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary
         }
 
         [Fact]
-        public async Task GetUserAsyncIsNullTest()
+        public async Task GetUserAsyncIsNotNullTest()
         {
             var usersProxy = Bootstrapper.Container.Resolve<IUsersProxy>();
 
             var serverUser = await usersProxy.GetUserAsync(null);
 
-            Assert.True(serverUser == null);
+            Assert.True(serverUser != null);
         }
     }
 }
