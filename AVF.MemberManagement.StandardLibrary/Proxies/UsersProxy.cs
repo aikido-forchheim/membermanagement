@@ -13,9 +13,9 @@ namespace AVF.MemberManagement.StandardLibrary.Proxies
     {
         private readonly ILogger _logger;
         private readonly IPhpCrudApiService _phpCrudApiService;
-        
+
         private readonly string _uri = $"Users";
-        
+
         private List<User> _users;
 
         public UsersProxy(ILogger logger, IPhpCrudApiService phpCrudApiService)
@@ -59,21 +59,13 @@ namespace AVF.MemberManagement.StandardLibrary.Proxies
 
         public async Task<User> GetUserAsync(string username)
         {
+            if (username == null) throw new ArgumentNullException(nameof(username));
+
             var uri = $"{_uri}?filter=Username,eq,{username}";
 
-            try
-            {
-                _users = (await _phpCrudApiService.GetDataAsync<UsersWrapper>(uri)).Users;
-            }
-            catch (Exception e)
-            {
-                _logger.LogDebug(e.ToString());
-                return new User();
-            }
+            _users = (await _phpCrudApiService.GetDataAsync<UsersWrapper>(uri)).Users;
 
-            if (_users == null || _users.Count == 0) return new User();
-
-            var user = _users.SingleOrDefault();
+            var user = _users.Single();
 
             return user;
         }
