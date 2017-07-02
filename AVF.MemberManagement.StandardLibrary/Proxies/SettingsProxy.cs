@@ -32,28 +32,9 @@ namespace AVF.MemberManagement.StandardLibrary.Proxies
         {
             if (_settingsCache != null && !forceCacheReload) return _settingsCache;
 
-            var uri = $"Settings";
+            _settingsCache = (await _phpCrudApiService.GetDataAsync<SettingsWrapper>("Settings")).Settings;
 
-            try
-            {
-                _settingsCache = (await _phpCrudApiService.GetDataAsync<SettingsWrapper>(uri)).Settings;
-            }
-            catch (Exception e)
-            {
-                _settingsCache = null;
-
-                _logger.LogWarning(e);
-            }
-
-            if (_settingsCache == null)
-            {
-                _settingsCache = new List<Setting>();
-                _logger.LogWarning("SettingsCache was initialized with null, loadin empty settings list");
-            }
-            else
-            {
-                _logger.LogInformation(_settingsCache.Count + " Settings loaded");
-            }
+            _logger.LogInformation(_settingsCache.Count + " Settings loaded");
 
             return _settingsCache;
         }

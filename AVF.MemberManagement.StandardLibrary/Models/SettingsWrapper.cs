@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AVF.MemberManagement.StandardLibrary.Models
 {
-    internal class SettingsWrapper
+    public class SettingsWrapper
     {
         public List<Setting> Settings { get; set; }
     }

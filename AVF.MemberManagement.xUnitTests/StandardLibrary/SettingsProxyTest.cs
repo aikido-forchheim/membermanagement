@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
+using AVF.MemberManagement.StandardLibrary.Models;
 using AVF.MemberManagement.StandardLibrary.Proxies;
 using FakeItEasy;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace AVF.MemberManagement.xUnitTests.StandardLibrary
@@ -16,16 +18,30 @@ namespace AVF.MemberManagement.xUnitTests.StandardLibrary
         [Fact]
         public async void LoadSettingsCacheAsyncTest()
         {
-            ISettingsProxy settingsProxy = new SettingsProxy(A.Fake<ILogger>(), A.Fake<IPhpCrudApiService>());
+            var fakePhpCrudApiService = GetFakePhpCrudApiService();
+
+            ISettingsProxy settingsProxy = new SettingsProxy(A.Fake<ILogger>(), fakePhpCrudApiService);
             var settingsCache = await settingsProxy.LoadSettingsCacheAsync();
 
             Assert.NotNull(settingsCache);
         }
 
+        private static IPhpCrudApiService GetFakePhpCrudApiService()
+        {
+            var fakePhpCrudApiService = A.Fake<IPhpCrudApiService>();
+
+            A.CallTo(() => fakePhpCrudApiService.GetDataAsync<SettingsWrapper>(A<string>.Ignored))
+                .Returns(Task.FromResult(JsonConvert.DeserializeObject<SettingsWrapper>(
+                    "{\"Settings\":[{\"Key\":\"HashAlgorithm\",\"Value\":\"SHA512\",\"Des\":\"HashAlgorithm used for password hashing\"},{\"Key\":\"Logo\",\"Value\":\"https://raw.githubusercontent.com/aikido-forchheim/assets/master/logo1024.jpg\",\"Des\":\"Vereinslogo\"}]}")));
+            return fakePhpCrudApiService;
+        }
+
         [Fact]
         public async void AssertNotExistingSettingReturnsNull()
         {
-            ISettingsProxy settingsProxy = new SettingsProxy(A.Fake<ILogger>(), A.Fake<IPhpCrudApiService>());
+            var fakePhpCrudApiService = GetFakePhpCrudApiService();
+
+            ISettingsProxy settingsProxy = new SettingsProxy(A.Fake<ILogger>(), fakePhpCrudApiService);
 
             var notExistingSetting = await settingsProxy.GetSettingAsync("SomeNotExistingKey");
 
@@ -35,7 +51,9 @@ namespace AVF.MemberManagement.xUnitTests.StandardLibrary
         [Fact]
         public async void AssertNotExistingSettingWithDefaultReturnsDefault()
         {
-            ISettingsProxy settingsProxy = new SettingsProxy(A.Fake<ILogger>(), A.Fake<IPhpCrudApiService>());
+            var fakePhpCrudApiService = GetFakePhpCrudApiService();
+
+            ISettingsProxy settingsProxy = new SettingsProxy(A.Fake<ILogger>(), fakePhpCrudApiService);
 
             const string defaultValue = "IamDefault";
             var notExistingSetting = await settingsProxy.GetSettingAsync("SomeNotExistingKey", defaultValue);
