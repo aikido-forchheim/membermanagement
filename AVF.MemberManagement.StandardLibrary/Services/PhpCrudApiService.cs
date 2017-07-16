@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -83,19 +84,38 @@ namespace AVF.MemberManagement.StandardLibrary.Services
 
         public async Task<string> GetDataAsync(string uri, bool serverTransform = false)
         {
-            var fullUri = await GetFullUriWithCsrfToken(uri);
+            try
+            {
+                var fullUri = await GetFullUriWithCsrfToken(uri);
 
-            if (serverTransform) fullUri = AddQueryOption(fullUri, "transform", "1");
+                if (serverTransform) fullUri = AddQueryOption(fullUri, "transform", "1");
 
-            var httpWebRequest = HttpWebRequestWithCookieContainer.Create(fullUri);
-            httpWebRequest.Method = "GET";
+                var httpWebRequest = HttpWebRequestWithCookieContainer.Create(fullUri);
+                httpWebRequest.Method = "GET";
 
-            return await HttpWebRequestWithCookieContainer.GetStringAsync(httpWebRequest);
+                return await HttpWebRequestWithCookieContainer.GetStringAsync(httpWebRequest);
+            }
+            catch (Exception)
+            {
+                //await Task.Delay(250);
+
+                Debug.WriteLine("Forcetokenrefresh");
+                var fullUri = await GetFullUriWithCsrfToken(uri, true);
+                
+                //await Task.Delay(250);
+
+                if (serverTransform) fullUri = AddQueryOption(fullUri, "transform", "1");
+
+                var httpWebRequest = HttpWebRequestWithCookieContainer.Create(fullUri);
+                httpWebRequest.Method = "GET";
+
+                return await HttpWebRequestWithCookieContainer.GetStringAsync(httpWebRequest);
+            }
         }
 
-        private async Task<string> GetFullUriWithCsrfToken(string resourcePathAndQueryOptions)
+        private async Task<string> GetFullUriWithCsrfToken(string resourcePathAndQueryOptions, bool forceTokenRefresh = false)
         {
-            if (_token == null || _accountService.RestApiAccount.HasChanged) _token = await TokenService.GetTokenAsync(_accountService.RestApiAccount);
+            if (_token == null || _accountService.RestApiAccount.HasChanged || forceTokenRefresh) _token = await TokenService.GetTokenAsync(_accountService.RestApiAccount);
 
             if (!_accountService.RestApiAccount.ApiUrl.EndsWith("/") && !resourcePathAndQueryOptions.StartsWith("/")) resourcePathAndQueryOptions = "/" + resourcePathAndQueryOptions;
 
