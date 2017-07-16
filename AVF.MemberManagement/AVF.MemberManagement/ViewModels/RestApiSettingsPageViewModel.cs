@@ -102,7 +102,14 @@ namespace AVF.MemberManagement.ViewModels
 
         private async Task RunConnectionTest()
         {
-            _settings = await _settingsProxy.LoadSettingsCacheAsync(true);
+            try
+            {
+                _settings = await _settingsProxy.LoadSettingsCacheAsync(true);
+            }
+            catch (Exception)
+            {
+                _settings = null;
+            }
 
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
         }
