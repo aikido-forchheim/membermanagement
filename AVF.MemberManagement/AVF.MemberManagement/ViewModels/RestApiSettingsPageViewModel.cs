@@ -70,15 +70,27 @@ namespace AVF.MemberManagement.ViewModels
             _navigationService.NavigateAsync(nameof(MainPage));
         }
 
-        private void OnSave()
+        private async void OnSave()
         {
             try
             {
-                AccountService.StoreRestApiAccount(AccountService.RestApiAccount.ApiUrl, AccountService.RestApiAccount.Username, AccountService.RestApiAccount.Password);
+                await RunConnectionTest().ContinueWith(task =>
+                {
 
-                Message = "Account-Informationen erfolgreich gespeichert...";
+                    if (CanSave())
+                    {
+                        AccountService.StoreRestApiAccount(AccountService.RestApiAccount.ApiUrl,
+                            AccountService.RestApiAccount.Username, AccountService.RestApiAccount.Password);
 
-                _logger.LogInformation(Message);
+                        Message = "Account-Informationen erfolgreich gespeichert...";
+                    }
+                    else
+                    {
+                        Message = "Account-Informationen temporär verändert, aber nicht gespeichert... Verbindungstest war nicht erfolgreich!";
+                    }
+
+                    _logger.LogInformation(Message);
+                });
             }
             catch (Exception ex)
             {
