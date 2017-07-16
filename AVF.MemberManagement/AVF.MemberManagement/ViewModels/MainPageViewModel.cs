@@ -12,7 +12,7 @@ using AVF.MemberManagement.Views;
 
 namespace AVF.MemberManagement.ViewModels
 {
-    public class MainPageViewModel : BindableBase
+    public partial class MainPageViewModel : BindableBase
     {
         public ICommand SettingsCommand { get; }
         public ICommand StartCommand { get; }
@@ -21,12 +21,6 @@ namespace AVF.MemberManagement.ViewModels
         private readonly INavigationService _navigationService;
         private readonly IUsersProxy _usersProxy;
         private readonly IPasswordService _passwordService;
-        
-        class UserRequest
-        {
-            public DateTime RequestTime { get; set; }
-            public User User { get; set; }
-        }
 
         private DateTime _lastUserRequestTime;
 
@@ -70,19 +64,19 @@ namespace AVF.MemberManagement.ViewModels
             return userRequest;
         }
 
-        private User _serverUser;
+        public User ServerUser { get; private set; }
 
         private void CheckCanEnterPassword(User serverUser)
         {
             if (serverUser == null || serverUser.UserId == 0)
             {
                 CanEnterPassword = false;
-                _serverUser = null;
+                ServerUser = null;
             }
             else
             {
                 CanEnterPassword = true;
-                _serverUser = serverUser;
+                ServerUser = serverUser;
             }
 
             ((DelegateCommand)StartCommand).RaiseCanExecuteChanged();
@@ -107,7 +101,7 @@ namespace AVF.MemberManagement.ViewModels
             {
                 SetProperty(ref _password, value);
 
-                _passwordService.IsValidAsync(Password, _serverUser.Password, App.AppId)
+                _passwordService.IsValidAsync(Password, ServerUser.Password, App.AppId)
                     .ContinueWith(isPasswordValidTask =>
                     {
                         _isPasswordValid = !isPasswordValidTask.IsFaulted && isPasswordValidTask.Result;
@@ -144,7 +138,7 @@ namespace AVF.MemberManagement.ViewModels
 
         private bool CanStart()
         {
-            return IsRestApiAccountSet && _serverUser != null && _isPasswordValid;
+            return IsRestApiAccountSet && ServerUser != null && _isPasswordValid;
         }
     }
 
