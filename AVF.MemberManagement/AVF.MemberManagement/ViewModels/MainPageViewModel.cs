@@ -2,8 +2,6 @@
 using Prism.Mvvm;
 using Prism.Navigation;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
@@ -12,7 +10,7 @@ using AVF.MemberManagement.Views;
 
 namespace AVF.MemberManagement.ViewModels
 {
-    public partial class MainPageViewModel : BindableBase
+    public class MainPageViewModel : BindableBase
     {
         public ICommand SettingsCommand { get; }
         public ICommand StartCommand { get; }
@@ -64,7 +62,26 @@ namespace AVF.MemberManagement.ViewModels
             return userRequest;
         }
 
-        public User ServerUser { get; private set; }
+        private User _serverUser;
+
+        public User ServerUser
+        {
+            get => _serverUser;
+            set
+            {
+                SetProperty(ref _serverUser, value);
+
+                HasPassword = !string.IsNullOrEmpty(_serverUser?.Password);
+            }
+        }
+
+        private bool _hasPassword;
+
+        public bool HasPassword
+        {
+            get => _hasPassword;
+            set => SetProperty(ref _hasPassword, value);
+        }
 
         private void CheckCanEnterPassword(User serverUser)
         {
