@@ -24,10 +24,18 @@
             
             <Label Text="Benutzername:"></Label>
             <Entry Text="{Binding Username}" WidthRequest="256" IsEnabled="{Binding IsRestApiAccountSet}"></Entry>
+
+            <!--<Label Text="Neues Passwort eingeben:"></Label>-->
             <Label Text="Passwort:"></Label>
+            
             <Entry Text="{Binding Password}" WidthRequest="256" IsPassword="True" IsEnabled="{Binding CanEnterPassword}"></Entry>
             
+            <!--<Label Text="Passwort wiederholen:"></Label>
+            <Entry Text="{Binding Password}" WidthRequest="256" IsPassword="True" IsEnabled="{Binding CanEnterPassword}"></Entry>-->
+            
             <Button Text="Weiter" Command="{Binding StartCommand}"></Button>
+
+            <!--<Button Text="Weiter" Command="{Binding SubmitPasswordCommand}"></Button>-->
 
             <Label Text="Bitte erst Einstellungen setzen:" IsVisible="{Binding IsRestApiAccountSet, Converter={StaticResource BooleanNotConverter}}"></Label>
 

@@ -65,9 +65,7 @@ namespace AVF.MemberManagement.StandardLibrary.Proxies
 
             _users = (await _phpCrudApiService.GetDataAsync<UsersWrapper>(uri)).Users;
 
-            var user = _users.Single();
-
-            return user;
+            return _users.Any() ? _users.Single() : null;
         }
 
         public async Task<List<User>> GetUsersAsync()

@@ -21,6 +21,14 @@ namespace AVF.MemberManagement.ViewModels
         private readonly INavigationService _navigationService;
         private readonly IUsersProxy _usersProxy;
         private readonly IPasswordService _passwordService;
+        
+        class UserRequest
+        {
+            public DateTime RequestTime { get; set; }
+            public User User { get; set; }
+        }
+
+        private DateTime _lastUserRequestTime;
 
         public bool IsRestApiAccountSet => _accountService.IsRestApiAccountSet;
         
@@ -33,8 +41,33 @@ namespace AVF.MemberManagement.ViewModels
             {
                 SetProperty(ref _username, value);
 
-                _usersProxy.GetUserAsync(value).ContinueWith(getServerUserTask => CheckCanEnterPassword(getServerUserTask.IsFaulted ? null : getServerUserTask.Result));
+                var userRequestTime = DateTime.Now;
+
+                _lastUserRequestTime = userRequestTime;
+
+                var userRequestTask = CheckUsernameWithTimestampAsync(value, userRequestTime);
+
+                userRequestTask.ContinueWith(getServerUserTask =>
+                {
+                    if (getServerUserTask.Result.RequestTime >= _lastUserRequestTime)
+                    {
+                        CheckCanEnterPassword(getServerUserTask.IsFaulted
+                            ? null
+                            : getServerUserTask.Result.User);
+                    }
+                });
             }
+        }
+
+        private async Task<UserRequest> CheckUsernameWithTimestampAsync(string username, DateTime requestTime)
+        {
+            var userRequest = new UserRequest
+            {
+                RequestTime = requestTime,
+                User = await _usersProxy.GetUserAsync(username)
+            };
+
+            return userRequest;
         }
 
         private User _serverUser;
