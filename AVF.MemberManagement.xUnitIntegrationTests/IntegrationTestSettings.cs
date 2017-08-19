@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,11 +17,16 @@ namespace AVF.MemberManagement.xUnitIntegrationTests
         
         public static IntegrationTestSettings Get()
         {
-            var pathToIntegrationTestSettings = Environment.GetEnvironmentVariable("AVF.MemberManagement.xUnitIntegrationTests.IntegrationTestSettings") ?? Environment.GetEnvironmentVariable("ITS");
+            var home = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+
+            var pathFromDocuments = Path.Combine(home,"Documents/IntegrationTestSettings.json");
+            
+            var pathToIntegrationTestSettings = (Environment.GetEnvironmentVariable("AVF.MemberManagement.xUnitIntegrationTests.IntegrationTestSettings") ?? Environment.GetEnvironmentVariable("ITS")) ??
+                                             pathFromDocuments;
 
             IntegrationTestSettings integrationTestSettings;
 
-            if (pathToIntegrationTestSettings != null && File.Exists(pathToIntegrationTestSettings))
+            if (File.Exists(pathToIntegrationTestSettings))
             {
                 var json = File.ReadAllText(pathToIntegrationTestSettings, Encoding.UTF8);
 

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\xunit.runner.visualstudio.2.2.0\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\packages\xunit.runner.visualstudio.2.2.0\build\net20\xunit.runner.visualstudio.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -234,10 +234,6 @@
     <ProjectReference Include="..\AVF.MemberManagement.xUnitTests\AVF.MemberManagement.xUnitTests.csproj">
       <Project>{62e51f14-4650-42f9-9192-f53b5c917a5d}</Project>
       <Name>AVF.MemberManagement.xUnitTests</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\AVF.MemberManagement\AVF.MemberManagement\AVF.MemberManagement.csproj">
-      <Project>{5fbac065-134e-46ba-8181-c87e2d2af1af}</Project>
-      <Name>AVF.MemberManagement</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

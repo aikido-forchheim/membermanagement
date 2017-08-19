@@ -1,11 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AVF.MemberManagement.PortableLibrary.Services;
-using AVF.MemberManagement.Services;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Proxies;
 using AVF.MemberManagement.StandardLibrary.Services;
@@ -20,19 +19,32 @@ namespace AVF.MemberManagement.xUnitIntegrationTests
     {
         public override void Run(bool runWithDefaultConfiguration)
         {
-            Container = new UnityContainer();
+            try
+            {
+                Container = new UnityContainer();
 
-            var fakeLogger = A.Fake<ILogger>();
+                var fakeLogger = A.Fake<ILogger>();
 
-            Container.RegisterInstance(fakeLogger);
-            Container.RegisterInstance(IntegrationTestSettings.Get());
+                Container.RegisterInstance(fakeLogger);
+                Container.RegisterInstance(IntegrationTestSettings.Get());
             
-            Container.RegisterType<IAccountService, AccountService>(new ContainerControlledLifetimeManager());
-            Container.Resolve<IAccountService>().Init(Container.Resolve<IntegrationTestSettings>().RestApiAccount);
-            Container.RegisterType<IPhpCrudApiService, PhpCrudApiService>(new ContainerControlledLifetimeManager());
-            Container.RegisterType<IUsersProxy, UsersProxy>(new ContainerControlledLifetimeManager());
-            Container.RegisterType<ISettingsProxy, SettingsProxy>(new ContainerControlledLifetimeManager());
-            Container.RegisterType<IPasswordService, PasswordService>(new ContainerControlledLifetimeManager());
+                var fakeAccountService = A.Fake<IAccountService>();
+                var restApiAccount = Container.Resolve<IntegrationTestSettings>().RestApiAccount;
+                A.CallTo(() => fakeAccountService.RestApiAccount).Returns(restApiAccount);
+                Container.RegisterInstance(fakeAccountService);
+            
+                Container.Resolve<IAccountService>().Init(Container.Resolve<IntegrationTestSettings>().RestApiAccount);
+                Container.RegisterType<IPhpCrudApiService, PhpCrudApiService>(new ContainerControlledLifetimeManager());
+                Container.RegisterType<IUsersProxy, UsersProxy>(new ContainerControlledLifetimeManager());
+                Container.RegisterType<ISettingsProxy, SettingsProxy>(new ContainerControlledLifetimeManager());
+                Container.RegisterType<IPasswordService, PasswordService>(new ContainerControlledLifetimeManager());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
         }
     }
 }
