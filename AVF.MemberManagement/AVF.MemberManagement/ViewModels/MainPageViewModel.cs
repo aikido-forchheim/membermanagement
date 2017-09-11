@@ -21,7 +21,6 @@ namespace AVF.MemberManagement.ViewModels
         private readonly IPasswordService _passwordService;
 
         private DateTime _latestRequestTime;
-        private bool _isPasswordValid;
 
         #region Properties
 
@@ -102,12 +101,26 @@ namespace AVF.MemberManagement.ViewModels
             {
                 SetProperty(ref _password, value);
 
-                _passwordService.IsValidAsync(Password, ServerUser.Password, App.AppId)
-                    .ContinueWith(isPasswordValidTask =>
+                IsPasswordValid = false;
+
+                if (_isInitialPassword)
+                {
+                    if (Password != null && Password.Length >= 3 
+                        && ServerUser.Password != null && ServerUser.Password.Length >= 3 
+                        && Password == ServerUser.Password)
                     {
-                        _isPasswordValid = !isPasswordValidTask.IsFaulted && isPasswordValidTask.Result;
-                        ((DelegateCommand)StartCommand).RaiseCanExecuteChanged();
-                    });
+                        IsPasswordValid = true;
+                    }
+                }
+                else
+                {
+                    _passwordService.IsValidAsync(Password, ServerUser.Password, App.AppId)
+                        .ContinueWith(isPasswordValidTask =>
+                        {
+                            IsPasswordValid = !isPasswordValidTask.IsFaulted && isPasswordValidTask.Result;
+                            ((DelegateCommand) StartCommand).RaiseCanExecuteChanged();
+                        });
+                }
             }
         }
 
@@ -136,7 +149,19 @@ namespace AVF.MemberManagement.ViewModels
         }
 
         #endregion
-        
+
+        #region IsPasswordValid
+
+        private bool _isPasswordValid;
+
+        public bool IsPasswordValid
+        {
+            get => _isPasswordValid;
+            set => SetProperty(ref _isPasswordValid, value);
+        }
+
+        #endregion
+
 
         #region IsUsernameInDatabaseAndHasPassword
 

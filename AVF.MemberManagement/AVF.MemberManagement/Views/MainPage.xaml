@@ -31,14 +31,16 @@
 
                 <Entry Text="{Binding Password}" WidthRequest="256" IsPassword="True"></Entry>
 
-                <Button Text="Weiter (Echtes Passwort anlegen)" Command="{Binding NewPasswordCommand}" IsVisible="{Binding IsInitialPassword}"></Button>
-                <Button Text="Weiter" Command="{Binding StartCommand}" IsVisible="{Binding IsInitialPassword, Converter={StaticResource BooleanNotConverter}}"></Button>
+                <StackLayout IsVisible="{Binding IsPasswordValid}">
+                    <Button Text="Weiter (Echtes Passwort anlegen)" Command="{Binding NewPasswordCommand}" IsVisible="{Binding IsInitialPassword}"></Button>
+                    <Button Text="Weiter" Command="{Binding StartCommand}" IsVisible="{Binding IsInitialPassword, Converter={StaticResource BooleanNotConverter}}"></Button>
+                </StackLayout>
             </StackLayout>
-
 
             <Label Text="Bitte erst Einstellungen setzen:" IsVisible="{Binding IsRestApiAccountSet, Converter={StaticResource BooleanNotConverter}}"></Label>
 
             <Button Text="Einstellungen" Command="{Binding SettingsCommand}" Margin="0,128,0,0"></Button>
+            
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
