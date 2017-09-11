@@ -20,47 +20,18 @@ namespace AVF.MemberManagement.ViewModels
         private readonly IUsersProxy _usersProxy;
         private readonly IPasswordService _passwordService;
 
-        private DateTime _lastUserRequestTime;
+        private DateTime _latestRequestTime;
+        private bool _isPasswordValid;
+
+        #region Properties
+
+        #region IsRestApiAccountSet
 
         public bool IsRestApiAccountSet => _accountService.IsRestApiAccountSet;
 
-        private string _username;
+        #endregion
 
-        public string Username
-        {
-            get => _username;
-            set
-            {
-                SetProperty(ref _username, value);
-
-                var userRequestTime = DateTime.Now;
-
-                _lastUserRequestTime = userRequestTime;
-
-                var userRequestTask = CheckUsernameWithTimestampAsync(value, userRequestTime);
-
-                userRequestTask.ContinueWith(getServerUserTask =>
-                {
-                    if (getServerUserTask.Result.RequestTime >= _lastUserRequestTime)
-                    {
-                        SetIfUsernameWasFoundOnServer(getServerUserTask.IsFaulted
-                            ? null
-                            : getServerUserTask.Result.User);
-                    }
-                });
-            }
-        }
-
-        private async Task<UserRequest> CheckUsernameWithTimestampAsync(string username, DateTime requestTime)
-        {
-            var userRequest = new UserRequest
-            {
-                RequestTime = requestTime,
-                User = await _usersProxy.GetUserAsync(username)
-            };
-
-            return userRequest;
-        }
+        #region ServerUser
 
         private User _serverUser;
 
@@ -77,37 +48,37 @@ namespace AVF.MemberManagement.ViewModels
             }
         }
 
-        private bool _isInitialPassword;
+        #endregion
 
-        public bool IsInitialPassword
+
+        #region Username
+
+        private string _username;
+
+        public string Username
         {
-            get => _isInitialPassword;
-            set => SetProperty(ref _isInitialPassword, value);
-        }
-
-        private bool _hasPassword;
-
-        public bool HasPassword
-        {
-            get => _hasPassword;
-            set => SetProperty(ref _hasPassword, value);
-        }
-
-        private void SetIfUsernameWasFoundOnServer(User serverUser)
-        {
-            if (serverUser == null || serverUser.UserId == 0)
+            get => _username;
+            set
             {
-                IsUsernameInDatabase = false;
-                ServerUser = null;
-            }
-            else
-            {
-                IsUsernameInDatabase = true;
-                ServerUser = serverUser;
-            }
+                SetProperty(ref _username, value);
 
-            ((DelegateCommand) StartCommand).RaiseCanExecuteChanged();
+                var now = DateTime.Now;
+
+                _latestRequestTime = now;
+
+                RequestServerUserAsync(value, now).ContinueWith(task =>
+                {
+                    if (task.Result.RequestTime >= _latestRequestTime)
+                    {
+                        EnablePasswortBoxIfUsernameWasFoundOnServer(GetUserFromTask(task));
+                    }
+                });
+            }
         }
+
+        #endregion
+
+        #region IsUsernameInDatabase
 
         private bool _isUsernameInDatabase;
 
@@ -117,15 +88,10 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _isUsernameInDatabase, value);
         }
 
-        private bool _isUsernameInDatabaseAndHasPassword;
+        #endregion
 
-        public bool IsUsernameInDatabaseAndHasPassword
-        {
-            get => _isUsernameInDatabaseAndHasPassword;
-            set => SetProperty(ref _isUsernameInDatabaseAndHasPassword, value);
-        }
-
-        private bool _isPasswordValid;
+        
+        #region Password
 
         private string _password;
 
@@ -140,10 +106,53 @@ namespace AVF.MemberManagement.ViewModels
                     .ContinueWith(isPasswordValidTask =>
                     {
                         _isPasswordValid = !isPasswordValidTask.IsFaulted && isPasswordValidTask.Result;
-                        ((DelegateCommand) StartCommand).RaiseCanExecuteChanged();
+                        ((DelegateCommand)StartCommand).RaiseCanExecuteChanged();
                     });
             }
         }
+
+        #endregion
+
+        #region HasPassword
+
+        private bool _hasPassword;
+
+        public bool HasPassword
+        {
+            get => _hasPassword;
+            set => SetProperty(ref _hasPassword, value);
+        }
+
+        #endregion
+        
+        #region IsInitialPassword
+
+        private bool _isInitialPassword;
+
+        public bool IsInitialPassword
+        {
+            get => _isInitialPassword;
+            set => SetProperty(ref _isInitialPassword, value);
+        }
+
+        #endregion
+        
+
+        #region IsUsernameInDatabaseAndHasPassword
+
+        private bool _isUsernameInDatabaseAndHasPassword;
+
+        public bool IsUsernameInDatabaseAndHasPassword
+        {
+            get => _isUsernameInDatabaseAndHasPassword;
+            set => SetProperty(ref _isUsernameInDatabaseAndHasPassword, value);
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Ctor
 
         public MainPageViewModel(IAccountService accountService, INavigationService navigationService, IUsersProxy usersProxy, IPasswordService passwordService)
         {
@@ -155,6 +164,10 @@ namespace AVF.MemberManagement.ViewModels
             SettingsCommand = new DelegateCommand(OnSettings, CanSettings);
             StartCommand = new DelegateCommand(OnStart, CanStart);
         }
+
+        #endregion
+
+        #region Commands
 
         private void OnSettings()
         {
@@ -175,6 +188,43 @@ namespace AVF.MemberManagement.ViewModels
         {
             return IsRestApiAccountSet && ServerUser != null && _isPasswordValid;
         }
-    }
 
+        #endregion
+
+        #region Methods
+
+        private async Task<UserRequest> RequestServerUserAsync(string username, DateTime requestTime)
+        {
+            var userRequest = new UserRequest
+            {
+                RequestTime = requestTime,
+                User = await _usersProxy.GetUserAsync(username)
+            };
+
+            return userRequest;
+        }
+
+        private void EnablePasswortBoxIfUsernameWasFoundOnServer(User serverUser)
+        {
+            if (serverUser == null || serverUser.UserId == 0)
+            {
+                IsUsernameInDatabase = false;
+                ServerUser = null;
+            }
+            else
+            {
+                IsUsernameInDatabase = true;
+                ServerUser = serverUser;
+            }
+
+            ((DelegateCommand)StartCommand).RaiseCanExecuteChanged();
+        }
+        
+        private static User GetUserFromTask(Task<UserRequest> getServerUserTask)
+        {
+            return getServerUserTask.IsFaulted ? null : getServerUserTask.Result.User;
+        }
+
+        #endregion
+    }
 }
