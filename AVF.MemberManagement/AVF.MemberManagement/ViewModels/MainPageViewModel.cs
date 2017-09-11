@@ -23,7 +23,7 @@ namespace AVF.MemberManagement.ViewModels
         private DateTime _lastUserRequestTime;
 
         public bool IsRestApiAccountSet => _accountService.IsRestApiAccountSet;
-        
+
         private string _username;
 
         public string Username
@@ -43,7 +43,7 @@ namespace AVF.MemberManagement.ViewModels
                 {
                     if (getServerUserTask.Result.RequestTime >= _lastUserRequestTime)
                     {
-                        CheckCanEnterPassword(getServerUserTask.IsFaulted
+                        SetIfUsernameWasFoundOnServer(getServerUserTask.IsFaulted
                             ? null
                             : getServerUserTask.Result.User);
                     }
@@ -72,7 +72,17 @@ namespace AVF.MemberManagement.ViewModels
                 SetProperty(ref _serverUser, value);
 
                 HasPassword = !string.IsNullOrEmpty(_serverUser?.Password);
+                IsInitialPassword = (_serverUser?.Password ?? string.Empty).Length < 20;
+                IsUsernameInDatabaseAndHasPassword = _isUsernameInDatabase && _hasPassword;
             }
+        }
+
+        private bool _isInitialPassword;
+
+        public bool IsInitialPassword
+        {
+            get => _isInitialPassword;
+            set => SetProperty(ref _isInitialPassword, value);
         }
 
         private bool _hasPassword;
@@ -83,28 +93,36 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _hasPassword, value);
         }
 
-        private void CheckCanEnterPassword(User serverUser)
+        private void SetIfUsernameWasFoundOnServer(User serverUser)
         {
             if (serverUser == null || serverUser.UserId == 0)
             {
-                CanEnterPassword = false;
+                IsUsernameInDatabase = false;
                 ServerUser = null;
             }
             else
             {
-                CanEnterPassword = true;
+                IsUsernameInDatabase = true;
                 ServerUser = serverUser;
             }
 
-            ((DelegateCommand)StartCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand) StartCommand).RaiseCanExecuteChanged();
         }
 
-        private bool _canEnterPassword;
+        private bool _isUsernameInDatabase;
 
-        public bool CanEnterPassword
+        public bool IsUsernameInDatabase
         {
-            get => _canEnterPassword;
-            set => SetProperty(ref _canEnterPassword, value);
+            get => _isUsernameInDatabase;
+            set => SetProperty(ref _isUsernameInDatabase, value);
+        }
+
+        private bool _isUsernameInDatabaseAndHasPassword;
+
+        public bool IsUsernameInDatabaseAndHasPassword
+        {
+            get => _isUsernameInDatabaseAndHasPassword;
+            set => SetProperty(ref _isUsernameInDatabaseAndHasPassword, value);
         }
 
         private bool _isPasswordValid;

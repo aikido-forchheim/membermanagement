@@ -16,22 +16,25 @@
 
             <Image HorizontalOptions="Center" Margin="0,0,0,64">
                 <Image.Source>
-                    <UriImageSource CacheValidity="1" CachingEnabled="True" Uri="https://raw.githubusercontent.com/aikido-forchheim/assets/master/logo1024.jpg"></UriImageSource> 
+                    <UriImageSource CacheValidity="1" CachingEnabled="True" Uri="https://raw.githubusercontent.com/aikido-forchheim/assets/master/logo1024.jpg"></UriImageSource>
                 </Image.Source>
                 <Image.HeightRequest>128</Image.HeightRequest>
                 <Image.WidthRequest>128</Image.WidthRequest>
             </Image>
-            
+
             <Label Text="Benutzername:"></Label>
             <Entry Text="{Binding Username}" WidthRequest="256" IsEnabled="{Binding IsRestApiAccountSet}"></Entry>
-            
-            <Label Text="Passwort:" IsVisible="{Binding HasPassword}"></Label>
 
-            <Entry Text="{Binding Password}" WidthRequest="256" IsPassword="True" IsEnabled="{Binding CanEnterPassword}" IsVisible="{Binding HasPassword}"></Entry>
-            
-            <Button Text="Weiter" Command="{Binding StartCommand}" IsVisible="{Binding HasPassword}"></Button>
+            <StackLayout IsVisible="{Binding IsUsernameInDatabaseAndHasPassword}">
+                <Label Text="Initiales Passwort:" IsVisible="{Binding IsInitialPassword}"></Label>
+                <Label Text="Passwort:" IsVisible="{Binding IsInitialPassword, Converter={StaticResource BooleanNotConverter}}"></Label>
 
-            <Button Text="Weiter"  IsVisible="{Binding HasPassword, Converter={StaticResource BooleanNotConverter}}"></Button><!--Command="{Binding NewPasswordCommand}"-->
+                <Entry Text="{Binding Password}" WidthRequest="256" IsPassword="True"></Entry>
+
+                <Button Text="Weiter (Echtes Passwort anlegen)" Command="{Binding NewPasswordCommand}" IsVisible="{Binding IsInitialPassword}"></Button>
+                <Button Text="Weiter" Command="{Binding StartCommand}" IsVisible="{Binding IsInitialPassword, Converter={StaticResource BooleanNotConverter}}"></Button>
+            </StackLayout>
+
 
             <Label Text="Bitte erst Einstellungen setzen:" IsVisible="{Binding IsRestApiAccountSet, Converter={StaticResource BooleanNotConverter}}"></Label>
 
