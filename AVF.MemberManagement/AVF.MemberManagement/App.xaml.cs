@@ -49,6 +49,7 @@ namespace AVF.MemberManagement
             Container.RegisterType<IPasswordService, PasswordService>(new ContainerControlledLifetimeManager());
             Container.RegisterTypeForNavigation<RestApiSettingsPage>();
             Container.RegisterTypeForNavigation<StartPage>();
+            Container.RegisterTypeForNavigation<PasswordPage>();
         }
 
         //protected override void OnStart()
