@@ -43,7 +43,7 @@ namespace AVF.MemberManagement.ViewModels
 
                 HasPassword = !string.IsNullOrEmpty(_serverUser?.Password);
                 IsInitialPassword = (_serverUser?.Password ?? string.Empty).Length < 20;
-                IsUsernameInDatabaseAndHasPassword = _isUsernameInDatabase && _hasPassword;
+                IsUserInDatabaseAndHasPassword = _isUsernameInDatabase && _hasPassword;
             }
         }
 
@@ -163,14 +163,14 @@ namespace AVF.MemberManagement.ViewModels
         #endregion
 
 
-        #region IsUsernameInDatabaseAndHasPassword
+        #region IsUserInDatabaseAndHasPassword
 
-        private bool _isUsernameInDatabaseAndHasPassword;
+        private bool _isUserInDatabaseAndHasPassword;
 
-        public bool IsUsernameInDatabaseAndHasPassword
+        public bool IsUserInDatabaseAndHasPassword
         {
-            get => _isUsernameInDatabaseAndHasPassword;
-            set => SetProperty(ref _isUsernameInDatabaseAndHasPassword, value);
+            get => _isUserInDatabaseAndHasPassword;
+            set => SetProperty(ref _isUserInDatabaseAndHasPassword, value);
         }
 
         #endregion

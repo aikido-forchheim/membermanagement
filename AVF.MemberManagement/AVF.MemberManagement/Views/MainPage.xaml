@@ -25,7 +25,7 @@
             <Label Text="Benutzername:"></Label>
             <Entry Text="{Binding Username}" WidthRequest="256" IsEnabled="{Binding IsRestApiAccountSet}"></Entry>
 
-            <StackLayout IsVisible="{Binding IsUsernameInDatabaseAndHasPassword}">
+            <StackLayout IsVisible="{Binding IsUserInDatabaseAndHasPassword}">
                 <Label Text="Initiales Passwort:" IsVisible="{Binding IsInitialPassword}"></Label>
                 <Label Text="Passwort:" IsVisible="{Binding IsInitialPassword, Converter={StaticResource BooleanNotConverter}}"></Label>
 
