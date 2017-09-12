@@ -11,7 +11,7 @@ namespace AVF.MemberManagement.ViewModels
 {
     public class PasswordPageViewModel : BindableBase, INavigatedAware
     {
-        public const int MinPasswordLength = 8;
+        public int MinPasswordLength => 8;
 
         #region Properties
 
@@ -25,8 +25,9 @@ namespace AVF.MemberManagement.ViewModels
             set
             {
                 SetProperty(ref _password1, value);
-                IsValidPassword1 = (_password1 ?? string.Empty).Length >= MinPasswordLength;
-
+                var length = (_password1 ?? string.Empty).Length;
+                IsValidPassword1 = length >= MinPasswordLength;
+                Password1Length = length;
                 (SaveAndContinueCommand as DelegateCommand)?.RaiseCanExecuteChanged();
             }
         }
@@ -68,7 +69,9 @@ namespace AVF.MemberManagement.ViewModels
             set
             {
                 SetProperty(ref _password2, value);
-                IsValidPassword2 = (_password2 ?? string.Empty).Length >= MinPasswordLength;
+                var length = (_password2 ?? string.Empty).Length;
+                IsValidPassword2 = length >= MinPasswordLength;
+                Password2Length = length;
 
                 (SaveAndContinueCommand as DelegateCommand)?.RaiseCanExecuteChanged();
             }
