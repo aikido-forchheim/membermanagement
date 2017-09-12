@@ -14,6 +14,7 @@ namespace AVF.MemberManagement.ViewModels
     {
         public ICommand SettingsCommand { get; }
         public ICommand StartCommand { get; }
+        public ICommand NewPasswordCommand { get; }
 
         private readonly IAccountService _accountService;
         private readonly INavigationService _navigationService;
@@ -188,6 +189,7 @@ namespace AVF.MemberManagement.ViewModels
 
             SettingsCommand = new DelegateCommand(OnSettings, CanSettings);
             StartCommand = new DelegateCommand(OnStart, CanStart);
+            NewPasswordCommand = new DelegateCommand(OnNewPassword, CanNewPassword);
         }
 
         #endregion
@@ -212,6 +214,16 @@ namespace AVF.MemberManagement.ViewModels
         private bool CanStart()
         {
             return IsRestApiAccountSet && ServerUser != null && _isPasswordValid;
+        }
+
+        private void OnNewPassword()
+        {
+            _navigationService.NavigateAsync(nameof(PasswordPage));
+        }
+
+        private bool CanNewPassword()
+        {
+            return true;
         }
 
         #endregion
