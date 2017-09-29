@@ -35,6 +35,7 @@ namespace AVF.MemberManagement.xUnitIntegrationTests
             
                 Container.Resolve<IAccountService>().Init(Container.Resolve<IntegrationTestSettings>().RestApiAccount);
                 Container.RegisterType<IPhpCrudApiService, PhpCrudApiService>(new ContainerControlledLifetimeManager());
+                Container.RegisterType<ITestProxy, TestProxy>(new ContainerControlledLifetimeManager());
                 Container.RegisterType<IUsersProxy, UsersProxy>(new ContainerControlledLifetimeManager());
                 Container.RegisterType<ISettingsProxy, SettingsProxy>(new ContainerControlledLifetimeManager());
                 Container.RegisterType<IPasswordService, PasswordService>(new ContainerControlledLifetimeManager());
