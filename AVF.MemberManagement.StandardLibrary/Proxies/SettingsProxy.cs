@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Models;
-using IT2media.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Logging;
 
 namespace AVF.MemberManagement.StandardLibrary.Proxies

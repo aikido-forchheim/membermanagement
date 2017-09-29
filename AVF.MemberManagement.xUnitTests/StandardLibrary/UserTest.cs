@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AVF.MemberManagement.StandardLibrary.Models;
+﻿using AVF.MemberManagement.StandardLibrary.Models;
 using Xunit;
-using Xunit.Sdk;
 
 namespace AVF.MemberManagement.xUnitTests.StandardLibrary
 {

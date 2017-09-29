@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AVF.MemberManagement.StandardLibrary.Models
+﻿namespace AVF.MemberManagement.StandardLibrary.Models
 {
     public class Test
     {

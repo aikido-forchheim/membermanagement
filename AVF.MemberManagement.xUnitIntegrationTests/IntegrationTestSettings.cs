@@ -1,9 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Models;
 using Newtonsoft.Json;
 
@@ -20,7 +17,8 @@ namespace AVF.MemberManagement.xUnitIntegrationTests
             var home = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 
             var pathFromDocuments = Path.Combine(home,"Documents/IntegrationTestSettings.json");
-            
+            if (home.EndsWith("Documents")) pathFromDocuments = Path.Combine(home, "IntegrationTestSettings.json");
+
             var pathToIntegrationTestSettings = (Environment.GetEnvironmentVariable("AVF.MemberManagement.xUnitIntegrationTests.IntegrationTestSettings") ?? Environment.GetEnvironmentVariable("ITS")) ??
                                              pathFromDocuments;
 

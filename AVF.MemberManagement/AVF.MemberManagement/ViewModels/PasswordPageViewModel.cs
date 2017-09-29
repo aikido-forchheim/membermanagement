@@ -1,10 +1,6 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Input;
-using AVF.MemberManagement.Views;
 using Prism.Navigation;
 
 namespace AVF.MemberManagement.ViewModels

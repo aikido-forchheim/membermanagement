@@ -1,22 +1,6 @@
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using AVF.MemberManagement.PortableLibrary.Services;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
-using AVF.MemberManagement.StandardLibrary.Models;
-using AVF.MemberManagement.StandardLibrary.Proxies;
-using AVF.MemberManagement.StandardLibrary.Services;
-using FakeItEasy;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 using Xunit;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.Practices.Unity;
 
 namespace AVF.MemberManagement.xUnitIntegrationTests

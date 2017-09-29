@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,12 +7,12 @@ namespace AVF.MemberManagement.StandardLibrary.Factories
 {
     public class HttpWebRequestWithCookieContainer
     {
-        private static readonly CookieContainer _cookieContainer = new CookieContainer();
+        private static readonly CookieContainer CookieContainer = new CookieContainer();
         
         public static HttpWebRequest Create(string url)
         {
             var httpWebReqeust = (HttpWebRequest)WebRequest.Create(url);
-            httpWebReqeust.CookieContainer = _cookieContainer;
+            httpWebReqeust.CookieContainer = CookieContainer;
             return httpWebReqeust;
         }
 

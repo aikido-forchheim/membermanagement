@@ -8,7 +8,6 @@ using Prism.Unity;
 using AVF.MemberManagement.Views;
 using Microsoft.Extensions.Logging;
 using Microsoft.Practices.Unity;
-using Xamarin.Forms;
 
 namespace AVF.MemberManagement
 {

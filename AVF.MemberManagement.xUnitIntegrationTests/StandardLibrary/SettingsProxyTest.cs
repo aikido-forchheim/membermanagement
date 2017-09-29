@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
-using AVF.MemberManagement.StandardLibrary.Proxies;
-using FakeItEasy;
-using Microsoft.Extensions.Logging;
 using Xunit;
 using Microsoft.Practices.Unity;
 
