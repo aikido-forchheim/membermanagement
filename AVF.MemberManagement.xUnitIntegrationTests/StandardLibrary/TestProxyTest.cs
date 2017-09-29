@@ -13,7 +13,7 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary
         {
             var testProxy = Bootstrapper.Container.Resolve<ITestProxy>();
 
-            var testValues = await testProxy.GetTestsAsync();
+            var testValues = await testProxy.GetTestEntriesAsync();
 
             Assert.True(testValues.Count > 2);
         }
@@ -23,9 +23,25 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary
         {
             var testProxy = Bootstrapper.Container.Resolve<ITestProxy>();
 
-            var testValue = await testProxy.GetTestAsync(-1);
+            var testValue = await testProxy.GetTestObjectAsync(-1);
 
             Assert.True(testValue.ID == -1);
+        }
+
+        [Fact]
+        public async Task UpdateTestZero()
+        {
+            var testProxy = Bootstrapper.Container.Resolve<ITestProxy>();
+
+            var testObject = new Test
+            {
+                ID = 0,
+                Text = "ÖÄÜ"
+            };
+
+            var updateResult = await testProxy.UpdateTestObjectAsync(testObject);
+
+            Assert.True(updateResult == "null");
         }
 
         [Fact]
@@ -33,13 +49,15 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary
         {
             var testProxy = Bootstrapper.Container.Resolve<ITestProxy>();
 
-            var test = new Test
+            var testObject = new Test
             {
-                ID = 0,
-                Text = "ÖÄÜ"
+                ID = -1,
+                Text = "ok"
             };
 
-            await testProxy.UpdateUserAsync(test);
+            var updateResult = await testProxy.UpdateTestObjectAsync(testObject);
+
+            Assert.True(updateResult == "1");
         }
     }
 }

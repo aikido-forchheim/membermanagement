@@ -16,23 +16,23 @@ namespace AVF.MemberManagement.StandardLibrary.Proxies
             _phpCrudApiService = phpCrudApiService;
         }
 
-        public async Task<List<Test>> GetTestsAsync()
+        public async Task<List<Test>> GetTestEntriesAsync()
         {
             var testTableEntries = (await _phpCrudApiService.GetDataAsync<TestWrapper>(Uri)).tblTest;
 
             return testTableEntries;
         }
 
-        public async Task<Test> GetTestAsync(int id)
+        public async Task<Test> GetTestObjectAsync(int id)
         {
             var testObject = await _phpCrudApiService.GetDataAsync<Test>($"{Uri}/{id}");
 
             return testObject;
         }
 
-        public async Task UpdateUserAsync(Test test)
+        public async Task<string> UpdateTestObjectAsync(Test test)
         {
-            await _phpCrudApiService.UpdateDataAsync($"{Uri}/{test.ID}", test);
+            return await _phpCrudApiService.UpdateDataAsync($"{Uri}/{test.ID}", test);
         }
     }
 }

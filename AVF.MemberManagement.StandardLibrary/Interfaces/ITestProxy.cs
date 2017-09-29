@@ -6,10 +6,10 @@ namespace AVF.MemberManagement.StandardLibrary.Interfaces
 {
     public interface ITestProxy
     {
-        Task<List<Test>> GetTestsAsync();
+        Task<List<Test>> GetTestEntriesAsync();
 
-        Task<Test> GetTestAsync(int id);
+        Task<Test> GetTestObjectAsync(int id);
 
-        Task UpdateUserAsync(Test test);
+        Task<string> UpdateTestObjectAsync(Test test);
     }
 }
