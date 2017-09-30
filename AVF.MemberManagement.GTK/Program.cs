@@ -21,7 +21,7 @@ namespace AVF.MemberManagement.GTK
         private static void Main()
         {
             Globals.UsesXamarinAuth = false;
-            Globals.AccountService = new AccountService();
+            Globals.AccountService = new AccountServiceS();
 
             ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             Gtk.Application.Init();
