@@ -117,8 +117,9 @@ namespace AVF.MemberManagement.ViewModels
             {
                 _settings = await _settingsProxy.LoadSettingsCacheAsync(true);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine(ex);
                 _settings = null;
             }
 
