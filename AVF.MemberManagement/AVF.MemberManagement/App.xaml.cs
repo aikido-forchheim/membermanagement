@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using AVF.MemberManagement.PortableLibrary.Services;
 using AVF.MemberManagement.Services;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
@@ -8,6 +9,7 @@ using Prism.Unity;
 using AVF.MemberManagement.Views;
 using Microsoft.Extensions.Logging;
 using Microsoft.Practices.Unity;
+using Xamarin.Forms;
 
 namespace AVF.MemberManagement
 {
@@ -39,9 +41,17 @@ namespace AVF.MemberManagement
             Container.RegisterTypeForNavigation<MainPage>();
             //Container.RegisterTypeForNavigation<UserAdministrationPage>();
             //Container.RegisterTypeForNavigation<EnterPasswordPage>();
+            if (Globals.UsesXamarinAuth)
+            {
+                Container.RegisterType<IAccountService, AccountService>(new ContainerControlledLifetimeManager());
+            }
+            else
+            {
+                Container.RegisterInstance(Globals.AccountService);
+            }
 
-            Container.RegisterType<IAccountService, AccountService>(new ContainerControlledLifetimeManager());
             Container.Resolve<IAccountService>().InitWithAccountStore(AppId);
+
             Container.RegisterType<IPhpCrudApiService, PhpCrudApiService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IUsersProxy, UsersProxy>(new ContainerControlledLifetimeManager());
             Container.RegisterType<ISettingsProxy, SettingsProxy>(new ContainerControlledLifetimeManager());
