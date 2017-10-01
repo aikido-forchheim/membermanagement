@@ -21,7 +21,7 @@ namespace AVF.MemberManagement.ViewModels
             _passwordService = passwordService;
         }
 
-        public async void OnNavigatedFrom(NavigationParameters parameters)
+        public void OnNavigatedFrom(NavigationParameters parameters)
         {
             //Title = (await _settingsProxy.GetSettingAsync("Title")).Value;
         }
