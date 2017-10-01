@@ -125,7 +125,9 @@ namespace AVF.MemberManagement.ViewModels
         {
             var saltedPasswordHash = await _passwordService.HashPasswordAsync(Password1, App.AppId);
 
-            //_usersProxy.UpdateUserAsync()
+            User.Password = saltedPasswordHash;
+
+            await _usersProxy.UpdateUserAsync(User);
         }
 
         private bool CanSaveAndContinue()
@@ -137,10 +139,11 @@ namespace AVF.MemberManagement.ViewModels
 
         #endregion
 
-        public PasswordPageViewModel(INavigationService navigationService, IPasswordService passwordService)
+        public PasswordPageViewModel(INavigationService navigationService, IPasswordService passwordService, IUsersProxy usersProxy)
         {
             _navigationService = navigationService;
             _passwordService = passwordService;
+            _usersProxy = usersProxy;
             SaveAndContinueCommand = new DelegateCommand(OnSaveAndContinue, CanSaveAndContinue);
         }
 
