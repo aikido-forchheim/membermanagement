@@ -218,7 +218,9 @@ namespace AVF.MemberManagement.ViewModels
 
         private void OnNewPassword()
         {
-            _navigationService.NavigateAsync(nameof(PasswordPage));
+            var navigationParametersForPasswordPage = new NavigationParameters {{"User", ServerUser}};
+
+            _navigationService.NavigateAsync(nameof(PasswordPage), navigationParametersForPasswordPage);
         }
 
         private bool CanNewPassword()

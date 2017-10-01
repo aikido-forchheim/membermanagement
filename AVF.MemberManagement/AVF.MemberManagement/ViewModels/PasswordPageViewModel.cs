@@ -1,6 +1,8 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
 using System.Windows.Input;
+using AVF.MemberManagement.StandardLibrary.Interfaces;
+using AVF.MemberManagement.StandardLibrary.Models;
 using Prism.Navigation;
 
 namespace AVF.MemberManagement.ViewModels
@@ -8,6 +10,18 @@ namespace AVF.MemberManagement.ViewModels
     public class PasswordPageViewModel : BindableBase, INavigatedAware
     {
         public int MinPasswordLength => 8;
+
+        private User _user;
+
+        public User User
+        {
+            get => _user;
+            set => SetProperty(ref _user, value);
+        }
+
+        private readonly INavigationService _navigationService;
+        private readonly IPasswordService _passwordService;
+        private readonly IUsersProxy _usersProxy;
 
         #region Properties
 
@@ -107,9 +121,11 @@ namespace AVF.MemberManagement.ViewModels
 
         public ICommand SaveAndContinueCommand { get; }
 
-        private void OnSaveAndContinue()
+        private async void OnSaveAndContinue()
         {
-            
+            var saltedPasswordHash = await _passwordService.HashPasswordAsync(Password1, App.AppId);
+
+            //_usersProxy.UpdateUserAsync()
         }
 
         private bool CanSaveAndContinue()
@@ -121,8 +137,10 @@ namespace AVF.MemberManagement.ViewModels
 
         #endregion
 
-        public PasswordPageViewModel()
+        public PasswordPageViewModel(INavigationService navigationService, IPasswordService passwordService)
         {
+            _navigationService = navigationService;
+            _passwordService = passwordService;
             SaveAndContinueCommand = new DelegateCommand(OnSaveAndContinue, CanSaveAndContinue);
         }
 
@@ -133,7 +151,9 @@ namespace AVF.MemberManagement.ViewModels
 
         public void OnNavigatedTo(NavigationParameters parameters)
         {
-            //throw new NotImplementedException();
+            var userFromNavigationParameters = (User) parameters["User"];
+
+            User = userFromNavigationParameters;
         }
     }
 }
