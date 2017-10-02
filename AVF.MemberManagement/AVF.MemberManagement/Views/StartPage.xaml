@@ -4,5 +4,8 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="AVF.MemberManagement.Views.StartPage">
-  
+  <StackLayout>
+      <Label Text="Startseite"></Label>
+      <Button Text="Trainingsteilnehmer eintragen"></Button>
+  </StackLayout>
 </ContentPage>

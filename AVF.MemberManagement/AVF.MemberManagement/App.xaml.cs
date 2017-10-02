@@ -26,7 +26,7 @@ namespace AVF.MemberManagement
         {
             InitializeComponent();
 
-            NavigationService.NavigateAsync("MainPage");
+            NavigationService.NavigateAsync(nameof(MainPage));
         }
 
         protected override void RegisterTypes()

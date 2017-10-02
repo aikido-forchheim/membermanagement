@@ -1,5 +1,7 @@
 ﻿using Prism.Mvvm;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
+using AVF.MemberManagement.StandardLibrary.Models;
+using AVF.MemberManagement.StandardLibrary.Services;
 using Prism.Navigation;
 
 namespace AVF.MemberManagement.ViewModels
@@ -28,7 +30,9 @@ namespace AVF.MemberManagement.ViewModels
 
         public void OnNavigatedTo(NavigationParameters parameters)
         {
-            //throw new NotImplementedException();
+            var user = (User) parameters["User"];
+
+            Globals.User = user;
         }
     }
 }

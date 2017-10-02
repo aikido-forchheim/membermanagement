@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Models;
-using AVF.MemberManagement.Views;
 
 namespace AVF.MemberManagement.ViewModels
 {
@@ -198,7 +197,7 @@ namespace AVF.MemberManagement.ViewModels
 
         private void OnSettings()
         {
-            _navigationService.NavigateAsync(nameof(RestApiSettingsPage));
+            _navigationService.NavigateAsync("RestApiSettingsPage");
         }
 
         private static bool CanSettings()
@@ -208,7 +207,7 @@ namespace AVF.MemberManagement.ViewModels
 
         private void OnStart()
         {
-            //_navigationService.NavigateAsync(nameof(StartPage));
+            _navigationService.NavigateAsync("StartPage");
         }
 
         private bool CanStart()
@@ -220,7 +219,7 @@ namespace AVF.MemberManagement.ViewModels
         {
             var navigationParametersForPasswordPage = new NavigationParameters {{"User", ServerUser}};
 
-            _navigationService.NavigateAsync(nameof(PasswordPage), navigationParametersForPasswordPage);
+            _navigationService.NavigateAsync("PasswordPage", navigationParametersForPasswordPage);
         }
 
         private bool CanNewPassword()

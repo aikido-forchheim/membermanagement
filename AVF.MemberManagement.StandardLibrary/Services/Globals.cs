@@ -1,4 +1,5 @@
 ﻿using AVF.MemberManagement.StandardLibrary.Interfaces;
+using AVF.MemberManagement.StandardLibrary.Models;
 
 namespace AVF.MemberManagement.StandardLibrary.Services
 {
@@ -7,5 +8,7 @@ namespace AVF.MemberManagement.StandardLibrary.Services
         public static bool UsesXamarinAuth = true;
 
         public static IAccountService AccountService;
+
+        public static User User { get; set; }
     }
 }

@@ -128,6 +128,8 @@ namespace AVF.MemberManagement.ViewModels
             User.Password = saltedPasswordHash;
 
             await _usersProxy.UpdateUserAsync(User);
+
+            await _navigationService.NavigateAsync("StartPage");
         }
 
         private bool CanSaveAndContinue()
