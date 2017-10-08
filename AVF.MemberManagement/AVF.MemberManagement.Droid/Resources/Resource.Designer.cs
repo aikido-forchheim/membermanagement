@@ -2211,8 +2211,26 @@ namespace AVF.MemberManagement.Droid
 			// aapt resource value: 0x7f020053
 			public const int avd_hide_password = 2130837587;
 			
+			// aapt resource value: 0x7f02010f
+			public const int avd_hide_password_1 = 2130837775;
+			
+			// aapt resource value: 0x7f020110
+			public const int avd_hide_password_2 = 2130837776;
+			
+			// aapt resource value: 0x7f020111
+			public const int avd_hide_password_3 = 2130837777;
+			
 			// aapt resource value: 0x7f020054
 			public const int avd_show_password = 2130837588;
+			
+			// aapt resource value: 0x7f020112
+			public const int avd_show_password_1 = 2130837778;
+			
+			// aapt resource value: 0x7f020113
+			public const int avd_show_password_2 = 2130837779;
+			
+			// aapt resource value: 0x7f020114
+			public const int avd_show_password_3 = 2130837780;
 			
 			// aapt resource value: 0x7f020055
 			public const int design_bottom_navigation_item_background = 2130837589;
@@ -3837,41 +3855,41 @@ namespace AVF.MemberManagement.Droid
 		public partial class Style
 		{
 			
-			// aapt resource value: 0x7f0b00ac
-			public const int AlertDialog_AppCompat = 2131427500;
-			
-			// aapt resource value: 0x7f0b00ad
-			public const int AlertDialog_AppCompat_Light = 2131427501;
-			
 			// aapt resource value: 0x7f0b00ae
-			public const int Animation_AppCompat_Dialog = 2131427502;
+			public const int AlertDialog_AppCompat = 2131427502;
 			
 			// aapt resource value: 0x7f0b00af
-			public const int Animation_AppCompat_DropDownUp = 2131427503;
+			public const int AlertDialog_AppCompat_Light = 2131427503;
+			
+			// aapt resource value: 0x7f0b00b0
+			public const int Animation_AppCompat_Dialog = 2131427504;
+			
+			// aapt resource value: 0x7f0b00b1
+			public const int Animation_AppCompat_DropDownUp = 2131427505;
 			
 			// aapt resource value: 0x7f0b0170
 			public const int Animation_Design_BottomSheetDialog = 2131427696;
 			
-			// aapt resource value: 0x7f0b00b0
-			public const int Base_AlertDialog_AppCompat = 2131427504;
-			
-			// aapt resource value: 0x7f0b00b1
-			public const int Base_AlertDialog_AppCompat_Light = 2131427505;
-			
 			// aapt resource value: 0x7f0b00b2
-			public const int Base_Animation_AppCompat_Dialog = 2131427506;
+			public const int Base_AlertDialog_AppCompat = 2131427506;
 			
 			// aapt resource value: 0x7f0b00b3
-			public const int Base_Animation_AppCompat_DropDownUp = 2131427507;
+			public const int Base_AlertDialog_AppCompat_Light = 2131427507;
+			
+			// aapt resource value: 0x7f0b00b4
+			public const int Base_Animation_AppCompat_Dialog = 2131427508;
+			
+			// aapt resource value: 0x7f0b00b5
+			public const int Base_Animation_AppCompat_DropDownUp = 2131427509;
 			
 			// aapt resource value: 0x7f0b000c
 			public const int Base_CardView = 2131427340;
 			
-			// aapt resource value: 0x7f0b00b4
-			public const int Base_DialogWindowTitle_AppCompat = 2131427508;
+			// aapt resource value: 0x7f0b00b6
+			public const int Base_DialogWindowTitle_AppCompat = 2131427510;
 			
-			// aapt resource value: 0x7f0b00b5
-			public const int Base_DialogWindowTitleBackground_AppCompat = 2131427509;
+			// aapt resource value: 0x7f0b00b7
+			public const int Base_DialogWindowTitleBackground_AppCompat = 2131427511;
 			
 			// aapt resource value: 0x7f0b004e
 			public const int Base_TextAppearance_AppCompat = 2131427406;
@@ -3927,8 +3945,8 @@ namespace AVF.MemberManagement.Droid
 			// aapt resource value: 0x7f0b005b
 			public const int Base_TextAppearance_AppCompat_Menu = 2131427419;
 			
-			// aapt resource value: 0x7f0b00b6
-			public const int Base_TextAppearance_AppCompat_SearchResult = 2131427510;
+			// aapt resource value: 0x7f0b00b8
+			public const int Base_TextAppearance_AppCompat_SearchResult = 2131427512;
 			
 			// aapt resource value: 0x7f0b005c
 			public const int Base_TextAppearance_AppCompat_SearchResult_Subtitle = 2131427420;
@@ -3978,11 +3996,11 @@ namespace AVF.MemberManagement.Droid
 			// aapt resource value: 0x7f0b0067
 			public const int Base_TextAppearance_AppCompat_Widget_Button = 2131427431;
 			
-			// aapt resource value: 0x7f0b00b7
-			public const int Base_TextAppearance_AppCompat_Widget_Button_Borderless_Colored = 2131427511;
+			// aapt resource value: 0x7f0b00aa
+			public const int Base_TextAppearance_AppCompat_Widget_Button_Borderless_Colored = 2131427498;
 			
-			// aapt resource value: 0x7f0b00b8
-			public const int Base_TextAppearance_AppCompat_Widget_Button_Colored = 2131427512;
+			// aapt resource value: 0x7f0b00ab
+			public const int Base_TextAppearance_AppCompat_Widget_Button_Colored = 2131427499;
 			
 			// aapt resource value: 0x7f0b00a4
 			public const int Base_TextAppearance_AppCompat_Widget_Button_Inverse = 2131427492;
@@ -4365,11 +4383,11 @@ namespace AVF.MemberManagement.Droid
 			// aapt resource value: 0x7f0b0098
 			public const int Platform_V21_AppCompat_Light = 2131427480;
 			
-			// aapt resource value: 0x7f0b00aa
-			public const int Platform_V25_AppCompat = 2131427498;
+			// aapt resource value: 0x7f0b00ac
+			public const int Platform_V25_AppCompat = 2131427500;
 			
-			// aapt resource value: 0x7f0b00ab
-			public const int Platform_V25_AppCompat_Light = 2131427499;
+			// aapt resource value: 0x7f0b00ad
+			public const int Platform_V25_AppCompat_Light = 2131427501;
 			
 			// aapt resource value: 0x7f0b0031
 			public const int Platform_Widget_AppCompat_Spinner = 2131427377;
