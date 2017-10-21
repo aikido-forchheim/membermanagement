@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace AVF.MemberManagement.StandardLibrary.Services
+namespace AVF.MemberManagement.StandardLibrary2.Services
 {
     public class PhpCrudApiService : IPhpCrudApiService
     {
@@ -94,8 +94,9 @@ namespace AVF.MemberManagement.StandardLibrary.Services
 
                 return await HttpWebRequestWithCookieContainer.GetStringAsync(httpWebRequest);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Debug.WriteLine(e);
                 //await Task.Delay(250);
 
                 Debug.WriteLine("Forcetokenrefresh");

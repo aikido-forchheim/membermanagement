@@ -32,12 +32,6 @@
     <Compile Include="Services\PasswordService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AVF.MemberManagement.StandardLibrary\AVF.MemberManagement.StandardLibrary.csproj">
-      <Project>{93E9105C-2EF5-4BEC-8402-8D497C4B034A}</Project>
-      <Name>AVF.MemberManagement.StandardLibrary</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -105,6 +99,12 @@
     <Reference Include="Validation, Version=2.4.0.0, Culture=neutral, PublicKeyToken=2fc06f0d701809a7, processorArchitecture=MSIL">
       <HintPath>..\packages\Validation.2.4.15\lib\portable-net45+win8+wp8+wpa81\Validation.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AVF.MemberManagement.StandardLibrary\AVF.MemberManagement.StandardLibrary.csproj">
+      <Project>{b900104e-d6b5-4a65-85fd-57702e0f6d65}</Project>
+      <Name>AVF.MemberManagement.StandardLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>

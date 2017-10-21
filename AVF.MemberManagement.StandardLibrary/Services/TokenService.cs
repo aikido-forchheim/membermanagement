@@ -1,13 +1,14 @@
 ﻿using System.Text;
 using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Factories;
+using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Models;
 
 namespace AVF.MemberManagement.StandardLibrary.Services
 {
-    public class TokenService
+    public class TokenService : ITokenService
     {
-        public static async Task<string> GetTokenAsync(RestApiAccount restApiAccount)
+        public async Task<string> GetTokenAsync(RestApiAccount restApiAccount)
         {
             var tokenAsync = await GetTokenAsync(restApiAccount.ApiUrl, restApiAccount.Username, restApiAccount.Password);
             restApiAccount.HasChanged = false;

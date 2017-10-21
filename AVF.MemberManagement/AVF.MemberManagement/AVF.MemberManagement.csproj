@@ -163,13 +163,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\AVF.MemberManagement.StandardLibrary\AVF.MemberManagement.StandardLibrary.csproj">
-      <Project>{93E9105C-2EF5-4BEC-8402-8D497C4B034A}</Project>
-      <Name>AVF.MemberManagement.StandardLibrary</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\AVF.MemberManagement.PortableLibrary\AVF.MemberManagement.PortableLibrary.csproj">
       <Project>{12EBB884-B4BF-4326-B730-46D589C2E069}</Project>
       <Name>AVF.MemberManagement.PortableLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\AVF.MemberManagement.StandardLibrary\AVF.MemberManagement.StandardLibrary.csproj">
+      <Project>{b900104e-d6b5-4a65-85fd-57702e0f6d65}</Project>
+      <Name>AVF.MemberManagement.StandardLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

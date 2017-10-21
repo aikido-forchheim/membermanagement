@@ -52,6 +52,7 @@ namespace AVF.MemberManagement
 
             Container.Resolve<IAccountService>().InitWithAccountStore(AppId);
 
+            Container.RegisterType<ITokenService, TokenService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IPhpCrudApiService, PhpCrudApiService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IUsersProxy, UsersProxy>(new ContainerControlledLifetimeManager());
             Container.RegisterType<ISettingsProxy, SettingsProxy>(new ContainerControlledLifetimeManager());
