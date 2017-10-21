@@ -207,7 +207,9 @@ namespace AVF.MemberManagement.ViewModels
 
         private void OnStart()
         {
-            _navigationService.NavigateAsync("StartPage");
+            var navigationParametersForPasswordPage = new NavigationParameters { { "User", ServerUser } };
+
+            _navigationService.NavigateAsync("StartPage", navigationParametersForPasswordPage);
         }
 
         private bool CanStart()

@@ -15,6 +15,14 @@ namespace AVF.MemberManagement.ViewModels
 
         public string Title { get; set; }
 
+        private string _username;
+
+        public string Username
+        {
+            get => _username;
+            set => SetProperty(ref _username, value);
+        }
+
         public StartPageViewModel(IAccountService accountService, INavigationService navigationService, IUsersProxy usersProxy, IPasswordService passwordService)
         {
             _accountService = accountService;
@@ -33,6 +41,8 @@ namespace AVF.MemberManagement.ViewModels
             var user = (User) parameters["User"];
 
             Globals.User = user;
+
+            Username = user.Username;
         }
     }
 }
