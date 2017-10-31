@@ -1,7 +1,7 @@
 ﻿using Prism.Mvvm;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
-using AVF.MemberManagement.StandardLibrary.Models.Tbo;
 using AVF.MemberManagement.StandardLibrary.Services;
+using AVF.MemberManagement.StandardLibrary.Tbo;
 using Prism.Navigation;
 
 namespace AVF.MemberManagement.ViewModels
@@ -10,7 +10,6 @@ namespace AVF.MemberManagement.ViewModels
     {
         private readonly IAccountService _accountService;
         private readonly INavigationService _navigationService;
-        private readonly IUsersProxy _usersProxy;
         private readonly IPasswordService _passwordService;
 
         public string Title { get; set; }
@@ -23,11 +22,10 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _username, value);
         }
 
-        public StartPageViewModel(IAccountService accountService, INavigationService navigationService, IUsersProxy usersProxy, IPasswordService passwordService)
+        public StartPageViewModel(IAccountService accountService, INavigationService navigationService, IPasswordService passwordService)
         {
             _accountService = accountService;
             _navigationService = navigationService;
-            _usersProxy = usersProxy;
             _passwordService = passwordService;
         }
 

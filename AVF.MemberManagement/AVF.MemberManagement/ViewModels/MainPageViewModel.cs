@@ -2,11 +2,12 @@
 using Prism.Mvvm;
 using Prism.Navigation;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Models;
-using AVF.MemberManagement.StandardLibrary.Models.Tbo;
+using AVF.MemberManagement.StandardLibrary.Tbo;
 
 namespace AVF.MemberManagement.ViewModels
 {
@@ -18,7 +19,7 @@ namespace AVF.MemberManagement.ViewModels
 
         private readonly IAccountService _accountService;
         private readonly INavigationService _navigationService;
-        private readonly IUsersProxy _usersProxy;
+        private readonly IRepository<User> _usersProxy;
         private readonly IPasswordService _passwordService;
 
         private DateTime _latestRequestTime;
@@ -90,7 +91,7 @@ namespace AVF.MemberManagement.ViewModels
 
         #endregion
 
-        
+
         #region Password
 
         private string _password;
@@ -106,8 +107,8 @@ namespace AVF.MemberManagement.ViewModels
 
                 if (_isInitialPassword)
                 {
-                    if (Password != null && Password.Length >= 3 
-                        && ServerUser.Password != null && ServerUser.Password.Length >= 3 
+                    if (Password != null && Password.Length >= 3
+                        && ServerUser.Password != null && ServerUser.Password.Length >= 3
                         && Password == ServerUser.Password)
                     {
                         IsPasswordValid = true;
@@ -119,7 +120,7 @@ namespace AVF.MemberManagement.ViewModels
                         .ContinueWith(isPasswordValidTask =>
                         {
                             IsPasswordValid = !isPasswordValidTask.IsFaulted && isPasswordValidTask.Result;
-                            ((DelegateCommand) StartCommand).RaiseCanExecuteChanged();
+                            ((DelegateCommand)StartCommand).RaiseCanExecuteChanged();
                         });
                 }
             }
@@ -138,7 +139,7 @@ namespace AVF.MemberManagement.ViewModels
         }
 
         #endregion
-        
+
         #region IsInitialPassword
 
         private bool _isInitialPassword;
@@ -180,7 +181,7 @@ namespace AVF.MemberManagement.ViewModels
 
         #region Ctor
 
-        public MainPageViewModel(IAccountService accountService, INavigationService navigationService, IUsersProxy usersProxy, IPasswordService passwordService)
+        public MainPageViewModel(IAccountService accountService, INavigationService navigationService, IRepository<User> usersProxy, IPasswordService passwordService)
         {
             _accountService = accountService;
             _navigationService = navigationService;
@@ -220,7 +221,7 @@ namespace AVF.MemberManagement.ViewModels
 
         private void OnNewPassword()
         {
-            var navigationParametersForPasswordPage = new NavigationParameters {{"User", ServerUser}};
+            var navigationParametersForPasswordPage = new NavigationParameters { { "User", ServerUser } };
 
             _navigationService.NavigateAsync("PasswordPage", navigationParametersForPasswordPage);
         }
@@ -236,10 +237,17 @@ namespace AVF.MemberManagement.ViewModels
 
         private async Task<UserRequest> RequestServerUserAsync(string username, DateTime requestTime)
         {
+            //this is all old async code because we user the proxy instead of the cached repositorxy now
+            if ((await _usersProxy.GetAsync()).All(user => user.Username != username)) return new UserRequest
+            {
+                RequestTime = requestTime,
+                User = null
+            };
+
             var userRequest = new UserRequest
             {
                 RequestTime = requestTime,
-                User = await _usersProxy.GetUserAsync(username)
+                User = (await _usersProxy.GetAsync()).Single(user => user.Username == username)
             };
 
             return userRequest;
@@ -260,7 +268,7 @@ namespace AVF.MemberManagement.ViewModels
 
             ((DelegateCommand)StartCommand).RaiseCanExecuteChanged();
         }
-        
+
         private static User GetUserFromTask(Task<UserRequest> getServerUserTask)
         {
             return getServerUserTask.IsFaulted ? null : getServerUserTask.Result.User;

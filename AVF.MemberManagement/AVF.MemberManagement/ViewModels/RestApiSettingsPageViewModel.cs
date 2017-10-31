@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
-using AVF.MemberManagement.StandardLibrary.Models.Tbo;
+using AVF.MemberManagement.StandardLibrary.Tbo;
 using Microsoft.Extensions.Logging;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -16,10 +16,11 @@ namespace AVF.MemberManagement.ViewModels
     public class RestApiSettingsPageViewModel : BindableBase, INavigatingAware
     {
         private readonly ILogger _logger;
-        public IAccountService AccountService { get; }
         private readonly INavigationService _navigationService;
-        private readonly ISettingsProxy _settingsProxy;
-        
+        private readonly IProxyBase<Setting, string> _settingsProxy; //Leave Proxy instead of Repository, because we use this for connection testing our RestApi, and the Repository may be cached anytime later
+
+        public IAccountService AccountService { get; }
+
         private string _message;
         private List<Setting> _settings;
 
@@ -35,12 +36,13 @@ namespace AVF.MemberManagement.ViewModels
 
         public ICommand BackCommand { get; }
 
-        public RestApiSettingsPageViewModel(ILogger logger, IAccountService accountService, INavigationService navigationService, ISettingsProxy settingsProxy)
+        public RestApiSettingsPageViewModel(ILogger logger, IAccountService accountService, INavigationService navigationService, IProxyBase<Setting, string> settingsProxy)
         {
             _logger = logger;
-            AccountService = accountService;
             _navigationService = navigationService;
             _settingsProxy = settingsProxy;
+
+            AccountService = accountService;
 
             SaveCommand = new DelegateCommand(OnSave, CanSave);
             BackCommand = new DelegateCommand(OnBack, CanBack);
@@ -114,11 +116,11 @@ namespace AVF.MemberManagement.ViewModels
         {
             try
             {
-                _settings = await _settingsProxy.LoadSettingsCacheAsync(true);
+                _settings = await _settingsProxy.GetAsync();
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex);
+                _logger.LogInformation(ex);
                 _settings = null;
             }
 

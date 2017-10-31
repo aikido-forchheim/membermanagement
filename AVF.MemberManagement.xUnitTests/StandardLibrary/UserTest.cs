@@ -1,11 +1,11 @@
-﻿using AVF.MemberManagement.StandardLibrary.Models.Tbo;
+﻿using AVF.MemberManagement.StandardLibrary.Tbo;
 using Xunit;
 
 namespace AVF.MemberManagement.xUnitTests.StandardLibrary
 {
     public class UserTest
     {
-        [Fact()]
+        [Fact]
         public void TestUserBaseForNull()
         {
             var user = new User

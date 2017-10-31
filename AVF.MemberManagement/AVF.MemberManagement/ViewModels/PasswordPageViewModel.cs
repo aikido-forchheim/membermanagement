@@ -2,7 +2,7 @@
 using Prism.Mvvm;
 using System.Windows.Input;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
-using AVF.MemberManagement.StandardLibrary.Models.Tbo;
+using AVF.MemberManagement.StandardLibrary.Tbo;
 using Prism.Navigation;
 
 namespace AVF.MemberManagement.ViewModels
@@ -21,7 +21,7 @@ namespace AVF.MemberManagement.ViewModels
 
         private readonly INavigationService _navigationService;
         private readonly IPasswordService _passwordService;
-        private readonly IUsersProxy _usersProxy;
+        private readonly IProxy<User> _usersProxy;
 
         #region Properties
 
@@ -127,7 +127,7 @@ namespace AVF.MemberManagement.ViewModels
 
             User.Password = saltedPasswordHash;
 
-            await _usersProxy.UpdateUserAsync(User);
+            await _usersProxy.UpdateAsync(User);
 
             await _navigationService.NavigateAsync("StartPage");
         }
@@ -141,7 +141,7 @@ namespace AVF.MemberManagement.ViewModels
 
         #endregion
 
-        public PasswordPageViewModel(INavigationService navigationService, IPasswordService passwordService, IUsersProxy usersProxy)
+        public PasswordPageViewModel(INavigationService navigationService, IPasswordService passwordService, IProxy<User> usersProxy)
         {
             _navigationService = navigationService;
             _passwordService = passwordService;

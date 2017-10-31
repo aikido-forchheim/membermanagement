@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
-using AVF.MemberManagement.StandardLibrary.Models.Tbo;
-using Xunit;
+using AVF.MemberManagement.StandardLibrary.Tbo;
 using Microsoft.Practices.Unity;
+using Xunit;
 
 namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary
 {
@@ -11,7 +11,7 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary
         [Fact]
         public async Task GetAllTestEntriesInTable()
         {
-            var testProxy = Bootstrapper.Container.Resolve<ITestProxy>();
+            var testProxy = Bootstrapper.Container.Resolve<IProxy<Test>>();
 
             var testValues = await testProxy.GetAsync();
 
@@ -21,7 +21,7 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary
         [Fact]
         public async Task CanGetMinusValues()
         {
-            var testProxy = Bootstrapper.Container.Resolve<ITestProxy>();
+            var testProxy = Bootstrapper.Container.Resolve<IProxy<Test>>();
 
             var testValues = await testProxy.GetAsync();
 
@@ -31,7 +31,7 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary
         [Fact]
         public async Task CanGetSingleMinusValues()
         {
-            var testProxy = Bootstrapper.Container.Resolve<ITestProxy>();
+            var testProxy = Bootstrapper.Container.Resolve<IProxy<Test>>();
 
             var testValue = await testProxy.GetAsync(-1);
 
@@ -41,7 +41,7 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary
         [Fact]
         public async Task UpdateTestZero()
         {
-            var testProxy = Bootstrapper.Container.Resolve<ITestProxy>();
+            var testProxy = Bootstrapper.Container.Resolve<IProxy<Test>>();
 
             var testObject = new Test
             {
@@ -57,7 +57,7 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary
         [Fact]
         public async Task UpdateTestMinus()
         {
-            var testProxy = Bootstrapper.Container.Resolve<ITestProxy>();
+            var testProxy = Bootstrapper.Container.Resolve<IProxy<Test>>();
 
             var testObject = new Test
             {

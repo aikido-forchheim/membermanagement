@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AVF.MemberManagement.StandardLibrary.Interfaces
+﻿namespace AVF.MemberManagement.StandardLibrary.Interfaces
 {
-    public interface IIntId
+    public interface IIntId : IId<int>
     {
-        int Id { get; set; }
+        
+    }
+
+    public interface IId<T>
+    {
+        T Id { get; set; }
     }
 }

@@ -1,7 +1,8 @@
 ﻿using AVF.MemberManagement.StandardLibrary.Enums;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
-using Xunit;
+using AVF.MemberManagement.StandardLibrary.Tbo;
 using Microsoft.Practices.Unity;
+using Xunit;
 
 namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary.Proxies
 {
@@ -10,7 +11,7 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary.Proxies
         [Fact]
         public async void CanGetBeitragsklasse()
         {
-            var proxy = Bootstrapper.Container.Resolve<IBeitragsklassenProxy>();
+            var proxy = Bootstrapper.Container.Resolve<IProxy<Beitragsklasse>>();
 
             var beitragsklassen = await proxy.GetAsync();
 
@@ -20,7 +21,7 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary.Proxies
         [Fact]
         public async void CanGetSingleBeitragsklasse()
         {
-            var proxy = Bootstrapper.Container.Resolve<IBeitragsklassenProxy>();
+            var proxy = Bootstrapper.Container.Resolve<IProxy<Beitragsklasse>>();
 
             var beitragsklasse = await proxy.GetAsync(1);
 

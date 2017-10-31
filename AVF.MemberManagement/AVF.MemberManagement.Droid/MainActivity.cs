@@ -41,8 +41,10 @@ namespace AVF.MemberManagement.Droid
     {
         public void RegisterTypes(IUnityContainer container)
         {
-            container.RegisterType<ITokenService, TokenService>(new ContainerControlledLifetimeManager());
-            container.RegisterType<IPhpCrudApiService, PhpCrudApiService>(new ContainerControlledLifetimeManager());
+            //With btls we can use the old .NET Standard 1.1 services again
+
+            //container.RegisterType<ITokenService, TokenService>(new ContainerControlledLifetimeManager());
+            //container.RegisterType<IPhpCrudApiService, PhpCrudApiService>(new ContainerControlledLifetimeManager());
         }
     }
 }

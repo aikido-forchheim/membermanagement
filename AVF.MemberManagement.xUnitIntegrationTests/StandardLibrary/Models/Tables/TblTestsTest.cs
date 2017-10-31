@@ -1,4 +1,4 @@
-﻿using AVF.MemberManagement.StandardLibrary.Models.Tables;
+﻿using AVF.MemberManagement.StandardLibrary.Tables;
 using Newtonsoft.Json;
 using Xunit;
 

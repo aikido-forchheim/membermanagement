@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
+using AVF.MemberManagement.StandardLibrary.Tbo;
 using Org.BouncyCastle.Security;
 using PCLCrypto;
 
@@ -15,11 +16,11 @@ namespace AVF.MemberManagement.PortableLibrary.Services
 
         private string _hashAlgorithmForSecureRandom = "SHA512";
 
-        readonly ISettingsProxy _settingsProxy;
+        private readonly IRepositoryBase<Setting, string> _settingsRepository;
 
-        public PasswordService(ISettingsProxy settingsProxy)
+        public PasswordService(IRepositoryBase<Setting, string> settingsRepository)
         {
-            _settingsProxy = settingsProxy;
+            _settingsRepository = settingsRepository;
         }
 
         public async Task<bool> IsValidAsync(string enteredPassword, string storedPasswordHash, string pepper)
@@ -44,19 +45,7 @@ namespace AVF.MemberManagement.PortableLibrary.Services
 
         public async Task<string> HashPasswordAsync(string password, string pepper, byte[] saltBytes = null)
         {
-            //string pepper = App.AppId;
-
-            //TODO: Why is this throwing an execption sometimes when running the unit tests?
-            _hashAlgorithmForSecureRandom = (await _settingsProxy.GetSettingAsync("HashAlgorithm")).Value;
-
-            try
-            {
-                
-            }
-            catch
-            {
-                // ignored
-            }
+            _hashAlgorithmForSecureRandom = (await _settingsRepository.GetAsync("HashAlgorithm")).Value;
 
             if (saltBytes == null)
             {

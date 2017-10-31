@@ -1,8 +1,8 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
-using Xunit;
+using AVF.MemberManagement.StandardLibrary.Tbo;
 using Microsoft.Practices.Unity;
+using Xunit;
 
 namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary
 {
@@ -11,37 +11,11 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary
         [Fact]
         public async Task CanGetOneSetting()
         {
-            var settingsProxy = Bootstrapper.Container.Resolve<ISettingsProxy>();
+            var settingsProxy = Bootstrapper.Container.Resolve<IProxyBase<Setting, string>>();
 
-            var settings = await settingsProxy.LoadSettingsCacheAsync();
+            var settings = await settingsProxy.GetAsync();
 
-            var canGetOneSetting = settings != null && settings.Any();
-
-            Assert.True(canGetOneSetting);
-        }
-
-        [Fact]
-        public async Task TestForceCacheReload()
-        {
-            var settingsProxy = Bootstrapper.Container.Resolve<ISettingsProxy>();
-
-            var settings = await settingsProxy.LoadSettingsCacheAsync();
-
-            var settings2 = await settingsProxy.LoadSettingsCacheAsync(true);
-
-            Assert.True(settings != settings2);
-        }
-
-        [Fact]
-        public async Task TestCacheUse()
-        {
-            var settingsProxy = Bootstrapper.Container.Resolve<ISettingsProxy>();
-
-            var settings = await settingsProxy.LoadSettingsCacheAsync();
-
-            var settings2 = await settingsProxy.LoadSettingsCacheAsync();
-
-            Assert.True(settings == settings2);
+            Assert.True(settings.Count > 0);
         }
     }
 }

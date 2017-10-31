@@ -1,5 +1,5 @@
 ﻿using AVF.MemberManagement.StandardLibrary.Interfaces;
-using AVF.MemberManagement.StandardLibrary.Models.Tbo;
+using AVF.MemberManagement.StandardLibrary.Tbo;
 
 namespace AVF.MemberManagement.StandardLibrary.Services
 {
