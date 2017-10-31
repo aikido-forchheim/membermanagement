@@ -27,13 +27,15 @@ namespace AVF.MemberManagement.xUnitIntegrationTests
                 var restApiAccount = Container.Resolve<IntegrationTestSettings>().RestApiAccount;
                 A.CallTo(() => fakeAccountService.RestApiAccount).Returns(restApiAccount);
                 Container.RegisterInstance(fakeAccountService);
-            
+
+                Container.RegisterType<ITokenService, TokenService>(new ContainerControlledLifetimeManager());
                 Container.Resolve<IAccountService>().Init(Container.Resolve<IntegrationTestSettings>().RestApiAccount);
                 Container.RegisterType<IPhpCrudApiService, PhpCrudApiService>(new ContainerControlledLifetimeManager());
-                Container.RegisterType<ITestProxy, TestProxy>(new ContainerControlledLifetimeManager());
+                Container.RegisterType<ITestProxy, TestsProxy>(new ContainerControlledLifetimeManager());
                 Container.RegisterType<IUsersProxy, UsersProxy>(new ContainerControlledLifetimeManager());
                 Container.RegisterType<ISettingsProxy, SettingsProxy>(new ContainerControlledLifetimeManager());
                 Container.RegisterType<IPasswordService, PasswordService>(new ContainerControlledLifetimeManager());
+                Container.RegisterType<IBeitragsklassenProxy, BeitragsklassenProxy>(new ContainerControlledLifetimeManager());
             }
             catch (Exception e)
             {

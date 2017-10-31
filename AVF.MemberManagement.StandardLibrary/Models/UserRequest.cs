@@ -1,4 +1,5 @@
 ﻿using System;
+using AVF.MemberManagement.StandardLibrary.Models.Tbo;
 
 namespace AVF.MemberManagement.StandardLibrary.Models
 {

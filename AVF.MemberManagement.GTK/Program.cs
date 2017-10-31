@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using AVF.MemberManagement.GTK.Services;
 using AVF.MemberManagement.StandardLibrary.Services;
-using Gdk;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.GTK;
 

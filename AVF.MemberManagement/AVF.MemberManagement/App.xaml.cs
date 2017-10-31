@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using AVF.MemberManagement.PortableLibrary.Services;
 using AVF.MemberManagement.Services;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
@@ -9,7 +8,6 @@ using Prism.Unity;
 using AVF.MemberManagement.Views;
 using Microsoft.Extensions.Logging;
 using Microsoft.Practices.Unity;
-using Xamarin.Forms;
 
 namespace AVF.MemberManagement
 {

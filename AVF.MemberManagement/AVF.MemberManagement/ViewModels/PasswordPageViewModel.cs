@@ -2,7 +2,7 @@
 using Prism.Mvvm;
 using System.Windows.Input;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
-using AVF.MemberManagement.StandardLibrary.Models;
+using AVF.MemberManagement.StandardLibrary.Models.Tbo;
 using Prism.Navigation;
 
 namespace AVF.MemberManagement.ViewModels

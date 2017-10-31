@@ -1,4 +1,4 @@
-﻿using AVF.MemberManagement.StandardLibrary.Models;
+﻿using AVF.MemberManagement.StandardLibrary.Models.Tbo;
 using Xunit;
 
 namespace AVF.MemberManagement.xUnitTests.StandardLibrary
@@ -13,7 +13,7 @@ namespace AVF.MemberManagement.xUnitTests.StandardLibrary
                 Username = "Username",
                 Password = "Password",
                 Active = true,
-                UserId = 666
+                Id = 666
             };
 
             var userBase = user;

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
-using AVF.MemberManagement.StandardLibrary.Models;
+using AVF.MemberManagement.StandardLibrary.Models.Tbo;
 using Microsoft.Extensions.Logging;
 using Prism.Commands;
 using Prism.Mvvm;

@@ -2,7 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
-using AVF.MemberManagement.StandardLibrary.Models;
+using AVF.MemberManagement.StandardLibrary.Models.Tables;
+using AVF.MemberManagement.StandardLibrary.Models.Tbo;
 using Microsoft.Extensions.Logging;
 
 namespace AVF.MemberManagement.StandardLibrary.Proxies
@@ -11,6 +12,8 @@ namespace AVF.MemberManagement.StandardLibrary.Proxies
     {
         private readonly ILogger _logger;
         private readonly IPhpCrudApiService _phpCrudApiService;
+
+        private const string Uri = TblSettings.TableName;
 
         private List<Setting> _settingsCache;
 
@@ -29,7 +32,7 @@ namespace AVF.MemberManagement.StandardLibrary.Proxies
         {
             if (_settingsCache != null && !forceCacheReload) return _settingsCache;
 
-            _settingsCache = (await _phpCrudApiService.GetDataAsync<SettingsWrapper>("Settings")).Settings;
+            _settingsCache = (await _phpCrudApiService.GetDataAsync<TblSettings>(Uri)).Settings;
 
             _logger.LogInformation(_settingsCache.Count + " Settings loaded");
 

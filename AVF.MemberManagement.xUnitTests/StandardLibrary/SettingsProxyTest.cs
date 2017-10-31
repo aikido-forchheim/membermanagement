@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
-using AVF.MemberManagement.StandardLibrary.Models;
+using AVF.MemberManagement.StandardLibrary.Models.Tables;
 using AVF.MemberManagement.StandardLibrary.Proxies;
 using FakeItEasy;
 using Microsoft.Extensions.Logging;
@@ -26,8 +26,8 @@ namespace AVF.MemberManagement.xUnitTests.StandardLibrary
         {
             var fakePhpCrudApiService = A.Fake<IPhpCrudApiService>();
 
-            A.CallTo(() => fakePhpCrudApiService.GetDataAsync<SettingsWrapper>(A<string>.Ignored))
-                .Returns(Task.FromResult(JsonConvert.DeserializeObject<SettingsWrapper>(
+            A.CallTo(() => fakePhpCrudApiService.GetDataAsync<TblSettings>(A<string>.Ignored))
+                .Returns(Task.FromResult(JsonConvert.DeserializeObject<TblSettings>(
                     "{\"Settings\":[{\"Key\":\"HashAlgorithm\",\"Value\":\"SHA512\",\"Des\":\"HashAlgorithm used for password hashing\"},{\"Key\":\"Logo\",\"Value\":\"https://raw.githubusercontent.com/aikido-forchheim/assets/master/logo1024.jpg\",\"Des\":\"Vereinslogo\"}]}")));
             return fakePhpCrudApiService;
         }

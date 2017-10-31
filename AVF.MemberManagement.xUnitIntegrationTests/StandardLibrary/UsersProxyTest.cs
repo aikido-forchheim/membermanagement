@@ -17,7 +17,7 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary
 
             var serverUser = await usersProxy.GetUserAsync(userName);
 
-            Assert.True(serverUser != null && serverUser.UserId > 0);
+            Assert.True(serverUser != null && serverUser.Id > 0);
         }
 
         [Fact]

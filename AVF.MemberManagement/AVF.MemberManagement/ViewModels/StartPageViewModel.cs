@@ -1,6 +1,6 @@
 ﻿using Prism.Mvvm;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
-using AVF.MemberManagement.StandardLibrary.Models;
+using AVF.MemberManagement.StandardLibrary.Models.Tbo;
 using AVF.MemberManagement.StandardLibrary.Services;
 using Prism.Navigation;
 

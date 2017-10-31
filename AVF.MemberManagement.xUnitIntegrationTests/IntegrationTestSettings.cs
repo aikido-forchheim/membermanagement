@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Text;
 using AVF.MemberManagement.StandardLibrary.Models;
+using AVF.MemberManagement.StandardLibrary.Models.Tbo;
 using Newtonsoft.Json;
 
 namespace AVF.MemberManagement.xUnitIntegrationTests

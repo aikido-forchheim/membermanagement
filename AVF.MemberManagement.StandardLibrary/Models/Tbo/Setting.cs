@@ -1,4 +1,4 @@
-﻿namespace AVF.MemberManagement.StandardLibrary.Models
+﻿namespace AVF.MemberManagement.StandardLibrary.Models.Tbo
 {
     public class Setting
 	{

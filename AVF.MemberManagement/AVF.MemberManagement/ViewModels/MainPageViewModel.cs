@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Models;
+using AVF.MemberManagement.StandardLibrary.Models.Tbo;
 
 namespace AVF.MemberManagement.ViewModels
 {
@@ -246,7 +247,7 @@ namespace AVF.MemberManagement.ViewModels
 
         private void EnablePasswortBoxIfUsernameWasFoundOnServer(User serverUser)
         {
-            if (serverUser == null || serverUser.UserId == 0)
+            if (serverUser == null || serverUser.Id == 0)
             {
                 IsUsernameInDatabase = false;
                 ServerUser = null;
