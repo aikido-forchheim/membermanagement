@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Forms.VisualStyles;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Microsoft.Practices.Unity;
@@ -11,6 +12,32 @@ namespace AVF.MemberManagement.Console
     {
         public StundensatzKalkulator()
         {
+        }
+
+        public async Task Main2()
+        {
+            var trainings = await Program.Container.Resolve<IRepository<Training>>().GetAsync();
+            var mitglieder = await Program.Container.Resolve<IRepository<Mitglied>>().GetAsync();
+            var trainerErnennungen = await Program.Container.Resolve<IRepository<TrainerErnennung>>().GetAsync();
+            var stundensaetze = await Program.Container.Resolve<IRepository<Stundensatz>>().GetAsync();
+
+            var aktuelleTrainerStufen = from trainerErnennung in trainerErnennungen
+                group trainerErnennung by trainerErnennung.MitgliedID
+                into trainerErnennungenGroup
+                select new { MitgliedID = trainerErnennungenGroup.Key, AktuelleTrainerStufe = trainerErnennungenGroup.Min(t => t.StufeID)};
+
+            var x = from training in trainings
+                join trainerStufe in aktuelleTrainerStufen on training.Id equals trainerStufe.MitgliedID into
+                    trainerStufenDerTrainings
+                from trainerStufeDesTrainings in trainerStufenDerTrainings
+                join mitglied in mitglieder on trainerStufeDesTrainings.MitgliedID equals mitglied.Id
+                where training.Termin > new DateTime(2016, 01, 01) && training.Termin < new DateTime(2016, 02, 01)
+                select new { Dauer = training.DauerMinuten, trainerStufeDesTrainings.AktuelleTrainerStufe, Name = $"{mitglied.Vorname}{mitglied.Nachname}" };
+
+            //from trainingMitTrainerStufe in trainingsMitTrainerStufe
+            // join Mitglied in mitglieder on trainingMitTrainerStufe.
+            // where training.Termin > new DateTime(2016, 01, 01) && training.Termin < new DateTime(2016, 02, 01)
+            // select new { Training = training, TrainerErnennung = trainerErnennung };
         }
 
         public async Task Main()
