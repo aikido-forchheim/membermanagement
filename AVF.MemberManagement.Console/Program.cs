@@ -38,6 +38,7 @@ namespace AVF.MemberManagement.Console
                             break;
                         case 2:
                             new StundensatzKalkulator().Main().Wait();
+                            new StundensatzKalkulator().Main2().Wait();
                             break;
                     }
                 }

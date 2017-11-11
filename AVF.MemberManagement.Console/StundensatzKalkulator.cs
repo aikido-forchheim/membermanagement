@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms.VisualStyles;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
+using Microsoft.Practices.ObjectBuilder2;
 using Microsoft.Practices.Unity;
 
 namespace AVF.MemberManagement.Console
@@ -31,9 +32,13 @@ namespace AVF.MemberManagement.Console
                     trainerStufenDerTrainings
                 from trainerStufeDesTrainings in trainerStufenDerTrainings
                 join mitglied in mitglieder on trainerStufeDesTrainings.MitgliedID equals mitglied.Id
-                where training.Termin > new DateTime(2016, 01, 01) && training.Termin < new DateTime(2016, 02, 01)
-                select new { Dauer = training.DauerMinuten, trainerStufeDesTrainings.AktuelleTrainerStufe, Name = $"{mitglied.Vorname}{mitglied.Nachname}" };
+                //join stundensatz in stundensaetze on new { training.DauerMinuten, TrainerStufenID = 1 } equals new { stundensatz.Dauer, stundensatz.TrainerStufenID } into stds
+                join stundensatz in stundensaetze on training.DauerMinuten equals  stundensatz.Dauer
+                where training.Termin > new DateTime(2016, 01, 01) && training.Termin < new DateTime(2016, 02, 01) && stundensatz.TrainerStufenID == 1
+                select new { Dauer = training.DauerMinuten, trainerStufeDesTrainings.AktuelleTrainerStufe, Name = $"{mitglied.Vorname}{mitglied.Nachname}", stundensatz.Betrag };
 
+            x.ForEach(System.Console.WriteLine);
+            
             //from trainingMitTrainerStufe in trainingsMitTrainerStufe
             // join Mitglied in mitglieder on trainingMitTrainerStufe.
             // where training.Termin > new DateTime(2016, 01, 01) && training.Termin < new DateTime(2016, 02, 01)
