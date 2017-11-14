@@ -19,19 +19,19 @@ namespace AVF.MemberManagement.StandardLibrary.Archive
         {
         }
 
-        public async Task<User> GetUserAsync(string username)
-        {
-            //Make Users a cached repo and
-            //move this to repo
+        //public async Task<User> GetUserAsync(string username)
+        //{
+        //    //Make Users a cached repo and
+        //    //move this to repo
 
-            if (username == null) throw new ArgumentNullException(nameof(username));
+        //    //if (username == null) throw new ArgumentNullException(nameof(username));
 
-            var uri = $"{Uri}?filter=Username,eq,{username}";
+        //    //var uri = $"{Uri}?filter=Username,eq,{username}";
 
-            var foundUsers = (await _phpCrudApiService.GetDataAsync<TblUsers>(uri)).Rows;
+        //    //var foundUsers = (await _phpCrudApiService.GetDataAsync<TblUsers>(uri)).Rows;
 
-            return foundUsers.Any() ? foundUsers.Single() : null;
-        }
+        //    //return foundUsers.Any() ? foundUsers.Single() : null;
+        //}
     }
 }
 

@@ -11,7 +11,7 @@ namespace AVF.MemberManagement.StandardLibrary.Proxies
         private readonly string _uri;
 
         private readonly ILogger _logger;
-        public readonly IPhpCrudApiService _phpCrudApiService;
+        private readonly IPhpCrudApiService _phpCrudApiService;
 
         public ProxyBase(ILogger logger, IPhpCrudApiService phpCrudApiService)
         {

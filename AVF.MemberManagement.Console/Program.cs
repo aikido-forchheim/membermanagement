@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 using AVF.MemberManagement.xUnitIntegrationTests;
 using Microsoft.Practices.Unity;
 
@@ -17,7 +18,7 @@ namespace AVF.MemberManagement.Console
                 bootstrapper.Run();
 
                 Container = bootstrapper.Container;
-                
+
                 System.Console.Clear();
 
                 var input = 0;
@@ -26,6 +27,7 @@ namespace AVF.MemberManagement.Console
                     System.Console.WriteLine();
                     System.Console.WriteLine("1: Generate class prototypes");
                     System.Console.WriteLine("2: Stundensatz-Kalkulator");
+                    System.Console.WriteLine("3: Cache Database");
                     System.Console.WriteLine();
                     System.Console.Write("Please enter number and press ENTER: ");
 
@@ -38,6 +40,9 @@ namespace AVF.MemberManagement.Console
                             break;
                         case 2:
                             new StundensatzKalkulator().Main().Wait();
+                            break;
+                        case 3:
+                            new JsonDumper().Main().Wait();
                             break;
                     }
                 }
