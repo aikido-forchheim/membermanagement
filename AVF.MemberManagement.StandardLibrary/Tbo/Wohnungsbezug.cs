@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace AVF.MemberManagement.StandardLibrary.Tbo
 {
-    public class Wohnung : IIntId
+    public class Wohnungsbezug : IIntId
     {
         public const string PrimaryKey = "ID";
 
@@ -15,31 +15,19 @@ namespace AVF.MemberManagement.StandardLibrary.Tbo
             set;
         }
 
-        public string PLZ
+        public int MitgliedId
         {
             get;
             set;
         }
 
-        public string Ort
+        public int WohnungId
         {
             get;
             set;
         }
 
-        public string Strasse
-        {
-            get;
-            set;
-        }
-
-        public string Hausnummer
-        {
-            get;
-            set;
-        }
-
-        public decimal? Fahrtstrecke
+        public DateTime Datum
         {
             get;
             set;

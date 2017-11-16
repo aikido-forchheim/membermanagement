@@ -40,12 +40,6 @@ namespace AVF.MemberManagement.StandardLibrary.Tbo
             set;
         }
 
-        public int Wohnung
-        {
-            get;
-            set;
-        }
-
         public int BeitragsklasseID
         {
             get;
