@@ -133,7 +133,7 @@ namespace AVF.MemberManagement.StandardLibrary.Tbo
 
         public override string ToString()
         {
-            return string.Format("[Mitglied: Id={0}, Nachname={1}, Vorname={2}]", Id, Nachname, Vorname);
+            return $"[Mitglied: Id={Id}, Nachname={Nachname}, Vorname={Vorname}]";
         }
     }
 }

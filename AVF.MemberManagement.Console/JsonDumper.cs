@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Microsoft.Practices.Unity;
+using PCLStorage;
 
 namespace AVF.MemberManagement.Console
 {
@@ -18,6 +19,8 @@ namespace AVF.MemberManagement.Console
 
             foreach (var tboType in tboTypes)
             {
+                if (tboType.Name == "Setting") continue;
+
                 System.Console.WriteLine(tboType.Name);
 
                 var typeOfIProxy = typeof(IProxy<>);
@@ -29,9 +32,34 @@ namespace AVF.MemberManagement.Console
                 dynamic proxy = Program.Container.Resolve(genericIProxyType);
 
                 var data = await proxy.GetAsync();
+
+                var json = (string)Newtonsoft.Json.JsonConvert.SerializeObject(data);
+
+                var tboTypeName = tboType.Name;
+
+                await WriteJson(json, tboTypeName);
             }
+
+            var settingsProxy = Program.Container.Resolve<IProxyBase<Setting, string>>();
+
+            var settingsJson = Newtonsoft.Json.JsonConvert.SerializeObject(await settingsProxy.GetAsync());
+
+            await WriteJson(settingsJson, nameof(Setting));
         }
-        
+
+        private static async Task WriteJson(string json, string tboTypeName)
+        {
+            var localStorage = FileSystem.Current.LocalStorage;
+
+            var avfFolder = await localStorage.CreateFolderAsync("AVF",
+                CreationCollisionOption.OpenIfExists);
+
+            var jsonFile = await avfFolder.CreateFileAsync($"List{tboTypeName}.json",
+                CreationCollisionOption.ReplaceExisting);
+
+            await jsonFile.WriteAllTextAsync(json);
+        }
+
         private static IEnumerable<Type> GetTypesInNamespace(Assembly assembly, string nameSpace)
         {
             return assembly.GetTypes().Where(t => string.Equals(t.Namespace, nameSpace, StringComparison.Ordinal));
