@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq.Expressions;
+using AVF.MemberManagement.Factories;
 using AVF.MemberManagement.xUnitIntegrationTests;
 using Microsoft.Practices.Unity;
 
@@ -13,6 +15,9 @@ namespace AVF.MemberManagement.Console
         {
             try
             {
+                TraceListener[] listeners = { new TextWriterTraceListener(System.Console.Out) };
+                Debug.Listeners.AddRange(listeners);
+
                 var bootstrapper = new Bootstrapper();
 
                 bootstrapper.Run();
@@ -42,7 +47,7 @@ namespace AVF.MemberManagement.Console
                             new StundensatzKalkulator().Main().Wait();
                             break;
                         case 3:
-                            new JsonDumper().Main().Wait();
+                            new JsonDumper(Container).Main().Wait();
                             break;
                     }
                 }

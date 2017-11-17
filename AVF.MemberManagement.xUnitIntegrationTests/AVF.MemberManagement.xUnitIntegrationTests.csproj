@@ -239,6 +239,10 @@
       <Project>{06B2E0C1-3277-491C-9ABA-A53BBF260F6A}</Project>
       <Name>AVF.MemberManagement.StandardLibrary</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AVF.MemberManagement\AVF.MemberManagement\AVF.MemberManagement.csproj">
+      <Project>{5fbac065-134e-46ba-8181-c87e2d2af1af}</Project>
+      <Name>AVF.MemberManagement</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
