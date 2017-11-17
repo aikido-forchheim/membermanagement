@@ -1,5 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace AVF.MemberManagement.StandardLibrary.Converters
 {
@@ -27,7 +28,19 @@ namespace AVF.MemberManagement.StandardLibrary.Converters
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            throw new NotImplementedException();
+            JValue jValue;
+
+            if (value == null)
+            {
+                jValue = new JValue("0000-00-00T00:00:00");
+            }
+            else
+            {
+                var s = ((DateTime)value).ToString("s");
+                jValue = new JValue(s);
+            }
+
+            jValue.WriteTo(writer);
         }
     }
 }

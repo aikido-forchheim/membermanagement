@@ -1,5 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace AVF.MemberManagement.StandardLibrary.Converters
 {
@@ -12,22 +13,27 @@ namespace AVF.MemberManagement.StandardLibrary.Converters
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            int i = 0;
+            if (reader.TokenType != JsonToken.String) return false;
 
-            if (reader.TokenType == JsonToken.String)
-            {
-                if (int.TryParse(reader.Value.ToString(), out i))
-                {
-                    if (i > 0) return true;
-                }
-            }
+            if (!int.TryParse(reader.Value.ToString(), out var i)) return false;
 
-            return false;
+            return i > 0;
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            throw new NotImplementedException();
+            JValue jValue;
+
+            if ((bool) value)
+            {
+                jValue = new JValue("1");
+            }
+            else
+            {
+                jValue = new JValue("0");
+            }
+
+            jValue.WriteTo(writer);
         }
     }
 }

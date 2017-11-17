@@ -19,6 +19,8 @@ namespace AVF.MemberManagement.Console
 
             foreach (var tboType in tboTypes)
             {
+                if (tboType.Name == "Setting") continue;
+
                 System.Console.WriteLine(tboType.Name);
 
                 var typeOfIProxy = typeof(IProxy<>);
@@ -31,20 +33,33 @@ namespace AVF.MemberManagement.Console
 
                 var data = await proxy.GetAsync();
 
-                var json = (string) Newtonsoft.Json.JsonConvert.SerializeObject(data);
+                var json = (string)Newtonsoft.Json.JsonConvert.SerializeObject(data);
 
-                var localStorage = FileSystem.Current.LocalStorage;
+                var tboTypeName = tboType.Name;
 
-                var avfFolder = await localStorage.CreateFolderAsync("AVF",
-                    CreationCollisionOption.OpenIfExists);
-
-                var jsonFile = await avfFolder.CreateFileAsync($"List{tboType.Name}.json",
-                    CreationCollisionOption.ReplaceExisting);
-
-                await jsonFile.WriteAllTextAsync(json);
+                await WriteJson(json, tboTypeName);
             }
+
+            var settingsProxy = Program.Container.Resolve<IProxyBase<Setting, string>>();
+
+            var settingsJson = Newtonsoft.Json.JsonConvert.SerializeObject(await settingsProxy.GetAsync());
+
+            await WriteJson(settingsJson, nameof(Setting));
         }
-        
+
+        private static async Task WriteJson(string json, string tboTypeName)
+        {
+            var localStorage = FileSystem.Current.LocalStorage;
+
+            var avfFolder = await localStorage.CreateFolderAsync("AVF",
+                CreationCollisionOption.OpenIfExists);
+
+            var jsonFile = await avfFolder.CreateFileAsync($"List{tboTypeName}.json",
+                CreationCollisionOption.ReplaceExisting);
+
+            await jsonFile.WriteAllTextAsync(json);
+        }
+
         private static IEnumerable<Type> GetTypesInNamespace(Assembly assembly, string nameSpace)
         {
             return assembly.GetTypes().Where(t => string.Equals(t.Namespace, nameSpace, StringComparison.Ordinal));
