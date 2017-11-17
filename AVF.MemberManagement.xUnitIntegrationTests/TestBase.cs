@@ -8,7 +8,7 @@
 
         public TestBase()
         {
-            Bootstrapper = new Bootstrapper();
+            Bootstrapper = new Bootstrapper(false);
             Bootstrapper.Run();
         }
     }

@@ -28,8 +28,6 @@ namespace AVF.MemberManagement.GTK
             //window.Icon = Pixbuf.LoadFromResource("XamGtkExplorer.GTK.Application-icon.png");
             window.Show();
             Gtk.Application.Run();
-
-
         }
     }
 }
