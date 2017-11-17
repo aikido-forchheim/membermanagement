@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Microsoft.Practices.Unity;
+using PCLStorage;
 
 namespace AVF.MemberManagement.Console
 {
@@ -29,6 +30,18 @@ namespace AVF.MemberManagement.Console
                 dynamic proxy = Program.Container.Resolve(genericIProxyType);
 
                 var data = await proxy.GetAsync();
+
+                var json = (string) Newtonsoft.Json.JsonConvert.SerializeObject(data);
+
+                var localStorage = FileSystem.Current.LocalStorage;
+
+                var avfFolder = await localStorage.CreateFolderAsync("AVF",
+                    CreationCollisionOption.OpenIfExists);
+
+                var jsonFile = await avfFolder.CreateFileAsync($"List{tboType.Name}.json",
+                    CreationCollisionOption.ReplaceExisting);
+
+                await jsonFile.WriteAllTextAsync(json);
             }
         }
         
