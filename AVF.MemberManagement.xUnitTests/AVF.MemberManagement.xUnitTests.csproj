@@ -192,11 +192,14 @@
       <Project>{93E9105C-2EF5-4BEC-8402-8D497C4B034A}</Project>
       <Name>AVF.MemberManagement.StandardLibrary</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AVF.MemberManagement\AVF.MemberManagement\AVF.MemberManagement.csproj">
+      <Project>{5FBAC065-134E-46BA-8181-C87E2D2AF1AF}</Project>
+      <Name>AVF.MemberManagement</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <SsdtUnitTestVersion>3.1</SsdtUnitTestVersion>

@@ -17,7 +17,10 @@ namespace AVF.MemberManagement.StandardLibrary.Repositories
 
         public override async Task<List<T>> GetAsync()
         {
-            _cache = await base.GetAsync();
+            if (_cache.Count == 0)
+            {
+                _cache = await base.GetAsync();
+            }
             return _cache;
         }
 
