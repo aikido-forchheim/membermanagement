@@ -47,7 +47,7 @@ namespace AVF.MemberManagement.Console
                             new StundensatzKalkulator().Main().Wait();
                             break;
                         case 3:
-                            new JsonDumper(Container).Main().Wait();
+                            new JsonFileFactory(Container).RefreshFileCache().Wait();
                             break;
                     }
                 }

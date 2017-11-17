@@ -1,4 +1,5 @@
 using System;
+using AVF.MemberManagement.Factories;
 using AVF.MemberManagement.PortableLibrary.Services;
 using AVF.MemberManagement.StandardLibrary.Factories;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
@@ -61,6 +62,8 @@ namespace AVF.MemberManagement.xUnitIntegrationTests
                 //IPasswordService
                 _container.RegisterType<IPasswordService, PasswordService>(new ContainerControlledLifetimeManager());
                 
+                
+                _container.RegisterType<IJsonFileFactory, JsonFileFactory>(new ContainerControlledLifetimeManager());
                 
                 _repositoryBootstrapper.RegisterRepositories(_useFileProxies);
             }

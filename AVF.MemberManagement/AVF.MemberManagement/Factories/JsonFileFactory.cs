@@ -11,20 +11,22 @@ using PCLStorage;
 
 namespace AVF.MemberManagement.Factories
 {
-    public class JsonDumper
+    public class JsonFileFactory : IJsonFileFactory
     {
         private readonly IUnityContainer _container;
 
-        public JsonDumper(IUnityContainer container)
+        public JsonFileFactory(IUnityContainer container)
         {
             _container = container;
         }
 
-        public async Task Main()
+        public async Task<List<IFile>> RefreshFileCache()
         {
             // ReSharper disable once RedundantNameQualifier => We need to get the FullName of the Tbo namespace, with typeof(....Test).Namespace we get the correct ns even if we ever rename it.
             var tboTypes = GetTypesInNamespace(typeof(Beitragsklasse).GetTypeInfo().Assembly, typeof(AVF.MemberManagement.StandardLibrary.Tbo.Test).Namespace);
 
+            var writtenFiles = new List<IFile>();
+            
             foreach (var tboType in tboTypes)
             {
                 if (tboType.Name == "Setting") continue;
@@ -45,17 +47,25 @@ namespace AVF.MemberManagement.Factories
 
                 var tboTypeName = tboType.Name;
 
-                await WriteJson(json, tboTypeName);
+                var file = await WriteJson(json, tboTypeName);
+                
+                writtenFiles.Add(file);
             }
+            
 
             var settingsProxy = _container.Resolve<IProxyBase<Setting, string>>();
 
             var settingsJson = Newtonsoft.Json.JsonConvert.SerializeObject(await settingsProxy.GetAsync());
 
-            await WriteJson(settingsJson, nameof(Setting));
+            var settingsFile = await WriteJson(settingsJson, nameof(Setting));
+            
+            writtenFiles.Add(settingsFile);
+
+
+            return writtenFiles;
         }
 
-        private static async Task WriteJson(string json, string tboTypeName)
+        private static async Task<IFile> WriteJson(string json, string tboTypeName)
         {
             var localStorage = FileSystem.Current.LocalStorage;
 
@@ -66,6 +76,8 @@ namespace AVF.MemberManagement.Factories
                 CreationCollisionOption.ReplaceExisting);
 
             await jsonFile.WriteAllTextAsync(json);
+
+            return jsonFile;
         }
 
         private static IEnumerable<Type> GetTypesInNamespace(Assembly assembly, string nameSpace)

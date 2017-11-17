@@ -1,4 +1,7 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Net;
+using System.Threading.Tasks;
+using AVF.MemberManagement.Factories;
 using AVF.MemberManagement.PortableLibrary.Services;
 using AVF.MemberManagement.Services;
 using AVF.MemberManagement.StandardLibrary.Archive;
@@ -61,12 +64,25 @@ namespace AVF.MemberManagement
             //IPasswordService
             Container.RegisterType<IPasswordService, PasswordService>(new ContainerControlledLifetimeManager());
 
+            
+            Container.RegisterType<IJsonFileFactory, JsonFileFactory>(new ContainerControlledLifetimeManager());
+                
             _repositoryBootstrapper.RegisterRepositories(false);
+            
+            //RefreshCache().Wait();
 
             Container.RegisterTypeForNavigation<MainPage>();
             Container.RegisterTypeForNavigation<RestApiSettingsPage>();
             Container.RegisterTypeForNavigation<PasswordPage>();
             Container.RegisterTypeForNavigation<StartPage>();
+        }
+
+        private async Task RefreshCache()
+        {
+            var factory = Container.Resolve<IJsonFileFactory>();
+            var fileList = await factory.RefreshFileCache();
+            
+            Debug.WriteLine("Cached files count:" + fileList.Count);
         }
 
         //protected override void OnStart()
