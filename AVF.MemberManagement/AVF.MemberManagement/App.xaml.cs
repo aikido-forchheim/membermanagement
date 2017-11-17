@@ -20,13 +20,12 @@ namespace AVF.MemberManagement
 {
     public partial class App : PrismApplication
     {
-        private readonly RepositoryBootstrapper _repositoryBootstrapper;
+        private RepositoryBootstrapper _repositoryBootstrapper;
 
         public const string AppId = "10bc9068-17ac-4f0f-a596-7fdfe20bc9f4";
 
         public App(IPlatformInitializer initializer = null) : base(initializer)
         {
-            _repositoryBootstrapper = new RepositoryBootstrapper(Container);
         }
 
         protected override void OnInitialized()
@@ -38,6 +37,8 @@ namespace AVF.MemberManagement
 
         protected override void RegisterTypes()
         {
+            _repositoryBootstrapper = new RepositoryBootstrapper(Container);
+
             //ILogger
             ILoggerFactory loggerFactory = new LoggerFactory();
             ILogger logger = loggerFactory.CreateLogger<App>();
