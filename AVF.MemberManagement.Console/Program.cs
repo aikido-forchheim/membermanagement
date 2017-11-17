@@ -18,7 +18,7 @@ namespace AVF.MemberManagement.Console
                 TraceListener[] listeners = { new TextWriterTraceListener(System.Console.Out) };
                 Debug.Listeners.AddRange(listeners);
 
-                var bootstrapper = new Bootstrapper();
+                var bootstrapper = new Bootstrapper(false);
 
                 bootstrapper.Run();
 

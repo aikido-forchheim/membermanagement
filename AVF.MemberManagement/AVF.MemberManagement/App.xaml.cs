@@ -61,7 +61,7 @@ namespace AVF.MemberManagement
             //IPasswordService
             Container.RegisterType<IPasswordService, PasswordService>(new ContainerControlledLifetimeManager());
 
-            _repositoryBootstrapper.RegisterRepositories();
+            _repositoryBootstrapper.RegisterRepositories(false);
 
             Container.RegisterTypeForNavigation<MainPage>();
             Container.RegisterTypeForNavigation<RestApiSettingsPage>();

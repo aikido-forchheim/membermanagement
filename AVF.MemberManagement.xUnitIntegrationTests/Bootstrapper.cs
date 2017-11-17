@@ -16,12 +16,16 @@ namespace AVF.MemberManagement.xUnitIntegrationTests
 {
     public class Bootstrapper : UnityBootstrapper
     {
+        private readonly bool _useFileProxies;
+
         private readonly IUnityContainer _container;
 
         private readonly RepositoryBootstrapper _repositoryBootstrapper;
 
-        public Bootstrapper()
+        public Bootstrapper(bool useFileProxies)
         {
+            _useFileProxies = useFileProxies;
+
             _container = new UnityContainer();
 
             Container = _container;
@@ -58,8 +62,7 @@ namespace AVF.MemberManagement.xUnitIntegrationTests
                 _container.RegisterType<IPasswordService, PasswordService>(new ContainerControlledLifetimeManager());
                 
                 
-                _repositoryBootstrapper.RegisterRepositories();
-                
+                _repositoryBootstrapper.RegisterRepositories(_useFileProxies);
             }
             catch (Exception e)
             {

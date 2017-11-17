@@ -6,14 +6,10 @@ using Microsoft.Extensions.Logging;
 
 namespace AVF.MemberManagement.Proxies
 {
-    public class FileProxy<TTbl, T> : ProxyBase<TTbl, T, int>, IProxy<T>
+    public class FileProxy<TTbl, T> : FileProxyBase<TTbl, T, int>, IProxy<T>
         where TTbl : ITable<T>, new()
         where T : IIntId
     {
-        public FileProxy(ILogger logger, IPhpCrudApiService phpCrudApiService) : base(logger, phpCrudApiService)
-        {
-        }
-
         public Task<string> UpdateAsync(T obj)
         {
             throw new NotImplementedException();
