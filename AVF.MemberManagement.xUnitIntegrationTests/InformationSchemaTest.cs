@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using Microsoft.Practices.Unity;
 using Xunit;
@@ -8,14 +9,18 @@ namespace AVF.MemberManagement.xUnitIntegrationTests
     public class InformationSchemaTest : TestBase
     {
         [Fact]
-        public async void ReadInformationSchemaTest()
+        public async void CountTablesViaInformationSchemaTest()
         {
             var phpCrudApiService = Bootstrapper.Container.Resolve<IPhpCrudApiService>();
             var tableObjectGenerator = Bootstrapper.Container.Resolve<ITableObjectGenerator>();
 
-            var tablesNames = await tableObjectGenerator.GetTableNames(phpCrudApiService);
+            var tablesAndViewList = await tableObjectGenerator.GetTableNames(phpCrudApiService);
 
-            Assert.True(tablesNames.Count == 19);
+            var viewNames = new[] { "tables", "Test" };
+
+            var tableNames = tablesAndViewList.Where(t => !viewNames.Contains(t)).ToList();
+
+            Assert.True(tableNames.Count == 18);
         }
 
         [Fact]
