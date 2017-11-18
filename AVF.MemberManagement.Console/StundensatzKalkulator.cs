@@ -42,7 +42,29 @@ namespace AVF.MemberManagement.Console
                 else
                     System.Console.Write($"                           ");
 
-                System.Console.Write($"{trainerNr}. Trainer, {trainer.Nachname, -10} {trainer.Vorname, -9}({trainerId, 3}), Stufe {trainerstufe}, {verguetung, 5}" );
+                System.Console.Write($"{trainerNr}. Trainer, {trainer.Nachname,-10} {trainer.Vorname,-9}({trainerId,3}), Stufe {trainerstufe}, ");
+                if (training.DauerMinuten == 120)
+                {
+                    System.Console.Write($"UKZ ");
+
+                }
+                else if (training.DauerMinuten == 105)
+                {
+                    System.Console.Write($"UM  ");
+
+                }
+                else if ( trainerNr > 1 )
+                {
+                    System.Console.Write($"UKZ ");
+
+                }
+                else
+                {
+                    System.Console.Write($"UK ");
+
+                }
+
+                System.Console.Write($"{verguetung, 5}" );
 
                 if ( training.Kindertraining )
                 {
