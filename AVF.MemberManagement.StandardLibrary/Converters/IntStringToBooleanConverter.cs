@@ -1,9 +1,10 @@
 ﻿using System;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace AVF.MemberManagement.StandardLibrary.Converters
 {
-    public class DateTimeStringToNullableDateTimeConverter : JsonConverter
+    public class IntStringToBooleanConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType)
         {
@@ -12,22 +13,27 @@ namespace AVF.MemberManagement.StandardLibrary.Converters
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            DateTime dt = DateTime.MinValue;
+            if (reader.TokenType != JsonToken.String) return false;
 
-            if (reader.TokenType == JsonToken.String)
-            {
-                if (DateTime.TryParse(reader.Value.ToString(), out dt))
-                {
-                    return dt;
-                }
-            }
+            if (!int.TryParse(reader.Value.ToString(), out var i)) return false;
 
-            return null;
+            return i > 0;
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            throw new NotImplementedException();
+            JValue jValue;
+
+            if ((bool) value)
+            {
+                jValue = new JValue("1");
+            }
+            else
+            {
+                jValue = new JValue("0");
+            }
+
+            jValue.WriteTo(writer);
         }
     }
 }

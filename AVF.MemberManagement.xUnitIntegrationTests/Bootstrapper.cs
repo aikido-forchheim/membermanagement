@@ -1,4 +1,5 @@
 using System;
+using AVF.MemberManagement.Factories;
 using AVF.MemberManagement.PortableLibrary.Services;
 using AVF.MemberManagement.StandardLibrary.Factories;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
@@ -16,39 +17,55 @@ namespace AVF.MemberManagement.xUnitIntegrationTests
 {
     public class Bootstrapper : UnityBootstrapper
     {
+        private readonly bool _useFileProxies;
+
+        private readonly IUnityContainer _container;
+
+        private readonly RepositoryBootstrapper _repositoryBootstrapper;
+
+        public Bootstrapper(bool useFileProxies)
+        {
+            _useFileProxies = useFileProxies;
+
+            _container = new UnityContainer();
+
+            Container = _container;
+
+            _repositoryBootstrapper = new RepositoryBootstrapper(_container);
+        }
+
         public override void Run(bool runWithDefaultConfiguration)
         {
             try
             {
-                Container = new UnityContainer();
-                
                 //ILogger
                 var fakeLogger = A.Fake<ILogger>();
-                Container.RegisterInstance(fakeLogger);
+                _container.RegisterInstance(fakeLogger);
                 
                 //IAccountService
-                Container.RegisterInstance(IntegrationTestSettings.Get());
+                _container.RegisterInstance(IntegrationTestSettings.Get());
                 var fakeAccountService = A.Fake<IAccountService>();
-                var restApiAccount = Container.Resolve<IntegrationTestSettings>().RestApiAccount;
+                var restApiAccount = _container.Resolve<IntegrationTestSettings>().RestApiAccount;
                 A.CallTo(() => fakeAccountService.RestApiAccount).Returns(restApiAccount);
-                Container.RegisterInstance(fakeAccountService);
+                _container.RegisterInstance(fakeAccountService);
                 
                 //ITableObjectGenerator
-                Container.RegisterType<ITableObjectGenerator, TableObjectGenerator>();
+                _container.RegisterType<ITableObjectGenerator, TableObjectGenerator>();
                 
                 //ITokenService
-                Container.RegisterType<ITokenService, TokenService>(new ContainerControlledLifetimeManager());
-                Container.Resolve<IAccountService>().Init(Container.Resolve<IntegrationTestSettings>().RestApiAccount);
+                _container.RegisterType<ITokenService, TokenService>(new ContainerControlledLifetimeManager());
+                _container.Resolve<IAccountService>().Init(_container.Resolve<IntegrationTestSettings>().RestApiAccount);
                 
                 //IPhpCrudApiService
-                Container.RegisterType<IPhpCrudApiService, PhpCrudApiService>(new ContainerControlledLifetimeManager());
+                _container.RegisterType<IPhpCrudApiService, PhpCrudApiService>(new ContainerControlledLifetimeManager());
 
                 //IPasswordService
-                Container.RegisterType<IPasswordService, PasswordService>(new ContainerControlledLifetimeManager());
+                _container.RegisterType<IPasswordService, PasswordService>(new ContainerControlledLifetimeManager());
                 
                 
-                RegisterRepositories();
+                _container.RegisterType<IJsonFileFactory, JsonFileFactory>(new ContainerControlledLifetimeManager());
                 
+                _repositoryBootstrapper.RegisterRepositories(_useFileProxies);
             }
             catch (Exception e)
             {

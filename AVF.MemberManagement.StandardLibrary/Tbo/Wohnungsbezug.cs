@@ -27,7 +27,7 @@ namespace AVF.MemberManagement.StandardLibrary.Tbo
             set;
         }
 
-        public DateTime Datum
+        public DateTime? Datum
         {
             get;
             set;

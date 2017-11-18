@@ -117,8 +117,15 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary.Repositorie
         [Fact]
         public async void Wohungen()
         {
-            var wohungen = await Bootstrapper.Container.Resolve<IRepository<Wohnung>>().GetAsync();
-            Assert.True(wohungen.Count > 0);
+            var wohnungen = await Bootstrapper.Container.Resolve<IRepository<Wohnung>>().GetAsync();
+            Assert.True(wohnungen.Count > 0);
+        }
+
+        [Fact]
+        public async void Wohnungsbezug()
+        {
+            var wohnungsbezug = await Bootstrapper.Container.Resolve<IRepository<Wohnungsbezug>>().GetAsync();
+            Assert.True(wohnungsbezug.Count > 0);
         }
 
         [Fact]
