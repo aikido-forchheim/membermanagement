@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -21,9 +22,21 @@ namespace AVF.MemberManagement.Console
         List<TrainerStufe>           m_trainerStufe;
         List<Wohnung>                m_wohnung;
         List<Wohnungsbezug>          m_wohnungsbezug;
+        List<Wochentag>              m_wochentag;
 
-        decimal[] m_decVerguetung;
-        decimal[] m_decFahrtkosten;
+        struct TrainerVerguetung
+        {
+            public decimal decVerguetung;
+            public decimal decFahrtkosten;
+            public int UL_counter;
+            public int UM_counter;
+            public int UK_counter;
+            public int UKZ_counter;
+        };
+
+        TrainerVerguetung[] m_aTrData;
+
+        System.IO.StreamWriter m_ofile;
 
         private void addTrainerVerguetung( Training training, int? trainerId, int trainerNr )
         {
@@ -33,49 +46,50 @@ namespace AVF.MemberManagement.Console
                 var trainerstufe = ernennungen.Any() ? ernennungen.Max(t => t.StufeID) : 1;
                 var stufenName   = m_trainerStufe.Single(s => (s.Id == trainerstufe)).Bezeichnung;
                 var stundensatz  = m_stundensaetze.Single(s => ( s.TrainerStufenID == trainerstufe) && (s.TrainerNummer == trainerNr) && (s.Dauer == training.DauerMinuten) );
-                var trainer      = m_mitglieder.Single(m => m.Id == trainerId);
+                var trainer      = m_mitglieder.Single(s => s.Id == trainerId);
+                var wochentag    = m_wochentag.Single(s => s.Id == training.WochentagID);
 
                 decimal verguetung = stundensatz.Betrag;
 
-                if ( trainerNr == 1 )
-                    System.Console.Write($"{training.Termin:yyyy-MM-dd} {training.Zeit:hh}:{training.Zeit:mm}, {training.DauerMinuten,3} min, ");
-                else
-                    System.Console.Write($"                           ");
+ //               if ( trainerNr == 1 )
+                    m_ofile.Write($"{training.Termin:yyyy-MM-dd} {wochentag.Bezeichnung, -10} {training.Zeit:hh}:{training.Zeit:mm}, {training.DauerMinuten,3} min, ");
+ //               else
+ //                   m_ofile.Write($"                                      ");
 
-                System.Console.Write($"{trainerNr}. Trainer, {trainer.Nachname,-10} {trainer.Vorname,-9}({trainerId,3}), Stufe {trainerstufe}, ");
+                m_ofile.Write($"{trainerNr}. Trainer, {trainer.Nachname,-10} {trainer.Vorname,-9}({trainerId,3}), Stufe {trainerstufe}, ");
                 if (training.DauerMinuten == 120)
                 {
-                    System.Console.Write($"UKZ ");
-
+                    m_ofile.Write($"UL  ");
+                    ++ m_aTrData[trainerId.Value].UL_counter;
                 }
                 else if (training.DauerMinuten == 105)
                 {
-                    System.Console.Write($"UM  ");
-
+                    m_ofile.Write($"UM  ");
+                    ++m_aTrData[trainerId.Value].UM_counter;
                 }
-                else if ( trainerNr > 1 )
+                else if ( trainerNr == 1 )
                 {
-                    System.Console.Write($"UKZ ");
-
+                    m_ofile.Write($"UK  ");
+                    ++m_aTrData[trainerId.Value].UK_counter;
                 }
                 else
                 {
-                    System.Console.Write($"UK ");
-
+                    m_ofile.Write($"UKZ ");
+                    ++m_aTrData[trainerId.Value].UKZ_counter;
                 }
 
-                System.Console.Write($"{verguetung, 5}" );
+                m_ofile.Write($"{verguetung, 5}" );
 
                 if ( training.Kindertraining )
                 {
                     var zuschlag = m_zuschlagKinderTraining.Single( s => (s.Trainernummer == trainerNr) && (s.Dauer == training.DauerMinuten) );
-                    System.Console.Write( $" + {zuschlag.Betrag, 4}" );
+                    m_ofile.Write( $" + {zuschlag.Betrag, 4}" );
                     verguetung += zuschlag.Betrag;
                 }
                 else
-                    System.Console.Write( $"       ");
+                    m_ofile.Write( $"       ");
 
-                System.Console.Write( $" = { verguetung, 5 }" );
+                m_ofile.Write( $" = { verguetung, 5 }" );
 
                 var wohnungsbezug = m_wohnungsbezug.Where(t => (t.MitgliedId == trainerId) && ((t.Datum == null) || (t.Datum <= training.Termin)));
                 if ( wohnungsbezug.Any() )
@@ -87,12 +101,12 @@ namespace AVF.MemberManagement.Console
                     if (wohnung.Fahrtstrecke.HasValue)
                     {
                         decimal FKZ = Decimal.Round( wohnung.Fahrtstrecke.Value * 0.17M, 2 );
-                        System.Console.Write($", FKZ = { FKZ,5 }");
-                        m_decFahrtkosten[trainerId.Value] += FKZ;
+                        m_ofile.Write($", FKZ = { FKZ,5 }");
+                        m_aTrData[trainerId.Value].decFahrtkosten += FKZ;
                     }
                 }
-                m_decVerguetung[trainerId.Value] += verguetung;
-                System.Console.WriteLine();
+                m_aTrData[trainerId.Value].decVerguetung += verguetung;
+                m_ofile.WriteLine();
             }
         }
 
@@ -106,12 +120,14 @@ namespace AVF.MemberManagement.Console
             m_trainerStufe           = await Program.Container.Resolve < IRepository < TrainerStufe>            > ().GetAsync();
             m_wohnung                = await Program.Container.Resolve < IRepository < Wohnung >                > ().GetAsync();
             m_wohnungsbezug          = await Program.Container.Resolve < IRepository < Wohnungsbezug >          > ().GetAsync();
+            m_wochentag              = await Program.Container.Resolve < IRepository < Wochentag>               > ().GetAsync();
 
             int iArraySize = m_mitglieder.Max(t => t.Id) + 1;
 
-            m_decVerguetung  = new decimal[iArraySize];
-            m_decFahrtkosten = new decimal[iArraySize];
+            m_aTrData = new TrainerVerguetung[iArraySize];
 
+            m_ofile = new System.IO.StreamWriter( @"Trainerverguetung.txt" );
+            
             DateTime periodStart = new DateTime(2016, 1, 1);
             DateTime periodEnd   = new DateTime(2016, 12, 31);
 
@@ -124,7 +140,37 @@ namespace AVF.MemberManagement.Console
                 addTrainerVerguetung(training, training.Kotrainer2, 3);
             }
 
-            System.Console.WriteLine();
+            m_ofile.WriteLine();
+
+            foreach (var mitglied in m_mitglieder)
+            {
+                if (mitglied.Id >= 0)
+                {
+                    if (m_aTrData[mitglied.Id].decVerguetung > 0)
+                    {
+                        m_ofile.WriteLine($"{ mitglied.Nachname, -10 } { mitglied.Vorname, -10 } ({ mitglied.Id, 3 })");
+                        if (m_aTrData[mitglied.Id].UL_counter > 0)
+                        {
+                            m_ofile.WriteLine($"{ m_aTrData[mitglied.Id].UL_counter } UL  ");
+                        }
+                        if (m_aTrData[mitglied.Id].UM_counter > 0)
+                        {
+                            m_ofile.WriteLine($"{ m_aTrData[mitglied.Id].UM_counter } UM  ");
+                        }
+                        if (m_aTrData[mitglied.Id].UK_counter > 0)
+                        {
+                            m_ofile.WriteLine($"{ m_aTrData[mitglied.Id].UK_counter } UK  ");
+                        }
+                        if (m_aTrData[mitglied.Id].UKZ_counter > 0)
+                        {
+                            m_ofile.WriteLine($"{ m_aTrData[mitglied.Id].UKZ_counter } UKZ ");
+                        }
+                    }
+                }
+            }
+
+            m_ofile.WriteLine();
+
 
             decimal summeUnterricht = 0;
             decimal summeFKZ        = 0;
@@ -132,22 +178,24 @@ namespace AVF.MemberManagement.Console
             {
                 if ( mitglied.Id >= 0 )
                 {
-                    decimal betrag = m_decVerguetung[mitglied.Id];
-                    decimal FKZ    = m_decFahrtkosten[mitglied.Id];
+                    decimal betrag = m_aTrData[mitglied.Id].decVerguetung;
+                    decimal FKZ    = m_aTrData[mitglied.Id].decFahrtkosten;
 
                     if (betrag > 0)
                     {
-                        System.Console.WriteLine($"{ mitglied.Nachname, -10 } { mitglied.Vorname, -10 } ({ mitglied.Id, 3 }): Unterricht: { betrag, 8 }, FKZ: { FKZ, 8 } ");
+                        m_ofile.WriteLine($"{ mitglied.Nachname, -10 } { mitglied.Vorname, -10 } ({ mitglied.Id, 3 }): Unterricht: { betrag, 8 }, FKZ: { FKZ, 8 } ");
                         summeUnterricht += betrag;
                         summeFKZ += FKZ;
                     }
                 }
             }
 
-            System.Console.WriteLine();
-            System.Console.WriteLine($"Insgesamt Unterricht: { summeUnterricht,            8 }");
-            System.Console.WriteLine($"Insgesamt FKZ       : { summeFKZ,                   8 }");
-            System.Console.WriteLine($"Gesamtsumme         : { summeUnterricht + summeFKZ, 8 }");
+            m_ofile.WriteLine();
+            m_ofile.WriteLine($"Insgesamt Unterricht: { summeUnterricht,            8 }");
+            m_ofile.WriteLine($"Insgesamt FKZ       : { summeFKZ,                   8 }");
+            m_ofile.WriteLine($"Gesamtsumme         : { summeUnterricht + summeFKZ, 8 }");
+
+            m_ofile.Close();
         }
     }
 }
