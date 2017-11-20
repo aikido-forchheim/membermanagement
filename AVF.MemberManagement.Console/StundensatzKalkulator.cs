@@ -32,6 +32,8 @@ namespace AVF.MemberManagement.Console
 
         private TrainerVerguetung[] m_aTrData;
 
+        // table access functions
+
         private int TrainerLevel( int? trainerId, DateTime termin )  // calculates level (Vereinstrainer, Lehrer ...) of a trainer at a given date
         {
             var ernennungen = m_trainerErnennungen.Where(t => (t.MitgliedID == trainerId) && ((t.Datum == null) || (t.Datum <= termin)));
@@ -60,29 +62,23 @@ namespace AVF.MemberManagement.Console
             return 0;
         }
 
-        private decimal? Distance( int? idMitglied, DateTime termin )
+        private decimal TravelExpenses(int? idMitglied, DateTime termin)
         {
             var wohnungsbezug = m_wohnungsbezug.Where(t => (t.MitgliedId == idMitglied) && ((t.Datum == null) || (t.Datum <= termin)));
             if (wohnungsbezug.Any())
             {
                 var letzterUmzug = wohnungsbezug.Max(t => t.Datum);
-                var wohnungId = wohnungsbezug.Single(s => (s.Datum == letzterUmzug)).WohnungId;
-                var wohnung = m_wohnung.Single(s => (s.Id == wohnungId));
+                var wohnungId    = wohnungsbezug.Single(s => (s.Datum == letzterUmzug)).WohnungId;
+                var wohnung      = m_wohnung.Single(s => (s.Id == wohnungId));
                 if (wohnung.Fahrtstrecke.HasValue)
-                    return wohnung.Fahrtstrecke.Value;
-            }
-            return null;
-        }
-
-        private decimal TravelExpenses(int? idMitglied, DateTime termin)
-        {
-            decimal? fahrtstrecke = Distance( idMitglied, termin );
-            if (fahrtstrecke.HasValue)
-            {
-                return Decimal.Round(fahrtstrecke.Value * 0.17M, 2);
+                {
+                    return Decimal.Round(wohnung.Fahrtstrecke.Value * 0.17M, 2);
+                }
             }
             return 0;
         }
+
+        // basic output functions
 
         private void WriteTraining(System.IO.StreamWriter ofile, Training training)
         {
@@ -94,77 +90,137 @@ namespace AVF.MemberManagement.Console
             ofile.Write($"{ mitglied.Nachname,-10 } { mitglied.Vorname,-10 } ({ mitglied.Id,3 }) ");
         }
 
-        private void AddTrainerVerguetung( System.IO.StreamWriter ofile, Training training, int? trainerId, int trainerNr )
+        private void WriteAmount(System.IO.StreamWriter ofile, string prefix, decimal amount)
         {
+            string s = $"{prefix} { amount,7 } € ";
+
+            if (amount > 0)
+            {
+                ofile.Write( s );
+            }
+            else
+            {
+                for (int i = 0; i < s.Length; ++i)
+                    ofile.Write($" ");
+            }
+        }
+
+        private void WriteSum(System.IO.StreamWriter ofile, decimal amount1,  decimal amount2 )
+        {
+            WriteAmount(ofile, " ", amount1);
+            WriteAmount(ofile, "+", amount2);
+            WriteAmount(ofile, "=", amount1 + amount2);
+        }
+
+        // helper functions
+
+        private int? TrainerIdFromNr(Training training, int trainerNr )
+        {
+            switch ( trainerNr )
+            {
+                case 1: return training.Trainer;
+                case 2: return training.Kotrainer1;
+                case 3: return training.Kotrainer2;
+                default:
+                    // throw exception
+                    return null;
+            }
+        }
+
+        private decimal HandleTrainerFee( System.IO.StreamWriter ofile, Training training, int? trainerId, int trainerNr )
+        {
+            if (training.VHS)
+            {
+                ofile.Write($" -------- VHS --------  ");
+                return 0;
+            }
+            else
+            {
+                var     trainerstufe           = TrainerLevel(trainerId, training.Termin);
+                decimal grundVerguetung        = TrainingAward(trainerstufe, training.DauerMinuten, trainerNr);
+                decimal zuschlagKinderTraining = ExtraAmount(training, trainerNr);
+                decimal gesamtVerguetung       = grundVerguetung + zuschlagKinderTraining;
+
+                ofile.Write($" Stufe {trainerstufe}, ");
+                WriteSum(ofile, grundVerguetung, zuschlagKinderTraining);
+
+                return gesamtVerguetung;
+            }
+        }
+
+        private void AddTrainerVerguetung
+        ( 
+            System.IO.StreamWriter ofile, 
+            Training               training, 
+            int                    trainerNr,
+            bool                   writeMitglied
+        )
+        {
+            int? trainerId = TrainerIdFromNr(training, trainerNr);
+
             if ( ! trainerId.HasValue ) return;
             if (   trainerId < 0 )      return;
 
             WriteTraining( ofile, training );
 
+            if ( writeMitglied )
+                WriteMitglied( ofile, m_mitglieder.Single(s => s.Id == trainerId) );
+
             ofile.Write( $"{trainerNr}. Trainer, " );
 
-            var trainerstufe = TrainerLevel(trainerId, training.Termin);
+            decimal trainerFee  = HandleTrainerFee(ofile, training, trainerId, trainerNr);    // Vergütung für Unterrichtstätigkeit
+            decimal fahrtKosten = TravelExpenses(trainerId, training.Termin);                 // Fahrtkosten
 
-            WriteMitglied( ofile, m_mitglieder.Single(s => s.Id == trainerId));
-            ofile.Write($" Stufe {trainerstufe}, ");
-
-            decimal summe = 0;
-
-            // Vergütung für Unterrichtstätigkeit
-
-            if ( training.VHS )
-            {
-                ofile.Write($" -------- VHS --------  ");
-            }
-            else
-            {
-                decimal grundVerguetung        = TrainingAward( trainerstufe, training.DauerMinuten, trainerNr );
-                decimal zuschlagKinderTraining = ExtraAmount  ( training, trainerNr );
-                decimal gesamtVerguetung       = grundVerguetung + zuschlagKinderTraining;
-
-                m_aTrData[trainerId.Value].decVerguetung += gesamtVerguetung;
-                summe += gesamtVerguetung;
-
-                ofile.Write($"{ grundVerguetung,5 }€");
-                if (zuschlagKinderTraining > 0 )
-                    ofile.Write($" + { zuschlagKinderTraining, 4 }€");
-                else
-                    ofile.Write($"        ");
-                ofile.Write($" = { gesamtVerguetung,5 }€ ");
-            }
-
-            // Fahrtkosten
-
-            decimal fahrtKosten = TravelExpenses(trainerId, training.Termin);
-
+            m_aTrData[trainerId.Value].decVerguetung += trainerFee;
             m_aTrData[trainerId.Value].decFahrtkosten += fahrtKosten;
-            summe += fahrtKosten;
 
-            if ( fahrtKosten > 0 )
-                ofile.Write($"FKZ = { fahrtKosten, 5 }€");
-            else
-                ofile.Write($" ?????????? ");
+            WriteAmount(ofile, " ", fahrtKosten);
 
-            ofile.Write($"  Summe = { summe, 5 }€");
+            WriteAmount(ofile, "  Summe ", trainerFee + fahrtKosten);
             ofile.WriteLine();
         }
 
-        private void GatherData( System.IO.StreamWriter ofile )
+        private void CreateIndividualAccount( Mitglied trainer, List<Training> trainings )
         {
-            DateTime periodStart = new DateTime(2016, 1, 1);
-            DateTime periodEnd = new DateTime(2016, 12, 31);
+            string fileName = $"{ trainer.Nachname }_{ trainer.Vorname }.txt  ";
 
-            var trainingsInPeriod = m_trainings.Where(training => training.Termin > periodStart && training.Termin < periodEnd).ToList();
+            System.IO.StreamWriter ofile = new System.IO.StreamWriter( fileName );
 
-            foreach (var training in trainingsInPeriod)
+            foreach (var training in trainings)
             {
-                AddTrainerVerguetung( ofile, training, training.Trainer,    1 );
-                AddTrainerVerguetung( ofile, training, training.Kotrainer1, 2 );
-                AddTrainerVerguetung( ofile, training, training.Kotrainer2, 3 );
+                for ( int trainerNr = 1; trainerNr <= 3; ++trainerNr )
+                    if ( (trainer == null) || (TrainerIdFromNr(training, trainerNr) == trainer.Id) )
+                        AddTrainerVerguetung( ofile, training, trainerNr, false );
+            }
+
+            decimal unterricht = m_aTrData[trainer.Id].decVerguetung;
+            decimal fahrtKosten = m_aTrData[trainer.Id].decFahrtkosten;
+
+            ofile.WriteLine($"Unterricht   FKZ      Summe");
+            ofile.WriteLine();
+
+            WriteSum(ofile, unterricht, fahrtKosten);
+
+            ofile.WriteLine();
+            ofile.Close();
+        }
+
+        private void SettlePeriod
+        ( 
+            System.IO.StreamWriter ofile, 
+            Mitglied               trainer,                       // null means: no specific trainer, do for all trainers
+            List<Training>         trainings 
+        )
+        {
+            foreach (Training training in trainings)
+            {
+                for (int trainerNr = 1; trainerNr <= 3; ++trainerNr)
+                    if ((trainer == null) || (TrainerIdFromNr(training, trainerNr) == trainer.Id))
+                        AddTrainerVerguetung(ofile, training, trainerNr, false);
             }
         }
 
-        private void WriteSummary( System.IO.StreamWriter ofile )
+        private void WriteSummary(System.IO.StreamWriter ofile)
         {
             ofile.WriteLine();
 
@@ -172,26 +228,31 @@ namespace AVF.MemberManagement.Console
             ofile.WriteLine();
 
             decimal summeUnterricht = 0;
-            decimal summeFKZ = 0;
+            decimal summeFahrtkosten = 0;
             foreach (Mitglied mitglied in m_mitglieder)
             {
                 if (mitglied.Id >= 0)
                 {
-                    decimal betrag = m_aTrData[mitglied.Id].decVerguetung;
-                    decimal FKZ    = m_aTrData[mitglied.Id].decFahrtkosten;
+                    decimal unterricht = m_aTrData[mitglied.Id].decVerguetung;
+                    decimal fahrtKosten = m_aTrData[mitglied.Id].decFahrtkosten;
 
-                    if (betrag > 0)
+                    if ((unterricht > 0) || (fahrtKosten > 0))
                     {
-                        WriteMitglied( ofile, mitglied );
-                        ofile.WriteLine($" { betrag, 8 }€ { FKZ, 8 }€ { betrag + FKZ, 8 }€");
-                        summeUnterricht += betrag;
-                        summeFKZ += FKZ;
+                        WriteMitglied(ofile, mitglied);
+
+                        WriteSum(ofile, unterricht, fahrtKosten);
+                        ofile.WriteLine();
+
+                        summeUnterricht += unterricht;
+                        summeFahrtkosten += fahrtKosten;
                     }
                 }
             }
 
             ofile.WriteLine();
-            ofile.WriteLine($"Gesamtbeträge               { summeUnterricht,8 }€ { summeFKZ,8 }€  { summeUnterricht + summeFKZ,8 }€");
+            ofile.Write($"Gesamtbeträge               ");
+            WriteSum(ofile, summeUnterricht, summeFahrtkosten);
+            ofile.WriteLine();
         }
 
         public async Task Main()
@@ -210,13 +271,29 @@ namespace AVF.MemberManagement.Console
 
             m_aTrData = new TrainerVerguetung[iArraySize];
 
-            System.IO.StreamWriter ofile = new System.IO.StreamWriter( @"Trainerverguetung.txt" );
+            DateTime datStart = new DateTime(2016,  1,  1);
+            DateTime datEnd   = new DateTime(2016, 12, 31);
 
-            GatherData( ofile );
+            List<Training> trainingsInPeriod = m_trainings.Where(training => training.Termin > datStart && training.Termin < datEnd).ToList();
 
-            WriteSummary( ofile );
+            {
+                System.IO.StreamWriter ofile = new System.IO.StreamWriter(@"Trainerverguetung.txt");
 
-            ofile.Close();
+                SettlePeriod(ofile, null, trainingsInPeriod);
+
+                WriteSummary(ofile);
+
+                ofile.Close();
+            }
+
+            foreach (Mitglied mitglied in m_mitglieder)
+            {
+                if ( ( mitglied.Id >= 0 ) && ( m_aTrData[mitglied.Id].decFahrtkosten > 0 ) )
+                {
+                    CreateIndividualAccount( mitglied, trainingsInPeriod);
+                }
+            }
+
         }
     }
 }
