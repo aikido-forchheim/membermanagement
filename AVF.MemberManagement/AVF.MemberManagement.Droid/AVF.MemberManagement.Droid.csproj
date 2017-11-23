@@ -50,6 +50,7 @@
     <WarningLevel>4</WarningLevel>
     <AndroidUseSharedRuntime>False</AndroidUseSharedRuntime>
     <AndroidLinkMode>SdkOnly</AndroidLinkMode>
+    <AndroidTlsProvider>btls</AndroidTlsProvider>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FormsViewGroup, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -220,12 +221,8 @@
     <None Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\AVF.MemberManagement.StandardLibrary2\AVF.MemberManagement.StandardLibrary2.csproj">
-      <Project>{968d5acb-1174-49d1-ab84-32841b2864aa}</Project>
-      <Name>AVF.MemberManagement.StandardLibrary2</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\AVF.MemberManagement.StandardLibrary\AVF.MemberManagement.StandardLibrary.csproj">
-      <Project>{06b2e0c1-3277-491c-9aba-a53bbf260f6a}</Project>
+      <Project>{B900104E-D6B5-4A65-85FD-57702E0F6D65}</Project>
       <Name>AVF.MemberManagement.StandardLibrary</Name>
     </ProjectReference>
     <ProjectReference Include="..\AVF.MemberManagement\AVF.MemberManagement.csproj">

@@ -1,4 +1,5 @@
-﻿using Prism.Unity;
+﻿using Windows.UI.Core;
+using Prism.Unity;
 using Microsoft.Practices.Unity;
 
 namespace AVF.MemberManagement.UWP
@@ -10,6 +11,9 @@ namespace AVF.MemberManagement.UWP
             this.InitializeComponent();
 
             LoadApplication(new AVF.MemberManagement.App(new UwpInitializer()));
+
+            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
+                AppViewBackButtonVisibility.Visible;
         }
     }
 

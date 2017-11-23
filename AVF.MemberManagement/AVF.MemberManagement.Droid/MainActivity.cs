@@ -7,7 +7,6 @@ using Android.Views;
 using Android.Widget;
 using Android.OS;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
-using AVF.MemberManagement.StandardLibrary2.Services;
 using Prism.Unity;
 using Microsoft.Practices.Unity;
 using Debug = System.Diagnostics.Debug;

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AVF.MemberManagement.UserControls.BigLabel"
+             x:Name="This"
+             >
+  <ContentView.Content>
+        <Label Text="{Binding Text, Source={x:Reference This}}" FontAttributes="{Binding FontAttributes, Source={x:Reference This}}" x:Name="Label">
+            <Label.FontSize>
+                <OnIdiom x:TypeArguments="x:Double">
+                    <OnIdiom.Desktop>24</OnIdiom.Desktop>
+                    <OnIdiom.Tablet>24</OnIdiom.Tablet>
+                </OnIdiom>
+            </Label.FontSize>
+        </Label>
+  </ContentView.Content>
+</ContentView>
