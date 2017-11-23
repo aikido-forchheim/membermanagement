@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -56,9 +57,18 @@ namespace AVF.MemberManagement.StandardLibrary.Repositories
                 _cache.Add(setting.Id, setting);
                 return setting;
             }
-            catch (WebException e)
+            catch (WebException webException)
             {
-                if (((HttpWebResponse)e.Response).StatusCode == HttpStatusCode.NotFound)
+                if (((HttpWebResponse)webException.Response).StatusCode == HttpStatusCode.NotFound)
+                {
+                    throw new KeyNotFoundException(id);
+                }
+
+                throw;
+            }
+            catch (InvalidOperationException invalidOperationException)
+            {
+                if (invalidOperationException.Message == "Sequence contains no matching element")
                 {
                     throw new KeyNotFoundException(id);
                 }

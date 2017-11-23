@@ -41,33 +41,39 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary
         [Fact]
         public async Task UpdateTestZero()
         {
-            var testProxy = Bootstrapper.Container.Resolve<IProxy<Test>>();
-
-            var testObject = new Test
+            if (!Bootstrapper.UseFileProxies)
             {
-                Id = 0,
-                Text = "ÖÄÜ"
-            };
+                var testProxy = Bootstrapper.Container.Resolve<IProxy<Test>>();
 
-            var updateResult = await testProxy.UpdateAsync(testObject);
+                var testObject = new Test
+                {
+                    Id = 0,
+                    Text = "ÖÄÜ"
+                };
 
-            Assert.True(updateResult == "null");
+                var updateResult = await testProxy.UpdateAsync(testObject);
+
+                Assert.True(updateResult == "null");
+            }
         }
 
         [Fact]
         public async Task UpdateTestMinus()
         {
-            var testProxy = Bootstrapper.Container.Resolve<IProxy<Test>>();
-
-            var testObject = new Test
+            if (!Bootstrapper.UseFileProxies)
             {
-                Id = -1,
-                Text = "ok"
-            };
+                var testProxy = Bootstrapper.Container.Resolve<IProxy<Test>>();
 
-            var updateResult = await testProxy.UpdateAsync(testObject);
+                var testObject = new Test
+                {
+                    Id = -1,
+                    Text = "ok"
+                };
 
-            Assert.True(updateResult == "1");
+                var updateResult = await testProxy.UpdateAsync(testObject);
+
+                Assert.True(updateResult == "1");
+            }
         }
     }
 }
