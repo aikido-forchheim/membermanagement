@@ -17,12 +17,16 @@ namespace AVF.MemberManagement.Proxies
 
             var list = await GetDataFromJsonFileAsync();
 
+            await Task.Delay(10000);
+
             return list;
         }
 
         public async Task<T> GetAsync(TId id)
         {
             var list = await GetDataFromJsonFileAsync();
+
+            await Task.Delay(2000);
 
             return list.Single(t => t.Id.Equals(id));
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using AVF.MemberManagement.GTK.Services;
 using AVF.MemberManagement.StandardLibrary.Services;
@@ -13,8 +14,16 @@ namespace AVF.MemberManagement.GTK
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        private static void Main()
+        private static void Main(string[] args)
         {
+            if (args != null)
+            {
+                if (args.Contains("/usefileproxies"))
+                {
+                    Globals.UseFileProxies = true;
+                }
+            }
+
             Globals.UsesXamarinAuth = false;
             Globals.AccountService = new AccountServiceS();
 
