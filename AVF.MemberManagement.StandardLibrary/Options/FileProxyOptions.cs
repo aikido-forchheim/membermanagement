@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Models;
 
 namespace AVF.MemberManagement.StandardLibrary.Options
@@ -10,8 +11,8 @@ namespace AVF.MemberManagement.StandardLibrary.Options
         /// <summary>
         /// <![CDATA[Dictionary<string tboName, FileProxyOptions>]]>
         /// </summary>
-        public Dictionary<string, FileProxyDelayTimes> FileProxyDelayTimes { get; set; }
+        public Dictionary<string, IFileProxyDelayTimes> FileProxyDelayTimes { get; set; } = new Dictionary<string, IFileProxyDelayTimes>();
 
-        public FileProxyDelayTimes FallBackTimes { get; set; }
+        public IFileProxyDelayTimes FallBackTimes { get; set; } = new FileProxyDelayTimes { GetAsyncFullTableDelay = 5000, GetAsyncSingleEntryDelay = 1000 };
     }
 }

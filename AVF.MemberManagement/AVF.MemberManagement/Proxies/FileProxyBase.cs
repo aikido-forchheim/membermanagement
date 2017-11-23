@@ -16,9 +16,12 @@ namespace AVF.MemberManagement.Proxies
     {
         private readonly IOptions<FileProxyOptions> _fileProxyOptions;
 
+        private readonly IFileProxyDelayTimes _fileProxyDelayTimes;
+
         public FileProxyBase(IOptions<FileProxyOptions> fileProxyOptions)
         {
             _fileProxyOptions = fileProxyOptions;
+            _fileProxyDelayTimes = GetFileProxyDelayTimes();
         }
 
         public async Task<List<T>> GetAsync()
@@ -27,13 +30,7 @@ namespace AVF.MemberManagement.Proxies
 
             var list = await GetDataFromJsonFileAsync();
 
-            if (_fileProxyOptions.Value.ShouldSimulateDelay)
-            {
-                var tboName = typeof(T).Name;
-                var fileProxyDelayTimes = _fileProxyOptions.Value.FileProxyDelayTimes.ContainsKey(tboName) ? _fileProxyOptions.Value.FileProxyDelayTimes[tboName] : _fileProxyOptions.Value.FallBackTimes;
-
-                await Task.Delay(fileProxyDelayTimes.GetAsyncFullTableDelay); //GetAsyncFullTableDelay as DependencyProperty https://stackoverflow.com/questions/2621488/create-a-delegate-from-a-property-getter-or-setter-method
-            }
+            await SimulateDelay(_fileProxyDelayTimes.GetFullTableDelayGetAsync);
 
             return list;
         }
@@ -42,7 +39,7 @@ namespace AVF.MemberManagement.Proxies
         {
             var list = await GetDataFromJsonFileAsync();
 
-            await Task.Delay(2000);
+            await SimulateDelay(_fileProxyDelayTimes.GetSingleEntryDelayGetAsync);
 
             return list.Single(t => t.Id.Equals(id));
         }
@@ -66,6 +63,21 @@ namespace AVF.MemberManagement.Proxies
 
             var list = Newtonsoft.Json.JsonConvert.DeserializeObject<List<T>>(json);
             return list;
+        }
+
+        private IFileProxyDelayTimes GetFileProxyDelayTimes()
+        {
+            var tboName = typeof(T).Name;
+            var fileProxyDelayTimes = _fileProxyOptions.Value.FileProxyDelayTimes.ContainsKey(tboName) ? _fileProxyOptions.Value.FileProxyDelayTimes[tboName] : _fileProxyOptions.Value.FallBackTimes;
+            return fileProxyDelayTimes;
+        }
+
+        private async Task SimulateDelay(Func<int> delayFunc)
+        {
+            if (_fileProxyOptions.Value.ShouldSimulateDelay)
+            {
+                await Task.Delay(delayFunc.Invoke());
+            }
         }
     }
 }
