@@ -4,8 +4,8 @@ namespace AVF.MemberManagement.StandardLibrary.Models
 {
     public class FileProxyDelayTimes : IFileProxyDelayTimes
     {
-        public int GetAsyncFullTableDelay { get; set; } = 10000;
-        public int GetAsyncSingleEntryDelay { get; set; } = 2000;
+        public int GetAsyncFullTableDelay { get; set; }
+        public int GetAsyncSingleEntryDelay { get; set; }
 
 
         public int GetFullTableDelayGetAsync()

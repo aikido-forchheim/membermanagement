@@ -1,5 +1,6 @@
 ﻿using AVF.MemberManagement.Proxies;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
+using AVF.MemberManagement.StandardLibrary.Models;
 using AVF.MemberManagement.StandardLibrary.Options;
 using AVF.MemberManagement.StandardLibrary.Proxies;
 using AVF.MemberManagement.StandardLibrary.Repositories;
@@ -21,16 +22,17 @@ namespace AVF.MemberManagement
 
         public void RegisterRepositories(bool useFileProxies)
         {
-            IOptions<FileProxyOptions> fileProxyOptions = new OptionsWrapper<FileProxyOptions>(new FileProxyOptions());
-            fileProxyOptions.Value.ShouldSimulateDelay = false;
-            _container.RegisterInstance(fileProxyOptions, new ContainerControlledLifetimeManager());
-
             if (!useFileProxies)
             {
                 RegisterWebProxies();
             }
             else
             {
+                IOptions<FileProxyOptions> fileProxyOptions = new OptionsWrapper<FileProxyOptions>(new FileProxyOptions());
+                fileProxyOptions.Value.ShouldSimulateDelay = false;
+                fileProxyOptions.Value.FileProxyDelayTimes.Add(nameof(User), new FileProxyDelayTimes { GetAsyncFullTableDelay = 1, GetAsyncSingleEntryDelay = 1 });
+                _container.RegisterInstance(fileProxyOptions, new ContainerControlledLifetimeManager());
+
                 RegisterFileProxies();
             }
 
