@@ -129,19 +129,22 @@ namespace AVF.MemberManagement.Console
 
         private decimal HandleTrainerFee( System.IO.StreamWriter ofile, Training training, int? trainerId, int trainerNr )
         {
+            var trainerstufe = TrainerLevel( trainerId, training.Termin );
+
+            ofile.Write( $"{trainerNr}. Trainer, " );
+            ofile.Write( $" Stufe { trainerstufe }, " );
+
             if (training.VHS)
             {
-                ofile.Write($" -------- VHS --------  ");
+                ofile.Write($"  -------------- VHS -------------- ");
                 return 0;
             }
             else
             {
-                var     trainerstufe           = TrainerLevel(trainerId, training.Termin);
                 decimal grundVerguetung        = TrainingAward(trainerstufe, training.DauerMinuten, trainerNr);
                 decimal zuschlagKinderTraining = ExtraAmount(training, trainerNr);
                 decimal gesamtVerguetung       = grundVerguetung + zuschlagKinderTraining;
 
-                ofile.Write($" Stufe {trainerstufe}, ");
                 WriteSum(ofile, grundVerguetung, zuschlagKinderTraining);
 
                 return gesamtVerguetung;
@@ -166,18 +169,32 @@ namespace AVF.MemberManagement.Console
             if ( writeMitglied )
                 WriteMitglied( ofile, m_mitglieder.Single(s => s.Id == trainerId) );
 
-            ofile.Write( $"{trainerNr}. Trainer, " );
+            decimal trainerFee  = HandleTrainerFee( ofile, training, trainerId, trainerNr );    // Vergütung für Unterrichtstätigkeit
+            decimal fahrtKosten = TravelExpenses( trainerId, training.Termin );                 // Fahrtkosten
 
-            decimal trainerFee  = HandleTrainerFee(ofile, training, trainerId, trainerNr);    // Vergütung für Unterrichtstätigkeit
-            decimal fahrtKosten = TravelExpenses(trainerId, training.Termin);                 // Fahrtkosten
-
-            m_aTrData[trainerId.Value].decVerguetung += trainerFee;
+            m_aTrData[trainerId.Value].decVerguetung  += trainerFee;
             m_aTrData[trainerId.Value].decFahrtkosten += fahrtKosten;
 
-            WriteAmount(ofile, " ", fahrtKosten);
+            WriteAmount( ofile, " ", fahrtKosten );
 
-            WriteAmount(ofile, "  Summe ", trainerFee + fahrtKosten);
+            WriteAmount( ofile, "  Summe ", trainerFee + fahrtKosten );
             ofile.WriteLine();
+        }
+
+        private void SettlePeriod
+        ( 
+            System.IO.StreamWriter ofile, 
+            Mitglied               trainer,                       // null means: no specific trainer, do for all trainers
+            List<Training>         trainings,
+            bool                   writeMitglied
+        )
+        {
+            foreach (Training training in trainings)
+            {
+                for (int trainerNr = 1; trainerNr <= 3; ++trainerNr)
+                    if ((trainer == null) || (TrainerIdFromNr(training, trainerNr) == trainer.Id))
+                        AddTrainerVerguetung(ofile, training, trainerNr, writeMitglied);
+            }
         }
 
         private void CreateIndividualAccount( Mitglied trainer, List<Training> trainings )
@@ -186,46 +203,33 @@ namespace AVF.MemberManagement.Console
 
             System.IO.StreamWriter ofile = new System.IO.StreamWriter( fileName );
 
-            foreach (var training in trainings)
-            {
-                for ( int trainerNr = 1; trainerNr <= 3; ++trainerNr )
-                    if ( (trainer == null) || (TrainerIdFromNr(training, trainerNr) == trainer.Id) )
-                        AddTrainerVerguetung( ofile, training, trainerNr, false );
-            }
+            WriteMitglied( ofile, trainer );
+            ofile.WriteLine( );
+            ofile.WriteLine( );
 
-            decimal unterricht = m_aTrData[trainer.Id].decVerguetung;
-            decimal fahrtKosten = m_aTrData[trainer.Id].decFahrtkosten;
+            SettlePeriod( ofile, trainer, trainings, false );
 
-            ofile.WriteLine($"Unterricht   FKZ      Summe");
-            ofile.WriteLine();
+            ofile.WriteLine( );
+            ofile.WriteLine( $" Unterricht  Fahrtkosten    Summe") ;
+            ofile.WriteLine( ) ;
 
-            WriteSum(ofile, unterricht, fahrtKosten);
+            WriteSum
+            (
+                ofile, 
+                m_aTrData[trainer.Id].decVerguetung, 
+                m_aTrData[trainer.Id].decFahrtkosten
+            );
 
             ofile.WriteLine();
             ofile.Close();
         }
 
-        private void SettlePeriod
-        ( 
-            System.IO.StreamWriter ofile, 
-            Mitglied               trainer,                       // null means: no specific trainer, do for all trainers
-            List<Training>         trainings 
-        )
-        {
-            foreach (Training training in trainings)
-            {
-                for (int trainerNr = 1; trainerNr <= 3; ++trainerNr)
-                    if ((trainer == null) || (TrainerIdFromNr(training, trainerNr) == trainer.Id))
-                        AddTrainerVerguetung(ofile, training, trainerNr, false);
-            }
-        }
-
         private void WriteSummary(System.IO.StreamWriter ofile)
         {
-            ofile.WriteLine();
-
-            ofile.WriteLine($"Nachname   Vorname     Nr.  Unterricht   FKZ      Summe");
-            ofile.WriteLine();
+            ofile.WriteLine( );
+            ofile.Write    ( $"Nachname   Vorname     Nr.  " );
+            ofile.WriteLine( $" Unterricht  Fahrtkosten    Summe" );
+            ofile.WriteLine( );
 
             decimal summeUnterricht = 0;
             decimal summeFahrtkosten = 0;
@@ -255,31 +259,36 @@ namespace AVF.MemberManagement.Console
             ofile.WriteLine();
         }
 
+        private async Task ReadTables()
+        {
+            m_trainings = await Program.Container.Resolve<IRepository<Training>>().GetAsync();
+            m_mitglieder = await Program.Container.Resolve<IRepository<Mitglied>>().GetAsync();
+            m_trainerErnennungen = await Program.Container.Resolve<IRepository<TrainerErnennung>>().GetAsync();
+            m_stundensaetze = await Program.Container.Resolve<IRepository<Stundensatz>>().GetAsync();
+            m_zuschlagKinderTraining = await Program.Container.Resolve<IRepository<ZuschlagKindertraining>>().GetAsync();
+            m_trainerStufe = await Program.Container.Resolve<IRepository<TrainerStufe>>().GetAsync();
+            m_wohnung = await Program.Container.Resolve<IRepository<Wohnung>>().GetAsync();
+            m_wohnungsbezug = await Program.Container.Resolve<IRepository<Wohnungsbezug>>().GetAsync();
+            m_wochentag = await Program.Container.Resolve<IRepository<Wochentag>>().GetAsync();
+        }
+
         public async Task Main()
         {
-            m_trainings              = await Program.Container.Resolve < IRepository < Training >               > ().GetAsync();
-            m_mitglieder             = await Program.Container.Resolve < IRepository < Mitglied >               > ().GetAsync();
-            m_trainerErnennungen     = await Program.Container.Resolve < IRepository < TrainerErnennung >       > ().GetAsync();
-            m_stundensaetze          = await Program.Container.Resolve < IRepository < Stundensatz >            > ().GetAsync();
-            m_zuschlagKinderTraining = await Program.Container.Resolve < IRepository < ZuschlagKindertraining > > ().GetAsync();
-            m_trainerStufe           = await Program.Container.Resolve < IRepository < TrainerStufe>            > ().GetAsync();
-            m_wohnung                = await Program.Container.Resolve < IRepository < Wohnung >                > ().GetAsync();
-            m_wohnungsbezug          = await Program.Container.Resolve < IRepository < Wohnungsbezug >          > ().GetAsync();
-            m_wochentag              = await Program.Container.Resolve < IRepository < Wochentag>               > ().GetAsync();
+            await ReadTables();
 
             int iArraySize = m_mitglieder.Max(t => t.Id) + 1;
 
             m_aTrData = new TrainerVerguetung[iArraySize];
 
-            DateTime datStart = new DateTime(2016,  1,  1);
-            DateTime datEnd   = new DateTime(2016, 12, 31);
+            DateTime datStart = new DateTime(2017,  1,  1);
+            DateTime datEnd   = new DateTime(2017, 12, 31);
 
             List<Training> trainingsInPeriod = m_trainings.Where(training => training.Termin > datStart && training.Termin < datEnd).ToList();
 
             {
                 System.IO.StreamWriter ofile = new System.IO.StreamWriter(@"Trainerverguetung.txt");
 
-                SettlePeriod(ofile, null, trainingsInPeriod);
+                SettlePeriod( ofile, null, trainingsInPeriod, true );
 
                 WriteSummary(ofile);
 
@@ -290,7 +299,7 @@ namespace AVF.MemberManagement.Console
             {
                 if ( ( mitglied.Id >= 0 ) && ( m_aTrData[mitglied.Id].decFahrtkosten > 0 ) )
                 {
-                    CreateIndividualAccount( mitglied, trainingsInPeriod);
+                    CreateIndividualAccount( mitglied, trainingsInPeriod );
                 }
             }
 
