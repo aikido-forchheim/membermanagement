@@ -237,7 +237,7 @@
       <Name>AVF.MemberManagement.PortableLibrary</Name>
     </ProjectReference>
     <ProjectReference Include="..\AVF.MemberManagement.StandardLibrary\AVF.MemberManagement.StandardLibrary.csproj">
-      <Project>{06B2E0C1-3277-491C-9ABA-A53BBF260F6A}</Project>
+      <Project>{B900104E-D6B5-4A65-85FD-57702E0F6D65}</Project>
       <Name>AVF.MemberManagement.StandardLibrary</Name>
     </ProjectReference>
     <ProjectReference Include="..\AVF.MemberManagement\AVF.MemberManagement\AVF.MemberManagement.csproj">

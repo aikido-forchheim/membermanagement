@@ -10,5 +10,7 @@ namespace AVF.MemberManagement.StandardLibrary.Services
         public static IAccountService AccountService;
 
         public static User User { get; set; }
+
+        public static bool UseFileProxies { get; set; }
     }
 }

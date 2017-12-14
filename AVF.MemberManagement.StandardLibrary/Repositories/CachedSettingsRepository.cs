@@ -1,14 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
+using Microsoft.Extensions.Logging;
 
 namespace AVF.MemberManagement.StandardLibrary.Repositories
 {
     public class CachedSettingsRepository : IRepositoryBase<Setting, string>
     {
+        private readonly ILogger _logger;
+
         private readonly IProxyBase<Setting, string> _settingsProxy;
 
         private readonly Dictionary<string, Setting> _cache = new Dictionary<string, Setting>();
@@ -16,9 +20,10 @@ namespace AVF.MemberManagement.StandardLibrary.Repositories
         private bool _allEntriesAreInCache;
 
 
-        public CachedSettingsRepository(IProxyBase<Setting, string> settingsProxy)
+        public CachedSettingsRepository(IProxyBase<Setting, string> settingsProxy, ILogger logger)
         {
             _settingsProxy = settingsProxy;
+            _logger = logger;
         }
 
         public async Task<List<Setting>> GetAsync()
@@ -53,12 +58,28 @@ namespace AVF.MemberManagement.StandardLibrary.Repositories
             try
             {
                 var setting = await _settingsProxy.GetAsync(id);
-                _cache.Add(setting.Id, setting);
+                if (!_cache.ContainsKey(setting.Id))
+                {
+                    _cache.Add(setting.Id, setting);
+                }
+                else
+                {
+                    _logger.LogTrace("Key was already added by another thread: " + setting.Id);
+                }
                 return setting;
             }
-            catch (WebException e)
+            catch (WebException webException)
             {
-                if (((HttpWebResponse)e.Response).StatusCode == HttpStatusCode.NotFound)
+                if (((HttpWebResponse)webException.Response).StatusCode == HttpStatusCode.NotFound)
+                {
+                    throw new KeyNotFoundException(id);
+                }
+
+                throw;
+            }
+            catch (InvalidOperationException invalidOperationException)
+            {
+                if (invalidOperationException.Message == "Sequence contains no matching element")
                 {
                     throw new KeyNotFoundException(id);
                 }
