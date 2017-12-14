@@ -15,6 +15,8 @@ namespace AVF.MemberManagement.ViewModels
     public class EnterParticipantsPageViewModel : BindableBase, INavigatedAware
     {
         private readonly IRepository<Mitglied> _mitgliederRepository;
+        private readonly IRepository<Training> _trainingsRepository;
+        private readonly IRepository<TrainingsTeilnahme> _trainingsTeilnahmenRepository;
 
         private List<Mitglied> _mitglieder = new List<Mitglied>();
 
@@ -78,14 +80,73 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _selectedMember, value);
         }
 
-        public EnterParticipantsPageViewModel(IRepository<Mitglied> mitgliederRepository)
+        private List<Mitglied> _previousParticipants;
+
+        public List<Mitglied> PreviousParticipants
+        {
+            get => _previousParticipants;
+            set => SetProperty(ref _previousParticipants, value);
+        }
+
+        public EnterParticipantsPageViewModel(IRepository<Mitglied> mitgliederRepository, IRepository<Training> trainingsRepository, IRepository<TrainingsTeilnahme> trainingsTeilnahmenRepository)
         {
             _mitgliederRepository = mitgliederRepository;
+            _trainingsRepository = trainingsRepository;
+            _trainingsTeilnahmenRepository = trainingsTeilnahmenRepository;
         }
 
         public void OnNavigatedFrom(NavigationParameters parameters)
         {
 
+        }
+
+        public async void OnNavigatedTo(NavigationParameters parameters)
+        {
+            _participants.Clear();
+
+            SelectedDateString = (string)parameters["SelectedDateString"];
+            Training = (TrainingsModel)parameters["SelectedTraining"];
+
+            _mitglieder = await _mitgliederRepository.GetAsync();
+
+            _mitglieder.Sort(Tester);
+
+            foreach (var trainingParticipation in Training.Participations)
+            {
+                var member = _mitglieder.Single(m => m.Id == trainingParticipation.MitgliedID);
+
+                Participants.Add(member);
+            }
+
+            FindMorePreviousParticipants();
+        }
+
+        private async void FindMorePreviousParticipants()
+        {
+            //nur wenn noch nicht in Participants Liste
+
+            var trainings = await _trainingsRepository.GetAsync();
+
+            var trainingsOnWeekDay = trainings.Where(training =>
+            {
+                var daysToCheck = Training.Training.Termin - TimeSpan.FromDays(100);
+
+                return training.KursID == Training.Training.KursID && training.Id != Training.Training.Id &&
+                           training.Termin < Training.Training.Termin && training.Termin > daysToCheck;
+            }).Select(t => t.Id).ToList();
+
+            var trainingsTeilnahmen = await _trainingsTeilnahmenRepository.GetAsync();
+
+            Dictionary<int, int> mitgliederCount = new Dictionary<int, int>();
+            var trainingsTeilnahmes = trainingsTeilnahmen.Where(teilnahme => trainingsOnWeekDay.Contains(teilnahme.TrainingID)).ToList();
+            foreach (var trainingsTeilnahme in trainingsTeilnahmes)
+            {
+                if (!mitgliederCount.ContainsKey(trainingsTeilnahme.MitgliedID)) mitgliederCount.Add(trainingsTeilnahme.MitgliedID, 0);
+
+                mitgliederCount[trainingsTeilnahme.MitgliedID]++;
+            }
+
+            //now order dict by counter (second int)
         }
 
         private void FindMembers(string searchText)
@@ -136,25 +197,6 @@ namespace AVF.MemberManagement.ViewModels
         {
             return argVorname.ToLower().Contains(searchText.ToLower()) ||
                                    argNachname.ToLower().Contains(searchText.ToLower());
-        }
-
-        public async void OnNavigatedTo(NavigationParameters parameters)
-        {
-            _participants.Clear();
-
-            SelectedDateString = (string)parameters["SelectedDateString"];
-            Training = (TrainingsModel)parameters["SelectedTraining"];
-
-            _mitglieder = await _mitgliederRepository.GetAsync();
-
-            _mitglieder.Sort(Tester);
-
-            foreach (var trainingParticipation in Training.Participations)
-            {
-                var member = _mitglieder.Single(m => m.Id == trainingParticipation.MitgliedID);
-
-                Participants.Add(member);
-            }
         }
     }
 }

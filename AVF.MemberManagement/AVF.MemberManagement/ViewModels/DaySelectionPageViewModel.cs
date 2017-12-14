@@ -26,7 +26,7 @@ namespace AVF.MemberManagement.ViewModels
 
         private void NavigateToKursSelectionPage()
         {
-            var navigationParameters = new NavigationParameters {{"Date", new DateTime(2016, 1, 13)}};
+            var navigationParameters = new NavigationParameters {{"Date", new DateTime(2016, 10, 12)}};
             _navigationService.NavigateAsync(nameof(KursSelectionPage), navigationParameters);
         }
 
