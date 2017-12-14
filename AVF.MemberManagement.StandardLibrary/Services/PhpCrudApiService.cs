@@ -94,7 +94,7 @@ namespace AVF.MemberManagement.StandardLibrary.Services
 
                 return await HttpWebRequestWithCookieContainer.GetStringAsync(httpWebRequest);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 //await Task.Delay(250);
 

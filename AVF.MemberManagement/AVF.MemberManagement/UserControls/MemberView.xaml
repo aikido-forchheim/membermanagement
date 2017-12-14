@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="AVF.MemberManagement.UserControls.MemberView">
+    <ContentView.Content>
+        <StackLayout Orientation="Horizontal">
+            <StackLayout.Margin>
+                <OnIdiom x:TypeArguments="Thickness">
+                    <OnIdiom.Phone>
+                        <OnPlatform x:TypeArguments="Thickness">
+                            <OnPlatform.Platforms>
+                                <On Platform="UWP" Value="8,8,8,8" />
+                            </OnPlatform.Platforms>
+                        </OnPlatform>
+                    </OnIdiom.Phone>
+                    <OnIdiom.Tablet>
+                        <OnPlatform x:TypeArguments="Thickness">
+                            <OnPlatform.Platforms>
+                                <On Platform="UWP" Value="8,8,8,8" />
+                            </OnPlatform.Platforms>
+                        </OnPlatform>
+                    </OnIdiom.Tablet>
+                </OnIdiom>
+            </StackLayout.Margin>
+            <BoxView Color="DarkGray">
+                <StackLayout.Margin>
+                    <OnPlatform x:TypeArguments="Thickness">
+                            <OnPlatform.Platforms>
+                                <On Platform="UWP" Value="4,4,4,4" />
+                            </OnPlatform.Platforms>
+                        </OnPlatform>
+                </StackLayout.Margin>
+            </BoxView>
+            <StackLayout Orientation="Horizontal">
+                <StackLayout.Margin>
+                    <OnPlatform x:TypeArguments="Thickness">
+                            <OnPlatform.Platforms>
+                                <On Platform="UWP" Value="4,4,4,4" />
+                            </OnPlatform.Platforms>
+                        </OnPlatform>
+                </StackLayout.Margin>
+                <Label Text="{Binding Vorname}">
+                </Label>
+                <Label Text="{Binding Nachname}">
+                </Label>
+            </StackLayout>
+        </StackLayout>
+    </ContentView.Content>
+</ContentView>

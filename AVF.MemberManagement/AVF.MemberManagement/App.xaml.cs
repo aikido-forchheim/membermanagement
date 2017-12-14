@@ -65,17 +65,25 @@ namespace AVF.MemberManagement
             //IPasswordService
             Container.RegisterType<IPasswordService, PasswordService>(new ContainerControlledLifetimeManager());
 
-            
+            Container.RegisterType<IKursModelService, KursModelService>(new ContainerControlledLifetimeManager());
+
+
             Container.RegisterType<IJsonFileFactory, JsonFileFactory>(new ContainerControlledLifetimeManager());
-                
-            _repositoryBootstrapper.RegisterRepositories(false);
-            
+
+            //_repositoryBootstrapper.RegisterRepositories(false);
+            //Globals.UseFileProxies = true;
+            _repositoryBootstrapper.RegisterRepositories(Globals.UseFileProxies);
+
             //RefreshCache().Wait();
+            //RefreshCache(); //UWP
 
             Container.RegisterTypeForNavigation<MainPage>();
             Container.RegisterTypeForNavigation<RestApiSettingsPage>();
             Container.RegisterTypeForNavigation<PasswordPage>();
             Container.RegisterTypeForNavigation<StartPage>();
+            Container.RegisterTypeForNavigation<DaySelectionPage>();
+            Container.RegisterTypeForNavigation<KursSelectionPage>();
+            Container.RegisterTypeForNavigation<EnterParticipantsPage>();
         }
 
         private async Task RefreshCache()

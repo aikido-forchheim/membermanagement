@@ -4,37 +4,37 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="AVF.MemberManagement.Views.RestApiSettingsPage">
-    
-    <StackLayout VerticalOptions="Center" HorizontalOptions="FillAndExpand" Margin="32">
+    <ScrollView>
+        <StackLayout VerticalOptions="Center" HorizontalOptions="FillAndExpand" Margin="32">
 
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-            </Grid.RowDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
 
-            <Label Grid.Row="0" Grid.Column="0" Text="ApiUrl:" VerticalOptions="Center"></Label>
-            <Entry Grid.Row="0" Grid.Column="1" Text="{Binding AccountService.RestApiAccount.ApiUrl}" Keyboard="Url"></Entry>
+                <Label Grid.Row="0" Grid.Column="0" Text="ApiUrl:" VerticalOptions="Center"></Label>
+                <Entry Grid.Row="0" Grid.Column="1" Text="{Binding AccountService.RestApiAccount.ApiUrl}" Keyboard="Url"></Entry>
 
-            <Label Grid.Row="1" Grid.Column="0" Text="Username:" VerticalOptions="Center"></Label>
-            <Entry Grid.Row="1" Grid.Column="1" Text="{Binding AccountService.RestApiAccount.Username}" Keyboard="Text"></Entry>
+                <Label Grid.Row="1" Grid.Column="0" Text="Username:" VerticalOptions="Center"></Label>
+                <Entry Grid.Row="1" Grid.Column="1" Text="{Binding AccountService.RestApiAccount.Username}" Keyboard="Text"></Entry>
 
-            <Label Grid.Row="2" Grid.Column="0" Text="Password:" VerticalOptions="Center" ></Label>
-            <Entry Grid.Row="2" Grid.Column="1" Text="{Binding AccountService.RestApiAccount.Password}" IsPassword="true" Keyboard="Text"></Entry>
+                <Label Grid.Row="2" Grid.Column="0" Text="Password:" VerticalOptions="Center" ></Label>
+                <Entry Grid.Row="2" Grid.Column="1" Text="{Binding AccountService.RestApiAccount.Password}" IsPassword="true" Keyboard="Text"></Entry>
 
-        </Grid>
+            </Grid>
 
-        <Button Text="Test" Command="{Binding ValidateCommand}"></Button>
-        <Button Text="Speichern" Command="{Binding SaveCommand}"></Button>
-        <Button Text="Zurück" Command="{Binding BackCommand}"></Button>
+            <Button Text="Test" Command="{Binding ValidateCommand}"></Button>
+            <Button Text="Speichern" Command="{Binding SaveCommand}"></Button>
+            <Button Text="Zurück" Command="{Binding BackCommand}"></Button>
 
-        <Label Text="{Binding Message}"></Label>
+            <Label Text="{Binding Message}"></Label>
 
-    </StackLayout>
-
+        </StackLayout>
+    </ScrollView>
 </ContentPage>

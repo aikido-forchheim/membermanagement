@@ -1,7 +1,12 @@
-﻿using Prism.Mvvm;
+﻿using System;
+using System.Diagnostics;
+using System.Windows.Input;
+using Prism.Mvvm;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Services;
 using AVF.MemberManagement.StandardLibrary.Tbo;
+using AVF.MemberManagement.Views;
+using Prism.Commands;
 using Prism.Navigation;
 
 namespace AVF.MemberManagement.ViewModels
@@ -27,7 +32,25 @@ namespace AVF.MemberManagement.ViewModels
             _accountService = accountService;
             _navigationService = navigationService;
             _passwordService = passwordService;
+
+            NavigateToDaySelectionPageCommand = new DelegateCommand(NavigateToDaySelectionPage, CanNavigateToDaySelectionPage);
         }
+
+        #region NavigateToDaySelectionPageCommand
+
+        public ICommand NavigateToDaySelectionPageCommand { get; }
+
+        private void NavigateToDaySelectionPage()
+        {
+            _navigationService.NavigateAsync(nameof(DaySelectionPage));
+        }
+
+        private bool CanNavigateToDaySelectionPage()
+        {
+            return true;
+        }
+
+        #endregion
 
         public void OnNavigatedFrom(NavigationParameters parameters)
         {
@@ -36,11 +59,18 @@ namespace AVF.MemberManagement.ViewModels
 
         public void OnNavigatedTo(NavigationParameters parameters)
         {
-            var user = (User) parameters["User"];
+            try
+            {
+                var user = (User)parameters["User"];
+                if (user == null) return;
 
-            Globals.User = user;
-
-            Username = user.Username;
+                Globals.User = user;
+                Username = user.Username;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+            }
         }
     }
 }
