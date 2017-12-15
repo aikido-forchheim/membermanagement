@@ -88,6 +88,21 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _previousParticipants, value);
         }
 
+        public string ParticipantsCountText
+        {
+            get => $"Bereits eingetragene Teilnehmer ({Participants.Count}):";
+        }
+
+        public string PreviousParticipantsCountText
+        {
+            get => $"Zuletzt anwesend ({PreviousParticipants.Count}):";
+        }
+
+        public string FoundMembersCountText
+        {
+            get => $"Gefundene Mitglieder ({FoundMembers.Count}):";
+        }
+
         public EnterParticipantsPageViewModel(IRepository<Mitglied> mitgliederRepository, IRepository<Training> trainingsRepository, IRepository<TrainingsTeilnahme> trainingsTeilnahmenRepository)
         {
             _mitgliederRepository = mitgliederRepository;
@@ -118,10 +133,12 @@ namespace AVF.MemberManagement.ViewModels
                 Participants.Add(member);
             }
 
-            FindMorePreviousParticipants();
+            RaisePropertyChanged(nameof(ParticipantsCountText));
+
+            await FindMorePreviousParticipants();
         }
 
-        private async void FindMorePreviousParticipants()
+        private async Task FindMorePreviousParticipants()
         {
             try
             {
@@ -161,6 +178,8 @@ namespace AVF.MemberManagement.ViewModels
 
                     PreviousParticipants.Add(_mitglieder.Single(m => m.Id == memberMapping.Key));
                 }
+
+                RaisePropertyChanged(nameof(PreviousParticipantsCountText));
             }
 
             catch (Exception ex)
@@ -196,6 +215,8 @@ namespace AVF.MemberManagement.ViewModels
             {
                 FoundMembers.Add(foundMember);
             }
+
+            RaisePropertyChanged(nameof(FoundMembersCountText));
         }
 
         private int Tester(Mitglied x, Mitglied y)

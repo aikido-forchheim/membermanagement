@@ -3,7 +3,7 @@
     <ContentPage Title="Trainingsteilnehmer">
         <StackLayout Margin="8,8,8,8">
             <StackLayout>
-                <Label Text="Bereits eingetragene Teilnehmer (8):" Margin="8,8,8,16">
+                <Label Text="{Binding ParticipantsCountText}" Margin="8,8,8,16">
                 </Label>
                 <ListView ItemsSource="{Binding Participants}" SelectedItem="{Binding SelectedParticipant}" Margin="16,0,0,0">
                     <ListView.ItemTemplate>
@@ -23,7 +23,7 @@
     <ContentPage Title="Regelmäßige Teilnehmer">
         <StackLayout Margin="8,8,8,8">
             <StackLayout>
-                <Label Text="Zuletzt anwesend (17):" Margin="8,8,8,16">
+                <Label Text="{Binding PreviousParticipantsCountText}" Margin="8,8,8,16">
                 </Label>
                 <!-- SelectedItem="{Binding SelectedParticipant}" -->
                 <ListView ItemsSource="{Binding PreviousParticipants}" Margin="16,0,0,0">
@@ -43,7 +43,7 @@
     </ContentPage>
     <ContentPage Title="Mitglieder suchen">
         <StackLayout Margin="8,8,8,8">
-            <Label Text="Gefundene Mitglieder (3):" Margin="8,8,8,16">
+            <Label Text="{Binding FoundMembersCountText}" Margin="8,8,8,16">
             </Label>
             <ListView ItemsSource="{Binding FoundMembers}" SelectedItem="{Binding SelectedMember}" Margin="16,0,0,0">
                 <ListView.ItemTemplate>
