@@ -71,6 +71,7 @@
     <Compile Include="UserControls\MemberView.xaml.cs">
       <DependentUpon>MemberView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="IRepositoryBootstrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App.xaml">

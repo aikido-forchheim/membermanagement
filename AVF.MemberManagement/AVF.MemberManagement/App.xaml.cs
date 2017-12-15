@@ -39,6 +39,8 @@ namespace AVF.MemberManagement
         {
             _repositoryBootstrapper = new RepositoryBootstrapper(Container);
 
+            Container.RegisterInstance<IRepositoryBootstrapper>(_repositoryBootstrapper);
+
             //ILogger
             ILoggerFactory loggerFactory = new LoggerFactory();
             ILogger logger = loggerFactory.CreateLogger<App>();
@@ -72,7 +74,7 @@ namespace AVF.MemberManagement
 
             //_repositoryBootstrapper.RegisterRepositories(false);
             //Globals.UseFileProxies = false;
-            Globals.UseFileProxies = true;
+            //Globals.UseFileProxies = true;
             _repositoryBootstrapper.RegisterRepositories(Globals.UseFileProxies);
 
             //RefreshCache().Wait();

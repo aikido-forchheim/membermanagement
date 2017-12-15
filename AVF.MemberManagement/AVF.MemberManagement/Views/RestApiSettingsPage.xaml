@@ -33,6 +33,8 @@
             <Button Text="Speichern" Command="{Binding SaveCommand}"></Button>
             <Button Text="Zurück" Command="{Binding BackCommand}"></Button>
 
+            <StackLayout Orientation="Horizontal"><Label Text="Use Cache: "></Label><Switch IsToggled="{Binding UseFileProxies}"></Switch><Button Text="Refresh Cache" Command="{Binding RefreshCacheCommand}"></Button><Label Text="{Binding CacheMessage}"></Label></StackLayout>
+
             <Label Text="{Binding Message}"></Label>
 
         </StackLayout>

@@ -11,7 +11,7 @@ using Microsoft.Practices.Unity;
 
 namespace AVF.MemberManagement
 {
-    public class RepositoryBootstrapper
+    public class RepositoryBootstrapper : IRepositoryBootstrapper
     {
         private readonly IUnityContainer _container;
 
