@@ -125,14 +125,13 @@ namespace AVF.MemberManagement.ViewModels
         {
             try
             {
-                //nur wenn noch nicht in Participants Liste
                 PreviousParticipants.Clear()
                                     ;
                 var trainings = await _trainingsRepository.GetAsync();
 
                 var trainingsOnWeekDay = trainings.Where(training =>
                 {
-                    var daysToCheck = Training.Training.Termin - TimeSpan.FromDays(100);
+                    var daysToCheck = Training.Training.Termin - TimeSpan.FromDays(30);
 
                     return training.KursID == Training.Training.KursID && training.Id != Training.Training.Id &&
                                training.Termin < Training.Training.Termin && training.Termin > daysToCheck;
@@ -154,9 +153,12 @@ namespace AVF.MemberManagement.ViewModels
 
                 myList.Sort((pair1, pair2) => pair1.Value.CompareTo(pair2.Value)); //order descending
 
-
                 foreach (var memberMapping in myList)
                 {
+                    if (Participants.Any(p => p.Id == memberMapping.Key)) 
+                        continue;
+                    //nur wenn noch nicht in Participants Liste
+
                     PreviousParticipants.Add(_mitglieder.Single(m => m.Id == memberMapping.Key));
                 }
             }
