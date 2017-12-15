@@ -80,9 +80,9 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _selectedMember, value);
         }
 
-        private List<Mitglied> _previousParticipants;
+        private ObservableCollection<Mitglied> _previousParticipants = new ObservableCollection<Mitglied>();
 
-        public List<Mitglied> PreviousParticipants
+        public ObservableCollection<Mitglied> PreviousParticipants
         {
             get => _previousParticipants;
             set => SetProperty(ref _previousParticipants, value);
@@ -123,30 +123,48 @@ namespace AVF.MemberManagement.ViewModels
 
         private async void FindMorePreviousParticipants()
         {
-            //nur wenn noch nicht in Participants Liste
-
-            var trainings = await _trainingsRepository.GetAsync();
-
-            var trainingsOnWeekDay = trainings.Where(training =>
+            try
             {
-                var daysToCheck = Training.Training.Termin - TimeSpan.FromDays(100);
+                //nur wenn noch nicht in Participants Liste
+                PreviousParticipants.Clear()
+                                    ;
+                var trainings = await _trainingsRepository.GetAsync();
 
-                return training.KursID == Training.Training.KursID && training.Id != Training.Training.Id &&
-                           training.Termin < Training.Training.Termin && training.Termin > daysToCheck;
-            }).Select(t => t.Id).ToList();
+                var trainingsOnWeekDay = trainings.Where(training =>
+                {
+                    var daysToCheck = Training.Training.Termin - TimeSpan.FromDays(100);
 
-            var trainingsTeilnahmen = await _trainingsTeilnahmenRepository.GetAsync();
+                    return training.KursID == Training.Training.KursID && training.Id != Training.Training.Id &&
+                               training.Termin < Training.Training.Termin && training.Termin > daysToCheck;
+                }).Select(t => t.Id).ToList();
 
-            Dictionary<int, int> mitgliederCount = new Dictionary<int, int>();
-            var trainingsTeilnahmes = trainingsTeilnahmen.Where(teilnahme => trainingsOnWeekDay.Contains(teilnahme.TrainingID)).ToList();
-            foreach (var trainingsTeilnahme in trainingsTeilnahmes)
-            {
-                if (!mitgliederCount.ContainsKey(trainingsTeilnahme.MitgliedID)) mitgliederCount.Add(trainingsTeilnahme.MitgliedID, 0);
+                var trainingsTeilnahmen = await _trainingsTeilnahmenRepository.GetAsync();
 
-                mitgliederCount[trainingsTeilnahme.MitgliedID]++;
+                Dictionary<int, int> mitgliederCount = new Dictionary<int, int>();
+                var trainingsTeilnahmes = trainingsTeilnahmen.Where(teilnahme => trainingsOnWeekDay.Contains(teilnahme.TrainingID)).ToList();
+                foreach (var trainingsTeilnahme in trainingsTeilnahmes)
+                {
+                    if (!mitgliederCount.ContainsKey(trainingsTeilnahme.MitgliedID)) mitgliederCount.Add(trainingsTeilnahme.MitgliedID, 0);
+
+                    mitgliederCount[trainingsTeilnahme.MitgliedID]++;
+                }
+
+                //now order dict by counter (second int)
+                var myList = mitgliederCount.ToList();
+
+                myList.Sort((pair1, pair2) => pair1.Value.CompareTo(pair2.Value)); //order descending
+
+
+                foreach (var memberMapping in myList)
+                {
+                    PreviousParticipants.Add(_mitglieder.Single(m => m.Id == memberMapping.Key));
+                }
             }
 
-            //now order dict by counter (second int)
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+            }
         }
 
         private void FindMembers(string searchText)

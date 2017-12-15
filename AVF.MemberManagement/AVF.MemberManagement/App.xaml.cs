@@ -71,7 +71,8 @@ namespace AVF.MemberManagement
             Container.RegisterType<IJsonFileFactory, JsonFileFactory>(new ContainerControlledLifetimeManager());
 
             //_repositoryBootstrapper.RegisterRepositories(false);
-            //Globals.UseFileProxies = true;
+            //Globals.UseFileProxies = false;
+            Globals.UseFileProxies = true;
             _repositoryBootstrapper.RegisterRepositories(Globals.UseFileProxies);
 
             //RefreshCache().Wait();
