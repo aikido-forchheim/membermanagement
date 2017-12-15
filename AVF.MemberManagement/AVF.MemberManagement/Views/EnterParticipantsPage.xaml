@@ -3,7 +3,8 @@
     <ContentPage Title="Trainingsteilnehmer">
         <StackLayout Margin="8,8,8,8">
             <StackLayout>
-                <Label Text="Bereits eingetragene Teilnehmer (8):" Margin="8,8,8,16"></Label>
+                <Label Text="Bereits eingetragene Teilnehmer (8):" Margin="8,8,8,16">
+                </Label>
                 <ListView ItemsSource="{Binding Participants}" SelectedItem="{Binding SelectedParticipant}" Margin="16,0,0,0">
                     <ListView.ItemTemplate>
                         <DataTemplate>
@@ -14,14 +15,16 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-                <Button Text="Entfernen" Margin="16,32,16,32"></Button>
+                <Button Text="Entfernen" Margin="16,32,16,32">
+                </Button>
             </StackLayout>
         </StackLayout>
     </ContentPage>
     <ContentPage Title="Regelmäßige Teilnehmer">
         <StackLayout Margin="8,8,8,8">
             <StackLayout>
-                <Label Text="Zuletzt anwesend (17):" Margin="8,8,8,16"></Label>
+                <Label Text="Zuletzt anwesend (17):" Margin="8,8,8,16">
+                </Label>
                 <ListView ItemsSource="{Binding Participants}" SelectedItem="{Binding SelectedParticipant}" Margin="16,0,0,0">
                     <ListView.ItemTemplate>
                         <DataTemplate>
@@ -32,13 +35,15 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-                <Button Text="Hinzufügen" Margin="16,32,16,32"></Button>
+                <Button Text="Hinzufügen" Margin="16,32,16,32">
+                </Button>
             </StackLayout>
         </StackLayout>
     </ContentPage>
     <ContentPage Title="Mitglieder suchen">
         <StackLayout Margin="8,8,8,8">
-            <Label Text="Gefundene Mitglieder (3):" Margin="8,8,8,16"></Label>
+            <Label Text="Gefundene Mitglieder (3):" Margin="8,8,8,16">
+            </Label>
             <ListView ItemsSource="{Binding FoundMembers}" SelectedItem="{Binding SelectedMember}" Margin="16,0,0,0">
                 <ListView.ItemTemplate>
                     <DataTemplate>
@@ -49,13 +54,16 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <Button Text="Hinzufügen" Margin="16,0,16,0"></Button>
-            <StackLayout Orientation="Horizontal" Margin="8,8,8,8">
-                <Label Text="Nur Kinder: " VerticalOptions="Center"></Label>
-                <Switch VerticalOptions="Center"></Switch>
+            <StackLayout Orientation="Horizontal" Margin="16,32,16,8">
+                <Label Text="Nur Kinder: " VerticalOptions="Center">
+                </Label>
+                <Switch VerticalOptions="Center">
+                </Switch>
             </StackLayout>
-            <Entry Text="{Binding SearchText}" Margin="16,0,16,32">
+            <Entry Text="{Binding SearchText}" Margin="16,0,16,0">
             </Entry>
+            <Button Text="Hinzufügen" Margin="16,8,16,32">
+            </Button>
         </StackLayout>
     </ContentPage>
 </TabbedPage>
