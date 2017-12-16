@@ -1,5 +1,4 @@
-﻿using Prism.Commands;
-using Prism.Mvvm;
+﻿using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -88,20 +87,11 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _previousParticipants, value);
         }
 
-        public string ParticipantsCountText
-        {
-            get => $"Bereits eingetragene Teilnehmer ({Participants.Count}):";
-        }
+        public string ParticipantsCountText => $"Bereits eingetragene Teilnehmer ({Participants.Count}):";
 
-        public string PreviousParticipantsCountText
-        {
-            get => $"Zuletzt anwesend ({PreviousParticipants.Count}):";
-        }
+        public string PreviousParticipantsCountText => $"Zuletzt anwesend ({PreviousParticipants.Count}):";
 
-        public string FoundMembersCountText
-        {
-            get => $"Gefundene Mitglieder ({FoundMembers.Count}):";
-        }
+        public string FoundMembersCountText => $"Gefundene Mitglieder ({FoundMembers.Count}):";
 
         public bool _childrenOnly;
 
