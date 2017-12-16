@@ -56,7 +56,7 @@
                 </ListView.ItemTemplate>
             </ListView>
             <StackLayout Orientation="Horizontal" Margin="16,32,16,8">
-                <Label Text="Nur Kinder: " VerticalOptions="Center">
+                <Label Text="Kinder: " VerticalOptions="Center">
                 </Label>
                 <Switch VerticalOptions="Center" IsToggled="{Binding ChildrenOnly}">
                 </Switch>

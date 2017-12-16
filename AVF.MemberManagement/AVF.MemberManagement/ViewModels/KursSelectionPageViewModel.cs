@@ -106,6 +106,7 @@ namespace AVF.MemberManagement.ViewModels
                 var trainings = await _trainings.GetAsync();
                 var trainingsTeilnahmen = await _trainingsTeilnahmen.GetAsync();
 
+                List<TrainingsModel> trainigModelsWithoutSort = new List<TrainingsModel>();
                 foreach (var kurs in alleKurse.Where(k => k.WochentagID == Wochentag.Id))
                 {
                     var classModel = await _classModelService.GetAsync(kurs);
@@ -121,6 +122,11 @@ namespace AVF.MemberManagement.ViewModels
                         Participations = GetParticipantListForTraining(trainingsTeilnahmen, training)
                     };
 
+                    trainigModelsWithoutSort.Add(trainingsModel);
+                }
+
+                foreach (var trainingsModel in trainigModelsWithoutSort.OrderBy(t=>t.Training.Zeit))
+                {
                     Trainings.Add(trainingsModel);
                 }
             }

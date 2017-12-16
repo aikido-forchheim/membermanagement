@@ -93,12 +93,12 @@ namespace AVF.MemberManagement.ViewModels
 
         public string FoundMembersCountText => $"Gefundene Mitglieder ({FoundMembers.Count}):";
 
-        public bool _childrenOnly;
+        private bool _childrenOnly;
 
         public bool ChildrenOnly
         {
             get => _childrenOnly;
-            set => SetProperty(ref _childrenOnly, value);
+            set { SetProperty(ref _childrenOnly, value); FindMembers(_searchText); }
         }
 
         public EnterParticipantsPageViewModel(IRepository<Mitglied> mitgliederRepository, IRepository<Training> trainingsRepository, IRepository<TrainingsTeilnahme> trainingsTeilnahmenRepository)
@@ -119,6 +119,8 @@ namespace AVF.MemberManagement.ViewModels
 
             SelectedDateString = (string)parameters["SelectedDateString"];
             Training = (TrainingsModel)parameters["SelectedTraining"];
+
+            ChildrenOnly = Training.Training.Kindertraining;
 
             _mitglieder = await _mitgliederRepository.GetAsync();
 
@@ -190,6 +192,8 @@ namespace AVF.MemberManagement.ViewModels
         {
             FoundMembers.Clear();
 
+            searchText = searchText ?? "";
+
             var searchStrings = searchText.Split(' ');
 
             var foundMembers = _mitglieder.Where(m =>
@@ -207,9 +211,9 @@ namespace AVF.MemberManagement.ViewModels
                 }
 
                 return allSearchStringsMatch && !Participants.Contains(m) && 
-                                                             ((!ChildrenOnly && (m.BeitragsklasseID == 1 || m.BeitragsklasseID ==2))
+                                                             (!ChildrenOnly && m.Geburtsdatum <= DateTime.Now - TimeSpan.FromDays(365 * 18)
                 ||
-                                                              (ChildrenOnly && m.BeitragsklasseID == 4))
+                                                              ChildrenOnly && m.Geburtsdatum > DateTime.Now - TimeSpan.FromDays(365 * 18))
 
                                                              ;// && m.Austritt == null && m.BeitragsklasseID == 4;
             });
