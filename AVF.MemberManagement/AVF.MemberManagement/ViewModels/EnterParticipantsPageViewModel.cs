@@ -103,6 +103,14 @@ namespace AVF.MemberManagement.ViewModels
             get => $"Gefundene Mitglieder ({FoundMembers.Count}):";
         }
 
+        public bool _childrenOnly;
+
+        public bool ChildrenOnly
+        {
+            get => _childrenOnly;
+            set => SetProperty(ref _childrenOnly, value);
+        }
+
         public EnterParticipantsPageViewModel(IRepository<Mitglied> mitgliederRepository, IRepository<Training> trainingsRepository, IRepository<TrainingsTeilnahme> trainingsTeilnahmenRepository)
         {
             _mitgliederRepository = mitgliederRepository;
@@ -208,7 +216,12 @@ namespace AVF.MemberManagement.ViewModels
                     if (!containsNamePart) allSearchStringsMatch = false;
                 }
 
-                return allSearchStringsMatch && !Participants.Contains(m);
+                return allSearchStringsMatch && !Participants.Contains(m) && 
+                                                             ((!ChildrenOnly && (m.BeitragsklasseID == 1 || m.BeitragsklasseID ==2))
+                ||
+                                                              (ChildrenOnly && m.BeitragsklasseID == 4))
+
+                                                             ;// && m.Austritt == null && m.BeitragsklasseID == 4;
             });
 
             foreach (var foundMember in foundMembers)

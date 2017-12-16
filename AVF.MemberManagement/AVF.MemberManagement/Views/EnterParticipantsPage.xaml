@@ -58,7 +58,7 @@
             <StackLayout Orientation="Horizontal" Margin="16,32,16,8">
                 <Label Text="Nur Kinder: " VerticalOptions="Center">
                 </Label>
-                <Switch VerticalOptions="Center">
+                <Switch VerticalOptions="Center" IsToggled="{Binding ChildrenOnly}">
                 </Switch>
             </StackLayout>
             <Entry Text="{Binding SearchText}" Margin="16,0,16,0">
