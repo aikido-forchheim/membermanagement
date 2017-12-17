@@ -52,6 +52,19 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _cacheMessage, value);
         }
 
+        private string _passwordForAdvancedSettings;
+
+        public string PasswordForAdvancedSettings
+        {
+            get => _passwordForAdvancedSettings;
+            set
+            {
+                SetProperty(ref _passwordForAdvancedSettings, value); 
+                
+                ((DelegateCommand) AdvancedSettingsCommand).RaiseCanExecuteChanged();
+            }
+        }
+
         public ICommand ValidateCommand { get; }
 
         public ICommand SaveCommand { get; }
@@ -74,6 +87,7 @@ namespace AVF.MemberManagement.ViewModels
             BackCommand = new DelegateCommand(OnBack, CanBack);
             ValidateCommand = new DelegateCommand(OnValidate, CanValidate);
             RefreshCacheCommand = new DelegateCommand(OnRefreshCache, CanRefreshCache);
+            AdvancedSettingsCommand = new DelegateCommand(AdvancedSettings, CanAdvancedSettings);
         }
 
         private bool CanValidate()
@@ -155,6 +169,26 @@ namespace AVF.MemberManagement.ViewModels
                 CacheMessage = ex.Message;
             }
         }
+
+        #region AdvancedSettingsCommand
+
+        public ICommand AdvancedSettingsCommand { get; }
+
+        private void AdvancedSettings()
+        {
+        }
+
+        private bool CanAdvancedSettings()
+        {
+            if (string.IsNullOrEmpty(AccountService.RestApiAccount?.Password)) return false;
+
+            return AccountService.RestApiAccount.Password == _passwordForAdvancedSettings;
+        }
+
+        //ctor: 
+        //xaml: Command="{Binding AdvancedSettingsCommand}"
+
+        #endregion
 
 
         public async void OnNavigatingTo(NavigationParameters parameters)

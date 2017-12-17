@@ -4,9 +4,7 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="AVF.MemberManagement.Views.RestApiSettingsPage">
-    <ScrollView>
-        <StackLayout VerticalOptions="Center" HorizontalOptions="FillAndExpand" Margin="32">
-
+        <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Margin="32">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -33,10 +31,12 @@
             <Button Text="Speichern" Command="{Binding SaveCommand}"></Button>
             <Button Text="Zurück" Command="{Binding BackCommand}"></Button>
 
-            <StackLayout Orientation="Horizontal"><Label Text="Use Cache: "></Label><Switch IsToggled="{Binding UseFileProxies}"></Switch><Button Text="Refresh Cache" Command="{Binding RefreshCacheCommand}"></Button><Label Text="{Binding CacheMessage}"></Label></StackLayout>
+            <Entry Text="{Binding PasswordForAdvancedSettings}" IsPassword="true" Keyboard="Text"></Entry>
+            <Button Text="AdvancedSettings" Command="{Binding AdvancedSettingsCommand}"></Button>
+
+            <StackLayout Orientation="Horizontal"><Label Text="Use Cache: " VerticalOptions="Center"></Label><Switch IsToggled="{Binding UseFileProxies}"></Switch><Button Text="Refresh Cache" Command="{Binding RefreshCacheCommand}"></Button><Label Text="{Binding CacheMessage}"></Label></StackLayout>
 
             <Label Text="{Binding Message}"></Label>
 
         </StackLayout>
-    </ScrollView>
 </ContentPage>
