@@ -10,6 +10,8 @@
         <Switch IsToggled="{Binding UseFileProxies}"></Switch>
         <Button Text="Refresh Cache" Command="{Binding RefreshCacheCommand}"></Button>
         <Label Text="{Binding CacheMessage}"></Label>
+        <Picker ItemsSource="{Binding AvailableIdioms}" SelectedItem="{Binding SelectedIdiom}"></Picker>
+        <Label Text="{Binding SelectedIdiom}"></Label>
     </StackLayout>
 
 </ContentPage>

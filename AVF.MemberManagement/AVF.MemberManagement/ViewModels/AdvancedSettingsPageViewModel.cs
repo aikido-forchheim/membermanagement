@@ -2,8 +2,10 @@
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
+using AVF.MemberManagement.StandardLibrary.Enums;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Services;
 
@@ -16,6 +18,21 @@ namespace AVF.MemberManagement.ViewModels
 
         public ICommand RefreshCacheCommand { get; }
 
+
+        private Idiom _selectedIdiom;
+
+        public Idiom SelectedIdiom
+        {
+            get => _selectedIdiom;
+            set
+            {
+                SetProperty(ref _selectedIdiom, value);
+                if (SelectedIdiom != Idiom.Unsupported) //whyever this is set on back button
+                Globals.Idiom = SelectedIdiom;
+            }
+        }
+
+        public ObservableCollection<Idiom> AvailableIdioms { get; set; } = new ObservableCollection<Idiom>() { Idiom.Unsupported, Idiom.Phone, Idiom.Tablet, Idiom.Desktop, Idiom.TV };
 
 
         public bool UseFileProxies
@@ -43,6 +60,8 @@ namespace AVF.MemberManagement.ViewModels
             _repositoryBootstrapper = repositoryBootstrapper;
 
             RefreshCacheCommand = new DelegateCommand(OnRefreshCache, CanRefreshCache);
+
+            SelectedIdiom = Globals.Idiom;
         }
 
         private bool CanRefreshCache()
