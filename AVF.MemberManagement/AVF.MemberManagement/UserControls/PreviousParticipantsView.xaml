@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:userControls="clr-namespace:AVF.MemberManagement.UserControls;assembly=AVF.MemberManagement"
+             x:Class="AVF.MemberManagement.UserControls.PreviousParticipantsView">
+  <ContentView.Content>
+        <StackLayout Margin="8,8,8,8">
+            <Label Text="{Binding PreviousParticipantsCountText}" Margin="8,8,8,16">
+              </Label>
+              <!-- SelectedItem="{Binding SelectedParticipant}" -->
+              <ListView ItemsSource="{Binding PreviousParticipants}" Margin="16,0,0,0">
+                  <ListView.ItemTemplate>
+                      <DataTemplate>
+                          <ViewCell>
+                              <userControls:MemberView>
+                              </userControls:MemberView>
+                          </ViewCell>
+                      </DataTemplate>
+                  </ListView.ItemTemplate>
+              </ListView>
+            <Button Text="Hinzufügen" Margin="16,32,16,32">
+            </Button>
+        </StackLayout>
+    </ContentView.Content>
+</ContentView>
