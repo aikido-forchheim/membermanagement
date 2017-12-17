@@ -10,6 +10,7 @@ using AVF.MemberManagement.StandardLibrary.Models;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.Views;
 using Prism.Navigation;
+using Xamarin.Forms;
 
 namespace AVF.MemberManagement.ViewModels
 {
@@ -142,7 +143,15 @@ namespace AVF.MemberManagement.ViewModels
 
         private void EnterParticipants()
         {
-            _navigationService.NavigateAsync(nameof(EnterParticipantsPage), new NavigationParameters { { "SelectedTraining", SelectedTraining }, { "SelectedDateString", SelectedDateString } });
+            if (Device.Idiom == TargetIdiom.Phone)
+            {
+                _navigationService.NavigateAsync(nameof(EnterParticipantsPage), new NavigationParameters { { "SelectedTraining", SelectedTraining }, { "SelectedDateString", SelectedDateString } });
+            }
+            else
+            {
+                _navigationService.NavigateAsync(nameof(EnterParticipantsTabletPage), new NavigationParameters { { "SelectedTraining", SelectedTraining }, { "SelectedDateString", SelectedDateString } });
+
+            }
         }
 
         private bool CanEnterParticipants()

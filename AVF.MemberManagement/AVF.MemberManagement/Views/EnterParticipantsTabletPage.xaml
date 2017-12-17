@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TabbedPage xmlns="http://xamarin.com/schemas/2014/forms" 
+            xmlns:userControls="clr-namespace:AVF.MemberManagement.UserControls;assembly=AVF.MemberManagement" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms" prism:ViewModelLocator.AutowireViewModel="True" x:Class="AVF.MemberManagement.Views.EnterParticipantsTabletPage" xmlns:ctrl="clr-namespace:AVF.MemberManagement.UserControls;assembly=AVF.MemberManagement">
+    <ContentPage Title="Regelmäßige Teilnehmer">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <userControls:ParticipantsView Grid.Column="0"></userControls:ParticipantsView>
+            <userControls:PreviousParticipantsView Grid.Column="1"></userControls:PreviousParticipantsView>
+        </Grid>
+    </ContentPage>
+    <ContentPage Title="Mitglieder suchen">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <userControls:ParticipantsView Grid.Column="0"></userControls:ParticipantsView>
+            <userControls:FindMembersView Grid.Column="1"></userControls:FindMembersView>
+        </Grid>
+    </ContentPage>
+</TabbedPage>

@@ -87,6 +87,7 @@ namespace AVF.MemberManagement
             Container.RegisterTypeForNavigation<DaySelectionPage>();
             Container.RegisterTypeForNavigation<KursSelectionPage>();
             Container.RegisterTypeForNavigation<EnterParticipantsPage>();
+            Container.RegisterTypeForNavigation<EnterParticipantsTabletPage>();
         }
 
         private async Task RefreshCache()

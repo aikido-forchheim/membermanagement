@@ -55,6 +55,7 @@
     </Compile>
     <Compile Include="ViewModels\DaySelectionPageViewModel.cs" />
     <Compile Include="ViewModels\EnterParticipantsPageViewModel.cs" />
+    <Compile Include="ViewModels\EnterParticipantsTabletPageViewModel.cs" />
     <Compile Include="ViewModels\KursSelectionPageViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\PasswordPageViewModel.cs" />
@@ -64,6 +65,9 @@
     </Compile>
     <Compile Include="Views\EnterParticipantsPage.xaml.cs">
       <DependentUpon>EnterParticipantsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EnterParticipantsTabletPage.xaml.cs">
+      <DependentUpon>EnterParticipantsTabletPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\KursSelectionPage.xaml.cs">
       <DependentUpon>KursSelectionPage.xaml</DependentUpon>
@@ -264,6 +268,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UserControls\FindMembersView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\EnterParticipantsTabletPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
