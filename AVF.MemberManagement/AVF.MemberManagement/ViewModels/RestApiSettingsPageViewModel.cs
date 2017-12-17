@@ -19,8 +19,6 @@ namespace AVF.MemberManagement.ViewModels
         private readonly ILogger _logger;
         private readonly INavigationService _navigationService;
         private readonly IProxyBase<Setting, string> _settingsProxy; //Leave Proxy instead of Repository, because we use this for connection testing our RestApi, and the Repository may be cached anytime later
-        private readonly IRepositoryBootstrapper _repositoryBootstrapper;
-        private readonly IJsonFileFactory _jsonFileFactory;
 
         public IAccountService AccountService { get; }
 
@@ -31,25 +29,6 @@ namespace AVF.MemberManagement.ViewModels
         {
             get => _message;
             set => SetProperty(ref _message, value);
-        }
-
-        public bool UseFileProxies
-        {
-            get => Globals.UseFileProxies;
-            set 
-            {
-                Globals.UseFileProxies = value;
-                _repositoryBootstrapper.RegisterRepositories(value);
-                RaisePropertyChanged("UseFileProxies");
-            }
-        }
-
-        private string _cacheMessage;
-
-        public string CacheMessage
-        {
-            get => _cacheMessage;
-            set => SetProperty(ref _cacheMessage, value);
         }
 
         private string _passwordForAdvancedSettings;
@@ -71,22 +50,17 @@ namespace AVF.MemberManagement.ViewModels
 
         public ICommand BackCommand { get; }
 
-        public ICommand RefreshCacheCommand { get; }
-
-        public RestApiSettingsPageViewModel(ILogger logger, IAccountService accountService, INavigationService navigationService, IProxyBase<Setting, string> settingsProxy, IRepositoryBootstrapper repositoryBootstrapper, IJsonFileFactory jsonFileFactory)
+        public RestApiSettingsPageViewModel(ILogger logger, IAccountService accountService, INavigationService navigationService, IProxyBase<Setting, string> settingsProxy)
         {
             _logger = logger;
             _navigationService = navigationService;
             _settingsProxy = settingsProxy;
-            _repositoryBootstrapper = repositoryBootstrapper;
-            _jsonFileFactory = jsonFileFactory;
 
             AccountService = accountService;
 
             SaveCommand = new DelegateCommand(OnSave, CanSave);
             BackCommand = new DelegateCommand(OnBack, CanBack);
             ValidateCommand = new DelegateCommand(OnValidate, CanValidate);
-            RefreshCacheCommand = new DelegateCommand(OnRefreshCache, CanRefreshCache);
             AdvancedSettingsCommand = new DelegateCommand(AdvancedSettings, CanAdvancedSettings);
         }
 
@@ -148,34 +122,13 @@ namespace AVF.MemberManagement.ViewModels
             return canSave;
         }
 
-        private bool CanRefreshCache()
-        {
-            return true;
-        }
-
-        private async void OnRefreshCache()
-        {
-            try
-            {
-                var factory = _jsonFileFactory;
-                var fileList = await factory.RefreshFileCache();
-
-                //Debug.WriteLine("Cached files count:" + fileList.Count);
-
-                CacheMessage = "Cached files count:" + fileList.Count;
-            }
-            catch (Exception ex)
-            {
-                CacheMessage = ex.Message;
-            }
-        }
-
         #region AdvancedSettingsCommand
 
         public ICommand AdvancedSettingsCommand { get; }
 
         private void AdvancedSettings()
         {
+            _navigationService.NavigateAsync("AdvancedSettingsPage");
         }
 
         private bool CanAdvancedSettings()
@@ -184,9 +137,6 @@ namespace AVF.MemberManagement.ViewModels
 
             return AccountService.RestApiAccount.Password == _passwordForAdvancedSettings;
         }
-
-        //ctor: 
-        //xaml: Command="{Binding AdvancedSettingsCommand}"
 
         #endregion
 

@@ -33,9 +33,7 @@
 
             <Entry Text="{Binding PasswordForAdvancedSettings}" IsPassword="true" Keyboard="Text"></Entry>
             <Button Text="AdvancedSettings" Command="{Binding AdvancedSettingsCommand}"></Button>
-
-            <StackLayout Orientation="Horizontal"><Label Text="Use Cache: " VerticalOptions="Center"></Label><Switch IsToggled="{Binding UseFileProxies}"></Switch><Button Text="Refresh Cache" Command="{Binding RefreshCacheCommand}"></Button><Label Text="{Binding CacheMessage}"></Label></StackLayout>
-
+            
             <Label Text="{Binding Message}"></Label>
 
         </StackLayout>

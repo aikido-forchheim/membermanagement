@@ -4,5 +4,12 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="AVF.MemberManagement.Views.AdvancedSettingsPage">
-  
+
+    <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+        <Label Text="Use Cache: " VerticalOptions="Center"></Label>
+        <Switch IsToggled="{Binding UseFileProxies}"></Switch>
+        <Button Text="Refresh Cache" Command="{Binding RefreshCacheCommand}"></Button>
+        <Label Text="{Binding CacheMessage}"></Label>
+    </StackLayout>
+
 </ContentPage>
