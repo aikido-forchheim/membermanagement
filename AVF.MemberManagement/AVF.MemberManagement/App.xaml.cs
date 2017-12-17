@@ -5,6 +5,7 @@ using AVF.MemberManagement.Factories;
 using AVF.MemberManagement.PortableLibrary.Services;
 using AVF.MemberManagement.Services;
 using AVF.MemberManagement.StandardLibrary.Archive;
+using AVF.MemberManagement.StandardLibrary.Enums;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Proxies;
 using AVF.MemberManagement.StandardLibrary.Repositories;
@@ -15,6 +16,7 @@ using Prism.Unity;
 using AVF.MemberManagement.Views;
 using Microsoft.Extensions.Logging;
 using Microsoft.Practices.Unity;
+using Xamarin.Forms;
 
 namespace AVF.MemberManagement
 {
@@ -33,6 +35,8 @@ namespace AVF.MemberManagement
             InitializeComponent();
 
             NavigationService.NavigateAsync(nameof(MainPage));
+
+            Globals.Idiom = (Idiom) (int) Device.Idiom;
         }
 
         protected override void RegisterTypes()

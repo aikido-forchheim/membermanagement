@@ -5,8 +5,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
+using AVF.MemberManagement.StandardLibrary.Enums;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Models;
+using AVF.MemberManagement.StandardLibrary.Services;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.Views;
 using Prism.Navigation;
@@ -143,7 +145,7 @@ namespace AVF.MemberManagement.ViewModels
 
         private void EnterParticipants()
         {
-            if (Device.Idiom == TargetIdiom.Phone)
+            if (Globals.Idiom == Idiom.Phone)
             {
                 _navigationService.NavigateAsync(nameof(EnterParticipantsPage), new NavigationParameters { { "SelectedTraining", SelectedTraining }, { "SelectedDateString", SelectedDateString } });
             }
