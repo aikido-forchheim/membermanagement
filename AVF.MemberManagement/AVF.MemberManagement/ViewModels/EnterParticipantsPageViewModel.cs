@@ -8,6 +8,8 @@ using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Models;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Prism.Navigation;
+using System.Windows.Input;
+using Prism.Commands;
 
 namespace AVF.MemberManagement.ViewModels
 {
@@ -48,7 +50,23 @@ namespace AVF.MemberManagement.ViewModels
         public Mitglied SelectedParticipant
         {
             get => _selectedParticipant;
-            set => SetProperty(ref _selectedParticipant, value);
+            set
+            {
+                SetProperty(ref _selectedParticipant, value);
+                //((DelegateCommand)AddPreviousParticipantCommand).RaiseCanExecuteChanged();
+            }
+        }
+
+        private Mitglied _selectedPreviousParticipant;
+
+        public Mitglied SelectedPreviousParticipant
+        {
+            get => _selectedPreviousParticipant;
+            set
+            {
+                SetProperty(ref _selectedPreviousParticipant, value);
+                ((DelegateCommand)AddPreviousParticipantCommand).RaiseCanExecuteChanged();
+            }
         }
 
         private string _searchText;
@@ -101,11 +119,30 @@ namespace AVF.MemberManagement.ViewModels
             set { SetProperty(ref _childrenOnly, value); FindMembers(_searchText); }
         }
 
+        public ICommand AddPreviousParticipantCommand { get; set; }
+
         public EnterParticipantsPageViewModel(IRepository<Mitglied> mitgliederRepository, IRepository<Training> trainingsRepository, IRepository<TrainingsTeilnahme> trainingsTeilnahmenRepository)
         {
             _mitgliederRepository = mitgliederRepository;
             _trainingsRepository = trainingsRepository;
             _trainingsTeilnahmenRepository = trainingsTeilnahmenRepository;
+
+            AddPreviousParticipantCommand = new DelegateCommand(AddPreviousParticipant, CanAddPreviousParticipant);
+        }
+
+        private bool CanAddPreviousParticipant()
+        {
+            return PreviousParticipants != null && PreviousParticipants.Count > 0 && SelectedPreviousParticipant != null
+                                                                       && PreviousParticipants.Contains(SelectedPreviousParticipant)
+                                                                       ;
+        }
+
+        private void AddPreviousParticipant()
+        {
+            Participants.Add(SelectedPreviousParticipant);
+            PreviousParticipants.Remove(SelectedPreviousParticipant);
+
+            ((DelegateCommand)AddPreviousParticipantCommand).RaiseCanExecuteChanged();
         }
 
         public void OnNavigatedFrom(NavigationParameters parameters)
