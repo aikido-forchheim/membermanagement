@@ -94,7 +94,11 @@ namespace AVF.MemberManagement.ViewModels
         public Mitglied SelectedMember
         {
             get => _selectedMember;
-            set => SetProperty(ref _selectedMember, value);
+            set
+            {
+                SetProperty(ref _selectedMember, value);
+                ((DelegateCommand)AddFoundMemberCommand).RaiseCanExecuteChanged();
+            }
         }
 
         private ObservableCollection<Mitglied> _previousParticipants = new ObservableCollection<Mitglied>();
@@ -121,6 +125,8 @@ namespace AVF.MemberManagement.ViewModels
 
         public ICommand AddPreviousParticipantCommand { get; set; }
 
+        public ICommand AddFoundMemberCommand { get; set; }
+
         public EnterParticipantsPageViewModel(IRepository<Mitglied> mitgliederRepository, IRepository<Training> trainingsRepository, IRepository<TrainingsTeilnahme> trainingsTeilnahmenRepository)
         {
             _mitgliederRepository = mitgliederRepository;
@@ -128,6 +134,22 @@ namespace AVF.MemberManagement.ViewModels
             _trainingsTeilnahmenRepository = trainingsTeilnahmenRepository;
 
             AddPreviousParticipantCommand = new DelegateCommand(AddPreviousParticipant, CanAddPreviousParticipant);
+            AddFoundMemberCommand = new DelegateCommand(AddFoundMember, CanAddFoundMember);
+        }
+
+        private bool CanAddFoundMember()
+        {
+            return FoundMembers != null && FoundMembers.Count > 0 && SelectedMember != null
+                                                       && FoundMembers.Contains(SelectedMember)
+                                                                       ;
+        }
+
+        private void AddFoundMember()
+        {
+            Participants.Add(SelectedMember);
+            FoundMembers.Remove(SelectedMember);
+
+            ((DelegateCommand)AddFoundMemberCommand).RaiseCanExecuteChanged();
         }
 
         private bool CanAddPreviousParticipant()

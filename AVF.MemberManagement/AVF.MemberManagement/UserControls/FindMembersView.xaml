@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:userControls="clr-namespace:AVF.MemberManagement.UserControls;assembly=AVF.MemberManagement"
@@ -25,7 +25,7 @@
           </StackLayout>
           <Entry Text="{Binding SearchText}" Margin="16,0,16,0">
           </Entry>
-          <Button Text="Hinzufügen" Margin="16,8,16,32">
+          <Button Text="Hinzufügen" Margin="16,8,16,32" Command="{Binding AddFoundMemberCommand}">
           </Button>
       </StackLayout>
     </ContentView.Content>
