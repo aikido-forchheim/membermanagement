@@ -14,7 +14,9 @@
                           <userControls:MemberView 
                                 OriginalBindingContext="{Binding Source={x:Reference child}, Path=BindingContext}" 
                                 BindingContext="{Binding Source={x:Reference parent}, Path=BindingContext}" 
-                                Command="{Binding AddFoundMemberCommand}">
+                                Command="{Binding AddFoundMemberCommand}"
+                                ButtonText="+"
+                                >
                             </userControls:MemberView>
                       </ViewCell>
                   </DataTemplate>

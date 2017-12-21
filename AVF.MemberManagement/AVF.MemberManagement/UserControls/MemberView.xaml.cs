@@ -29,5 +29,14 @@ namespace AVF.MemberManagement.UserControls
             get => (ICommand)GetValue(CommandProperty);
             set => SetValue(CommandProperty, value);
         }
+
+        public static readonly BindableProperty ButtonTextProperty =
+            BindableProperty.Create(nameof(ButtonText), typeof(string), typeof(MemberView), defaultValue: string.Empty);
+
+        public string ButtonText
+        {
+            get => (string)GetValue(ButtonTextProperty);
+            set => SetValue(ButtonTextProperty, value);
+        }
     }
 }

@@ -11,7 +11,9 @@
                             <userControls:MemberView 
                                 OriginalBindingContext="{Binding Source={x:Reference child}, Path=BindingContext}" 
                                 BindingContext="{Binding Source={x:Reference parent}, Path=BindingContext}" 
-                                Command="{Binding AddPreviousParticipantCommand}">
+                                Command="{Binding AddPreviousParticipantCommand}"
+                                ButtonText="+"
+                                >
                             </userControls:MemberView>
                         </ViewCell>
                     </DataTemplate>
