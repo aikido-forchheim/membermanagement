@@ -11,8 +11,12 @@
               <ListView x:Name="parent" ItemsSource="{Binding PreviousParticipants}" SelectedItem="{Binding SelectedPreviousParticipant}" Margin="16,0,0,0">
                   <ListView.ItemTemplate>
                       <DataTemplate>
-                          <ViewCell>
-                              <userControls:MemberView ParentBindingContext="{Binding Source={x:Reference parent}, Path=BindingContext}">
+                          <ViewCell x:Name="child" >
+                              <userControls:MemberView 
+                              BindingContext="{Binding Source={x:Reference parent}, Path=BindingContext}"
+                                ParentBindingContext="{Binding Source={x:Reference child}, Path=BindingContext}"
+                              Command="{Binding AddPreviousParticipantCommand}"
+                                >
                               </userControls:MemberView>
                           </ViewCell>
                       </DataTemplate>
