@@ -41,8 +41,8 @@
                 </Label>
                 <Label BindingContext="{Binding Source={x:Reference This}, Path=OriginalBindingContext}" Text="{Binding Nachname}" VerticalOptions="Center">
                 </Label>
-                <Button Command="{Binding Command, Source={x:Reference This}}" Text="+" WidthRequest="48" HorizontalOptions="EndAndExpand" VerticalOptions="Center" />
             </StackLayout>
+            <Button  Margin="0,0,16,0" Command="{Binding Command, Source={x:Reference This}}" Text="+" WidthRequest="44" HorizontalOptions="EndAndExpand" VerticalOptions="Center" />
         </StackLayout>
     </ContentView.Content>
 </ContentView>
