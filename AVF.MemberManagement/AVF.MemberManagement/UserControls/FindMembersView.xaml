@@ -16,6 +16,7 @@
                                 BindingContext="{Binding Source={x:Reference parent}, Path=BindingContext}" 
                                 Command="{Binding AddFoundMemberCommand}"
                                 ButtonText="+"
+                                ButtonTextColor="Green"
                                 >
                             </userControls:MemberView>
                       </ViewCell>

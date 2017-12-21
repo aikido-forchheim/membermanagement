@@ -38,5 +38,14 @@ namespace AVF.MemberManagement.UserControls
             get => (string)GetValue(ButtonTextProperty);
             set => SetValue(ButtonTextProperty, value);
         }
+
+        public static readonly BindableProperty ButtonTextColorProperty =
+            BindableProperty.Create(nameof(ButtonTextColor), typeof(Color), typeof(MemberView), defaultValue: Color.Default);
+
+        public Color ButtonTextColor
+        {
+            get => (Color)GetValue(ButtonTextColorProperty);
+            set => SetValue(ButtonTextProperty, value);
+        }
     }
 }

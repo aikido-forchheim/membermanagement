@@ -17,6 +17,7 @@
                                 BindingContext="{Binding Source={x:Reference parent}, Path=BindingContext}" 
                                 Command="{Binding RemoveParticipantCommand}"
                                 ButtonText="-"
+                                ButtonTextColor="Red"
                                     >
                             </userControls:MemberView>
                           </ViewCell>

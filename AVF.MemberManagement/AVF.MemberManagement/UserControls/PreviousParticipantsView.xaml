@@ -13,6 +13,7 @@
                                 BindingContext="{Binding Source={x:Reference parent}, Path=BindingContext}" 
                                 Command="{Binding AddPreviousParticipantCommand}"
                                 ButtonText="+"
+                                ButtonTextColor="Green"
                                 >
                             </userControls:MemberView>
                         </ViewCell>
