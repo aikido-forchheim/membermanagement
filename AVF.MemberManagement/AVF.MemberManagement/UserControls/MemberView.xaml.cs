@@ -10,5 +10,14 @@ namespace AVF.MemberManagement.UserControls
         {
             InitializeComponent();
         }
+
+        public static readonly BindableProperty ParentBindingContextProperty =
+            BindableProperty.Create(nameof(ParentBindingContext), typeof(object), typeof(MemberView));
+
+        public object ParentBindingContext
+        {
+            get => (object)GetValue(ParentBindingContextProperty);
+            set => SetValue(ParentBindingContextProperty, value);
+        }
     }
 }

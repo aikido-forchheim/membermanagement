@@ -8,11 +8,11 @@
             <Label Text="{Binding PreviousParticipantsCountText}" Margin="8,8,8,16">
               </Label>
               <!-- SelectedItem="{Binding SelectedParticipant}" -->
-              <ListView ItemsSource="{Binding PreviousParticipants}" SelectedItem="{Binding SelectedPreviousParticipant}" Margin="16,0,0,0">
+              <ListView x:Name="parent" ItemsSource="{Binding PreviousParticipants}" SelectedItem="{Binding SelectedPreviousParticipant}" Margin="16,0,0,0">
                   <ListView.ItemTemplate>
                       <DataTemplate>
                           <ViewCell>
-                              <userControls:MemberView>
+                              <userControls:MemberView ParentBindingContext="{Binding Source={x:Reference parent}, Path=BindingContext}">
                               </userControls:MemberView>
                           </ViewCell>
                       </DataTemplate>
