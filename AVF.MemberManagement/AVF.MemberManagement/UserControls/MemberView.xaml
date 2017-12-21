@@ -8,7 +8,6 @@
                         <OnPlatform x:TypeArguments="Thickness">
                             <OnPlatform.Platforms>
                                 <On Platform="UWP" Value="8,8,8,8" />
-<!--                                <On Platform="Android" Value="8,8,8,8" />-->
                             </OnPlatform.Platforms>
                         </OnPlatform>
                     </OnIdiom.Phone>
@@ -16,7 +15,6 @@
                         <OnPlatform x:TypeArguments="Thickness">
                             <OnPlatform.Platforms>
                                 <On Platform="UWP" Value="8,8,8,8" />
-<!--                                <On Platform="Android" Value="8,8,8,8" />-->
                             </OnPlatform.Platforms>
                         </OnPlatform>
                     </OnIdiom.Tablet>
@@ -27,7 +25,6 @@
                     <OnPlatform x:TypeArguments="Thickness">
                         <OnPlatform.Platforms>
                             <On Platform="UWP" Value="4,4,4,4" />
-<!--                            <On Platform="UWP" Value="4,4,4,4" />-->
                         </OnPlatform.Platforms>
                     </OnPlatform>
                 </StackLayout.Margin>
@@ -37,15 +34,14 @@
                     <OnPlatform x:TypeArguments="Thickness">
                         <OnPlatform.Platforms>
                             <On Platform="UWP" Value="4,4,4,4" />
-<!--                            <On Platform="UWP" Value="4,4,4,4" />-->
                         </OnPlatform.Platforms>
                     </OnPlatform>
                 </StackLayout.Margin>
-                <Label BindingContext="{Binding Source={x:Reference This}, Path=ParentBindingContext}" Text="{Binding Vorname}">
+                <Label BindingContext="{Binding Source={x:Reference This}, Path=OriginalBindingContext}" Text="{Binding Vorname}" VerticalOptions="Center">
                 </Label>
-                <Label BindingContext="{Binding Source={x:Reference This}, Path=ParentBindingContext}" Text="{Binding Nachname}">
+                <Label BindingContext="{Binding Source={x:Reference This}, Path=OriginalBindingContext}" Text="{Binding Nachname}" VerticalOptions="Center">
                 </Label>
-                <Button Command="{Binding Command, Source={x:Reference This}}" />
+                <Button Command="{Binding Command, Source={x:Reference This}}" Text="+" WidthRequest="48" HorizontalOptions="EndAndExpand" VerticalOptions="Center" />
             </StackLayout>
         </StackLayout>
     </ContentView.Content>

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:userControls="clr-namespace:AVF.MemberManagement.UserControls;assembly=AVF.MemberManagement"
@@ -8,12 +8,15 @@
           <StackLayout>
               <Label Text="{Binding ParticipantsCountText}" Margin="8,8,8,16">
               </Label>
-              <ListView ItemsSource="{Binding Participants}" SelectedItem="{Binding SelectedParticipant}" Margin="16,0,0,0">
+              <ListView x:Name="parent" ItemsSource="{Binding Participants}" SelectedItem="{Binding SelectedParticipant}" Margin="16,0,0,0">
                   <ListView.ItemTemplate>
                       <DataTemplate>
-                          <ViewCell>
-                              <userControls:MemberView>
-                              </userControls:MemberView>
+                          <ViewCell x:Name="child">
+                              <userControls:MemberView 
+                                OriginalBindingContext="{Binding Source={x:Reference child}, Path=BindingContext}" 
+                                BindingContext="{Binding Source={x:Reference parent}, Path=BindingContext}" 
+                                Command="{Binding RemoveParticipantCommand}">
+                            </userControls:MemberView>
                           </ViewCell>
                       </DataTemplate>
                   </ListView.ItemTemplate>

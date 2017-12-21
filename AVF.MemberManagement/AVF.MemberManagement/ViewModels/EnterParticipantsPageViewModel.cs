@@ -127,6 +127,8 @@ namespace AVF.MemberManagement.ViewModels
 
         public ICommand AddFoundMemberCommand { get; set; }
 
+        public ICommand RemoveParticipantCommand { get; set; }
+
         public EnterParticipantsPageViewModel(IRepository<Mitglied> mitgliederRepository, IRepository<Training> trainingsRepository, IRepository<TrainingsTeilnahme> trainingsTeilnahmenRepository)
         {
             _mitgliederRepository = mitgliederRepository;
@@ -135,6 +137,17 @@ namespace AVF.MemberManagement.ViewModels
 
             AddPreviousParticipantCommand = new DelegateCommand(AddPreviousParticipant, CanAddPreviousParticipant);
             AddFoundMemberCommand = new DelegateCommand(AddFoundMember, CanAddFoundMember);
+            RemoveParticipantCommand = new DelegateCommand(RemoveParticipant, CanRemoveParticipant);
+        }
+
+        private bool CanRemoveParticipant()
+        {
+            return true;
+        }
+
+        private void RemoveParticipant()
+        {
+            System.Diagnostics.Debug.WriteLine("RemoveParticipant clicked");
         }
 
         private bool CanAddFoundMember()

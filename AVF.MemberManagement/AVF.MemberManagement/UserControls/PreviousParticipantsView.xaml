@@ -1,27 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:userControls="clr-namespace:AVF.MemberManagement.UserControls;assembly=AVF.MemberManagement"
-             x:Class="AVF.MemberManagement.UserControls.PreviousParticipantsView">
-  <ContentView.Content>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:userControls="clr-namespace:AVF.MemberManagement.UserControls;assembly=AVF.MemberManagement" x:Class="AVF.MemberManagement.UserControls.PreviousParticipantsView">
+    <ContentView.Content>
         <StackLayout Margin="8,8,8,8">
             <Label Text="{Binding PreviousParticipantsCountText}" Margin="8,8,8,16">
-              </Label>
-              <!-- SelectedItem="{Binding SelectedParticipant}" -->
-              <ListView x:Name="parent" ItemsSource="{Binding PreviousParticipants}" SelectedItem="{Binding SelectedPreviousParticipant}" Margin="16,0,0,0">
-                  <ListView.ItemTemplate>
-                      <DataTemplate>
-                          <ViewCell x:Name="child" >
-                              <userControls:MemberView 
-                              BindingContext="{Binding Source={x:Reference parent}, Path=BindingContext}"
-                                ParentBindingContext="{Binding Source={x:Reference child}, Path=BindingContext}"
-                              Command="{Binding AddPreviousParticipantCommand}"
-                                >
-                              </userControls:MemberView>
-                          </ViewCell>
-                      </DataTemplate>
-                  </ListView.ItemTemplate>
-              </ListView>
+            </Label>
+            <ListView x:Name="parent" ItemsSource="{Binding PreviousParticipants}" SelectedItem="{Binding SelectedPreviousParticipant}" Margin="16,0,0,0">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell x:Name="child">
+                            <userControls:MemberView 
+                                OriginalBindingContext="{Binding Source={x:Reference child}, Path=BindingContext}" 
+                                BindingContext="{Binding Source={x:Reference parent}, Path=BindingContext}" 
+                                Command="{Binding AddPreviousParticipantCommand}">
+                            </userControls:MemberView>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
             <Button Text="Hinzufügen" Margin="16,32,16,32" Command="{Binding AddPreviousParticipantCommand}">
             </Button>
         </StackLayout>

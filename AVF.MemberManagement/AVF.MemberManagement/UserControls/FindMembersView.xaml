@@ -7,12 +7,15 @@
       <StackLayout Margin="8,8,8,8">
           <Label Text="{Binding FoundMembersCountText}" Margin="8,8,8,16">
           </Label>
-          <ListView ItemsSource="{Binding FoundMembers}" SelectedItem="{Binding SelectedMember}" Margin="16,0,0,0">
+          <ListView x:Name="parent" ItemsSource="{Binding FoundMembers}" SelectedItem="{Binding SelectedMember}" Margin="16,0,0,0">
               <ListView.ItemTemplate>
                   <DataTemplate>
-                      <ViewCell>
-                          <userControls:MemberView>
-                          </userControls:MemberView>
+                      <ViewCell x:Name="child">
+                          <userControls:MemberView 
+                                OriginalBindingContext="{Binding Source={x:Reference child}, Path=BindingContext}" 
+                                BindingContext="{Binding Source={x:Reference parent}, Path=BindingContext}" 
+                                Command="{Binding AddFoundMemberCommand}">
+                            </userControls:MemberView>
                       </ViewCell>
                   </DataTemplate>
               </ListView.ItemTemplate>
