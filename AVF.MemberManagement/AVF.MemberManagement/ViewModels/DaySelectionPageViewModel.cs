@@ -13,7 +13,7 @@ namespace AVF.MemberManagement.ViewModels
     {
         public DaySelectionPageViewModel(INavigationService navigationService) : base(navigationService)
         {
-            Title = "Tagesauswahl";
+            Title = "Trainingsteilnahme";
 
             NavigateToKursSelectionPageCommand = new DelegateCommand(NavigateToKursSelectionPage, CanNavigateToKursSelectionPage);
         }

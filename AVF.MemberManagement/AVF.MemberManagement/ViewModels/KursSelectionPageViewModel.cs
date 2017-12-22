@@ -62,8 +62,6 @@ namespace AVF.MemberManagement.ViewModels
 
         public KursSelectionPageViewModel(IRepository<Wochentag> wochentageRepository, IRepository<Kurs> kurseRepository, IKursModelService classModelService, IRepository<Training> trainings, IRepository<TrainingsTeilnahme> trainingsTeilnahmen, INavigationService navigationService) : base(navigationService)
         {
-            Title = $"Kursauswahl";
-
             _wochentageRepository = wochentageRepository;
             _kurseRepository = kurseRepository;
             _classModelService = classModelService;
@@ -73,7 +71,7 @@ namespace AVF.MemberManagement.ViewModels
             //View all Kurse for this Wochentag and select the nearest one to the actual time (if today?)
             //otherwise do not pre select any
 
-            //Enahancement: show if this Kurs already is a Training and has entered Trainingsteilnahme
+            //Enhancement: show if this Kurs already is a Training and has entered Trainingsteilnahme
 
             EnterParticipantsCommand = new DelegateCommand(EnterParticipants, CanEnterParticipants);
         }
@@ -95,11 +93,10 @@ namespace AVF.MemberManagement.ViewModels
 
                 Wochentag = wochentage.Single(wd => wd.Id == weekday);
 
-
-                Title = $"{SelectedDate.Day}.{SelectedDate.Month}.{SelectedDate.Year} ({Wochentag.Bezeichnung})";
-
                 SelectedDateString =
                     $"{SelectedDate.Day.ToString().PadLeft(2, '0')}.{SelectedDate.Month.ToString().PadLeft(2, '0')}.{SelectedDate.Year} ({Wochentag.Bezeichnung})";
+
+                Title = SelectedDateString;
 
                 var alleKurse = await _kurseRepository.GetAsync();
                 var trainings = await _trainings.GetAsync();

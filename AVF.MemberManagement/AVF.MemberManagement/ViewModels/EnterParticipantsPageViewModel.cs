@@ -152,8 +152,6 @@ namespace AVF.MemberManagement.ViewModels
 
         public EnterParticipantsPageViewModel(IRepository<Mitglied> mitgliederRepository, IRepository<Training> trainingsRepository, IRepository<TrainingsTeilnahme> trainingsTeilnahmenRepository, INavigationService navigationService) : base(navigationService)
         {
-            Title = "Trainingsteilnehmer";
-
             _mitgliederRepository = mitgliederRepository;
             _trainingsRepository = trainingsRepository;
             _trainingsTeilnahmenRepository = trainingsTeilnahmenRepository;
@@ -172,6 +170,8 @@ namespace AVF.MemberManagement.ViewModels
             SelectedDateString = (string)parameters["SelectedDateString"];
             Training = (TrainingsModel)parameters["SelectedTraining"];
             ChildrenOnly = Training.Training.Kindertraining;
+
+            Title = $"{Training.Class.Time} ({Training.Class.Trainer.Vorname})";
 
             _mitglieder = await _mitgliederRepository.GetAsync();
             _mitglieder.Sort(CompareMemberNames);
