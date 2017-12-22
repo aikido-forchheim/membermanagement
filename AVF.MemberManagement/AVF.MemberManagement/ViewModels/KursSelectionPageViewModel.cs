@@ -62,7 +62,7 @@ namespace AVF.MemberManagement.ViewModels
 
         public KursSelectionPageViewModel(IRepository<Wochentag> wochentageRepository, IRepository<Kurs> kurseRepository, IKursModelService classModelService, IRepository<Training> trainings, IRepository<TrainingsTeilnahme> trainingsTeilnahmen, INavigationService navigationService) : base(navigationService)
         {
-            Title = "Kursauswahl";
+            Title = $"Kursauswahl";
 
             _wochentageRepository = wochentageRepository;
             _kurseRepository = kurseRepository;
@@ -87,6 +87,8 @@ namespace AVF.MemberManagement.ViewModels
                 _trainingsCollection.Clear();
 
                 SelectedDate = (DateTime) parameters["Date"];
+
+                Title = $"Kursauswahl {SelectedDate.Day}.{SelectedDate.Month}.{SelectedDate.Year}";
 
                 var weekday = (int) SelectedDate.DayOfWeek;
                 if (weekday == 0) weekday = 7;
