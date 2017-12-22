@@ -42,7 +42,7 @@
                 <Label BindingContext="{Binding Source={x:Reference This}, Path=OriginalBindingContext}" Text="{Binding Nachname}" VerticalOptions="Center">
                 </Label>
             </StackLayout>
-            <Button  Margin="0,0,16,0" Command="{Binding Command, Source={x:Reference This}}" Text="{Binding ButtonText, Source={x:Reference This}}" TextColor="{Binding ButtonTextColor, Source={x:Reference This}}" WidthRequest="44" HorizontalOptions="EndAndExpand" VerticalOptions="Center" FontAttributes="Bold" />
+            <Button  Margin="0,0,24,0" Command="{Binding Command, Source={x:Reference This}}" Text="{Binding ButtonText, Source={x:Reference This}}" TextColor="{Binding ButtonTextColor, Source={x:Reference This}}" WidthRequest="44" HorizontalOptions="EndAndExpand" VerticalOptions="Center" FontAttributes="Bold" />
         </StackLayout>
     </ContentView.Content>
 </ContentView>
