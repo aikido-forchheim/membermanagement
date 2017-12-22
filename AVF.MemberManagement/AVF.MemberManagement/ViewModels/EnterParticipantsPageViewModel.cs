@@ -13,12 +13,11 @@ using Prism.Commands;
 
 namespace AVF.MemberManagement.ViewModels
 {
-    public class EnterParticipantsPageViewModel : BindableBase, INavigatedAware
+    public class EnterParticipantsPageViewModel : ViewModelBase
     {
         private readonly IRepository<Mitglied> _mitgliederRepository;
         private readonly IRepository<Training> _trainingsRepository;
         private readonly IRepository<TrainingsTeilnahme> _trainingsTeilnahmenRepository;
-        private readonly INavigationService _navigationService;
 
         public string ParticipantsCountText => $"Bereits eingetragene Teilnehmer ({Participants.Count}):";
         public string PreviousParticipantsCountText => $"Zuletzt anwesend ({PreviousParticipants.Count}):";
@@ -151,12 +150,13 @@ namespace AVF.MemberManagement.ViewModels
         public ICommand AddFoundMemberCommand { get; set; }
 
 
-        public EnterParticipantsPageViewModel(IRepository<Mitglied> mitgliederRepository, IRepository<Training> trainingsRepository, IRepository<TrainingsTeilnahme> trainingsTeilnahmenRepository, INavigationService navigationService)
+        public EnterParticipantsPageViewModel(IRepository<Mitglied> mitgliederRepository, IRepository<Training> trainingsRepository, IRepository<TrainingsTeilnahme> trainingsTeilnahmenRepository, INavigationService navigationService) : base(navigationService)
         {
+            Title = "Trainingsteilnehmer";
+
             _mitgliederRepository = mitgliederRepository;
             _trainingsRepository = trainingsRepository;
             _trainingsTeilnahmenRepository = trainingsTeilnahmenRepository;
-            _navigationService = navigationService;
 
             AddPreviousParticipantCommand = new DelegateCommand(AddPreviousParticipant, CanAddPreviousParticipant);
             AddFoundMemberCommand = new DelegateCommand(AddFoundMember, CanAddFoundMember);
@@ -165,12 +165,7 @@ namespace AVF.MemberManagement.ViewModels
 
         #region INavigatedAware
 
-        public void OnNavigatedFrom(NavigationParameters parameters)
-        {
-
-        }
-
-        public async void OnNavigatedTo(NavigationParameters parameters)
+        public override async void OnNavigatedTo(NavigationParameters parameters)
         {
             _participants.Clear();
 

@@ -1,5 +1,4 @@
 ﻿using Prism.Commands;
-using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,11 +11,10 @@ using AVF.MemberManagement.StandardLibrary.Services;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.Views;
 using Prism.Navigation;
-using Xamarin.Forms;
 
 namespace AVF.MemberManagement.ViewModels
 {
-    public class KursSelectionPageViewModel : BindableBase, INavigatedAware
+    public class KursSelectionPageViewModel : ViewModelBase
     {
         public DateTime SelectedDate { get; private set; } = DateTime.Today;
 
@@ -25,7 +23,6 @@ namespace AVF.MemberManagement.ViewModels
         private readonly IKursModelService _classModelService;
         private readonly IRepository<Training> _trainings;
         private readonly IRepository<TrainingsTeilnahme> _trainingsTeilnahmen;
-        private readonly INavigationService _navigationService;
 
         private string _selectedDateString;
 
@@ -63,14 +60,15 @@ namespace AVF.MemberManagement.ViewModels
             }
         }
 
-        public KursSelectionPageViewModel(IRepository<Wochentag> wochentageRepository, IRepository<Kurs> kurseRepository, IKursModelService classModelService, IRepository<Training> trainings, IRepository<TrainingsTeilnahme> trainingsTeilnahmen, INavigationService navigationService)
+        public KursSelectionPageViewModel(IRepository<Wochentag> wochentageRepository, IRepository<Kurs> kurseRepository, IKursModelService classModelService, IRepository<Training> trainings, IRepository<TrainingsTeilnahme> trainingsTeilnahmen, INavigationService navigationService) : base(navigationService)
         {
+            Title = "Kursauswahl";
+
             _wochentageRepository = wochentageRepository;
             _kurseRepository = kurseRepository;
             _classModelService = classModelService;
             _trainings = trainings;
             _trainingsTeilnahmen = trainingsTeilnahmen;
-            _navigationService = navigationService;
 
             //View all Kurse for this Wochentag and select the nearest one to the actual time (if today?)
             //otherwise do not pre select any
@@ -80,12 +78,7 @@ namespace AVF.MemberManagement.ViewModels
             EnterParticipantsCommand = new DelegateCommand(EnterParticipants, CanEnterParticipants);
         }
 
-        public void OnNavigatedFrom(NavigationParameters parameters)
-        {
-
-        }
-
-        public async void OnNavigatedTo(NavigationParameters parameters)
+        public override async void OnNavigatedTo(NavigationParameters parameters)
         {
             try
             {

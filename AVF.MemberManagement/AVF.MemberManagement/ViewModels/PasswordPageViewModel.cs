@@ -7,7 +7,7 @@ using Prism.Navigation;
 
 namespace AVF.MemberManagement.ViewModels
 {
-    public class PasswordPageViewModel : BindableBase, INavigatedAware
+    public class PasswordPageViewModel : ViewModelBase
     {
         public int MinPasswordLength => 8;
 
@@ -19,7 +19,6 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _user, value);
         }
 
-        private readonly INavigationService _navigationService;
         private readonly IPasswordService _passwordService;
         private readonly IProxy<User> _usersProxy;
 
@@ -141,20 +140,16 @@ namespace AVF.MemberManagement.ViewModels
 
         #endregion
 
-        public PasswordPageViewModel(INavigationService navigationService, IPasswordService passwordService, IProxy<User> usersProxy)
+        public PasswordPageViewModel(INavigationService navigationService, IPasswordService passwordService, IProxy<User> usersProxy) : base(navigationService)
         {
-            _navigationService = navigationService;
+            Title = "Passwort";
+
             _passwordService = passwordService;
             _usersProxy = usersProxy;
             SaveAndContinueCommand = new DelegateCommand(OnSaveAndContinue, CanSaveAndContinue);
         }
 
-        public void OnNavigatedFrom(NavigationParameters parameters)
-        {
-            //throw new NotImplementedException();
-        }
-
-        public void OnNavigatedTo(NavigationParameters parameters)
+        public override void OnNavigatedTo(NavigationParameters parameters)
         {
             var userFromNavigationParameters = (User) parameters["User"];
 

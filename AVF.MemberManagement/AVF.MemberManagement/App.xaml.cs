@@ -30,13 +30,13 @@ namespace AVF.MemberManagement
         {
         }
 
-        protected override void OnInitialized()
+        protected override async void OnInitialized()
         {
             InitializeComponent();
 
-            NavigationService.NavigateAsync(nameof(MainPage));
+            Globals.Idiom = (Idiom)(int)Device.Idiom;
 
-            Globals.Idiom = (Idiom) (int) Device.Idiom;
+            await NavigationService.NavigateAsync("NavigationPage/MainPage");
         }
 
         protected override void RegisterTypes()
@@ -84,6 +84,7 @@ namespace AVF.MemberManagement
             //RefreshCache().Wait();
             //RefreshCache(); //UWP
 
+            Container.RegisterTypeForNavigation<NavigationPage>();
             Container.RegisterTypeForNavigation<MainPage>();
             Container.RegisterTypeForNavigation<RestApiSettingsPage>();
             Container.RegisterTypeForNavigation<PasswordPage>();

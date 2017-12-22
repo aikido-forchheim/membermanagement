@@ -9,13 +9,11 @@ using Prism.Navigation;
 
 namespace AVF.MemberManagement.ViewModels
 {
-    public class DaySelectionPageViewModel : BindableBase
+    public class DaySelectionPageViewModel : ViewModelBase
     {
-        private readonly INavigationService _navigationService;
-
-        public DaySelectionPageViewModel(INavigationService navigationService)
+        public DaySelectionPageViewModel(INavigationService navigationService) : base(navigationService)
         {
-            _navigationService = navigationService;
+            Title = "Tagesauswahl";
 
             NavigateToKursSelectionPageCommand = new DelegateCommand(NavigateToKursSelectionPage, CanNavigateToKursSelectionPage);
         }

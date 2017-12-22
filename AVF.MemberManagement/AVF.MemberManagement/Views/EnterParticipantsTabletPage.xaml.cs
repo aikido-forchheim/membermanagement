@@ -24,6 +24,7 @@ namespace AVF.MemberManagement.Views
 
             if (result == "Ja" || result == "Nein")
             {
+                //TODO: Inherit EnterParticipantsTabletPage and EnterParticipantsPage from base
                 //TODO: Implement Save or Discard on Yes or No
                 await ((EnterParticipantsTabletPageViewModel) BindingContext).GoBackAsync();
             }

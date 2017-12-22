@@ -1,17 +1,15 @@
 ﻿using Prism.Commands;
-using Prism.Mvvm;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows.Input;
 using AVF.MemberManagement.StandardLibrary.Enums;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Services;
+using Prism.Navigation;
 
 namespace AVF.MemberManagement.ViewModels
 {
-    public class AdvancedSettingsPageViewModel : BindableBase
+    public class AdvancedSettingsPageViewModel : ViewModelBase
     {
         private readonly IJsonFileFactory _jsonFileFactory;
         private readonly IRepositoryBootstrapper _repositoryBootstrapper;
@@ -54,8 +52,10 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _cacheMessage, value);
         }
 
-        public AdvancedSettingsPageViewModel(IJsonFileFactory jsonFileFactory, IRepositoryBootstrapper repositoryBootstrapper)
+        public AdvancedSettingsPageViewModel(IJsonFileFactory jsonFileFactory, IRepositoryBootstrapper repositoryBootstrapper, INavigationService navigationService) : base(navigationService)
         {
+            Title = "Erweiterte Einstellungen";
+
             _jsonFileFactory = jsonFileFactory;
             _repositoryBootstrapper = repositoryBootstrapper;
 

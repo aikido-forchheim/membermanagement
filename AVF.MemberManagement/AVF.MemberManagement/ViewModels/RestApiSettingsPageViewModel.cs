@@ -7,17 +7,14 @@ using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Microsoft.Extensions.Logging;
 using Prism.Commands;
-using Prism.Mvvm;
 using IT2media.Extensions.Logging.Abstractions;
 using Prism.Navigation;
-using AVF.MemberManagement.StandardLibrary.Services;
 
 namespace AVF.MemberManagement.ViewModels
 {
-    public class RestApiSettingsPageViewModel : BindableBase, INavigatingAware
+    public class RestApiSettingsPageViewModel : ViewModelBase
     {
         private readonly ILogger _logger;
-        private readonly INavigationService _navigationService;
         private readonly IProxyBase<Setting, string> _settingsProxy; //Leave Proxy instead of Repository, because we use this for connection testing our RestApi, and the Repository may be cached anytime later
 
         public IAccountService AccountService { get; }
@@ -50,10 +47,11 @@ namespace AVF.MemberManagement.ViewModels
 
         public ICommand BackCommand { get; }
 
-        public RestApiSettingsPageViewModel(ILogger logger, IAccountService accountService, INavigationService navigationService, IProxyBase<Setting, string> settingsProxy)
+        public RestApiSettingsPageViewModel(ILogger logger, IAccountService accountService, INavigationService navigationService, IProxyBase<Setting, string> settingsProxy) : base(navigationService)
         {
+            Title = "Einstellungen";
+
             _logger = logger;
-            _navigationService = navigationService;
             _settingsProxy = settingsProxy;
 
             AccountService = accountService;
@@ -141,7 +139,7 @@ namespace AVF.MemberManagement.ViewModels
         #endregion
 
 
-        public async void OnNavigatingTo(NavigationParameters parameters)
+        public override async void OnNavigatingTo(NavigationParameters parameters)
         {
             await RunConnectionTest();
         }

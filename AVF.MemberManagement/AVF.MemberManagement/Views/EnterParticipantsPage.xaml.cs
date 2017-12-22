@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using AVF.MemberManagement.ViewModels;
+using Xamarin.Forms;
 
 namespace AVF.MemberManagement.Views
 {
@@ -7,6 +8,25 @@ namespace AVF.MemberManagement.Views
         public EnterParticipantsPage()
         {
             InitializeComponent();
+        }
+
+        protected override bool OnBackButtonPressed()
+        {
+            OnClosePageRequested();
+            return true;
+        }
+
+        private async void OnClosePageRequested()
+        {
+            var result = await DisplayActionSheet("Möchten Sie das aktuelle Training speichern?", null, null, "Ja",
+                "Nein", "Abbrechen");
+
+            if (result == "Ja" || result == "Nein")
+            {
+                //TODO: Inherit EnterParticipantsTabletPage and EnterParticipantsPage from base
+                //TODO: Implement Save or Discard on Yes or No
+                await ((EnterParticipantsPageViewModel)BindingContext).GoBackAsync();
+            }
         }
     }
 }
