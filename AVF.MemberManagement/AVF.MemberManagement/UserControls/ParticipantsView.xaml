@@ -24,7 +24,7 @@
                       </DataTemplate>
                   </ListView.ItemTemplate>
               </ListView>
-              <Button Text="Entfernen" Margin="16,32,16,32">
+                <Button Text="Entfernen" Margin="16,32,16,32" Command="{Binding RemoveParticipantCommand}">
               </Button>
           </StackLayout>
       </StackLayout>

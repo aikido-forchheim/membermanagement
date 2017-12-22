@@ -64,7 +64,7 @@ namespace AVF.MemberManagement.ViewModels
             set
             {
                 SetProperty(ref _selectedParticipant, value);
-                //((DelegateCommand)AddPreviousParticipantCommand).RaiseCanExecuteChanged();
+                ((DelegateCommand)RemoveParticipantCommand).RaiseCanExecuteChanged();
             }
         }
 
@@ -96,7 +96,7 @@ namespace AVF.MemberManagement.ViewModels
 
         #region FindMembers
 
-        private string _searchText;
+        private string _searchText = string.Empty;
 
         public string SearchText
         {
@@ -105,6 +105,7 @@ namespace AVF.MemberManagement.ViewModels
             {
                 SetProperty(ref _searchText, value);
                 FindMembers(_searchText);
+                RaisePropertyChanged(nameof(FoundMembersCountText));
             }
         }
 
@@ -113,7 +114,12 @@ namespace AVF.MemberManagement.ViewModels
         public bool ChildrenOnly
         {
             get => _childrenOnly;
-            set { SetProperty(ref _childrenOnly, value); FindMembers(_searchText); }
+            set
+            {
+                SetProperty(ref _childrenOnly, value);
+                FindMembers(_searchText);
+                RaisePropertyChanged(nameof(FoundMembersCountText));
+            }
         }
 
         private ObservableCollection<Mitglied> _foundMembers = new ObservableCollection<Mitglied>();
@@ -168,16 +174,16 @@ namespace AVF.MemberManagement.ViewModels
 
             SelectedDateString = (string)parameters["SelectedDateString"];
             Training = (TrainingsModel)parameters["SelectedTraining"];
-
             ChildrenOnly = Training.Training.Kindertraining;
 
             _mitglieder = await _mitgliederRepository.GetAsync();
-
             _mitglieder.Sort(CompareMemberNames);
 
             GetExistingParticipants();
-
             await FindPreviousParticipants();
+            FindMembers(_searchText);
+
+            RaiseCounterPropertiesChanged();
         }
 
         #endregion
@@ -187,12 +193,21 @@ namespace AVF.MemberManagement.ViewModels
 
         private bool CanRemoveParticipant()
         {
-            return true;
+            return Participants != null && Participants.Count > 0 && SelectedParticipant != null
+                   && Participants.Contains(SelectedParticipant)
+                ;
         }
 
-        private void RemoveParticipant()
+        private async void RemoveParticipant()
         {
-            System.Diagnostics.Debug.WriteLine("RemoveParticipant clicked");
+            Participants.Remove(SelectedParticipant);
+
+            ((DelegateCommand)RemoveParticipantCommand).RaiseCanExecuteChanged();
+
+            await FindPreviousParticipants();
+            FindMembers(_searchText);
+
+            RaiseCounterPropertiesChanged();
         }
 
         #endregion
@@ -215,9 +230,7 @@ namespace AVF.MemberManagement.ViewModels
 
             ((DelegateCommand)AddPreviousParticipantCommand).RaiseCanExecuteChanged();
 
-            RaisePropertyChanged(nameof(ParticipantsCountText));
-            RaisePropertyChanged(nameof(PreviousParticipantsCountText));
-            RaisePropertyChanged(nameof(FoundMembersCountText));
+            RaiseCounterPropertiesChanged();
         }
 
         #endregion
@@ -240,14 +253,12 @@ namespace AVF.MemberManagement.ViewModels
 
             ((DelegateCommand)AddFoundMemberCommand).RaiseCanExecuteChanged();
 
-            RaisePropertyChanged(nameof(ParticipantsCountText));
-            RaisePropertyChanged(nameof(PreviousParticipantsCountText));
-            RaisePropertyChanged(nameof(FoundMembersCountText));
+            RaiseCounterPropertiesChanged();
         }
 
         #endregion
 
-        
+
         private void GetExistingParticipants()
         {
             foreach (var trainingParticipation in Training.Participations)
@@ -256,8 +267,6 @@ namespace AVF.MemberManagement.ViewModels
 
                 Participants.Add(member);
             }
-
-            RaisePropertyChanged(nameof(ParticipantsCountText));
         }
 
         private async Task FindPreviousParticipants()
@@ -294,14 +303,12 @@ namespace AVF.MemberManagement.ViewModels
 
                 foreach (var memberMapping in myList)
                 {
-                    if (Participants.Any(p => p.Id == memberMapping.Key)) 
+                    if (Participants.Any(p => p.Id == memberMapping.Key))
                         continue;
                     //nur wenn noch nicht in Participants Liste
 
                     PreviousParticipants.Add(_mitglieder.Single(m => m.Id == memberMapping.Key));
                 }
-
-                RaisePropertyChanged(nameof(PreviousParticipantsCountText));
             }
 
             catch (Exception ex)
@@ -332,7 +339,7 @@ namespace AVF.MemberManagement.ViewModels
                     if (!containsNamePart) allSearchStringsMatch = false;
                 }
 
-                return allSearchStringsMatch && !Participants.Contains(m) && 
+                return allSearchStringsMatch && !Participants.Contains(m) &&
                                                              (!ChildrenOnly && m.Geburtsdatum <= DateTime.Now - TimeSpan.FromDays(365 * 18)
                 ||
                                                               ChildrenOnly && m.Geburtsdatum > DateTime.Now - TimeSpan.FromDays(365 * 18))
@@ -344,8 +351,6 @@ namespace AVF.MemberManagement.ViewModels
             {
                 FoundMembers.Add(foundMember);
             }
-
-            RaisePropertyChanged(nameof(FoundMembersCountText));
         }
 
 
@@ -371,6 +376,13 @@ namespace AVF.MemberManagement.ViewModels
         {
             return argVorname.ToLower().Contains(searchText.ToLower()) ||
                                    argNachname.ToLower().Contains(searchText.ToLower());
+        }
+
+        private void RaiseCounterPropertiesChanged()
+        {
+            RaisePropertyChanged(nameof(ParticipantsCountText));
+            RaisePropertyChanged(nameof(PreviousParticipantsCountText));
+            RaisePropertyChanged(nameof(FoundMembersCountText));
         }
 
         #endregion
