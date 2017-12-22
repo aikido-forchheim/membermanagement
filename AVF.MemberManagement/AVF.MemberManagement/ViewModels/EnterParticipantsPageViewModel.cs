@@ -333,18 +333,31 @@ namespace AVF.MemberManagement.ViewModels
                     if (!containsNamePart) allSearchStringsMatch = false;
                 }
 
-                return allSearchStringsMatch && !Participants.Contains(m) &&
-                                                             (!ChildrenOnly && m.Geburtsdatum <= DateTime.Now - TimeSpan.FromDays(365 * 18)
-                ||
-                                                              ChildrenOnly && m.Geburtsdatum > DateTime.Now - TimeSpan.FromDays(365 * 18))
-
-                                                             ;// && m.Austritt == null && m.BeitragsklasseID == 4;
+                return allSearchStringsMatch
+                &&     !Participants.Contains(m) 
+                &&     !HasResigned(m) 
+                &&     (
+                           !ChildrenOnly && m.Geburtsdatum <= DateTime.Now - TimeSpan.FromDays(365 * 18)
+                           ||
+                           ChildrenOnly && m.Geburtsdatum > DateTime.Now - TimeSpan.FromDays(365 * 18)
+                       )
+                ;
             });
 
             foreach (var foundMember in foundMembers)
             {
                 FoundMembers.Add(foundMember);
             }
+        }
+
+        private static bool HasResigned(Mitglied mitglied)
+        {
+            if (mitglied.Austritt == null)
+                return false;
+
+            var resignDate = (DateTime)mitglied.Austritt;
+
+            return resignDate < DateTime.Now;
         }
 
 
