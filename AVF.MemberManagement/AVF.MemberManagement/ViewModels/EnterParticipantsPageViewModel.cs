@@ -228,9 +228,15 @@ namespace AVF.MemberManagement.ViewModels
         private void AddFoundMember()
         {
             Participants.Add(SelectedMember);
+
+            PreviousParticipants.Remove(SelectedMember);
             FoundMembers.Remove(SelectedMember);
 
             ((DelegateCommand)AddFoundMemberCommand).RaiseCanExecuteChanged();
+
+            RaisePropertyChanged(nameof(ParticipantsCountText));
+            RaisePropertyChanged(nameof(PreviousParticipantsCountText));
+            RaisePropertyChanged(nameof(FoundMembersCountText));
         }
 
         #endregion
