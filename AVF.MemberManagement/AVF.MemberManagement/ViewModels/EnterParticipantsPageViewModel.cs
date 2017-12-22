@@ -18,6 +18,7 @@ namespace AVF.MemberManagement.ViewModels
         private readonly IRepository<Mitglied> _mitgliederRepository;
         private readonly IRepository<Training> _trainingsRepository;
         private readonly IRepository<TrainingsTeilnahme> _trainingsTeilnahmenRepository;
+        private readonly INavigationService _navigationService;
 
         public string ParticipantsCountText => $"Bereits eingetragene Teilnehmer ({Participants.Count}):";
         public string PreviousParticipantsCountText => $"Zuletzt anwesend ({PreviousParticipants.Count}):";
@@ -150,11 +151,12 @@ namespace AVF.MemberManagement.ViewModels
         public ICommand AddFoundMemberCommand { get; set; }
 
 
-        public EnterParticipantsPageViewModel(IRepository<Mitglied> mitgliederRepository, IRepository<Training> trainingsRepository, IRepository<TrainingsTeilnahme> trainingsTeilnahmenRepository)
+        public EnterParticipantsPageViewModel(IRepository<Mitglied> mitgliederRepository, IRepository<Training> trainingsRepository, IRepository<TrainingsTeilnahme> trainingsTeilnahmenRepository, INavigationService navigationService)
         {
             _mitgliederRepository = mitgliederRepository;
             _trainingsRepository = trainingsRepository;
             _trainingsTeilnahmenRepository = trainingsTeilnahmenRepository;
+            _navigationService = navigationService;
 
             AddPreviousParticipantCommand = new DelegateCommand(AddPreviousParticipant, CanAddPreviousParticipant);
             AddFoundMemberCommand = new DelegateCommand(AddFoundMember, CanAddFoundMember);
@@ -187,6 +189,11 @@ namespace AVF.MemberManagement.ViewModels
         }
 
         #endregion
+
+        public async Task<bool> GoBackAsync()
+        {
+            return await _navigationService.GoBackAsync();
+        }
 
 
         #region RemoveParticipantCommand
@@ -349,17 +356,7 @@ namespace AVF.MemberManagement.ViewModels
                 FoundMembers.Add(foundMember);
             }
         }
-
-        private static bool HasResigned(Mitglied mitglied)
-        {
-            if (mitglied.Austritt == null)
-                return false;
-
-            var resignDate = (DateTime)mitglied.Austritt;
-
-            return resignDate < DateTime.Now;
-        }
-
+        
 
         #region Helper
 
@@ -390,6 +387,16 @@ namespace AVF.MemberManagement.ViewModels
             RaisePropertyChanged(nameof(ParticipantsCountText));
             RaisePropertyChanged(nameof(PreviousParticipantsCountText));
             RaisePropertyChanged(nameof(FoundMembersCountText));
+        }
+
+        private static bool HasResigned(Mitglied mitglied)
+        {
+            if (mitglied.Austritt == null)
+                return false;
+
+            var resignDate = (DateTime)mitglied.Austritt;
+
+            return resignDate < DateTime.Now;
         }
 
         #endregion
