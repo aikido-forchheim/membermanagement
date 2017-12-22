@@ -193,9 +193,7 @@ namespace AVF.MemberManagement.ViewModels
 
         private bool CanRemoveParticipant()
         {
-            return Participants != null && Participants.Count > 0 && SelectedParticipant != null
-                   && Participants.Contains(SelectedParticipant)
-                ;
+            return Participants != null && Participants.Count > 0 && SelectedParticipant != null && Participants.Contains(SelectedParticipant);
         }
 
         private async void RemoveParticipant()
@@ -216,9 +214,7 @@ namespace AVF.MemberManagement.ViewModels
 
         private bool CanAddPreviousParticipant()
         {
-            return PreviousParticipants != null && PreviousParticipants.Count > 0 && SelectedPreviousParticipant != null
-                   && PreviousParticipants.Contains(SelectedPreviousParticipant)
-                ;
+            return PreviousParticipants != null && PreviousParticipants.Count > 0 && SelectedPreviousParticipant != null && PreviousParticipants.Contains(SelectedPreviousParticipant);
         }
 
         private void AddPreviousParticipant()
@@ -239,9 +235,7 @@ namespace AVF.MemberManagement.ViewModels
 
         private bool CanAddFoundMember()
         {
-            return FoundMembers != null && FoundMembers.Count > 0 && SelectedMember != null
-                                                       && FoundMembers.Contains(SelectedMember)
-                                                                       ;
+            return FoundMembers != null && FoundMembers.Count > 0 && SelectedMember != null && FoundMembers.Contains(SelectedMember);
         }
 
         private void AddFoundMember()
@@ -273,8 +267,8 @@ namespace AVF.MemberManagement.ViewModels
         {
             try
             {
-                PreviousParticipants.Clear()
-                                    ;
+                PreviousParticipants.Clear();
+
                 var trainings = await _trainingsRepository.GetAsync();
 
                 var trainingsOnWeekDay = trainings.Where(training =>
@@ -283,11 +277,12 @@ namespace AVF.MemberManagement.ViewModels
 
                     return training.KursID == Training.Training.KursID && training.Id != Training.Training.Id &&
                                training.Termin < Training.Training.Termin && training.Termin > daysToCheck;
-                }).Select(t => t.Id).ToList();
+                }
+                ).Select(t => t.Id).ToList();
 
                 var trainingsTeilnahmen = await _trainingsTeilnahmenRepository.GetAsync();
 
-                Dictionary<int, int> mitgliederCount = new Dictionary<int, int>();
+                var mitgliederCount = new Dictionary<int, int>();
                 var trainingsTeilnahmes = trainingsTeilnahmen.Where(teilnahme => trainingsOnWeekDay.Contains(teilnahme.TrainingID)).ToList();
                 foreach (var trainingsTeilnahme in trainingsTeilnahmes)
                 {
@@ -305,7 +300,6 @@ namespace AVF.MemberManagement.ViewModels
                 {
                     if (Participants.Any(p => p.Id == memberMapping.Key))
                         continue;
-                    //nur wenn noch nicht in Participants Liste
 
                     PreviousParticipants.Add(_mitglieder.Single(m => m.Id == memberMapping.Key));
                 }
