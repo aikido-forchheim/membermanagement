@@ -187,7 +187,7 @@ namespace AVF.MemberManagement.ViewModels
 
         public async Task<bool> GoBackAsync()
         {
-            return await _navigationService.GoBackAsync();
+            return await NavigationService.GoBackAsync();
         }
 
 

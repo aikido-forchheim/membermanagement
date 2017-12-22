@@ -199,7 +199,7 @@ namespace AVF.MemberManagement.ViewModels
 
         private void OnSettings()
         {
-            _navigationService.NavigateAsync("RestApiSettingsPage");
+            NavigationService.NavigateAsync("RestApiSettingsPage");
         }
 
         private static bool CanSettings()
@@ -211,7 +211,7 @@ namespace AVF.MemberManagement.ViewModels
         {
             var navigationParametersForPasswordPage = new NavigationParameters { { "User", ServerUser } };
 
-            _navigationService.NavigateAsync("StartPage", navigationParametersForPasswordPage);
+            NavigationService.NavigateAsync("StartPage", navigationParametersForPasswordPage);
         }
 
         private bool CanStart()
@@ -223,7 +223,7 @@ namespace AVF.MemberManagement.ViewModels
         {
             var navigationParametersForPasswordPage = new NavigationParameters { { "User", ServerUser } };
 
-            _navigationService.NavigateAsync("PasswordPage", navigationParametersForPasswordPage);
+            NavigationService.NavigateAsync("PasswordPage", navigationParametersForPasswordPage);
         }
 
         private bool CanNewPassword()

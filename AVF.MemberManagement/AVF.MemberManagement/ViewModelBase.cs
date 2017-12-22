@@ -2,22 +2,22 @@
 using Prism.Mvvm;
 using Prism.Navigation;
 
-namespace AVF.MemberManagement.ViewModels
+namespace AVF.MemberManagement
 {
     public class ViewModelBase : BindableBase, INavigationAware, IDestructible
     {
-        protected INavigationService _navigationService { get; private set; }
+        protected INavigationService NavigationService { get; private set; }
 
         private string _title;
         public string Title
         {
-            get { return _title; }
-            set { SetProperty(ref _title, value); }
+            get => _title;
+            set => SetProperty(ref _title, value);
         }
 
         public ViewModelBase(INavigationService navigationService)
         {
-            _navigationService = navigationService;
+            NavigationService = navigationService;
         }
 
         public virtual void OnNavigatedFrom(NavigationParameters parameters)

@@ -80,7 +80,7 @@ namespace AVF.MemberManagement.ViewModels
 
         private void OnBack()
         {
-            _navigationService.NavigateAsync("MainPage");
+            NavigationService.NavigateAsync("MainPage");
         }
 
         private async void OnSave()
@@ -126,7 +126,7 @@ namespace AVF.MemberManagement.ViewModels
 
         private void AdvancedSettings()
         {
-            _navigationService.NavigateAsync("AdvancedSettingsPage");
+            NavigationService.NavigateAsync("AdvancedSettingsPage");
         }
 
         private bool CanAdvancedSettings()

@@ -88,14 +88,15 @@ namespace AVF.MemberManagement.ViewModels
 
                 SelectedDate = (DateTime) parameters["Date"];
 
-                Title = $"Kursauswahl {SelectedDate.Day}.{SelectedDate.Month}.{SelectedDate.Year}";
-
                 var weekday = (int) SelectedDate.DayOfWeek;
                 if (weekday == 0) weekday = 7;
 
                 var wochentage = await _wochentageRepository.GetAsync();
 
                 Wochentag = wochentage.Single(wd => wd.Id == weekday);
+
+
+                Title = $"{SelectedDate.Day}.{SelectedDate.Month}.{SelectedDate.Year} ({Wochentag.Bezeichnung})";
 
                 SelectedDateString =
                     $"{SelectedDate.Day.ToString().PadLeft(2, '0')}.{SelectedDate.Month.ToString().PadLeft(2, '0')}.{SelectedDate.Year} ({Wochentag.Bezeichnung})";
@@ -142,11 +143,11 @@ namespace AVF.MemberManagement.ViewModels
         {
             if (Globals.Idiom == Idiom.Phone)
             {
-                _navigationService.NavigateAsync(nameof(EnterParticipantsPage), new NavigationParameters { { "SelectedTraining", SelectedTraining }, { "SelectedDateString", SelectedDateString } });
+                NavigationService.NavigateAsync(nameof(EnterParticipantsPage), new NavigationParameters { { "SelectedTraining", SelectedTraining }, { "SelectedDateString", SelectedDateString } });
             }
             else
             {
-                _navigationService.NavigateAsync(nameof(EnterParticipantsTabletPage), new NavigationParameters { { "SelectedTraining", SelectedTraining }, { "SelectedDateString", SelectedDateString } });
+                NavigationService.NavigateAsync(nameof(EnterParticipantsTabletPage), new NavigationParameters { { "SelectedTraining", SelectedTraining }, { "SelectedDateString", SelectedDateString } });
 
             }
         }

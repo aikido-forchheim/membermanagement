@@ -40,7 +40,7 @@ namespace AVF.MemberManagement.ViewModels
 
         private void NavigateToDaySelectionPage()
         {
-            _navigationService.NavigateAsync(nameof(DaySelectionPage));
+            NavigationService.NavigateAsync(nameof(DaySelectionPage));
         }
 
         private bool CanNavigateToDaySelectionPage()

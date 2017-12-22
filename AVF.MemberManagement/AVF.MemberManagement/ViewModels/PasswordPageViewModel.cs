@@ -128,7 +128,7 @@ namespace AVF.MemberManagement.ViewModels
 
             await _usersProxy.UpdateAsync(User);
 
-            await _navigationService.NavigateAsync("StartPage");
+            await NavigationService.NavigateAsync("StartPage");
         }
 
         private bool CanSaveAndContinue()

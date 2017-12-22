@@ -89,7 +89,7 @@
       <DependentUpon>MemberView.xaml</DependentUpon>
     </Compile>
     <Compile Include="IRepositoryBootstrapper.cs" />
-    <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="ViewModelBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App.xaml">
