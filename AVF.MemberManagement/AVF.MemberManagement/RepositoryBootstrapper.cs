@@ -36,11 +36,11 @@ namespace AVF.MemberManagement
                 RegisterFileProxies();
             }
 
-            _container.RegisterType<IRepository<Beitragsklasse>, Repository<Beitragsklasse>>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<IRepository<Beitragsklasse>, CachedRepository<Beitragsklasse>>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IRepository<Familienrabatt>, Repository<Familienrabatt>>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IRepository<Graduierung>, Repository<Graduierung>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IRepository<Kurs>, Repository<Kurs>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IRepository<Mitglied>, Repository<Mitglied>>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<IRepository<Kurs>, CachedRepository<Kurs>>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<IRepository<Mitglied>, CachedRepository<Mitglied>>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IRepository<Pruefung>, Repository<Pruefung>>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IRepositoryBase<Setting, string>, CachedSettingsRepository>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IRepository<Stundensatz>, Repository<Stundensatz>>(new ContainerControlledLifetimeManager());
@@ -50,7 +50,7 @@ namespace AVF.MemberManagement
             _container.RegisterType<IRepository<Training>, Repository<Training>>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IRepository<TrainingsTeilnahme>, Repository<TrainingsTeilnahme>>();
             _container.RegisterType<IRepository<User>, CachedRepository<User>>();
-            _container.RegisterType<IRepository<Wochentag>, Repository<Wochentag>>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<IRepository<Wochentag>, CachedRepository<Wochentag>>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IRepository<Wohnung>, Repository<Wohnung>>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IRepository<Wohnungsbezug>, Repository<Wohnungsbezug>>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IRepository<ZuschlagKindertraining>, Repository<ZuschlagKindertraining>>(new ContainerControlledLifetimeManager());
