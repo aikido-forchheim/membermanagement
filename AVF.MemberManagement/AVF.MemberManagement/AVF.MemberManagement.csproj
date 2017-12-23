@@ -41,9 +41,24 @@
     <Compile Include="Proxies\FileProxyBase.cs" />
     <Compile Include="RepositoryBootstrapper.cs" />
     <Compile Include="Services\AccountService.cs" />
+    <Compile Include="UserControls\BigLabel.xaml.cs">
+      <DependentUpon>BigLabel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\DaySelectionPageViewModel.cs" />
+    <Compile Include="ViewModels\EnterParticipantsPageViewModel.cs" />
+    <Compile Include="ViewModels\KursSelectionPageViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\PasswordPageViewModel.cs" />
     <Compile Include="ViewModels\StartPageViewModel.cs" />
+    <Compile Include="Views\DaySelectionPage.xaml.cs">
+      <DependentUpon>DaySelectionPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EnterParticipantsPage.xaml.cs">
+      <DependentUpon>EnterParticipantsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\KursSelectionPage.xaml.cs">
+      <DependentUpon>KursSelectionPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\PasswordPage.xaml.cs">
       <DependentUpon>PasswordPage.xaml</DependentUpon>
     </Compile>
@@ -52,6 +67,9 @@
     </Compile>
     <Compile Include="Views\StartPage.xaml.cs">
       <DependentUpon>StartPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\MemberView.xaml.cs">
+      <DependentUpon>MemberView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -62,6 +80,10 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="UserControls\MemberView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\MainPage.xaml">
@@ -190,6 +212,31 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\PasswordPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\DaySelectionPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\KursSelectionPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\EnterParticipantsPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="UserControls\BigLabel.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

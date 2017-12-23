@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using AVF.MemberManagement.GTK.Services;
 using AVF.MemberManagement.StandardLibrary.Services;
+using Gdk;
+using Gtk;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.GTK;
 
@@ -13,8 +16,16 @@ namespace AVF.MemberManagement.GTK
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        private static void Main()
+        private static void Main(string[] args)
         {
+            if (args != null)
+            {
+                if (args.Contains("/usefileproxies"))
+                {
+                    Globals.UseFileProxies = true;
+                }
+            }
+
             Globals.UsesXamarinAuth = false;
             Globals.AccountService = new AccountServiceS();
 
@@ -25,7 +36,10 @@ namespace AVF.MemberManagement.GTK
             var window = new FormsWindow();
             window.LoadApplication(app);
             window.SetApplicationTitle("AVF.MemberManagement.GTK");
-            //window.Icon = Pixbuf.LoadFromResource("XamGtkExplorer.GTK.Application-icon.png");
+            window.Icon = Pixbuf.LoadFromResource("AVF.MemberManagement.GTK.AVF.ico");
+            window.WidthRequest = 1024;
+            window.HeightRequest = 600;
+            window.WindowPosition = WindowPosition.Center;
             window.Show();
             Gtk.Application.Run();
         }

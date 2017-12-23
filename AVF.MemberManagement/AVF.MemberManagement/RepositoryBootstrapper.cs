@@ -1,9 +1,12 @@
 ﻿using AVF.MemberManagement.Proxies;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
+using AVF.MemberManagement.StandardLibrary.Models;
+using AVF.MemberManagement.StandardLibrary.Options;
 using AVF.MemberManagement.StandardLibrary.Proxies;
 using AVF.MemberManagement.StandardLibrary.Repositories;
 using AVF.MemberManagement.StandardLibrary.Tables;
 using AVF.MemberManagement.StandardLibrary.Tbo;
+using Microsoft.Extensions.Options;
 using Microsoft.Practices.Unity;
 
 namespace AVF.MemberManagement
@@ -25,6 +28,11 @@ namespace AVF.MemberManagement
             }
             else
             {
+                IOptions<FileProxyOptions> fileProxyOptions = new OptionsWrapper<FileProxyOptions>(new FileProxyOptions());
+                fileProxyOptions.Value.ShouldSimulateDelay = false;
+                fileProxyOptions.Value.FileProxyDelayTimes.Add(nameof(User), new FileProxyDelayTimes { GetAsyncFullTableDelay = 1, GetAsyncSingleEntryDelay = 1 });
+                _container.RegisterInstance(fileProxyOptions, new ContainerControlledLifetimeManager());
+
                 RegisterFileProxies();
             }
 
