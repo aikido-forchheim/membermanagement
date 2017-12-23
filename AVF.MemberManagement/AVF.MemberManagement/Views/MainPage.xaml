@@ -9,9 +9,9 @@
     <ContentPage.Content>
         <Grid x:Name="innerGrid">
             <Grid.RowDefinitions>
-                <RowDefinition Height="5*">
+                <RowDefinition Height="9*"> <!-- change also code behind: OnSizeAllocated-->
                 </RowDefinition>
-                <RowDefinition Height="7*">
+                <RowDefinition Height="16*"> <!-- change also code behind: OnSizeAllocated-->
                 </RowDefinition>
             </Grid.RowDefinitions>
             <Image HorizontalOptions="Center" VerticalOptions="Center">
@@ -34,22 +34,22 @@
                     </OnIdiom>
                 </Image.WidthRequest>
             </Image>
-            <Grid Grid.Row="1" x:Name="controlsGrid" HorizontalOptions="Center" VerticalOptions="Center" Margin="0,16,0,16">
+            <Grid Grid.Row="1" x:Name="controlsGrid" HorizontalOptions="Center" VerticalOptions="Center">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="1*">
-                    </RowDefinition>
                     <RowDefinition Height="2*">
+                    </RowDefinition>
+                    <RowDefinition Height="3*">
                     </RowDefinition>
                     <RowDefinition Height="2*">
                     </RowDefinition>
                 </Grid.RowDefinitions>
-                <StackLayout Grid.Row="0" x:Name="UserNameArea" HorizontalOptions="Center" VerticalOptions="Center">
+                <StackLayout Grid.Row="0" x:Name="UserNameArea" HorizontalOptions="Center" VerticalOptions="Start">
                     <Label Text="Benutzername:">
                     </Label>
                     <Entry Text="{Binding Username}" WidthRequest="256" IsEnabled="{Binding IsRestApiAccountSet}" BackgroundColor="#EEEEEE">
                     </Entry>
                 </StackLayout>
-                <StackLayout Grid.Row="1" x:Name="PasswordArea" IsVisible="{Binding IsUserInDatabaseAndHasPassword}" HorizontalOptions="Center" VerticalOptions="Center">
+                <StackLayout Grid.Row="1" x:Name="PasswordArea" IsVisible="{Binding IsUserInDatabaseAndHasPassword}" HorizontalOptions="Center" VerticalOptions="Start">
                     <Label Text="Initiales Passwort:" IsVisible="{Binding IsInitialPassword}">
                     </Label>
                     <Label Text="Passwort:" IsVisible="{Binding IsInitialPassword, Converter={StaticResource BooleanNotConverter}}">
@@ -63,10 +63,10 @@
                         </Button>
                     </StackLayout>
                 </StackLayout>
-                <StackLayout Grid.Row="2" HorizontalOptions="Center" VerticalOptions="End">
+                <StackLayout Grid.Row="2" HorizontalOptions="Center" VerticalOptions="Center">
                     <Label Text="Bitte erst Einstellungen setzen:" IsVisible="{Binding IsRestApiAccountSet, Converter={StaticResource BooleanNotConverter}}">
                     </Label>
-                    <Button Text="Einstellungen" Command="{Binding SettingsCommand}" Margin="0,0,0,16">
+                    <Button Text="Einstellungen" Command="{Binding SettingsCommand}">
                     </Button>
                 </StackLayout>
             </Grid>
