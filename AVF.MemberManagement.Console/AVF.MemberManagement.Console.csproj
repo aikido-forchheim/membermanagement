@@ -80,6 +80,7 @@
   <ItemGroup>
     <Compile Include="DatabaseWrapper.cs" />
     <Compile Include="Graduierungsliste.cs" />
+    <Compile Include="Mitgliederbeitraege.cs" />
     <Compile Include="OutputFile.cs" />
     <Compile Include="Pruefungsliste.cs" />
     <Compile Include="ClassPrototypeGenerator.cs" />

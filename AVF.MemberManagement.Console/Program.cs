@@ -35,6 +35,7 @@ namespace AVF.MemberManagement.Console
                     System.Console.WriteLine("3: Cache Database");
                     System.Console.WriteLine("4: Prüfungsliste");
                     System.Console.WriteLine("5: Graduierungsliste");
+                    System.Console.WriteLine("6: Mitgliederbeiträge");
                     System.Console.WriteLine();
                     System.Console.Write("Please enter number and press ENTER: ");
 
@@ -56,6 +57,9 @@ namespace AVF.MemberManagement.Console
                             break;
                         case 5:
                             new Graduierungsliste().Main().Wait();
+                            break;
+                        case 6:
+                            new Mitgliederbeitraege().Main().Wait();
                             break;
                     }
                 }

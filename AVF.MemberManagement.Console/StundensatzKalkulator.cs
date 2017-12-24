@@ -57,9 +57,11 @@ namespace AVF.MemberManagement.Console
 
         public void WriteSum( OutputFile o )
         {
-            o.WriteAmount( " ", decGrundVerguetung + decZuschlagKindertraining );
-            o.WriteAmount( "+", decFahrtkosten) ;
-            o.WriteAmount( "=", decGrundVerguetung + decZuschlagKindertraining + decFahrtkosten );
+            o.WriteAmount( decGrundVerguetung + decZuschlagKindertraining );
+            o.Write("+");
+            o.WriteAmount( decFahrtkosten);
+            o.Write("=");
+            o.WriteAmount( decGrundVerguetung + decZuschlagKindertraining + decFahrtkosten );
         }
 
         public decimal Summe()
@@ -142,16 +144,16 @@ namespace AVF.MemberManagement.Console
 
                                 if (training.VHS)
                                 {
-                                    ofile.Write($"  -------------- VHS -------------- ");
+                                    ofile.Write($"  ------- VHS ------- ");
                                 }
                                 else
                                 {
-                                    ofile.WriteAmount(" ", tv.GrundVerguetung());
-                                    ofile.WriteAmount(" ", tv.ZuschlagKindertraining());
+                                    ofile.WriteAmount( tv.GrundVerguetung());
+                                    ofile.WriteAmount( tv.ZuschlagKindertraining());
                                 }
 
-                                ofile.WriteAmount(" ", tv.Fahrtkosten());
-                                ofile.WriteAmount(" ", tv.Summe());
+                                ofile.WriteAmount( tv.Fahrtkosten());
+                                ofile.WriteAmount( tv.Summe());
                                 ofile.WriteLine();
                             }
                         }
@@ -211,7 +213,7 @@ namespace AVF.MemberManagement.Console
                 }
 
                 ofile.WriteLine();
-                ofile.Write($"Gesamtbeträge               ");
+                ofile.Write($"Gesamtbeträge                   ");
                 tvSum.WriteSum(ofile);
                 ofile.WriteLine();
 
@@ -239,10 +241,10 @@ namespace AVF.MemberManagement.Console
 
                     ofile.WriteLine();
                     ofile.Write      (" Summe                                                      ");
-                    ofile.WriteAmount(" ", m_aTrData[mitglied.Id].GrundVerguetung());
-                    ofile.WriteAmount(" ", m_aTrData[mitglied.Id].ZuschlagKindertraining());
-                    ofile.WriteAmount(" ", m_aTrData[mitglied.Id].Fahrtkosten());
-                    ofile.WriteAmount(" ", m_aTrData[mitglied.Id].Summe());
+                    ofile.WriteAmount( m_aTrData[mitglied.Id].GrundVerguetung());
+                    ofile.WriteAmount( m_aTrData[mitglied.Id].ZuschlagKindertraining());
+                    ofile.WriteAmount( m_aTrData[mitglied.Id].Fahrtkosten());
+                    ofile.WriteAmount( m_aTrData[mitglied.Id].Summe());
                     ofile.WriteLine();
                     ofile.WriteLine();
 

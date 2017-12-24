@@ -23,6 +23,7 @@ namespace AVF.MemberManagement.Console
         private List<Pruefung> m_pruefung;
         private List<Graduierung> m_graduierung;
         private List<Beitragsklasse> m_beitragsklasse;
+        private List<Familienrabatt> m_familienrabatt;
 
         public async Task ReadTables()
         {
@@ -38,6 +39,7 @@ namespace AVF.MemberManagement.Console
             m_pruefung = await Program.Container.Resolve<IRepository<Pruefung>>().GetAsync();
             m_graduierung = await Program.Container.Resolve<IRepository<Graduierung>>().GetAsync();
             m_beitragsklasse = await Program.Container.Resolve<IRepository<Beitragsklasse>>().GetAsync();
+            m_familienrabatt = await Program.Container.Resolve<IRepository<Familienrabatt>>().GetAsync();
             m_mitglieder.RemoveAt(0);   // Mitglied 0 is a dummy
         }
 
@@ -79,9 +81,19 @@ namespace AVF.MemberManagement.Console
             return m_mitglieder.Max(t => t.Id);
         }
 
-        public string Beitragsklasse(int i)
+        public Beitragsklasse BK(Mitglied mitglied)
         {
-            return m_beitragsklasse.Single(s => s.Id == i).BeitragsklasseRomanNumeral.ToString();
+            return m_beitragsklasse.Single(s => s.Id == mitglied.BeitragsklasseID);
+        }
+
+        public string BK_Text(Mitglied mitglied)
+        {
+            return BK( mitglied ).BeitragsklasseRomanNumeral.ToString();
+        }
+
+        public int Familienrabatt(Mitglied mitglied)
+        {
+            return m_familienrabatt.Single(s => s.Id == mitglied.Familienmitglied).Faktor;
         }
 
         public string Trainerstufe(int i)

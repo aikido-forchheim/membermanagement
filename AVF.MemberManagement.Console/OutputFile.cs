@@ -8,19 +8,11 @@ namespace AVF.MemberManagement.Console
         {
         }
 
-        public void WriteAmount(string prefix, decimal amount)
+        public void WriteAmount(decimal amount)
         {
-            string s = $"{prefix} { amount,7 } € ";
+            string s = (amount > 0) ? $" { amount,7 } € " : "";
 
-            if (amount > 0)
-            {
-                Write(s);
-            }
-            else
-            {
-                for (int i = 0; i < s.Length; ++i)
-                    Write($" ");
-            }
+            Write(s.PadRight(11));
         }
 
         public void WriteTraining(Training training, string weekDay)

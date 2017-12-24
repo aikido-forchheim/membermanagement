@@ -117,7 +117,7 @@ namespace AVF.MemberManagement.Console
                 ofile.WriteMitglied( mitglied );
                 ofile.Write($"{ mitglied.Geburtsdatum:yyyy-MM-dd} ");
                 ofile.Write($"{ mitglied.Geburtsort, -20} ");
-                ofile.Write($"{ m_dbWrapper.Beitragsklasse(mitglied.BeitragsklasseID), 2} ");
+                ofile.Write($"{ m_dbWrapper.BK_Text(mitglied), 3} ");
                 ofile.Write($"{ mitglied.Eintritt:yyyy-MM-dd} ");
                 ofile.Write($"{ dateGrad:yyyy-MM-dd} ");
                 ofile.Write($"{ dateNext:yyyy-MM-dd} ");
