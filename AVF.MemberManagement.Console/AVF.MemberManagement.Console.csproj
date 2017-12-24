@@ -79,6 +79,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DatabaseWrapper.cs" />
+    <Compile Include="Graduierungsliste.cs" />
+    <Compile Include="OutputFile.cs" />
     <Compile Include="Pruefungsliste.cs" />
     <Compile Include="ClassPrototypeGenerator.cs" />
     <Compile Include="Program.cs" />

@@ -33,6 +33,8 @@ namespace AVF.MemberManagement.Console
                     System.Console.WriteLine("1: Generate class prototypes");
                     System.Console.WriteLine("2: Stundensatz-Kalkulator");
                     System.Console.WriteLine("3: Cache Database");
+                    System.Console.WriteLine("4: Prüfungsliste");
+                    System.Console.WriteLine("5: Graduierungsliste");
                     System.Console.WriteLine();
                     System.Console.Write("Please enter number and press ENTER: ");
 
@@ -48,6 +50,12 @@ namespace AVF.MemberManagement.Console
                             break;
                         case 3:
                             new JsonFileFactory(Container).RefreshFileCache().Wait();
+                            break;
+                        case 4:
+                            new Pruefungsliste().Main().Wait();
+                            break;
+                        case 5:
+                            new Graduierungsliste().Main().Wait();
                             break;
                     }
                 }

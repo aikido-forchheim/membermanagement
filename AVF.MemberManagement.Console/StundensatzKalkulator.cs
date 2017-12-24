@@ -12,40 +12,6 @@ using Microsoft.Practices.Unity;
 
 namespace AVF.MemberManagement.Console
 {
-    internal class OutputFile : System.IO.StreamWriter
-    {
-
-        public OutputFile( string fileName ) : base( fileName )
-        {
-        }
-
-        public void WriteAmount( string prefix, decimal amount)
-        {
-            string s = $"{prefix} { amount,7 } € ";
-
-            if ( amount > 0 )
-            {
-                Write(s);
-            }
-            else
-            {
-                for (int i = 0; i < s.Length; ++i)
-                    Write($" ");
-            }
-        }
-
-        public void WriteTraining( Training training, string weekDay )
-        {
-            Write($"{training.Termin:yyyy-MM-dd} {weekDay,-10} {training.Zeit:hh}:{training.Zeit:mm}, {training.DauerMinuten,3} min, ");
-        }
-
-        public void WriteMitglied( Mitglied mitglied )
-        {
-            Write($"{ mitglied.Nachname,-10 } { mitglied.Vorname,-10 } ({ mitglied.Id,3 }) ");
-        }
-
-    }
-
     internal class TrainerVerguetung
     {
         public TrainerVerguetung()
@@ -155,7 +121,7 @@ namespace AVF.MemberManagement.Console
                     {
                         int? trainerId = TrainerIdFromNr(training, trainerNr);
 
-                        if ((trainerId.HasValue) && (trainerId >= 0))
+                        if ( m_dbWrapper.IstNochMitglied(trainerId) )
                         {
                             int trainerstufe = m_dbWrapper.TrainerLevel(trainerId, training.Termin);
 

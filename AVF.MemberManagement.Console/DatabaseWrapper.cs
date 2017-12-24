@@ -21,6 +21,8 @@ namespace AVF.MemberManagement.Console
         private List<Wohnungsbezug> m_wohnungsbezug;
         private List<Wochentag> m_wochentag;
         private List<Pruefung> m_pruefung;
+        private List<Graduierung> m_graduierung;
+        private List<Beitragsklasse> m_beitragsklasse;
 
         public async Task ReadTables()
         {
@@ -34,6 +36,8 @@ namespace AVF.MemberManagement.Console
             m_wohnungsbezug = await Program.Container.Resolve<IRepository<Wohnungsbezug>>().GetAsync();
             m_wochentag = await Program.Container.Resolve<IRepository<Wochentag>>().GetAsync();
             m_pruefung = await Program.Container.Resolve<IRepository<Pruefung>>().GetAsync();
+            m_graduierung = await Program.Container.Resolve<IRepository<Graduierung>>().GetAsync();
+            m_beitragsklasse = await Program.Container.Resolve<IRepository<Beitragsklasse>>().GetAsync();
             m_mitglieder.RemoveAt(0);   // Mitglied 0 is a dummy
         }
 
@@ -75,6 +79,11 @@ namespace AVF.MemberManagement.Console
             return m_mitglieder.Max(t => t.Id);
         }
 
+        public string Beitragsklasse(int i)
+        {
+            return m_beitragsklasse.Single(s => s.Id == i).BeitragsklasseRomanNumeral.ToString();
+        }
+
         public string Trainerstufe(int i)
         {
             return m_trainerStufe.Single(s => s.Id == i).Bezeichnung;
@@ -90,6 +99,22 @@ namespace AVF.MemberManagement.Console
             return m_mitglieder.Single(s => s.Id == id);
         }
 
+        public Boolean IstNochMitglied(int ? id)
+        {
+            if (!id.HasValue)
+                return false;
+
+            if ( id < 0 )
+                return false;
+
+            DateTime? austritt = MitgliedFromId( id.Value ).Austritt;
+
+            if (!austritt.HasValue)
+                return true;
+
+            return (austritt.Value.Year == 0);
+        }
+
         public List<Mitglied> Mitglieder()
         {
             return m_mitglieder;
@@ -98,6 +123,11 @@ namespace AVF.MemberManagement.Console
         public List<Pruefung> Pruefungen()
         {
             return m_pruefung;
+        }
+
+        public Graduierung GraduierungFromId(int id)
+        {
+            return m_graduierung.Single(s => s.Id == id);
         }
 
         public List<Training> Prepare(int iJahr)
