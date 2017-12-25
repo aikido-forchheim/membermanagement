@@ -44,7 +44,7 @@ namespace AVF.MemberManagement.Console
                             new ClassPrototypeGenerator().Main().Wait();
                             break;
                         case 2:
-                            new StundensatzKalkulator().Main().Wait();
+                            new StundensatzKalkulator().Main( 2017 ).Wait();
                             break;
                         case 3:
                             new JsonFileFactory(Container).RefreshFileCache().Wait();
