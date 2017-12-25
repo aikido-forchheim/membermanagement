@@ -5,6 +5,7 @@ using AVF.MemberManagement.Factories;
 using AVF.MemberManagement.PortableLibrary.Services;
 using AVF.MemberManagement.Services;
 using AVF.MemberManagement.StandardLibrary.Archive;
+using AVF.MemberManagement.StandardLibrary.Enums;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Proxies;
 using AVF.MemberManagement.StandardLibrary.Repositories;
@@ -15,6 +16,7 @@ using Prism.Unity;
 using AVF.MemberManagement.Views;
 using Microsoft.Extensions.Logging;
 using Microsoft.Practices.Unity;
+using Xamarin.Forms;
 
 namespace AVF.MemberManagement
 {
@@ -28,16 +30,20 @@ namespace AVF.MemberManagement
         {
         }
 
-        protected override void OnInitialized()
+        protected override async void OnInitialized()
         {
             InitializeComponent();
 
-            NavigationService.NavigateAsync(nameof(MainPage));
+            Globals.Idiom = (Idiom)(int)Device.Idiom;
+
+            await NavigationService.NavigateAsync("NavigationPage/MainPage");
         }
 
         protected override void RegisterTypes()
         {
             _repositoryBootstrapper = new RepositoryBootstrapper(Container);
+
+            Container.RegisterInstance<IRepositoryBootstrapper>(_repositoryBootstrapper);
 
             //ILogger
             ILoggerFactory loggerFactory = new LoggerFactory();
@@ -71,12 +77,14 @@ namespace AVF.MemberManagement
             Container.RegisterType<IJsonFileFactory, JsonFileFactory>(new ContainerControlledLifetimeManager());
 
             //_repositoryBootstrapper.RegisterRepositories(false);
+            //Globals.UseFileProxies = false;
             //Globals.UseFileProxies = true;
             _repositoryBootstrapper.RegisterRepositories(Globals.UseFileProxies);
 
             //RefreshCache().Wait();
             //RefreshCache(); //UWP
 
+            Container.RegisterTypeForNavigation<NavigationPage>();
             Container.RegisterTypeForNavigation<MainPage>();
             Container.RegisterTypeForNavigation<RestApiSettingsPage>();
             Container.RegisterTypeForNavigation<PasswordPage>();
@@ -84,6 +92,8 @@ namespace AVF.MemberManagement
             Container.RegisterTypeForNavigation<DaySelectionPage>();
             Container.RegisterTypeForNavigation<KursSelectionPage>();
             Container.RegisterTypeForNavigation<EnterParticipantsPage>();
+            Container.RegisterTypeForNavigation<EnterParticipantsTabletPage>();
+            Container.RegisterTypeForNavigation<AdvancedSettingsPage>();
         }
 
         private async Task RefreshCache()

@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using System;
+using Xamarin.Forms;
 
 namespace AVF.MemberManagement.Views
 {
@@ -7,6 +8,11 @@ namespace AVF.MemberManagement.Views
         public DaySelectionPage()
         {
             InitializeComponent();
+        }
+
+        private void DaySelectionPage_OnAppearing(object sender, EventArgs e)
+        {
+            BtnToday.Focus();
         }
     }
 }

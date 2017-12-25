@@ -11,13 +11,10 @@ using Prism.Navigation;
 
 namespace AVF.MemberManagement.ViewModels
 {
-    public class StartPageViewModel : BindableBase, INavigatedAware
+    public class StartPageViewModel : ViewModelBase
     {
         private readonly IAccountService _accountService;
-        private readonly INavigationService _navigationService;
         private readonly IPasswordService _passwordService;
-
-        public string Title { get; set; }
 
         private string _username;
 
@@ -27,10 +24,11 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _username, value);
         }
 
-        public StartPageViewModel(IAccountService accountService, INavigationService navigationService, IPasswordService passwordService)
+        public StartPageViewModel(IAccountService accountService, INavigationService navigationService, IPasswordService passwordService) : base(navigationService)
         {
+            Title = "Startseite";
+
             _accountService = accountService;
-            _navigationService = navigationService;
             _passwordService = passwordService;
 
             NavigateToDaySelectionPageCommand = new DelegateCommand(NavigateToDaySelectionPage, CanNavigateToDaySelectionPage);
@@ -42,7 +40,7 @@ namespace AVF.MemberManagement.ViewModels
 
         private void NavigateToDaySelectionPage()
         {
-            _navigationService.NavigateAsync(nameof(DaySelectionPage));
+            NavigationService.NavigateAsync(nameof(DaySelectionPage));
         }
 
         private bool CanNavigateToDaySelectionPage()
@@ -52,12 +50,7 @@ namespace AVF.MemberManagement.ViewModels
 
         #endregion
 
-        public void OnNavigatedFrom(NavigationParameters parameters)
-        {
-            //Title = (await _settingsProxy.GetSettingAsync("Title")).Value;
-        }
-
-        public void OnNavigatedTo(NavigationParameters parameters)
+        public override void OnNavigatedTo(NavigationParameters parameters)
         {
             try
             {

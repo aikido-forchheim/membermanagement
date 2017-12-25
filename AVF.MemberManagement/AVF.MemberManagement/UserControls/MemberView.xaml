@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ContentView xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="AVF.MemberManagement.UserControls.MemberView">
+<ContentView x:Name="This" xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="AVF.MemberManagement.UserControls.MemberView">
     <ContentView.Content>
         <StackLayout Orientation="Horizontal">
             <StackLayout.Margin>
@@ -23,25 +23,26 @@
             <BoxView Color="DarkGray">
                 <StackLayout.Margin>
                     <OnPlatform x:TypeArguments="Thickness">
-                            <OnPlatform.Platforms>
-                                <On Platform="UWP" Value="4,4,4,4" />
-                            </OnPlatform.Platforms>
-                        </OnPlatform>
+                        <OnPlatform.Platforms>
+                            <On Platform="UWP" Value="4,4,4,4" />
+                        </OnPlatform.Platforms>
+                    </OnPlatform>
                 </StackLayout.Margin>
             </BoxView>
             <StackLayout Orientation="Horizontal">
                 <StackLayout.Margin>
                     <OnPlatform x:TypeArguments="Thickness">
-                            <OnPlatform.Platforms>
-                                <On Platform="UWP" Value="4,4,4,4" />
-                            </OnPlatform.Platforms>
-                        </OnPlatform>
+                        <OnPlatform.Platforms>
+                            <On Platform="UWP" Value="4,4,4,4" />
+                        </OnPlatform.Platforms>
+                    </OnPlatform>
                 </StackLayout.Margin>
-                <Label Text="{Binding Vorname}">
+                <Label BindingContext="{Binding Source={x:Reference This}, Path=OriginalBindingContext}" Text="{Binding Vorname}" VerticalOptions="Center">
                 </Label>
-                <Label Text="{Binding Nachname}">
+                <Label BindingContext="{Binding Source={x:Reference This}, Path=OriginalBindingContext}" Text="{Binding Nachname}" VerticalOptions="Center">
                 </Label>
             </StackLayout>
+            <Button  Margin="0,0,24,0" Command="{Binding Command, Source={x:Reference This}}" Text="{Binding ButtonText, Source={x:Reference This}}" TextColor="{Binding ButtonTextColor, Source={x:Reference This}}" WidthRequest="44" HorizontalOptions="EndAndExpand" VerticalOptions="Center" FontAttributes="Bold" />
         </StackLayout>
     </ContentView.Content>
 </ContentView>

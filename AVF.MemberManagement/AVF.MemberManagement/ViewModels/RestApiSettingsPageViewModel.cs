@@ -7,16 +7,14 @@ using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Microsoft.Extensions.Logging;
 using Prism.Commands;
-using Prism.Mvvm;
 using IT2media.Extensions.Logging.Abstractions;
 using Prism.Navigation;
 
 namespace AVF.MemberManagement.ViewModels
 {
-    public class RestApiSettingsPageViewModel : BindableBase, INavigatingAware
+    public class RestApiSettingsPageViewModel : ViewModelBase
     {
         private readonly ILogger _logger;
-        private readonly INavigationService _navigationService;
         private readonly IProxyBase<Setting, string> _settingsProxy; //Leave Proxy instead of Repository, because we use this for connection testing our RestApi, and the Repository may be cached anytime later
 
         public IAccountService AccountService { get; }
@@ -30,16 +28,30 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _message, value);
         }
 
+        private string _passwordForAdvancedSettings;
+
+        public string PasswordForAdvancedSettings
+        {
+            get => _passwordForAdvancedSettings;
+            set
+            {
+                SetProperty(ref _passwordForAdvancedSettings, value); 
+                
+                ((DelegateCommand) AdvancedSettingsCommand).RaiseCanExecuteChanged();
+            }
+        }
+
         public ICommand ValidateCommand { get; }
 
         public ICommand SaveCommand { get; }
 
         public ICommand BackCommand { get; }
 
-        public RestApiSettingsPageViewModel(ILogger logger, IAccountService accountService, INavigationService navigationService, IProxyBase<Setting, string> settingsProxy)
+        public RestApiSettingsPageViewModel(ILogger logger, IAccountService accountService, INavigationService navigationService, IProxyBase<Setting, string> settingsProxy) : base(navigationService)
         {
+            Title = "Einstellungen";
+
             _logger = logger;
-            _navigationService = navigationService;
             _settingsProxy = settingsProxy;
 
             AccountService = accountService;
@@ -47,6 +59,7 @@ namespace AVF.MemberManagement.ViewModels
             SaveCommand = new DelegateCommand(OnSave, CanSave);
             BackCommand = new DelegateCommand(OnBack, CanBack);
             ValidateCommand = new DelegateCommand(OnValidate, CanValidate);
+            AdvancedSettingsCommand = new DelegateCommand(AdvancedSettings, CanAdvancedSettings);
         }
 
         private bool CanValidate()
@@ -67,7 +80,7 @@ namespace AVF.MemberManagement.ViewModels
 
         private void OnBack()
         {
-            _navigationService.NavigateAsync("MainPage");
+            NavigationService.NavigateAsync("MainPage");
         }
 
         private async void OnSave()
@@ -107,7 +120,26 @@ namespace AVF.MemberManagement.ViewModels
             return canSave;
         }
 
-        public async void OnNavigatingTo(NavigationParameters parameters)
+        #region AdvancedSettingsCommand
+
+        public ICommand AdvancedSettingsCommand { get; }
+
+        private void AdvancedSettings()
+        {
+            NavigationService.NavigateAsync("AdvancedSettingsPage");
+        }
+
+        private bool CanAdvancedSettings()
+        {
+            if (string.IsNullOrEmpty(AccountService.RestApiAccount?.Password)) return false;
+
+            return AccountService.RestApiAccount.Password == _passwordForAdvancedSettings;
+        }
+
+        #endregion
+
+
+        public override async void OnNavigatingTo(NavigationParameters parameters)
         {
             await RunConnectionTest();
         }

@@ -22,12 +22,12 @@ namespace AVF.MemberManagement.GTK
             {
                 if (args.Contains("/usefileproxies"))
                 {
-                    Globals.UseFileProxies = true;
+                    StandardLibrary.Services.Globals.UseFileProxies = true;
                 }
             }
 
-            Globals.UsesXamarinAuth = false;
-            Globals.AccountService = new AccountServiceS();
+            StandardLibrary.Services.Globals.UsesXamarinAuth = false;
+            StandardLibrary.Services.Globals.AccountService = new AccountServiceS();
 
             ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             Gtk.Application.Init();

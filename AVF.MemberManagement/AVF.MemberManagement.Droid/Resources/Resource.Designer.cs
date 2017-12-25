@@ -28,6 +28,8 @@ namespace AVF.MemberManagement.Droid
 		{
 			global::PCLCrypto.Resource.String.ApplicationName = global::AVF.MemberManagement.Droid.Resource.String.ApplicationName;
 			global::PCLCrypto.Resource.String.Hello = global::AVF.MemberManagement.Droid.Resource.String.Hello;
+			global::PCLStorage.Resource.String.ApplicationName = global::AVF.MemberManagement.Droid.Resource.String.ApplicationName;
+			global::PCLStorage.Resource.String.Hello = global::AVF.MemberManagement.Droid.Resource.String.Hello;
 			global::Xamarin.Auth.Resource.Animation.slide_in_right = global::AVF.MemberManagement.Droid.Resource.Animation.slide_in_right;
 			global::Xamarin.Auth.Resource.Animation.slide_out_left = global::AVF.MemberManagement.Droid.Resource.Animation.slide_out_left;
 			global::Xamarin.Auth.Resource.Drawable.ic_arrow_back = global::AVF.MemberManagement.Droid.Resource.Drawable.ic_arrow_back;

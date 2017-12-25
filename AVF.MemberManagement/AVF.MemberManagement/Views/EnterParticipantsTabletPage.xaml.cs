@@ -1,11 +1,12 @@
 ﻿using AVF.MemberManagement.ViewModels;
-using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 
 namespace AVF.MemberManagement.Views
 {
-    public partial class EnterParticipantsPage
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class EnterParticipantsTabletPage
     {
-        public EnterParticipantsPage()
+        public EnterParticipantsTabletPage()
         {
             InitializeComponent();
         }
@@ -25,7 +26,7 @@ namespace AVF.MemberManagement.Views
             {
                 //TODO: Inherit EnterParticipantsTabletPage and EnterParticipantsPage from base
                 //TODO: Implement Save or Discard on Yes or No
-                await ((EnterParticipantsPageViewModel)BindingContext).GoBackAsync();
+                await ((EnterParticipantsTabletPageViewModel) BindingContext).GoBackAsync();
             }
         }
     }
