@@ -20,9 +20,9 @@ namespace AVF.MemberManagement.iOS.Services
 
 		public void InitWithAccountStore(string appId)
 		{
-            if (File.Exists(RestApiAccountFileName))
+            if (File.Exists(GetFullPath(RestApiAccountFileName)))
             {
-                var json = File.ReadAllText(RestApiAccountFileName, Encoding.UTF8);
+                var json = File.ReadAllText(GetFullPath(RestApiAccountFileName), Encoding.UTF8);
 
 				_restApiAccount = JsonConvert.DeserializeObject<RestApiAccount>(json);   
             }
@@ -38,7 +38,7 @@ namespace AVF.MemberManagement.iOS.Services
 			{
 				try
 				{
-                    return File.Exists(RestApiAccountFileName);
+                    return File.Exists(GetFullPath(RestApiAccountFileName));
 				}
 				catch (Exception)
 				{
@@ -62,7 +62,7 @@ namespace AVF.MemberManagement.iOS.Services
 
             var json = JsonConvert.SerializeObject(restApiAccount);
 
-            File.WriteAllText(RestApiAccountFileName, json, Encoding.UTF8);
+            File.WriteAllText(GetFullPath(RestApiAccountFileName), json, Encoding.UTF8);
 		}
 
 		public RestApiAccount RestApiAccount
@@ -75,5 +75,12 @@ namespace AVF.MemberManagement.iOS.Services
 			{
 			}
 		}
+
+        private string GetFullPath(string filename)
+        {
+            var personalFolder = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            var fullPath = Path.Combine(personalFolder, filename);
+            return fullPath;
+        }
 	}
 }
