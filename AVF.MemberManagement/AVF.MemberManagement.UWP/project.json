@@ -13,7 +13,7 @@
     "Prism.Unity.Forms": "6.3.0",
     "Unity": "4.0.1",
     "Xamarin.Auth": "1.5.0",
-    "Xamarin.Forms": "2.4.0.18342"
+    "Xamarin.Forms": "2.5.0.121934"
   },
   "frameworks": {
     "uap10.0.10586": {}
