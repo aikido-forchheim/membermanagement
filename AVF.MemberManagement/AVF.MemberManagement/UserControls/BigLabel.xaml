@@ -5,7 +5,7 @@
              x:Name="This"
              >
   <ContentView.Content>
-        <Label FontSize="{Binding FontSize}" Text="{Binding Text, Source={x:Reference This}}" FontAttributes="{Binding FontAttributes, Source={x:Reference This}}" x:Name="Label">
+        <Label FontSize="{Binding FontSize, Source={x:Reference This}}" Text="{Binding Text, Source={x:Reference This}}" FontAttributes="{Binding FontAttributes, Source={x:Reference This}}" x:Name="Label">
         </Label>
   </ContentView.Content>
 </ContentView>
