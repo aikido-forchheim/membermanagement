@@ -139,8 +139,8 @@ namespace AVF.MemberManagement.Console
                             if ( print )
                             {
                                 ofile.WriteTraining(training, m_dbWrapper.WeekDay(training.WochentagID));
-                                ofile.Write($"{trainerNr}. Trainer, ");
-                                ofile.Write($" Stufe { trainerstufe }, ");
+                                ofile.Write($"{trainerNr} ");
+                                ofile.Write($"{trainerstufe} ");
 
                                 if (training.VHS)
                                 {
@@ -233,14 +233,14 @@ namespace AVF.MemberManagement.Console
 
                     m_aTrData[mitglied.Id].SetEmpty();     // reset individual account to avoid double counting
 
-                    ofile.WriteLine("Tag des Trainings     Zeit   Dauer    Trainernr.   Trainer    Grundver-    Kinder-      Fahrt-      Summe");
-                    ofile.WriteLine("                                                   -stufe     guetung      zuschlag     kosten           ");
+                    ofile.WriteLine("Tag des Trainings     Zeit  Min T T  Grundver-    Kinder-     Fahrt-    Summe");
+                    ofile.WriteLine("                                N S   guetung     zuschlag    kosten         ");
                     ofile.WriteLine();
 
                     SettlePeriod( ofile, mitglied, trainingsInPeriod, true );
 
                     ofile.WriteLine();
-                    ofile.Write      (" Summe                                                      ");
+                    ofile.Write      ("Summe                               ");
                     ofile.WriteAmount( m_aTrData[mitglied.Id].GrundVerguetung());
                     ofile.WriteAmount( m_aTrData[mitglied.Id].ZuschlagKindertraining());
                     ofile.WriteAmount( m_aTrData[mitglied.Id].Fahrtkosten());
@@ -248,7 +248,12 @@ namespace AVF.MemberManagement.Console
                     ofile.WriteLine();
                     ofile.WriteLine();
 
-                    ofile.WriteLine( "Legende Trainerstufen:" ); 
+                    ofile.WriteLine("TN: Trainernummer");
+                    ofile.WriteLine("1 - Hauptrainer");
+                    ofile.WriteLine("2 - Erster Kotrainer");
+                    ofile.WriteLine("3 - Zweiter Kotrainer");
+                    ofile.WriteLine();
+                    ofile.WriteLine("TS: Trainerstufe");
                     for (int i = 1; i <= m_dbWrapper.MaxTrainerstufe(); i++)
                         ofile.WriteLine( $"{ i } - { m_dbWrapper.Trainerstufe( i )}" );
 

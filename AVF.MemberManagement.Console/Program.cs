@@ -36,6 +36,7 @@ namespace AVF.MemberManagement.Console
                     System.Console.WriteLine("4: Prüfungsliste");
                     System.Console.WriteLine("5: Graduierungsliste");
                     System.Console.WriteLine("6: Mitgliederbeiträge");
+                    System.Console.WriteLine("7: Konsistenzprüfungen");
                     System.Console.WriteLine();
                     System.Console.Write("Please enter number and press ENTER: ");
 
@@ -47,7 +48,7 @@ namespace AVF.MemberManagement.Console
                             new ClassPrototypeGenerator().Main().Wait();
                             break;
                         case 2:
-                            new StundensatzKalkulator().Main( 2017 ).Wait();
+                            new StundensatzKalkulator().Main(2017).Wait();
                             break;
                         case 3:
                             new JsonFileFactory(Container).RefreshFileCache().Wait();
@@ -60,6 +61,11 @@ namespace AVF.MemberManagement.Console
                             break;
                         case 6:
                             new Mitgliederbeitraege().Main().Wait();
+                            break;
+                        case 7:
+                            new CheckConsistancy().Main().Wait();
+                            break;
+                        default:
                             break;
                     }
                 }

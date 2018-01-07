@@ -24,6 +24,7 @@ namespace AVF.MemberManagement.Console
         private List<Graduierung> m_graduierung;
         private List<Beitragsklasse> m_beitragsklasse;
         private List<Familienrabatt> m_familienrabatt;
+        private List<TrainingsTeilnahme> m_trainingsTeilnahme;
 
         public async Task ReadTables()
         {
@@ -40,6 +41,7 @@ namespace AVF.MemberManagement.Console
             m_graduierung = await Program.Container.Resolve<IRepository<Graduierung>>().GetAsync();
             m_beitragsklasse = await Program.Container.Resolve<IRepository<Beitragsklasse>>().GetAsync();
             m_familienrabatt = await Program.Container.Resolve<IRepository<Familienrabatt>>().GetAsync();
+            m_trainingsTeilnahme = await Program.Container.Resolve<IRepository<TrainingsTeilnahme>>().GetAsync();
             m_mitglieder.RemoveAt(0);   // Mitglied 0 is a dummy
         }
 
@@ -111,7 +113,12 @@ namespace AVF.MemberManagement.Console
             return m_mitglieder.Single(s => s.Id == id);
         }
 
-        public Boolean IstNochMitglied(int ? id)
+        public Boolean HatTeilgenommen(int member, Training training )
+        {
+            return m_trainingsTeilnahme.Exists(x => (x.Id == member) && (x.TrainingID == training.Id) );
+        }
+
+        public Boolean IstNochMitglied(int? id)
         {
             if (!id.HasValue)
                 return false;
@@ -144,12 +151,15 @@ namespace AVF.MemberManagement.Console
 
         public List<Training> Prepare(int iJahr)
         {
-            int iArraySize = MaxMitgliedsNr() + 1;
-
-            DateTime datStart = new DateTime(iJahr,  1,  1);
-            DateTime datEnd   = new DateTime(iJahr, 12, 31);
+            DateTime datStart = new DateTime(iJahr, 1, 1);
+            DateTime datEnd = new DateTime(iJahr, 12, 31);
 
             return m_trainings.Where(training => training.Termin > datStart && training.Termin < datEnd).ToList();
+        }
+
+        public List<Training> AllTrainings( )
+        {
+            return m_trainings;
         }
 
         public decimal CalcTravelExpenses(int? idMitglied, DateTime termin)

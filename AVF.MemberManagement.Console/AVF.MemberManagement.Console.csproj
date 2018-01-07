@@ -78,6 +78,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CheckConsistancy.cs" />
     <Compile Include="DatabaseWrapper.cs" />
     <Compile Include="Graduierungsliste.cs" />
     <Compile Include="Mitgliederbeitraege.cs" />

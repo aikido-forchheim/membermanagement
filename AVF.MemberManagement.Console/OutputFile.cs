@@ -17,7 +17,7 @@ namespace AVF.MemberManagement.Console
 
         public void WriteTraining(Training training, string weekDay)
         {
-            Write($"{training.Termin:yyyy-MM-dd} {weekDay,-10} {training.Zeit:hh}:{training.Zeit:mm}, {training.DauerMinuten,3} min, ");
+            Write($"{training.Termin:yyyy-MM-dd} {weekDay,-10} {training.Zeit:hh}:{training.Zeit:mm} {training.DauerMinuten,3} ");
         }
 
         public void WriteMitglied(Mitglied mitglied)
