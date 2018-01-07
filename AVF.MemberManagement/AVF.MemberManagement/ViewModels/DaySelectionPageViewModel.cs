@@ -9,13 +9,11 @@ using Prism.Navigation;
 
 namespace AVF.MemberManagement.ViewModels
 {
-    public class DaySelectionPageViewModel : BindableBase
+    public class DaySelectionPageViewModel : ViewModelBase
     {
-        private readonly INavigationService _navigationService;
-
-        public DaySelectionPageViewModel(INavigationService navigationService)
+        public DaySelectionPageViewModel(INavigationService navigationService) : base(navigationService)
         {
-            _navigationService = navigationService;
+            Title = "Trainingsteilnahme";
 
             NavigateToKursSelectionPageCommand = new DelegateCommand(NavigateToKursSelectionPage, CanNavigateToKursSelectionPage);
         }
@@ -26,8 +24,8 @@ namespace AVF.MemberManagement.ViewModels
 
         private void NavigateToKursSelectionPage()
         {
-            var navigationParameters = new NavigationParameters {{"Date", new DateTime(2016, 1, 13)}};
-            _navigationService.NavigateAsync(nameof(KursSelectionPage), navigationParameters);
+            var navigationParameters = new NavigationParameters {{"Date", new DateTime(2016, 10, 11)}};
+            NavigationService.NavigateAsync(nameof(KursSelectionPage), navigationParameters);
         }
 
         private bool CanNavigateToKursSelectionPage()

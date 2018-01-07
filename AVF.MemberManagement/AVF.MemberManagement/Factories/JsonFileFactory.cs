@@ -26,7 +26,7 @@ namespace AVF.MemberManagement.Factories
             var tboTypes = GetTypesInNamespace(typeof(Beitragsklasse).GetTypeInfo().Assembly, typeof(AVF.MemberManagement.StandardLibrary.Tbo.Test).Namespace);
 
             var writtenFiles = new List<IFile>();
-            
+
             foreach (var tboType in tboTypes)
             {
                 if (tboType.Name == "Setting") continue;
@@ -47,18 +47,24 @@ namespace AVF.MemberManagement.Factories
 
                 var tboTypeName = tboType.Name;
 
-                var file = await WriteJson(json, tboTypeName);
-                
-                writtenFiles.Add(file);
+                try
+                {
+                    var file = await WriteJson(json, tboTypeName);
+                    writtenFiles.Add(file);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
             }
-            
+
 
             var settingsProxy = _container.Resolve<IProxyBase<Setting, string>>();
 
             var settingsJson = Newtonsoft.Json.JsonConvert.SerializeObject(await settingsProxy.GetAsync());
 
             var settingsFile = await WriteJson(settingsJson, nameof(Setting));
-            
+
             writtenFiles.Add(settingsFile);
 
 

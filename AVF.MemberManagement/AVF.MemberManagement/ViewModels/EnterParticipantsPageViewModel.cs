@@ -1,5 +1,4 @@
-﻿using Prism.Commands;
-using Prism.Mvvm;
+﻿using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,12 +8,23 @@ using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Models;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Prism.Navigation;
+using System.Windows.Input;
+using Prism.Commands;
 
 namespace AVF.MemberManagement.ViewModels
 {
-    public class EnterParticipantsPageViewModel : BindableBase, INavigatedAware
+    public class EnterParticipantsPageViewModel : ViewModelBase
     {
         private readonly IRepository<Mitglied> _mitgliederRepository;
+        private readonly IRepository<Training> _trainingsRepository;
+        private readonly IRepository<TrainingsTeilnahme> _trainingsTeilnahmenRepository;
+
+        public string ParticipantsCountText => $"Bereits eingetragene Teilnehmer ({Participants.Count}):";
+        public string PreviousParticipantsCountText => $"Zuletzt anwesend ({PreviousParticipants.Count}):";
+        public string FoundMembersCountText => $"Gefundene Mitglieder ({FoundMembers.Count}):";
+
+
+        #region Mitglieder, aktuelles Datum und Training
 
         private List<Mitglied> _mitglieder = new List<Mitglied>();
 
@@ -34,6 +44,10 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _training, value);
         }
 
+        #endregion
+
+        #region Participants
+
         private ObservableCollection<Mitglied> _participants = new ObservableCollection<Mitglied>();
 
         public ObservableCollection<Mitglied> Participants
@@ -47,10 +61,42 @@ namespace AVF.MemberManagement.ViewModels
         public Mitglied SelectedParticipant
         {
             get => _selectedParticipant;
-            set => SetProperty(ref _selectedParticipant, value);
+            set
+            {
+                SetProperty(ref _selectedParticipant, value);
+                ((DelegateCommand)RemoveParticipantCommand).RaiseCanExecuteChanged();
+            }
         }
 
-        private string _searchText;
+        #endregion
+
+        #region PreviousParicipants
+
+        private ObservableCollection<Mitglied> _previousParticipants = new ObservableCollection<Mitglied>();
+
+        public ObservableCollection<Mitglied> PreviousParticipants
+        {
+            get => _previousParticipants;
+            set => SetProperty(ref _previousParticipants, value);
+        }
+
+        private Mitglied _selectedPreviousParticipant;
+
+        public Mitglied SelectedPreviousParticipant
+        {
+            get => _selectedPreviousParticipant;
+            set
+            {
+                SetProperty(ref _selectedPreviousParticipant, value);
+                ((DelegateCommand)AddPreviousParticipantCommand).RaiseCanExecuteChanged();
+            }
+        }
+
+        #endregion
+
+        #region FindMembers
+
+        private string _searchText = string.Empty;
 
         public string SearchText
         {
@@ -59,6 +105,20 @@ namespace AVF.MemberManagement.ViewModels
             {
                 SetProperty(ref _searchText, value);
                 FindMembers(_searchText);
+                RaisePropertyChanged(nameof(FoundMembersCountText));
+            }
+        }
+
+        private bool _childrenOnly;
+
+        public bool ChildrenOnly
+        {
+            get => _childrenOnly;
+            set
+            {
+                SetProperty(ref _childrenOnly, value);
+                FindMembers(_searchText);
+                RaisePropertyChanged(nameof(FoundMembersCountText));
             }
         }
 
@@ -75,22 +135,189 @@ namespace AVF.MemberManagement.ViewModels
         public Mitglied SelectedMember
         {
             get => _selectedMember;
-            set => SetProperty(ref _selectedMember, value);
+            set
+            {
+                SetProperty(ref _selectedMember, value);
+                ((DelegateCommand)AddFoundMemberCommand).RaiseCanExecuteChanged();
+            }
         }
 
-        public EnterParticipantsPageViewModel(IRepository<Mitglied> mitgliederRepository)
+        #endregion
+
+
+        public ICommand RemoveParticipantCommand { get; set; }
+        public ICommand AddPreviousParticipantCommand { get; set; }
+        public ICommand AddFoundMemberCommand { get; set; }
+
+
+        public EnterParticipantsPageViewModel(IRepository<Mitglied> mitgliederRepository, IRepository<Training> trainingsRepository, IRepository<TrainingsTeilnahme> trainingsTeilnahmenRepository, INavigationService navigationService) : base(navigationService)
         {
             _mitgliederRepository = mitgliederRepository;
+            _trainingsRepository = trainingsRepository;
+            _trainingsTeilnahmenRepository = trainingsTeilnahmenRepository;
+
+            AddPreviousParticipantCommand = new DelegateCommand(AddPreviousParticipant, CanAddPreviousParticipant);
+            AddFoundMemberCommand = new DelegateCommand(AddFoundMember, CanAddFoundMember);
+            RemoveParticipantCommand = new DelegateCommand(RemoveParticipant, CanRemoveParticipant);
         }
 
-        public void OnNavigatedFrom(NavigationParameters parameters)
-        {
+        #region INavigatedAware
 
+        public override async void OnNavigatedTo(NavigationParameters parameters)
+        {
+            _participants.Clear();
+
+            SelectedDateString = (string)parameters["SelectedDateString"];
+            Training = (TrainingsModel)parameters["SelectedTraining"];
+            ChildrenOnly = Training.Training.Kindertraining;
+
+            Title = $"{Training.Class.Time} ({Training.Class.Trainer.Vorname})";
+
+            _mitglieder = await _mitgliederRepository.GetAsync();
+            _mitglieder.Sort(CompareMemberNames);
+
+            GetExistingParticipants();
+            await FindPreviousParticipants();
+            FindMembers(_searchText);
+
+            RaiseCounterPropertiesChanged();
+        }
+
+        #endregion
+
+        public async Task<bool> GoBackAsync()
+        {
+            return await NavigationService.GoBackAsync();
+        }
+
+
+        #region RemoveParticipantCommand
+
+        private bool CanRemoveParticipant()
+        {
+            return Participants != null && Participants.Count > 0 && SelectedParticipant != null && Participants.Contains(SelectedParticipant);
+        }
+
+        private async void RemoveParticipant()
+        {
+            Participants.Remove(SelectedParticipant);
+
+            ((DelegateCommand)RemoveParticipantCommand).RaiseCanExecuteChanged();
+
+            await FindPreviousParticipants();
+            FindMembers(_searchText);
+
+            RaiseCounterPropertiesChanged();
+        }
+
+        #endregion
+
+        #region AddPreviousParticipantCommand
+
+        private bool CanAddPreviousParticipant()
+        {
+            return PreviousParticipants != null && PreviousParticipants.Count > 0 && SelectedPreviousParticipant != null && PreviousParticipants.Contains(SelectedPreviousParticipant);
+        }
+
+        private void AddPreviousParticipant()
+        {
+            Participants.Add(SelectedPreviousParticipant);
+
+            FoundMembers.Remove(SelectedPreviousParticipant);
+            PreviousParticipants.Remove(SelectedPreviousParticipant);
+
+            ((DelegateCommand)AddPreviousParticipantCommand).RaiseCanExecuteChanged();
+
+            RaiseCounterPropertiesChanged();
+        }
+
+        #endregion
+
+        #region AddFoundMemberCommand
+
+        private bool CanAddFoundMember()
+        {
+            return FoundMembers != null && FoundMembers.Count > 0 && SelectedMember != null && FoundMembers.Contains(SelectedMember);
+        }
+
+        private void AddFoundMember()
+        {
+            Participants.Add(SelectedMember);
+
+            PreviousParticipants.Remove(SelectedMember);
+            FoundMembers.Remove(SelectedMember);
+
+            ((DelegateCommand)AddFoundMemberCommand).RaiseCanExecuteChanged();
+
+            RaiseCounterPropertiesChanged();
+        }
+
+        #endregion
+
+
+        private void GetExistingParticipants()
+        {
+            foreach (var trainingParticipation in Training.Participations)
+            {
+                var member = _mitglieder.Single(m => m.Id == trainingParticipation.MitgliedID);
+
+                Participants.Add(member);
+            }
+        }
+
+        private async Task FindPreviousParticipants()
+        {
+            try
+            {
+                PreviousParticipants.Clear();
+
+                var trainings = await _trainingsRepository.GetAsync();
+
+                var trainingsOnWeekDay = trainings.Where(training =>
+                {
+                    var daysToCheck = Training.Training.Termin - TimeSpan.FromDays(30);
+
+                    return training.KursID == Training.Training.KursID && training.Id != Training.Training.Id &&
+                               training.Termin < Training.Training.Termin && training.Termin > daysToCheck;
+                }
+                ).Select(t => t.Id).ToList();
+
+                var trainingsTeilnahmen = await _trainingsTeilnahmenRepository.GetAsync();
+
+                var mitgliederCount = new Dictionary<int, int>();
+                var trainingsTeilnahmes = trainingsTeilnahmen.Where(teilnahme => trainingsOnWeekDay.Contains(teilnahme.TrainingID)).ToList();
+                foreach (var trainingsTeilnahme in trainingsTeilnahmes)
+                {
+                    if (!mitgliederCount.ContainsKey(trainingsTeilnahme.MitgliedID)) mitgliederCount.Add(trainingsTeilnahme.MitgliedID, 0);
+
+                    mitgliederCount[trainingsTeilnahme.MitgliedID]++;
+                }
+
+                //now order dict by counter (second int)
+                var myList = mitgliederCount.ToList();
+
+                myList.Sort((pair1, pair2) => pair1.Value.CompareTo(pair2.Value)); //order descending
+
+                foreach (var memberMapping in myList)
+                {
+                    if (Participants.Any(p => p.Id == memberMapping.Key))
+                        continue;
+
+                    PreviousParticipants.Add(_mitglieder.Single(m => m.Id == memberMapping.Key));
+                }
+            }
+
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+            }
         }
 
         private void FindMembers(string searchText)
         {
             FoundMembers.Clear();
+
+            searchText = searchText ?? "";
 
             var searchStrings = searchText.Split(' ');
 
@@ -108,7 +335,15 @@ namespace AVF.MemberManagement.ViewModels
                     if (!containsNamePart) allSearchStringsMatch = false;
                 }
 
-                return allSearchStringsMatch && !Participants.Contains(m);
+                return allSearchStringsMatch
+                &&     !Participants.Contains(m) 
+                &&     !HasResigned(m) 
+                &&     (
+                           !ChildrenOnly && m.Geburtsdatum <= DateTime.Now - TimeSpan.FromDays(365 * 18)
+                           ||
+                           ChildrenOnly && m.Geburtsdatum > DateTime.Now - TimeSpan.FromDays(365 * 18)
+                       )
+                ;
             });
 
             foreach (var foundMember in foundMembers)
@@ -116,8 +351,11 @@ namespace AVF.MemberManagement.ViewModels
                 FoundMembers.Add(foundMember);
             }
         }
+        
 
-        private int Tester(Mitglied x, Mitglied y)
+        #region Helper
+
+        private static int CompareMemberNames(Mitglied x, Mitglied y)
         {
             var argVornameX = x.Vorname ?? string.Empty;
             var argNachnameX = x.Nachname ?? string.Empty;
@@ -125,11 +363,12 @@ namespace AVF.MemberManagement.ViewModels
             var argVornameY = y.Vorname ?? string.Empty;
             var argNachnameY = y.Nachname ?? string.Empty;
 
-            string namex = argVornameX + argNachnameX;
-            string namey = argVornameY + argNachnameY;
+            var namex = argVornameX + argNachnameX;
+            var namey = argVornameY + argNachnameY;
 
-            var compare = string.Compare(namex, namey, StringComparison.Ordinal);
-            return compare;
+            var compareResult = string.Compare(namex, namey, StringComparison.Ordinal);
+
+            return compareResult;
         }
 
         private static bool DoesNamePartsContain(string searchText, string argVorname, string argNachname)
@@ -138,23 +377,23 @@ namespace AVF.MemberManagement.ViewModels
                                    argNachname.ToLower().Contains(searchText.ToLower());
         }
 
-        public async void OnNavigatedTo(NavigationParameters parameters)
+        private void RaiseCounterPropertiesChanged()
         {
-            _participants.Clear();
-
-            SelectedDateString = (string)parameters["SelectedDateString"];
-            Training = (TrainingsModel)parameters["SelectedTraining"];
-
-            _mitglieder = await _mitgliederRepository.GetAsync();
-
-            _mitglieder.Sort(Tester);
-
-            foreach (var trainingParticipation in Training.Participations)
-            {
-                var member = _mitglieder.Single(m => m.Id == trainingParticipation.MitgliedID);
-
-                Participants.Add(member);
-            }
+            RaisePropertyChanged(nameof(ParticipantsCountText));
+            RaisePropertyChanged(nameof(PreviousParticipantsCountText));
+            RaisePropertyChanged(nameof(FoundMembersCountText));
         }
+
+        private static bool HasResigned(Mitglied mitglied)
+        {
+            if (mitglied.Austritt == null)
+                return false;
+
+            var resignDate = (DateTime)mitglied.Austritt;
+
+            return resignDate < DateTime.Now;
+        }
+
+        #endregion
     }
 }

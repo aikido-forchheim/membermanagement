@@ -11,14 +11,13 @@ using AVF.MemberManagement.StandardLibrary.Tbo;
 
 namespace AVF.MemberManagement.ViewModels
 {
-    public class MainPageViewModel : BindableBase
+    public class MainPageViewModel : ViewModelBase
     {
         public ICommand SettingsCommand { get; }
         public ICommand StartCommand { get; }
         public ICommand NewPasswordCommand { get; }
 
         private readonly IAccountService _accountService;
-        private readonly INavigationService _navigationService;
         private readonly IRepository<User> _usersProxy;
         private readonly IPasswordService _passwordService;
 
@@ -181,10 +180,11 @@ namespace AVF.MemberManagement.ViewModels
 
         #region Ctor
 
-        public MainPageViewModel(IAccountService accountService, INavigationService navigationService, IRepository<User> usersProxy, IPasswordService passwordService)
+        public MainPageViewModel(IAccountService accountService, INavigationService navigationService, IRepository<User> usersProxy, IPasswordService passwordService) : base(navigationService)
         {
+            Title = "Anmeldung";
+
             _accountService = accountService;
-            _navigationService = navigationService;
             _usersProxy = usersProxy;
             _passwordService = passwordService;
 
@@ -199,7 +199,7 @@ namespace AVF.MemberManagement.ViewModels
 
         private void OnSettings()
         {
-            _navigationService.NavigateAsync("RestApiSettingsPage");
+            NavigationService.NavigateAsync("RestApiSettingsPage");
         }
 
         private static bool CanSettings()
@@ -211,7 +211,7 @@ namespace AVF.MemberManagement.ViewModels
         {
             var navigationParametersForPasswordPage = new NavigationParameters { { "User", ServerUser } };
 
-            _navigationService.NavigateAsync("StartPage", navigationParametersForPasswordPage);
+            NavigationService.NavigateAsync("StartPage", navigationParametersForPasswordPage);
         }
 
         private bool CanStart()
@@ -223,7 +223,7 @@ namespace AVF.MemberManagement.ViewModels
         {
             var navigationParametersForPasswordPage = new NavigationParameters { { "User", ServerUser } };
 
-            _navigationService.NavigateAsync("PasswordPage", navigationParametersForPasswordPage);
+            NavigationService.NavigateAsync("PasswordPage", navigationParametersForPasswordPage);
         }
 
         private bool CanNewPassword()

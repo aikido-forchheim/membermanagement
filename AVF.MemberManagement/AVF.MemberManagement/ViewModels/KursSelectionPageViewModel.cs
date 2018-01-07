@@ -1,19 +1,20 @@
 ﻿using Prism.Commands;
-using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
+using AVF.MemberManagement.StandardLibrary.Enums;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Models;
+using AVF.MemberManagement.StandardLibrary.Services;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.Views;
 using Prism.Navigation;
 
 namespace AVF.MemberManagement.ViewModels
 {
-    public class KursSelectionPageViewModel : BindableBase, INavigatedAware
+    public class KursSelectionPageViewModel : ViewModelBase
     {
         public DateTime SelectedDate { get; private set; } = DateTime.Today;
 
@@ -22,7 +23,6 @@ namespace AVF.MemberManagement.ViewModels
         private readonly IKursModelService _classModelService;
         private readonly IRepository<Training> _trainings;
         private readonly IRepository<TrainingsTeilnahme> _trainingsTeilnahmen;
-        private readonly INavigationService _navigationService;
 
         private string _selectedDateString;
 
@@ -60,29 +60,23 @@ namespace AVF.MemberManagement.ViewModels
             }
         }
 
-        public KursSelectionPageViewModel(IRepository<Wochentag> wochentageRepository, IRepository<Kurs> kurseRepository, IKursModelService classModelService, IRepository<Training> trainings, IRepository<TrainingsTeilnahme> trainingsTeilnahmen, INavigationService navigationService)
+        public KursSelectionPageViewModel(IRepository<Wochentag> wochentageRepository, IRepository<Kurs> kurseRepository, IKursModelService classModelService, IRepository<Training> trainings, IRepository<TrainingsTeilnahme> trainingsTeilnahmen, INavigationService navigationService) : base(navigationService)
         {
             _wochentageRepository = wochentageRepository;
             _kurseRepository = kurseRepository;
             _classModelService = classModelService;
             _trainings = trainings;
             _trainingsTeilnahmen = trainingsTeilnahmen;
-            _navigationService = navigationService;
 
             //View all Kurse for this Wochentag and select the nearest one to the actual time (if today?)
             //otherwise do not pre select any
 
-            //Enahancement: show if this Kurs already is a Training and has entered Trainingsteilnahme
+            //Enhancement: show if this Kurs already is a Training and has entered Trainingsteilnahme
 
             EnterParticipantsCommand = new DelegateCommand(EnterParticipants, CanEnterParticipants);
         }
 
-        public void OnNavigatedFrom(NavigationParameters parameters)
-        {
-
-        }
-
-        public async void OnNavigatedTo(NavigationParameters parameters)
+        public override async void OnNavigatedTo(NavigationParameters parameters)
         {
             try
             {
@@ -102,10 +96,13 @@ namespace AVF.MemberManagement.ViewModels
                 SelectedDateString =
                     $"{SelectedDate.Day.ToString().PadLeft(2, '0')}.{SelectedDate.Month.ToString().PadLeft(2, '0')}.{SelectedDate.Year} ({Wochentag.Bezeichnung})";
 
+                Title = SelectedDateString;
+
                 var alleKurse = await _kurseRepository.GetAsync();
                 var trainings = await _trainings.GetAsync();
                 var trainingsTeilnahmen = await _trainingsTeilnahmen.GetAsync();
 
+                List<TrainingsModel> trainigModelsWithoutSort = new List<TrainingsModel>();
                 foreach (var kurs in alleKurse.Where(k => k.WochentagID == Wochentag.Id))
                 {
                     var classModel = await _classModelService.GetAsync(kurs);
@@ -121,6 +118,11 @@ namespace AVF.MemberManagement.ViewModels
                         Participations = GetParticipantListForTraining(trainingsTeilnahmen, training)
                     };
 
+                    trainigModelsWithoutSort.Add(trainingsModel);
+                }
+
+                foreach (var trainingsModel in trainigModelsWithoutSort.OrderBy(t=>t.Training.Zeit))
+                {
                     Trainings.Add(trainingsModel);
                 }
             }
@@ -136,7 +138,15 @@ namespace AVF.MemberManagement.ViewModels
 
         private void EnterParticipants()
         {
-            _navigationService.NavigateAsync(nameof(EnterParticipantsPage), new NavigationParameters { { "SelectedTraining", SelectedTraining }, { "SelectedDateString", SelectedDateString } });
+            if (Globals.Idiom == Idiom.Phone)
+            {
+                NavigationService.NavigateAsync(nameof(EnterParticipantsPage), new NavigationParameters { { "SelectedTraining", SelectedTraining }, { "SelectedDateString", SelectedDateString } });
+            }
+            else
+            {
+                NavigationService.NavigateAsync(nameof(EnterParticipantsTabletPage), new NavigationParameters { { "SelectedTraining", SelectedTraining }, { "SelectedDateString", SelectedDateString } });
+
+            }
         }
 
         private bool CanEnterParticipants()

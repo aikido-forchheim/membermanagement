@@ -1,0 +1,4 @@
+"C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\amd64\MSBuild.exe" /p:Configuration=Release "C:\git\aikido-forchheim\membermanagement\AVF.Android.sln"
+"C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\amd64\MSBuild.exe" /p:Configuration=Release /t:SignAndroidPackage "C:\git\aikido-forchheim\membermanagement\AVF.MemberManagement\AVF.MemberManagement.Droid\AVF.MemberManagement.Droid.csproj"
+copy /y "C:\git\aikido-forchheim\membermanagement\AVF.MemberManagement\AVF.MemberManagement.Droid\bin\Release\*signed*.apk" C:\Dropbox\Aikido\App
+pause

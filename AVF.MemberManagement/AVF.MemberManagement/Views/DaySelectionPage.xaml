@@ -3,9 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="AVF.MemberManagement.Views.DaySelectionPage">
+             x:Class="AVF.MemberManagement.Views.DaySelectionPage" Appearing="DaySelectionPage_OnAppearing" Title="{Binding Title}">
     <StackLayout Grid.Row="1" VerticalOptions="Center" HorizontalOptions="Center">
         <DatePicker></DatePicker>
-        <Button Text="Heute" Command="{Binding NavigateToKursSelectionPageCommand}" WidthRequest="256"></Button>
+        <Button x:Name="BtnToday" Text="Heute" Command="{Binding NavigateToKursSelectionPageCommand}" WidthRequest="256"></Button>
     </StackLayout>
 </ContentPage>

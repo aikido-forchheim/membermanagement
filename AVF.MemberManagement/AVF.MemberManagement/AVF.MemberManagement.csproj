@@ -44,17 +44,34 @@
     <Compile Include="UserControls\BigLabel.xaml.cs">
       <DependentUpon>BigLabel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\FindMembersView.xaml.cs">
+      <DependentUpon>FindMembersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ParticipantsView.xaml.cs">
+      <DependentUpon>ParticipantsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\PreviousParticipantsView.xaml.cs">
+      <DependentUpon>PreviousParticipantsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\AdvancedSettingsPageViewModel.cs" />
     <Compile Include="ViewModels\DaySelectionPageViewModel.cs" />
     <Compile Include="ViewModels\EnterParticipantsPageViewModel.cs" />
+    <Compile Include="ViewModels\EnterParticipantsTabletPageViewModel.cs" />
     <Compile Include="ViewModels\KursSelectionPageViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\PasswordPageViewModel.cs" />
     <Compile Include="ViewModels\StartPageViewModel.cs" />
+    <Compile Include="Views\AdvancedSettingsPage.xaml.cs">
+      <DependentUpon>AdvancedSettingsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DaySelectionPage.xaml.cs">
       <DependentUpon>DaySelectionPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\EnterParticipantsPage.xaml.cs">
       <DependentUpon>EnterParticipantsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EnterParticipantsTabletPage.xaml.cs">
+      <DependentUpon>EnterParticipantsTabletPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\KursSelectionPage.xaml.cs">
       <DependentUpon>KursSelectionPage.xaml</DependentUpon>
@@ -71,6 +88,8 @@
     <Compile Include="UserControls\MemberView.xaml.cs">
       <DependentUpon>MemberView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="IRepositoryBootstrapper.cs" />
+    <Compile Include="ViewModelBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App.xaml">
@@ -234,9 +253,38 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="UserControls\ParticipantsView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UserControls\BigLabel.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UserControls\PreviousParticipantsView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UserControls\FindMembersView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\EnterParticipantsTabletPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\AdvancedSettingsPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
