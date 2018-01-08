@@ -38,11 +38,7 @@ namespace AVF.MemberManagement.StandardLibrary.Services
 
         private async Task<string> SendDataAsync(string uri, string jsonData, string method = "POST")
         {
-            var fullUri = await GetFullUriWithCsrfToken(uri);
-
-            var request = HttpWebRequestWithCookieContainer.Create(fullUri);
-            request.ContentType = "application/json";
-            request.Method = method;
+            System.Net.HttpWebRequest request = await GetRequest(uri, method);
 
             var stream = await request.GetRequestStreamAsync();
             using (var writer = new StreamWriter(stream))
@@ -52,13 +48,7 @@ namespace AVF.MemberManagement.StandardLibrary.Services
                 writer.Dispose();
             }
 
-            var response = await request.GetResponseAsync();
-            var responseStream = response.GetResponseStream();
-
-            using (var streamReader = new StreamReader(responseStream))
-            {
-                return streamReader.ReadToEnd();
-            }
+            return await GetResponse(request);
         }
 
         #endregion
@@ -155,6 +145,27 @@ namespace AVF.MemberManagement.StandardLibrary.Services
 
         #region Delete
 
+        public async Task<string> DeleteDataAsync(string url)
+        {
+            try
+            {
+                var response = await DeleteDataAsyncInternal(url);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                return null;
+            }
+        }
+
+        private async Task<string> DeleteDataAsyncInternal(string uri)
+        {
+            var request = await GetRequest(uri, "DELETE");
+
+            return await GetResponse(request);
+        }
+
         #endregion
 
 
@@ -187,6 +198,27 @@ namespace AVF.MemberManagement.StandardLibrary.Services
             if (!uri.Contains("?")) uri = uri + $"?{paramName}={paramValue}";
             else uri = uri + $"&{paramName}={paramValue}";
             return uri;
+        }
+
+        private static async Task<string> GetResponse(System.Net.HttpWebRequest request)
+        {
+            var response = await request.GetResponseAsync();
+            var responseStream = response.GetResponseStream();
+
+            using (var streamReader = new StreamReader(responseStream))
+            {
+                return streamReader.ReadToEnd();
+            }
+        }
+
+        private async Task<System.Net.HttpWebRequest> GetRequest(string uri, string method)
+        {
+            var fullUri = await GetFullUriWithCsrfToken(uri);
+
+            var request = HttpWebRequestWithCookieContainer.Create(fullUri);
+            request.ContentType = "application/json";
+            request.Method = method;
+            return request;
         }
 
         #endregion

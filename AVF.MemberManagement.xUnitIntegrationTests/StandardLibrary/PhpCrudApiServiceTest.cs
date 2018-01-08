@@ -3,7 +3,6 @@ using System.Linq;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tables;
 using AVF.MemberManagement.StandardLibrary.Tbo;
-using IT2media.Extensions.Object;
 using Microsoft.Practices.Unity;
 using Xunit;
 
@@ -13,6 +12,13 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary
     {
         [Fact]
         public async void CreateTest()
+        {
+            var insertResult = await CreateNewObjectInTblTest();
+
+            Assert.True(insertResult != null);
+        }
+
+        private async System.Threading.Tasks.Task<string> CreateNewObjectInTblTest()
         {
             var phpCrudApiService = Bootstrapper.Container.Resolve<IPhpCrudApiService>();
 
@@ -26,7 +32,7 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary
 
             var insertResult = await phpCrudApiService.SendDataAsync("tblTest", dataObject);
 
-            Assert.True(insertResult != null);
+            return insertResult;
         }
 
         [Fact]
@@ -62,6 +68,31 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary
             var lastRowControl = tblTestsWrapperControl.Rows.Last();
 
             Assert.True(lastRowControl.Text == textForUpdate);
+        }
+
+        [Fact]
+        public async void DeleteTest()
+        {
+            var phpCrudApiService = Bootstrapper.Container.Resolve<IPhpCrudApiService>();
+
+            var initialRowsCount = (await phpCrudApiService.GetDataAsync<TblTests>("tblTest")).Rows.Count;
+
+            var createResult = await CreateNewObjectInTblTest();
+            var wasCreateSuccessful = createResult != null;
+
+            Assert.True(wasCreateSuccessful);
+            
+            var tblTestsWrapper = await phpCrudApiService.GetDataAsync<TblTests>("tblTest");
+            
+            var lastRow = tblTestsWrapper.Rows.Last();
+
+            var result = await phpCrudApiService.DeleteDataAsync($"tblTest/{lastRow.Id}");
+
+            Assert.True(result != null && result != "null" && result == "1");
+
+            var rowsCountAfterInsertAndDelete = (await phpCrudApiService.GetDataAsync<TblTests>("tblTest")).Rows.Count;
+
+            Assert.True(rowsCountAfterInsertAndDelete == initialRowsCount);
         }
     }
 }
