@@ -38,5 +38,30 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary
 
             Assert.True(settingsWrapper.Rows != null && settingsWrapper.Rows.Count > 0);
         }
+
+        [Fact]
+        public async void UpdateTest()
+        {
+            var phpCrudApiService = Bootstrapper.Container.Resolve<IPhpCrudApiService>();
+
+            var tblTestsWrapper = await phpCrudApiService.GetDataAsync<TblTests>("tblTest");
+
+            var lastRow = tblTestsWrapper.Rows.Last();
+
+            var textForUpdate = Guid.NewGuid().ToString();
+
+            lastRow.Text = textForUpdate;
+
+            //SEND URI WITH /ID !!!
+            var updateResult = await phpCrudApiService.UpdateDataAsync($"tblTest/{lastRow.Id}", lastRow);
+
+            Assert.True(updateResult != null && updateResult != "null");
+
+            var tblTestsWrapperControl = await phpCrudApiService.GetDataAsync<TblTests>("tblTest");
+            
+            var lastRowControl = tblTestsWrapperControl.Rows.Last();
+
+            Assert.True(lastRowControl.Text == textForUpdate);
+        }
     }
 }
