@@ -1,4 +1,5 @@
 ﻿using System;
+using AVF.MemberManagement.StandardLibrary.Converters;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using Newtonsoft.Json;
 
@@ -33,7 +34,8 @@ namespace AVF.MemberManagement.StandardLibrary.Tbo
             set;
         }
 
-        public DateTime DatensatzAngelegtAm
+        [JsonConverter(typeof(DateTimeStringToNullableDateTimeConverter))]
+        public DateTime? DatensatzAngelegtAm
         {
             get;
             set;
@@ -45,7 +47,8 @@ namespace AVF.MemberManagement.StandardLibrary.Tbo
             set;
         }
 
-        public DateTime DatensatzGeaendertAm
+        [JsonConverter(typeof(DateTimeStringToNullableDateTimeConverter))]
+        public DateTime? DatensatzGeaendertAm
         {
             get;
             set;

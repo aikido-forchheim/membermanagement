@@ -46,7 +46,7 @@
                 <StackLayout Grid.Row="0" x:Name="UserNameArea" HorizontalOptions="Center" VerticalOptions="Start">
                     <Label Text="Benutzername:">
                     </Label>
-                    <Entry Text="{Binding Username}" WidthRequest="256" IsEnabled="{Binding IsRestApiAccountSet}" BackgroundColor="#EEEEEE">
+                    <Entry Text="{Binding Username}" Keyboard="Email" WidthRequest="256" IsEnabled="{Binding IsRestApiAccountSet}" BackgroundColor="#EEEEEE">
                     </Entry>
                 </StackLayout>
                 <StackLayout Grid.Row="1" x:Name="PasswordArea" IsVisible="{Binding IsUserInDatabaseAndHasPassword}" HorizontalOptions="Center" VerticalOptions="Start">

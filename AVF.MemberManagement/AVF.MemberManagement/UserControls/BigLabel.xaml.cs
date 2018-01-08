@@ -12,6 +12,25 @@ namespace AVF.MemberManagement.UserControls
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class BigLabel
     {
+        public NamedSize FontSize
+        {
+            get
+            {
+                switch (Device.Idiom)
+                {
+                    case TargetIdiom.Phone:
+                        return NamedSize.Default;
+                    default:
+                        return NamedSize.Medium;
+                        
+                }
+            }
+            set
+            {
+                
+            }
+        }
+
         public BigLabel()
         {
             InitializeComponent();
