@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Proxies;
-using AVF.MemberManagement.StandardLibrary.Services;
 using AVF.MemberManagement.StandardLibrary.Tables;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using FakeItEasy;
@@ -17,21 +14,53 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary.Proxies
 {
     public class ProxyBaseTest : TestBase
     {
-        [Fact]
-        public async void CreateTestShouldFail()
+        private readonly IPhpCrudApiService _phpCrudApiService;
+        private readonly ILogger _fakeLogger;
+
+        public ProxyBaseTest()
         {
-            //THIS SHOULD BE A TEST FOR ProxyTest with IIntId, ProxyBase with string as id for example should fail on null and string.empty
-            var phpCrudApiService = Bootstrapper.Container.Resolve<IPhpCrudApiService>();
-            var fakeLogger = A.Fake<ILogger>();
-
-            var testProxy = new ProxyBase<TblTests, Test, int>(fakeLogger, phpCrudApiService);
-
-            //test object with default id 0 should fail
-            var testObject = new Test();
-
-            var createResult = await testProxy.CreateAsync(testObject);
-
-            Assert.True(createResult == 1);
+            _phpCrudApiService = Bootstrapper.Container.Resolve<IPhpCrudApiService>();
+            _fakeLogger = A.Fake<ILogger>();
         }
+
+        [Fact]
+        public async void CreateDefaultTestObjectShouldFail()
+        {
+            var testBaseProxy = new ProxyBase<TblTestBase, TestObject, string>(_fakeLogger, _phpCrudApiService);
+
+            var testObject = new TestObject();
+
+            await Assert.ThrowsAsync<IOException>(async () =>
+            {
+                await testBaseProxy.CreateAsync(testObject);
+            });
+        }
+
+        [Fact]
+        public async void CreateTest()
+        {
+            var testBaseProxy = new ProxyBase<TblTestBase, TestObject, string>(_fakeLogger, _phpCrudApiService);
+
+            var id = Guid.NewGuid().ToString();
+
+            var testObject = new TestObject { Id = id };
+
+            var createResult = await testBaseProxy.CreateAsync(testObject);
+
+            Assert.True(createResult == 0);
+
+            //TODO: Delete generated TestObject to preserve space in db
+        }
+
+        [Fact]
+        public async void ReadTest()
+        {
+            var testBaseProxy = new ProxyBase<TblTestBase, TestObject, string>(_fakeLogger, _phpCrudApiService);
+
+            var testBaseObjects = await testBaseProxy.GetAsync();
+
+            Assert.True(testBaseObjects != null);
+        }
+
     }
 }

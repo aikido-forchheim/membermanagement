@@ -221,6 +221,7 @@
     <Compile Include="StandardLibrary\PhpCrudApiServiceTest.cs" />
     <Compile Include="StandardLibrary\Proxies\BeitragsklassenProxyTest.cs" />
     <Compile Include="StandardLibrary\Proxies\ProxyBaseTest.cs" />
+    <Compile Include="StandardLibrary\Proxies\ProxyTest.cs" />
     <Compile Include="StandardLibrary\SettingsProxyTest.cs" />
     <Compile Include="StandardLibrary\TestsProxyTest.cs" />
     <Compile Include="StandardLibrary\UsersProxyTest.cs" />
