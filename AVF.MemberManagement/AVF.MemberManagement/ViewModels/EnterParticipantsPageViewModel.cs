@@ -106,6 +106,7 @@ namespace AVF.MemberManagement.ViewModels
                 SetProperty(ref _searchText, value);
                 FindMembers(_searchText);
                 RaisePropertyChanged(nameof(FoundMembersCountText));
+                ((DelegateCommand)AddAndClearSearchTextCommand).RaiseCanExecuteChanged();
             }
         }
 
@@ -148,6 +149,8 @@ namespace AVF.MemberManagement.ViewModels
         public ICommand RemoveParticipantCommand { get; set; }
         public ICommand AddPreviousParticipantCommand { get; set; }
         public ICommand AddFoundMemberCommand { get; set; }
+        public ICommand ClearSearchTextCommand { get; set; }
+        public ICommand AddAndClearSearchTextCommand { get; set; }
 
 
         public EnterParticipantsPageViewModel(IRepository<Mitglied> mitgliederRepository, IRepository<Training> trainingsRepository, IRepository<TrainingsTeilnahme> trainingsTeilnahmenRepository, INavigationService navigationService) : base(navigationService)
@@ -159,6 +162,8 @@ namespace AVF.MemberManagement.ViewModels
             AddPreviousParticipantCommand = new DelegateCommand(AddPreviousParticipant, CanAddPreviousParticipant);
             AddFoundMemberCommand = new DelegateCommand(AddFoundMember, CanAddFoundMember);
             RemoveParticipantCommand = new DelegateCommand(RemoveParticipant, CanRemoveParticipant);
+            ClearSearchTextCommand = new DelegateCommand(ClearSearchText, CanClearSearchText);
+            AddAndClearSearchTextCommand = new DelegateCommand(AddAndClearSearchText, CanAddAndClearSearchText);
         }
 
         #region INavigatedAware
@@ -250,6 +255,42 @@ namespace AVF.MemberManagement.ViewModels
             ((DelegateCommand)AddFoundMemberCommand).RaiseCanExecuteChanged();
 
             RaiseCounterPropertiesChanged();
+
+            if (FoundMembers.Count == 0) ClearSearchText();
+        }
+
+        #endregion
+
+        #region ClearSearchTextCommand
+
+        private void ClearSearchText()
+        {
+            SearchText = string.Empty;
+        }
+
+        private bool CanClearSearchText()
+        {
+            return true;
+        }
+
+        #endregion
+
+        #region AddAndClearSearchTextCommand
+
+        private void AddAndClearSearchText()
+        {
+            if (FoundMembers != null && FoundMembers.Count == 1)
+            {
+                SelectedMember = FoundMembers[0];
+                AddFoundMember();
+            }
+
+            SearchText = string.Empty;
+        }
+
+        private bool CanAddAndClearSearchText()
+        {
+            return FoundMembers != null && FoundMembers.Count == 1;
         }
 
         #endregion
