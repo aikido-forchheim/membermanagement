@@ -4,6 +4,7 @@ using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tables;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Microsoft.Practices.Unity;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary
@@ -18,7 +19,7 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary
             Assert.True(insertResult != null);
         }
 
-        private async System.Threading.Tasks.Task<string> CreateNewObjectInTblTest()
+        private async Task<string> CreateNewObjectInTblTest()
         {
             var phpCrudApiService = Bootstrapper.Container.Resolve<IPhpCrudApiService>();
 

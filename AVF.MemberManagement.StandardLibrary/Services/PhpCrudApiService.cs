@@ -33,12 +33,14 @@ namespace AVF.MemberManagement.StandardLibrary.Services
         public async Task<string> SendDataAsync<T>(string url, T dataObject)
         {
             var jsonData = JsonConvert.SerializeObject(dataObject);
-            return await SendDataAsync(url, jsonData, "POST");
+            var sendResult = await SendDataAsync(url, jsonData, "POST");
+            if (sendResult == null) throw new IOException("PhpCrudApiService could not create object");
+            return sendResult;
         }
 
         private async Task<string> SendDataAsync(string uri, string jsonData, string method = "POST")
         {
-            System.Net.HttpWebRequest request = await GetRequest(uri, method);
+            var request = await GetRequest(uri, method);
 
             var stream = await request.GetRequestStreamAsync();
             using (var writer = new StreamWriter(stream))
@@ -207,7 +209,9 @@ namespace AVF.MemberManagement.StandardLibrary.Services
 
             using (var streamReader = new StreamReader(responseStream))
             {
-                return streamReader.ReadToEnd();
+                var responseString = streamReader.ReadToEnd();
+
+                return responseString == "null" ? null : responseString;
             }
         }
 

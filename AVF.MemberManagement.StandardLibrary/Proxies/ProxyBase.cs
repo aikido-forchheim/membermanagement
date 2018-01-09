@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -21,6 +22,19 @@ namespace AVF.MemberManagement.StandardLibrary.Proxies
             _phpCrudApiService = phpCrudApiService;
         }
 
+        #region Create
+
+        public async Task<int> CreateAsync(T obj)
+        {
+            var insertResult = await _phpCrudApiService.SendDataAsync(_uri, obj);
+
+            return int.Parse(insertResult);
+        }
+
+        #endregion
+
+        #region Read
+
         public async Task<List<T>> GetAsync()
         {
             var table = await _phpCrudApiService.GetDataAsync<TTbl>(_uri);
@@ -37,9 +51,19 @@ namespace AVF.MemberManagement.StandardLibrary.Proxies
             return obj;
         }
 
+        #endregion
+
+        #region Update
+
         public async Task<string> UpdateAsync(T obj, TId id)
         {
             return await _phpCrudApiService.UpdateDataAsync($"{_uri}/{id}", obj);
         }
+
+        #endregion
+
+        #region Delete
+
+        #endregion
     }
 }
