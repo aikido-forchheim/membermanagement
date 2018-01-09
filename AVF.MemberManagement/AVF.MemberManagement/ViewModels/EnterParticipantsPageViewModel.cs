@@ -106,6 +106,7 @@ namespace AVF.MemberManagement.ViewModels
                 SetProperty(ref _searchText, value);
                 FindMembers(_searchText);
                 RaisePropertyChanged(nameof(FoundMembersCountText));
+                ((DelegateCommand)ClearSearchTextCommand).RaiseCanExecuteChanged();
                 ((DelegateCommand)AddAndClearSearchTextCommand).RaiseCanExecuteChanged();
             }
         }
@@ -270,7 +271,7 @@ namespace AVF.MemberManagement.ViewModels
 
         private bool CanClearSearchText()
         {
-            return true;
+            return !string.IsNullOrEmpty(SearchText);
         }
 
         #endregion
@@ -282,10 +283,11 @@ namespace AVF.MemberManagement.ViewModels
             if (FoundMembers != null && FoundMembers.Count == 1)
             {
                 SelectedMember = FoundMembers[0];
-                AddFoundMember();
-            }
 
-            SearchText = string.Empty;
+                AddFoundMember();
+
+                SearchText = string.Empty;
+            }
         }
 
         private bool CanAddAndClearSearchText()

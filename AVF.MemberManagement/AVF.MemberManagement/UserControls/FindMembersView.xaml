@@ -22,17 +22,18 @@
             </StackLayout>
             <Grid Margin="16,0,16,0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition>
+                    <ColumnDefinition Width="24">
+                    </ColumnDefinition>
+                    <ColumnDefinition Width="*">
                     </ColumnDefinition>
                     <ColumnDefinition Width="24">
-                    </ColumnDefinition><ColumnDefinition Width="24">
                     </ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <Entry Text="{Binding SearchText}" HeightRequest="24" BackgroundColor="#EEEEEE">
-                </Entry>
-                <Button Grid.Column="1" Text="+" FontAttributes="Bold" Command="{Binding AddAndClearSearchTextCommand}">
+                <Button Grid.Column="0" Text="X" Command="{Binding ClearSearchTextCommand}">
                 </Button>
-                <Button Grid.Column="2" Text="X" Command="{Binding ClearSearchTextCommand}">
+                <Entry Grid.Column="1" x:Name="EntrySearchText" Text="{Binding SearchText}" Keyboard="Email" HeightRequest="24" BackgroundColor="#EEEEEE" Completed="Handle_Completed">
+                </Entry>
+                <Button Grid.Column="2" Text="+" FontAttributes="Bold" Command="{Binding AddAndClearSearchTextCommand}">
                 </Button>
             </Grid>
             <Button Text="Hinzufügen" Margin="16,8,16,32" Command="{Binding AddFoundMemberCommand}">
