@@ -22,7 +22,7 @@
             </Entry>
             <Label Grid.Row="1" Grid.Column="0" Text="Username:" VerticalOptions="Center">
             </Label>
-            <Entry Grid.Row="1" Grid.Column="1" Text="{Binding AccountService.RestApiAccount.Username}" Keyboard="Text">
+            <Entry Grid.Row="1" Grid.Column="1" Text="{Binding AccountService.RestApiAccount.Username}" Keyboard="Email">
             </Entry>
             <Label Grid.Row="2" Grid.Column="0" Text="Password:" VerticalOptions="Center">
             </Label>

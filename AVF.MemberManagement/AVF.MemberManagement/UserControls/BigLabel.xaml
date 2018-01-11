@@ -6,12 +6,6 @@
              >
   <ContentView.Content>
         <Label Text="{Binding Text, Source={x:Reference This}}" FontAttributes="{Binding FontAttributes, Source={x:Reference This}}" x:Name="Label">
-            <Label.FontSize>
-                <OnIdiom x:TypeArguments="x:Double">
-                    <OnIdiom.Desktop>24</OnIdiom.Desktop>
-                    <OnIdiom.Tablet>24</OnIdiom.Tablet>
-                </OnIdiom>
-            </Label.FontSize>
         </Label>
   </ContentView.Content>
 </ContentView>

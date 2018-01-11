@@ -8,7 +8,7 @@
           <StackLayout>
               <Label Text="{Binding ParticipantsCountText}" Margin="8,8,8,16">
               </Label>
-              <ListView x:Name="parent" ItemsSource="{Binding Participants}" SelectedItem="{Binding SelectedParticipant}" Margin="16,0,0,0">
+              <ListView x:Name="parent" ItemsSource="{Binding Participants}" SelectedItem="{Binding SelectedParticipant}" Margin="16,0,0,0" ItemSelected="Parent_OnItemSelected">
                   <ListView.ItemTemplate>
                       <DataTemplate>
                           <ViewCell x:Name="child">

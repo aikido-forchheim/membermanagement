@@ -25,6 +25,7 @@
                     <OnPlatform x:TypeArguments="Thickness">
                         <OnPlatform.Platforms>
                             <On Platform="UWP" Value="4,4,4,4" />
+                            <On Platform="iOS" Value="4,4,4,4" />
                         </OnPlatform.Platforms>
                     </OnPlatform>
                 </StackLayout.Margin>

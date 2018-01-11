@@ -27,21 +27,9 @@ namespace AVF.MemberManagement.StandardLibrary.Services
             _tokenService = tokenService;
         }
 
-        public async Task<string> UpdateDataAsync<T>(string url, T dataObject)
-        {
-            try
-            {
-                var jsonData = JsonConvert.SerializeObject(dataObject);
-                var response = await SendDataAsync(url, jsonData, "PUT");
-                return response;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.ToString());
-                return null;
-            }
-        }
-        
+
+        #region Create
+
         public async Task<string> SendDataAsync<T>(string url, T dataObject)
         {
             var jsonData = JsonConvert.SerializeObject(dataObject);
@@ -72,6 +60,10 @@ namespace AVF.MemberManagement.StandardLibrary.Services
                 return streamReader.ReadToEnd();
             }
         }
+
+        #endregion
+
+        #region Read
 
         public async Task<T> GetDataAsync<T>(string uri)
         {
@@ -112,19 +104,6 @@ namespace AVF.MemberManagement.StandardLibrary.Services
             }
         }
 
-        private async Task<string> GetFullUriWithCsrfToken(string resourcePathAndQueryOptions, bool forceTokenRefresh = false)
-        {
-            if (_token == null || _accountService.RestApiAccount.HasChanged || forceTokenRefresh) _token = await _tokenService.GetTokenAsync(_accountService.RestApiAccount);
-
-            if (!_accountService.RestApiAccount.ApiUrl.EndsWith("/") && !resourcePathAndQueryOptions.StartsWith("/")) resourcePathAndQueryOptions = "/" + resourcePathAndQueryOptions;
-
-            var fullUri = _accountService.RestApiAccount.ApiUrl + resourcePathAndQueryOptions;
-
-            fullUri = AddCsrfToken(fullUri);
-
-            return fullUri;
-        }
-
         public List<T> GetList<T>(string tableResultJson)
         {
             var result = JObject.Parse(tableResultJson);
@@ -153,6 +132,47 @@ namespace AVF.MemberManagement.StandardLibrary.Services
             return list;
         }
 
+        #endregion
+
+        #region Update
+
+        public async Task<string> UpdateDataAsync<T>(string url, T dataObject)
+        {
+            try
+            {
+                var jsonData = JsonConvert.SerializeObject(dataObject);
+                var response = await SendDataAsync(url, jsonData, "PUT");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                return null;
+            }
+        }
+
+        #endregion
+
+        #region Delete
+
+        #endregion
+
+
+        #region Helper
+
+        private async Task<string> GetFullUriWithCsrfToken(string resourcePathAndQueryOptions, bool forceTokenRefresh = false)
+        {
+            if (_token == null || _accountService.RestApiAccount.HasChanged || forceTokenRefresh) _token = await _tokenService.GetTokenAsync(_accountService.RestApiAccount);
+
+            if (!_accountService.RestApiAccount.ApiUrl.EndsWith("/") && !resourcePathAndQueryOptions.StartsWith("/")) resourcePathAndQueryOptions = "/" + resourcePathAndQueryOptions;
+
+            var fullUri = _accountService.RestApiAccount.ApiUrl + resourcePathAndQueryOptions;
+
+            fullUri = AddCsrfToken(fullUri);
+
+            return fullUri;
+        }
+
         private string AddCsrfToken(string serviceRootUrlWithResourcePathAndQueryOptions)
         {
             serviceRootUrlWithResourcePathAndQueryOptions = AddQueryOption(serviceRootUrlWithResourcePathAndQueryOptions, "csrf", _token);
@@ -168,6 +188,8 @@ namespace AVF.MemberManagement.StandardLibrary.Services
             else uri = uri + $"&{paramName}={paramValue}";
             return uri;
         }
+
+        #endregion
     }
 }
 
