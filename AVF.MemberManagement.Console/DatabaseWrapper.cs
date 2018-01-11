@@ -25,6 +25,7 @@ namespace AVF.MemberManagement.Console
         private List<Beitragsklasse> m_beitragsklasse;
         private List<Familienrabatt> m_familienrabatt;
         private List<TrainingsTeilnahme> m_trainingsTeilnahme;
+        private List<Kurs> m_kurs;
 
         public async Task ReadTables()
         {
@@ -42,6 +43,7 @@ namespace AVF.MemberManagement.Console
             m_beitragsklasse = await Program.Container.Resolve<IRepository<Beitragsklasse>>().GetAsync();
             m_familienrabatt = await Program.Container.Resolve<IRepository<Familienrabatt>>().GetAsync();
             m_trainingsTeilnahme = await Program.Container.Resolve<IRepository<TrainingsTeilnahme>>().GetAsync();
+            m_kurs = await Program.Container.Resolve<IRepository<Kurs>>().GetAsync();
             m_mitglieder.RemoveAt(0);   // Mitglied 0 is a dummy
         }
 
@@ -113,9 +115,23 @@ namespace AVF.MemberManagement.Console
             return m_mitglieder.Single(s => s.Id == id);
         }
 
-        public Boolean HatTeilgenommen(int member, Training training )
+        public Boolean HatTeilgenommen(int member, Training training)
         {
-            return m_trainingsTeilnahme.Exists(x => (x.Id == member) && (x.TrainingID == training.Id) );
+            return m_trainingsTeilnahme.Exists(x => (x.MitgliedID == member) && (x.TrainingID == training.Id));
+        }
+
+        public Boolean HatTeilgenommen(int member, List<Training> trainings)
+        {
+            bool found = false;
+            foreach (var training in trainings)
+            {
+                if (HatTeilgenommen(member, training))
+                {
+                    found = true;
+                    break;
+                }
+            }
+            return found;
         }
 
         public Boolean IstNochMitglied(int? id)
@@ -137,6 +153,11 @@ namespace AVF.MemberManagement.Console
         public List<Mitglied> Mitglieder()
         {
             return m_mitglieder;
+        }
+
+        public List<Kurs> Kurse()
+        {
+            return m_kurs;
         }
 
         public List<Pruefung> Pruefungen()

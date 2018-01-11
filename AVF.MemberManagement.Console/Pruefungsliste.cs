@@ -35,13 +35,7 @@ namespace AVF.MemberManagement.Console
                     ofile.WriteLine();
                     foreach (Pruefung pruefung in pruefungen)
                     {
-                        Graduierung grad = m_dbWrapper.GraduierungFromId(pruefung.GraduierungID);
-
-                        ofile.Write($"{grad.Bezeichnung} {pruefung.Datum:yyyy-MM-dd} Prüfer: ");
-                        if (pruefung.Pruefer > 0)
-                            ofile.WriteMitglied(m_dbWrapper.MitgliedFromId(pruefung.Pruefer));
-                        else
-                            ofile.Write( $"{pruefung.Bemerkung}" );
+                        ofile.WritePruefung(pruefung, m_dbWrapper);
                         ofile.WriteLine();
                     }
                     ofile.WriteLine();

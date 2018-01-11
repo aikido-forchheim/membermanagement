@@ -109,10 +109,10 @@ namespace AVF.MemberManagement.Console
 
         private void SettlePeriod
         (
-            OutputFile      ofile, 
-            Mitglied        trainer,                       // null means: no specific trainer, do for all trainers
-            List<Training>  trainings,
-            bool            print
+            OutputFile     ofile, 
+            Mitglied       trainer,                       // null means: no specific trainer, do for all trainers
+            List<Training> trainings,
+            bool           print
         )
         {
             foreach (Training training in trainings)
@@ -183,8 +183,9 @@ namespace AVF.MemberManagement.Console
             m_aTrData = InitTrData( );
 
             List<Training> trainingsInPeriod = m_dbWrapper.Prepare( iJahr );
+            trainingsInPeriod = trainingsInPeriod.OrderBy(x => x.Termin).ToList();
 
-         // Create summary account
+            // Create summary account
 
             {
                 OutputFile ofile = new OutputFile(@"Trainerverguetung.txt");
