@@ -38,6 +38,7 @@ namespace AVF.MemberManagement.Console
                     System.Console.WriteLine("6: Mitgliederbeiträge");
                     System.Console.WriteLine("7: Konsistenzprüfungen");
                     System.Console.WriteLine("8: TeilnahmeKurs");
+                    System.Console.WriteLine("9: Trainingsteilnahme");
                     System.Console.WriteLine();
                     System.Console.Write("Please enter number and press ENTER: ");
 
@@ -68,6 +69,9 @@ namespace AVF.MemberManagement.Console
                             break;
                         case 8:
                             new TeilnahmeKurs().Main().Wait();
+                            break;
+                        case 9:
+                            new Trainingsteilnahme().Main().Wait();
                             break;
                         default:
                             break;

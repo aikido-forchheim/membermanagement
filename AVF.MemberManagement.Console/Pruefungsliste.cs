@@ -19,7 +19,7 @@ namespace AVF.MemberManagement.Console
 
             foreach ( Mitglied mitglied in m_dbWrapper.Mitglieder() )
             {
-                List<Pruefung> pruefungen = new List<Pruefung>();
+                var pruefungen = new List<Pruefung>();
 
                 foreach ( Pruefung pruefung in m_dbWrapper.Pruefungen() )
                 {

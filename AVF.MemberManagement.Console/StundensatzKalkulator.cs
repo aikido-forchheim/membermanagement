@@ -182,8 +182,7 @@ namespace AVF.MemberManagement.Console
 
             m_aTrData = InitTrData( );
 
-            List<Training> trainingsInPeriod = m_dbWrapper.Prepare( iJahr );
-            trainingsInPeriod = trainingsInPeriod.OrderBy(x => x.Termin).ToList();
+            var trainingsInPeriod = m_dbWrapper.TrainingsInPeriod( iJahr );
 
             // Create summary account
 

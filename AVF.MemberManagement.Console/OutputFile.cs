@@ -25,13 +25,18 @@ namespace AVF.MemberManagement.Console
             Write($"{ mitglied.Nachname,-12 } { mitglied.Vorname,-12 } ({ mitglied.Id,3 }) ");
         }
 
+        public void WriteMitglied( int id, DatabaseWrapper dbWrapper)
+        {
+            WriteMitglied(dbWrapper.MitgliedFromId(id));
+        }
+
         public void WritePruefung( Pruefung pruefung, DatabaseWrapper dbWrapper )
         {
             Graduierung grad = dbWrapper.GraduierungFromId(pruefung.GraduierungID);
 
             Write($"{grad.Bezeichnung} {pruefung.Datum:yyyy-MM-dd} Prüfer: ");
             if (pruefung.Pruefer > 0)
-                WriteMitglied(dbWrapper.MitgliedFromId(pruefung.Pruefer));
+                WriteMitglied( pruefung.Pruefer, dbWrapper );
             else
                 Write($"{pruefung.Bemerkung}");
         }

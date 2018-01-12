@@ -134,6 +134,18 @@ namespace AVF.MemberManagement.Console
             return found;
         }
 
+        public int AnzahleBesuche(int member, List<Training> trainings)
+        {
+            int iCount = 0;
+            foreach (var training in trainings)
+            {
+                if (HatTeilgenommen(member, training))
+                    ++iCount;
+            }
+
+            return iCount;
+        }
+
         public Boolean IstNochMitglied(int? id)
         {
             if (!id.HasValue)
@@ -170,12 +182,18 @@ namespace AVF.MemberManagement.Console
             return m_graduierung.Single(s => s.Id == id);
         }
 
-        public List<Training> Prepare(int iJahr)
+        public List<Training> TrainingsInPeriod( DateTime datStart, DateTime datEnd )
+        {
+            var result = m_trainings.Where(training => training.Termin > datStart && training.Termin < datEnd).ToList();
+            return result.OrderBy(x => x.Termin).ToList();
+        }
+
+        public List<Training> TrainingsInPeriod(int iJahr)
         {
             DateTime datStart = new DateTime(iJahr, 1, 1);
             DateTime datEnd = new DateTime(iJahr, 12, 31);
 
-            return m_trainings.Where(training => training.Termin > datStart && training.Termin < datEnd).ToList();
+            return TrainingsInPeriod( datStart, datEnd );
         }
 
         public List<Training> AllTrainings( )

@@ -32,7 +32,7 @@ namespace AVF.MemberManagement.Console
                     if (!m_dbWrapper.HatTeilgenommen(training.Trainer, training))
                     {
                         ofile.Write($"Finding { ++iFinding }: Trainer hat nicht an Training teilgenommen. ");
-                        ofile.WriteMitglied(m_dbWrapper.MitgliedFromId(trainer.Value));
+                        ofile.WriteMitglied( trainer.Value, m_dbWrapper );
                         ofile.Write( $" Training Nr. {training.Id} " );
                         ofile.WriteTraining(training, m_dbWrapper.WeekDay(training.WochentagID));
                         ofile.WriteLine("");
@@ -69,7 +69,7 @@ namespace AVF.MemberManagement.Console
                     ofile.Write($"Finding { ++iFinding }: Kein passendes Training am Prüfungstag. ");
                     ofile.WritePruefung(pruefung, m_dbWrapper);
                     ofile.Write( "Prüfling: " );
-                    ofile.WriteMitglied(m_dbWrapper.MitgliedFromId( pruefung.Pruefling ));
+                    ofile.WriteMitglied( pruefung.Pruefling, m_dbWrapper );
                     ofile.WriteLine();
                 }
             }
