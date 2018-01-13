@@ -62,5 +62,11 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary.Proxies
             Assert.True(testBaseObjects != null);
         }
 
+        [Fact]
+        public async void DeleteTest()
+        {
+            //
+            //Assert.True(result != null && result != "null" && result == "1");
+        }
     }
 }

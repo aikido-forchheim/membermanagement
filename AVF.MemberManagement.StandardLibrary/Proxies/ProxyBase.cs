@@ -38,10 +38,8 @@ namespace AVF.MemberManagement.StandardLibrary.Proxies
         public async Task<List<T>> GetAsync()
         {
             var table = await _phpCrudApiService.GetDataAsync<TTbl>(_uri);
-
-            var tableData = table.Rows;
-
-            return tableData;
+            
+            return table.Rows;
         }
 
         public async Task<T> GetAsync(TId id)
@@ -57,12 +55,26 @@ namespace AVF.MemberManagement.StandardLibrary.Proxies
 
         public async Task<string> UpdateAsync(T obj, TId id)
         {
+            //TODO: Change signature: Id first
+
             return await _phpCrudApiService.UpdateDataAsync($"{_uri}/{id}", obj);
         }
 
         #endregion
 
         #region Delete
+
+        public async Task<int> DeleteAsync(TId id)
+        {   
+            var deleteResult = await _phpCrudApiService.DeleteDataAsync($"{_uri}/{id}"); //mysql has no guid or uuid type, so we use id without .ToString()
+
+            return int.Parse(deleteResult);
+        }
+
+        public async Task<int> DeleteAsync(T obj)
+        {
+            return await DeleteAsync(obj.Id);
+        }
 
         #endregion
     }

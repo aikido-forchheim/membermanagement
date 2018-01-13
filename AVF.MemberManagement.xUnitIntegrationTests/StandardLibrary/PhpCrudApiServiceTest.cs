@@ -17,6 +17,8 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary
             var insertResult = await CreateNewObjectInTblTest();
 
             Assert.True(insertResult != null);
+
+            //TODO: Delete object to cleanup
         }
 
         private async Task<string> CreateNewObjectInTblTest()
