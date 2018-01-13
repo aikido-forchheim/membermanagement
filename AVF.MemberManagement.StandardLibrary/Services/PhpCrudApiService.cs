@@ -130,18 +130,10 @@ namespace AVF.MemberManagement.StandardLibrary.Services
 
         public async Task<string> UpdateDataAsync<T>(string url, T dataObject)
         {
-            try
-            {
-                var jsonData = JsonConvert.SerializeObject(dataObject);
-                var responseResult = await SendDataAsync(url, jsonData, "PUT");
-                if (responseResult == null) throw new IOException("PhpCrudApiService could not update object");
-                return responseResult;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.ToString());
-                return null;
-            }
+            var jsonData = JsonConvert.SerializeObject(dataObject);
+            var responseResult = await SendDataAsync(url, jsonData, "PUT");
+            if (responseResult == null) throw new IOException("PhpCrudApiService could not update object");
+            return responseResult;
         }
 
         #endregion
