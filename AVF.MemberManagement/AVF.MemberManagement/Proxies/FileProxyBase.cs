@@ -44,7 +44,7 @@ namespace AVF.MemberManagement.Proxies
             return list.Single(t => t.Id.Equals(id));
         }
 
-        public Task<string> UpdateAsync(T obj, TId id)
+        public Task<int> UpdateAsync(T obj)
         {
             throw new NotImplementedException();
         }

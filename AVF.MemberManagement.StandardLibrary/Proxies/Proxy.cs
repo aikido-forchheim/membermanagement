@@ -11,10 +11,5 @@ namespace AVF.MemberManagement.StandardLibrary.Proxies
         public Proxy(ILogger logger, IPhpCrudApiService phpCrudApiService) : base(logger, phpCrudApiService)
         {
         }
-
-        public Task<string> UpdateAsync(T obj)
-        {
-            return UpdateAsync(obj, obj.Id);
-        }
     }
 }

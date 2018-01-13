@@ -133,8 +133,9 @@ namespace AVF.MemberManagement.StandardLibrary.Services
             try
             {
                 var jsonData = JsonConvert.SerializeObject(dataObject);
-                var response = await SendDataAsync(url, jsonData, "PUT");
-                return response;
+                var responseResult = await SendDataAsync(url, jsonData, "PUT");
+                if (responseResult == null) throw new IOException("PhpCrudApiService could not update object");
+                return responseResult;
             }
             catch (Exception ex)
             {

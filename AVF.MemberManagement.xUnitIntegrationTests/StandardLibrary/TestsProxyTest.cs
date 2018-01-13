@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Microsoft.Practices.Unity;
@@ -51,9 +52,10 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary
                     Text = "ÖÄÜ"
                 };
 
-                var updateResult = await testProxy.UpdateAsync(testObject);
-
-                Assert.True(updateResult == "null");
+                await Assert.ThrowsAsync<IOException>(async () =>
+                {
+                    await testProxy.UpdateAsync(testObject);
+                });
             }
         }
 
@@ -72,7 +74,7 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary
 
                 var updateResult = await testProxy.UpdateAsync(testObject);
 
-                Assert.True(updateResult == "1");
+                Assert.True(updateResult == 1);
             }
         }
     }
