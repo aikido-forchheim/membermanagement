@@ -228,6 +228,7 @@
     <Compile Include="TestBase.cs" />
     <Compile Include="StandardLibrary\Repositories\RepositoriesTest.cs" />
     <Compile Include="StandardLibrary\SettingsRepositoryTest.cs" />
+    <Compile Include="UnitTestTokenService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
