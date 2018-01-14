@@ -4,13 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
+using AVF.MemberManagement.Utilities;
 
 namespace AVF.MemberManagement.Console
 {
     class Trainingsteilnahme
     {
-        private DatabaseWrapper m_dbWrapper;
-
         private class NrOfTrainings : IComparable<NrOfTrainings>
         {
             public int memberId;
@@ -28,47 +27,42 @@ namespace AVF.MemberManagement.Console
             }
         };
 
-        private int WriteNrOfParticipations( OutputFile ofile, List<Training> trainingsInTimeRange, int ? kursId, int memberId )
+        private int WriteNrOfParticipations( DatabaseWrapper db, OutputFile ofile, List<Training> trainingsInTimeRange, int ? kursId, int memberId )
         {
             var list   = trainingsInTimeRange.Where(training => training.KursID == kursId).ToList();
-            int iCount = m_dbWrapper.AnzahleBesuche(memberId, list);
+            int iCount = db.AnzahleBesuche(memberId, list);
             ofile.Write((iCount > 0) ? $"{ iCount, 7 }" : "       ");
             return iCount;
         }
 
-        public async Task Main()
+        public void Main(DatabaseWrapper db)
         {
-            m_dbWrapper = new DatabaseWrapper();
-
-            System.Console.WriteLine("read database");
-            await m_dbWrapper.ReadTables();
-
             int iJahr = 2017;
             DateTime datStart = new DateTime(iJahr, 1, 1);
             DateTime datEnd = new DateTime(iJahr, 12, 31);
 
-            var trainingsInPeriod = m_dbWrapper.TrainingsInPeriod( datStart, datEnd );
+            var trainingsInPeriod = db.TrainingsInPeriod( datStart, datEnd );
 
-            OutputFile ofile = new OutputFile( "Trainingsteilnahme.txt" );
+            OutputFile ofile = new OutputFile( "Trainingsteilnahme.txt", db );
 
             ofile.WriteLine($"Trainingsteilnahme    {datStart:dd.MM.yyyy} bis {datEnd:dd.MM.yyyy}");
             ofile.WriteLine();
 
             ofile.Write("                       Mitglied  ");
-            foreach (var kurs in m_dbWrapper.Kurse())
+            foreach (var kurs in db.Kurse())
             {
-                string weekDay = m_dbWrapper.WeekDay(kurs.WochentagID); 
+                string weekDay = db.WeekDay(kurs.WochentagID); 
                 ofile.Write($"    { weekDay.Substring( 0, 2 ) } ");
             }
             ofile.WriteLine( " Lehrgänge" );
 
             ofile.Write("                         Nummer  ");
-            foreach (var kurs in m_dbWrapper.Kurse())
+            foreach (var kurs in db.Kurse())
                 ofile.Write($" {kurs.Zeit:hh}:{kurs.Zeit:mm} ");
             ofile.WriteLine(" Sondertr.  Summe");
             ofile.WriteLine();
 
-            NrOfTrainings[] aNrOfTrainings = new NrOfTrainings[m_dbWrapper.MaxMitgliedsNr() + 1];
+            NrOfTrainings[] aNrOfTrainings = new NrOfTrainings[db.MaxMitgliedsNr() + 1];
 
             System.Console.WriteLine("acquire data");
             for (int memberId = 0; memberId < aNrOfTrainings.Length; memberId++)
@@ -77,7 +71,7 @@ namespace AVF.MemberManagement.Console
                 aNrOfTrainings[memberId] = 
                     new NrOfTrainings(
                                          memberId, 
-                                         m_dbWrapper.AnzahleBesuche( memberId, trainingsInPeriod )
+                                         db.AnzahleBesuche( memberId, trainingsInPeriod )
                                      );
             }
 
@@ -86,7 +80,7 @@ namespace AVF.MemberManagement.Console
             Array.Sort(aNrOfTrainings);
             System.Console.WriteLine("generate output");
 
-            int iNrOfKurse = m_dbWrapper.Kurse().Count();
+            int iNrOfKurse = db.Kurse().Count();
             int[] aAnzahlBesucheInKurs = new int[iNrOfKurse + 1];
             for (int i = 0; i <= iNrOfKurse; ++i)
                 aAnzahlBesucheInKurs[i] = 0;
@@ -97,14 +91,14 @@ namespace AVF.MemberManagement.Console
                 {
                     int memberId = aNrOfTrainings[index].memberId;
                     System.Console.Write($"Member {memberId}\r");
-                    ofile.WriteMitglied(memberId, m_dbWrapper);
+                    ofile.WriteMitglied( memberId );
 
-                    foreach (var kurs in m_dbWrapper.Kurse())
+                    foreach (var kurs in db.Kurse())
                     {
-                        aAnzahlBesucheInKurs[kurs.Id] += WriteNrOfParticipations(ofile, trainingsInPeriod, kurs.Id, memberId);
+                        aAnzahlBesucheInKurs[kurs.Id] += WriteNrOfParticipations( db, ofile, trainingsInPeriod, kurs.Id, memberId);
                     }
 
-                    aAnzahlBesucheInKurs[iNrOfKurse] += WriteNrOfParticipations(ofile, trainingsInPeriod, null, memberId);
+                    aAnzahlBesucheInKurs[iNrOfKurse] += WriteNrOfParticipations( db, ofile, trainingsInPeriod, null, memberId);
 
                     ofile.WriteLine($"{ aNrOfTrainings[index].iCount, 11 }");
                 }

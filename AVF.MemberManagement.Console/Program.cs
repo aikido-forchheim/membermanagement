@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using AVF.MemberManagement.Factories;
 using AVF.MemberManagement.xUnitIntegrationTests;
 using Microsoft.Practices.Unity;
+using AVF.MemberManagement.Utilities;
 
 namespace AVF.MemberManagement.Console
 {
@@ -23,6 +24,11 @@ namespace AVF.MemberManagement.Console
                 bootstrapper.Run();
 
                 Container = bootstrapper.Container;
+
+                DatabaseWrapper m_dbWrapper;
+                m_dbWrapper = new DatabaseWrapper();
+                System.Console.WriteLine("read database");
+                m_dbWrapper.ReadTables( Container );
 
                 System.Console.Clear();
 
@@ -50,28 +56,28 @@ namespace AVF.MemberManagement.Console
                             new ClassPrototypeGenerator().Main().Wait();
                             break;
                         case 2:
-                            new StundensatzKalkulator().Main(2017).Wait();
+                            new StundensatzKalkulator().Main(m_dbWrapper, 2017);
                             break;
                         case 3:
                             new JsonFileFactory(Container).RefreshFileCache().Wait();
                             break;
                         case 4:
-                            new Pruefungsliste().Main().Wait();
+                            new Pruefungsliste().Main(m_dbWrapper);
                             break;
                         case 5:
-                            new Graduierungsliste().Main().Wait();
+                            new Graduierungsliste().Main(m_dbWrapper);
                             break;
                         case 6:
-                            new Mitgliederbeitraege().Main().Wait();
+                            new Mitgliederbeitraege().Main(m_dbWrapper);
                             break;
                         case 7:
-                            new CheckConsistancy().Main().Wait();
+                            new CheckConsistancy().Main(m_dbWrapper);
                             break;
                         case 8:
-                            new TeilnahmeKurs().Main().Wait();
+                            new TeilnahmeKurs().Main(m_dbWrapper);
                             break;
                         case 9:
-                            new Trainingsteilnahme().Main().Wait();
+                            new Trainingsteilnahme().Main(m_dbWrapper);
                             break;
                         default:
                             break;

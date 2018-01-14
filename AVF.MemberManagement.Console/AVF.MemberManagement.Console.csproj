@@ -82,7 +82,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CheckConsistancy.cs" />
-    <Compile Include="DatabaseWrapper.cs" />
     <Compile Include="Graduierungsliste.cs" />
     <Compile Include="Mitgliederbeitraege.cs" />
     <Compile Include="OutputFile.cs" />
@@ -90,6 +89,7 @@
     <Compile Include="ClassPrototypeGenerator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="BusinessLogic.cs" />
     <Compile Include="StundensatzKalkulator.cs" />
     <Compile Include="TeilnahmeKurs.cs" />
     <Compile Include="Trainingsteilnahme.cs" />
@@ -103,9 +103,17 @@
       <Project>{06b2e0c1-3277-491c-9aba-a53bbf260f6a}</Project>
       <Name>AVF.MemberManagement.StandardLibrary</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AVF.MemberManagement.Utilities\AVF.MemberManagement.Utilities.csproj">
+      <Project>{cc67f294-f1db-4db8-ad31-526b5c25ba79}</Project>
+      <Name>AVF.MemberManagement.Utilities</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AVF.MemberManagement.xUnitIntegrationTests\AVF.MemberManagement.xUnitIntegrationTests.csproj">
       <Project>{63f993d0-1578-4c5a-a467-ac0f2150b0d3}</Project>
       <Name>AVF.MemberManagement.xUnitIntegrationTests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AVF.MemberManagement.xUnitTests\AVF.MemberManagement.xUnitTests.csproj">
+      <Project>{62e51f14-4650-42f9-9192-f53b5c917a5d}</Project>
+      <Name>AVF.MemberManagement.xUnitTests</Name>
     </ProjectReference>
     <ProjectReference Include="..\AVF.MemberManagement\AVF.MemberManagement\AVF.MemberManagement.csproj">
       <Project>{5fbac065-134e-46ba-8181-c87e2d2af1af}</Project>

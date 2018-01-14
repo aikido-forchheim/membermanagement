@@ -2,26 +2,21 @@
 using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
+using AVF.MemberManagement.Utilities;
 
 namespace AVF.MemberManagement.Console
 {
     class Pruefungsliste
     {
-        private DatabaseWrapper m_dbWrapper;
-
-        public async Task Main()
+        public void Main( DatabaseWrapper db )
         {
-            OutputFile ofile = new OutputFile("Pruefungsliste.txt");
+            OutputFile ofile = new OutputFile("Pruefungsliste.txt", db );
 
-            m_dbWrapper = new DatabaseWrapper();
-
-            await m_dbWrapper.ReadTables();
-
-            foreach ( Mitglied mitglied in m_dbWrapper.Mitglieder() )
+            foreach ( Mitglied mitglied in db.Mitglieder() )
             {
                 var pruefungen = new List<Pruefung>();
 
-                foreach ( Pruefung pruefung in m_dbWrapper.Pruefungen() )
+                foreach ( Pruefung pruefung in db.Pruefungen() )
                 {
                     if ( pruefung.Pruefling == mitglied.Id )
                     {
@@ -35,7 +30,7 @@ namespace AVF.MemberManagement.Console
                     ofile.WriteLine();
                     foreach (Pruefung pruefung in pruefungen)
                     {
-                        ofile.WritePruefung(pruefung, m_dbWrapper);
+                        ofile.WritePruefung( pruefung );
                         ofile.WriteLine();
                     }
                     ofile.WriteLine();

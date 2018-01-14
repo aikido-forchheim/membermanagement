@@ -9,6 +9,7 @@ using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Microsoft.Practices.ObjectBuilder2;
 using Microsoft.Practices.Unity;
+using AVF.MemberManagement.Utilities;
 
 namespace AVF.MemberManagement.Console
 {
@@ -91,7 +92,6 @@ namespace AVF.MemberManagement.Console
 
     internal class StundensatzKalkulator
     {
-        private DatabaseWrapper     m_dbWrapper;
         private TrainerVerguetung[] m_aTrData;
 
         private int? TrainerIdFromNr(Training training, int trainerNr )
@@ -109,10 +109,11 @@ namespace AVF.MemberManagement.Console
 
         private void SettlePeriod
         (
-            OutputFile     ofile, 
-            Mitglied       trainer,                       // null means: no specific trainer, do for all trainers
-            List<Training> trainings,
-            bool           print
+            DatabaseWrapper db,
+            OutputFile      ofile, 
+            Mitglied        trainer,                       // null means: no specific trainer, do for all trainers
+            List<Training>  trainings,
+            bool            print
         )
         {
             foreach (Training training in trainings)
@@ -123,22 +124,22 @@ namespace AVF.MemberManagement.Console
                     {
                         int? trainerId = TrainerIdFromNr(training, trainerNr);
 
-                        if ( m_dbWrapper.IstNochMitglied(trainerId) )
+                        if ( db.IstNochMitglied(trainerId) )
                         {
-                            int trainerstufe = m_dbWrapper.TrainerLevel(trainerId, training.Termin);
+                            int trainerstufe = db.TrainerLevel(trainerId, training.Termin);
 
                             TrainerVerguetung tv = new TrainerVerguetung
                             (
-                                m_dbWrapper.TrainingAward(trainerstufe, training, trainerNr),
-                                m_dbWrapper.ExtraAmount(training, trainerNr),
-                                m_dbWrapper.CalcTravelExpenses(trainerId, training.Termin)
+                                db.TrainingAward(trainerstufe, training, trainerNr),
+                                db.ExtraAmount(training, trainerNr),
+                                db.CalcTravelExpenses(trainerId, training.Termin)
                             );
 
                             m_aTrData[trainerId.Value].Add(tv);
 
                             if ( print )
                             {
-                                ofile.WriteTraining(training, m_dbWrapper.WeekDay(training.WochentagID));
+                                ofile.WriteTraining(training, db.WeekDay(training.WochentagID));
                                 ofile.Write($"{trainerNr} ");
                                 ofile.Write($"{trainerstufe} ");
 
@@ -162,9 +163,9 @@ namespace AVF.MemberManagement.Console
             }
         }
 
-        private TrainerVerguetung[] InitTrData( )
+        private TrainerVerguetung[] InitTrData( DatabaseWrapper db )
         {
-            TrainerVerguetung[] aTrData = new TrainerVerguetung[m_dbWrapper.MaxMitgliedsNr() + 1];
+            TrainerVerguetung[] aTrData = new TrainerVerguetung[db.MaxMitgliedsNr() + 1];
 
             for (int i = 0; i < aTrData.Length; i++)
             {
@@ -174,22 +175,18 @@ namespace AVF.MemberManagement.Console
             return aTrData;
         }
 
-        public async Task Main( int iJahr )
+        public void Main( DatabaseWrapper db, int iJahr )
         {
-            m_dbWrapper = new DatabaseWrapper();
+            m_aTrData = InitTrData( db );
 
-            await m_dbWrapper.ReadTables();
-
-            m_aTrData = InitTrData( );
-
-            var trainingsInPeriod = m_dbWrapper.TrainingsInPeriod( iJahr );
+            var trainingsInPeriod = db.TrainingsInPeriod( iJahr );
 
             // Create summary account
 
             {
-                OutputFile ofile = new OutputFile(@"Trainerverguetung.txt");
+                OutputFile ofile = new OutputFile( @"Trainerverguetung.txt", db );
 
-                SettlePeriod( ofile, null, trainingsInPeriod, false );
+                SettlePeriod( db, ofile, null, trainingsInPeriod, false );
 
                 ofile.WriteLine();
                 ofile.WriteLine($"Nachname   Vorname     Nr.   Unterricht  Fahrtkosten    Summe");
@@ -197,7 +194,7 @@ namespace AVF.MemberManagement.Console
 
                 TrainerVerguetung tvSum = new TrainerVerguetung(0, 0, 0);
 
-                foreach (Mitglied mitglied in m_dbWrapper.Mitglieder())
+                foreach (Mitglied mitglied in db.Mitglieder())
                 {
                     TrainerVerguetung tv = m_aTrData[mitglied.Id];
 
@@ -222,11 +219,11 @@ namespace AVF.MemberManagement.Console
 
          // Create individual accounts
 
-            foreach ( Mitglied mitglied in m_dbWrapper.Mitglieder( ) )
+            foreach ( Mitglied mitglied in db.Mitglieder( ) )
             {
                 if ( ! m_aTrData[mitglied.Id].IsEmpty( ) )    // filled by summary account calculation if trainer
                 {
-                    OutputFile ofile = new OutputFile($"{ mitglied.Nachname }_{ mitglied.Vorname }.txt  ");
+                    OutputFile ofile = new OutputFile( $"{ mitglied.Nachname }_{ mitglied.Vorname }.txt  ", db );
 
                     ofile.WriteLine( $"{ mitglied.Nachname,-10 } { mitglied.Vorname,-10 } MitgliedsNr. ({ mitglied.Id,3 }) ") ;
                     ofile.WriteLine();
@@ -237,7 +234,7 @@ namespace AVF.MemberManagement.Console
                     ofile.WriteLine("                                N S   guetung     zuschlag    kosten         ");
                     ofile.WriteLine();
 
-                    SettlePeriod( ofile, mitglied, trainingsInPeriod, true );
+                    SettlePeriod( db, ofile, mitglied, trainingsInPeriod, true );
 
                     ofile.WriteLine();
                     ofile.Write      ("Summe                               ");
@@ -254,8 +251,8 @@ namespace AVF.MemberManagement.Console
                     ofile.WriteLine("3 - Zweiter Kotrainer");
                     ofile.WriteLine();
                     ofile.WriteLine("TS: Trainerstufe");
-                    for (int i = 1; i <= m_dbWrapper.MaxTrainerstufe(); i++)
-                        ofile.WriteLine( $"{ i } - { m_dbWrapper.Trainerstufe( i )}" );
+                    for (int i = 1; i <= db.MaxTrainerstufe(); i++)
+                        ofile.WriteLine( $"{ i } - { db.Trainerstufe( i )}" );
 
                     ofile.Close();
                 }

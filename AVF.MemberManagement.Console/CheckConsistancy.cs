@@ -3,20 +3,15 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
+using AVF.MemberManagement.Utilities;
 
 namespace AVF.MemberManagement.Console
 {
     class CheckConsistancy
     {
-        private DatabaseWrapper m_dbWrapper;
-
-        public async Task Main()
+        public void Main(DatabaseWrapper db)
         {
-            OutputFile ofile = new OutputFile("Findings.txt");
-
-            m_dbWrapper = new DatabaseWrapper();
-
-            await m_dbWrapper.ReadTables();
+            OutputFile ofile = new OutputFile( "Findings.txt", db );
 
             int iFinding = 0;
 
@@ -24,17 +19,17 @@ namespace AVF.MemberManagement.Console
 
             DateTime dateStart = new DateTime(2017, 1, 1);
 
-            foreach (Training training in m_dbWrapper.AllTrainings())
+            foreach (Training training in db.AllTrainings())
             {
                 int? trainer = training.Trainer;
                 if ( ( training.Termin > dateStart ) && (trainer.HasValue && trainer > 0) )
                 {
-                    if (!m_dbWrapper.HatTeilgenommen(training.Trainer, training))
+                    if (!db.HatTeilgenommen(training.Trainer, training))
                     {
                         ofile.Write($"Finding { ++iFinding }: Trainer hat nicht an Training teilgenommen. ");
-                        ofile.WriteMitglied( trainer.Value, m_dbWrapper );
+                        ofile.WriteMitglied( trainer.Value );
                         ofile.Write( $" Training Nr. {training.Id} " );
-                        ofile.WriteTraining(training, m_dbWrapper.WeekDay(training.WochentagID));
+                        ofile.WriteTraining(training, db.WeekDay(training.WochentagID));
                         ofile.WriteLine("");
                     }
                 }
@@ -44,15 +39,15 @@ namespace AVF.MemberManagement.Console
             // Am Prüfungstag muss ein Training stattgefunden haben
             // Prüfling and Prüfer müssen Teilnehmer sein
 
-            foreach (Pruefung pruefung in m_dbWrapper.Pruefungen())
+            foreach (Pruefung pruefung in db.Pruefungen())
             {
                 bool found = false;
-                foreach (Training training in m_dbWrapper.AllTrainings())
+                foreach (Training training in db.AllTrainings())
                 {
                      if ( 
                           ( training.Termin == pruefung.Datum ) &&
-                          ( m_dbWrapper.HatTeilgenommen(pruefung.Pruefling, training )) &&
-                          ( m_dbWrapper.HatTeilgenommen(pruefung.Pruefer,   training ))
+                          ( db.HatTeilgenommen(pruefung.Pruefling, training )) &&
+                          ( db.HatTeilgenommen(pruefung.Pruefer,   training ))
                        )
                     {
                         found = true;
@@ -67,9 +62,9 @@ namespace AVF.MemberManagement.Console
                    )
                 {
                     ofile.Write($"Finding { ++iFinding }: Kein passendes Training am Prüfungstag. ");
-                    ofile.WritePruefung(pruefung, m_dbWrapper);
+                    ofile.WritePruefung( pruefung );
                     ofile.Write( "Prüfling: " );
-                    ofile.WriteMitglied( pruefung.Pruefling, m_dbWrapper );
+                    ofile.WriteMitglied( pruefung.Pruefling );
                     ofile.WriteLine();
                 }
             }

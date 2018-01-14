@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
+using AVF.MemberManagement.Utilities;
 
 namespace AVF.MemberManagement.Console
 {
@@ -62,29 +63,23 @@ namespace AVF.MemberManagement.Console
 
     class Graduierungsliste
     {
-        private DatabaseWrapper m_dbWrapper;
-
-        public async Task Main()
+        public void Main(DatabaseWrapper db)
         {
-            OutputFile ofile = new OutputFile("Graduierungsliste.txt");
-
-            m_dbWrapper = new DatabaseWrapper();
-
-            await m_dbWrapper.ReadTables();
+            OutputFile ofile = new OutputFile( "Graduierungsliste.txt", db );
 
             List<ComparableMember> m_memberList = new List<ComparableMember>();
 
             DateTime dateZero = new DateTime(1, 1, 1);
 
-            foreach (Mitglied mitglied in m_dbWrapper.Mitglieder())
+            foreach (Mitglied mitglied in db.Mitglieder())
             {
-                if (m_dbWrapper.IstNochMitglied(mitglied.Id))
+                if (db.IstNochMitglied(mitglied.Id))
                 {
                     int      iStartGrad = (mitglied.BeitragsklasseID == 4) ? 1 : 7; // Erwachsene und Jugendliche beginnen mit dem 6. Kyu
                     DateTime iStartDate = (mitglied.Eintritt.HasValue) ? mitglied.Eintritt.Value : dateZero;
                     ComparableMember member = new ComparableMember(mitglied.Id, iStartGrad, iStartDate);
 
-                    foreach (Pruefung pruefung in m_dbWrapper.Pruefungen())
+                    foreach (Pruefung pruefung in db.Pruefungen())
                     {
                         if (pruefung.Pruefling == mitglied.Id)
                         {
@@ -101,8 +96,8 @@ namespace AVF.MemberManagement.Console
             int iGradIdLast = 0;
             foreach(ComparableMember cmem in m_memberList)
             {
-                Graduierung grad     = m_dbWrapper.GraduierungFromId(cmem.GetGraduierung());
-                Mitglied    mitglied = m_dbWrapper.MitgliedFromId(cmem.GetMemberId());
+                Graduierung grad     = db.GraduierungFromId(cmem.GetGraduierung());
+                Mitglied    mitglied = db.MitgliedFromId(cmem.GetMemberId());
                 DateTime    dateGrad = cmem.GetDatumGraduierung();
                 DateTime    dateNext = dateGrad.AddYears(grad.WartezeitJahre).AddMonths(grad.WartezeitMonate);
                 string      sGrad    = "";
@@ -117,7 +112,7 @@ namespace AVF.MemberManagement.Console
                 ofile.WriteMitglied( mitglied );
                 ofile.Write($"{ mitglied.Geburtsdatum:yyyy-MM-dd} ");
                 ofile.Write($"{ mitglied.Geburtsort, -20} ");
-                ofile.Write($"{ m_dbWrapper.BK_Text(mitglied), 3} ");
+                ofile.Write($"{ db.BK_Text(mitglied), 3} ");
                 ofile.Write($"{ mitglied.Eintritt:yyyy-MM-dd} ");
                 ofile.Write($"{ dateGrad:yyyy-MM-dd} ");
                 ofile.Write($"{ dateNext:yyyy-MM-dd} ");

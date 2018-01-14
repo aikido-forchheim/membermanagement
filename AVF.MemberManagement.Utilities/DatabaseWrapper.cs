@@ -7,9 +7,9 @@ using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Microsoft.Practices.Unity;
 
-namespace AVF.MemberManagement.Console
+namespace AVF.MemberManagement.Utilities
 {
-    internal class DatabaseWrapper
+    public class DatabaseWrapper
     {
         private List<Training> m_trainings;
         private List<Mitglied> m_mitglieder;
@@ -27,23 +27,23 @@ namespace AVF.MemberManagement.Console
         private List<TrainingsTeilnahme> m_trainingsTeilnahme;
         private List<Kurs> m_kurs;
 
-        public async Task ReadTables( )
+        public async Task ReadTables( IUnityContainer Container )
         {
-            m_trainings = await Program.Container.Resolve<IRepository<Training>>().GetAsync();
-            m_mitglieder = await Program.Container.Resolve<IRepository<Mitglied>>().GetAsync();
-            m_trainerErnennungen = await Program.Container.Resolve<IRepository<TrainerErnennung>>().GetAsync();
-            m_stundensaetze = await Program.Container.Resolve<IRepository<Stundensatz>>().GetAsync();
-            m_zuschlagKinderTraining = await Program.Container.Resolve<IRepository<ZuschlagKindertraining>>().GetAsync();
-            m_trainerStufe = await Program.Container.Resolve<IRepository<TrainerStufe>>().GetAsync();
-            m_wohnung = await Program.Container.Resolve<IRepository<Wohnung>>().GetAsync();
-            m_wohnungsbezug = await Program.Container.Resolve<IRepository<Wohnungsbezug>>().GetAsync();
-            m_wochentag = await Program.Container.Resolve<IRepository<Wochentag>>().GetAsync();
-            m_pruefung = await Program.Container.Resolve<IRepository<Pruefung>>().GetAsync();
-            m_graduierung = await Program.Container.Resolve<IRepository<Graduierung>>().GetAsync();
-            m_beitragsklasse = await Program.Container.Resolve<IRepository<Beitragsklasse>>().GetAsync();
-            m_familienrabatt = await Program.Container.Resolve<IRepository<Familienrabatt>>().GetAsync();
-            m_trainingsTeilnahme = await Program.Container.Resolve<IRepository<TrainingsTeilnahme>>().GetAsync();
-            m_kurs = await Program.Container.Resolve<IRepository<Kurs>>().GetAsync();
+            m_trainings = await Container.Resolve<IRepository<Training>>().GetAsync();
+            m_mitglieder = await Container.Resolve<IRepository<Mitglied>>().GetAsync();
+            m_trainerErnennungen = await Container.Resolve<IRepository<TrainerErnennung>>().GetAsync();
+            m_stundensaetze = await Container.Resolve<IRepository<Stundensatz>>().GetAsync();
+            m_zuschlagKinderTraining = await Container.Resolve<IRepository<ZuschlagKindertraining>>().GetAsync();
+            m_trainerStufe = await Container.Resolve<IRepository<TrainerStufe>>().GetAsync();
+            m_wohnung = await Container.Resolve<IRepository<Wohnung>>().GetAsync();
+            m_wohnungsbezug = await Container.Resolve<IRepository<Wohnungsbezug>>().GetAsync();
+            m_wochentag = await Container.Resolve<IRepository<Wochentag>>().GetAsync();
+            m_pruefung = await Container.Resolve<IRepository<Pruefung>>().GetAsync();
+            m_graduierung = await Container.Resolve<IRepository<Graduierung>>().GetAsync();
+            m_beitragsklasse = await Container.Resolve<IRepository<Beitragsklasse>>().GetAsync();
+            m_familienrabatt = await Container.Resolve<IRepository<Familienrabatt>>().GetAsync();
+            m_trainingsTeilnahme = await Container.Resolve<IRepository<TrainingsTeilnahme>>().GetAsync();
+            m_kurs = await Container.Resolve<IRepository<Kurs>>().GetAsync();
             m_mitglieder.RemoveAt(0);   // Mitglied 0 is a dummy
         }
 
@@ -92,7 +92,7 @@ namespace AVF.MemberManagement.Console
 
         public string BK_Text(Mitglied mitglied)
         {
-            return BK( mitglied ).BeitragsklasseRomanNumeral.ToString();
+            return BK(mitglied).BeitragsklasseRomanNumeral.ToString();
         }
 
         public int Familienrabatt(Mitglied mitglied)
@@ -151,10 +151,10 @@ namespace AVF.MemberManagement.Console
             if (!id.HasValue)
                 return false;
 
-            if ( id < 0 )
+            if (id < 0)
                 return false;
 
-            DateTime? austritt = MitgliedFromId( id.Value ).Austritt;
+            DateTime? austritt = MitgliedFromId(id.Value).Austritt;
 
             if (!austritt.HasValue)
                 return true;
@@ -182,7 +182,7 @@ namespace AVF.MemberManagement.Console
             return m_graduierung.Single(s => s.Id == id);
         }
 
-        public List<Training> TrainingsInPeriod( DateTime datStart, DateTime datEnd )
+        public List<Training> TrainingsInPeriod(DateTime datStart, DateTime datEnd)
         {
             var result = m_trainings.Where(training => training.Termin > datStart && training.Termin < datEnd).ToList();
             return result.OrderBy(x => x.Termin).ToList();
@@ -193,10 +193,10 @@ namespace AVF.MemberManagement.Console
             DateTime datStart = new DateTime(iJahr, 1, 1);
             DateTime datEnd = new DateTime(iJahr, 12, 31);
 
-            return TrainingsInPeriod( datStart, datEnd );
+            return TrainingsInPeriod(datStart, datEnd);
         }
 
-        public List<Training> AllTrainings( )
+        public List<Training> AllTrainings()
         {
             return m_trainings;
         }
@@ -211,7 +211,8 @@ namespace AVF.MemberManagement.Console
                 var wohnung = m_wohnung.Single(s => (s.Id == wohnungId));
                 if (wohnung.Fahrtstrecke.HasValue)
                 {
-                    return Decimal.Round(wohnung.Fahrtstrecke.Value * 0.17M, 2);
+                    Decimal Cents = wohnung.Fahrtstrecke.Value * 17;
+                    return Decimal.Floor(Cents + 0.5M) / 100;
                 }
             }
             return 0;

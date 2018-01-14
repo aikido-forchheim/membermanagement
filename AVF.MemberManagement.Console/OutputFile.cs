@@ -1,11 +1,15 @@
 ﻿using AVF.MemberManagement.StandardLibrary.Tbo;
+using AVF.MemberManagement.Utilities;
 
 namespace AVF.MemberManagement.Console
 {
     internal class OutputFile : System.IO.StreamWriter
     {
-        public OutputFile(string fileName) : base(fileName)
+        private DatabaseWrapper m_db;
+
+        public OutputFile( string fileName, DatabaseWrapper db ) : base(fileName)
         {
+            m_db = db;
         }
 
         public void WriteAmount(decimal amount)
@@ -25,18 +29,18 @@ namespace AVF.MemberManagement.Console
             Write($"{ mitglied.Nachname,-12 } { mitglied.Vorname,-12 } ({ mitglied.Id,3 }) ");
         }
 
-        public void WriteMitglied( int id, DatabaseWrapper dbWrapper)
+        public void WriteMitglied( int id )
         {
-            WriteMitglied(dbWrapper.MitgliedFromId(id));
+            WriteMitglied(m_db.MitgliedFromId(id));
         }
 
-        public void WritePruefung( Pruefung pruefung, DatabaseWrapper dbWrapper )
+        public void WritePruefung( Pruefung pruefung )
         {
-            Graduierung grad = dbWrapper.GraduierungFromId(pruefung.GraduierungID);
+            Graduierung grad = m_db.GraduierungFromId(pruefung.GraduierungID);
 
             Write($"{grad.Bezeichnung} {pruefung.Datum:yyyy-MM-dd} Prüfer: ");
             if (pruefung.Pruefer > 0)
-                WriteMitglied( pruefung.Pruefer, dbWrapper );
+                WriteMitglied( pruefung.Pruefer );
             else
                 Write($"{pruefung.Bemerkung}");
         }

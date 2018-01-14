@@ -3,38 +3,33 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
+using AVF.MemberManagement.Utilities;
 
 namespace AVF.MemberManagement.Console
 {
     class Mitgliederbeitraege
     {
-        private DatabaseWrapper m_dbWrapper;
-
-        public async Task Main()
+        public void Main( DatabaseWrapper db )
         {
-            OutputFile ofile = new OutputFile("Mitgliederbeitraege.txt");
-
-            m_dbWrapper = new DatabaseWrapper();
-
-            await m_dbWrapper.ReadTables();
+            OutputFile ofile = new OutputFile( "Mitgliederbeitraege.txt", db );
 
             decimal decHalbjahresSumme = 0;
             int iLfdNr = 0;
 
-            foreach (Mitglied mitglied in m_dbWrapper.Mitglieder())
+            foreach (Mitglied mitglied in db.Mitglieder())
             {
                 if (mitglied.Faktor > 0)
                 {
-                    int iProzentsatz = m_dbWrapper.Familienrabatt(mitglied);
+                    int iProzentsatz = db.Familienrabatt(mitglied);
                     if ( iProzentsatz > 0 )
                     { 
-                        decimal decStdJahresbeitrag  = m_dbWrapper.BK(mitglied).Beitrag;
+                        decimal decStdJahresbeitrag  = db.BK(mitglied).Beitrag;
                         decimal decJahresbeitrag     = decStdJahresbeitrag * iProzentsatz / 100;
                         decimal decHalbjahresbeitrag = decJahresbeitrag / 2;
                         decHalbjahresSumme += decHalbjahresbeitrag;
                         ofile.Write($"{ ++iLfdNr, 3}  ");
                         ofile.WriteMitglied( mitglied) ;
-                        ofile.Write($"{ m_dbWrapper.BK_Text(mitglied),3} ");
+                        ofile.Write($"{ db.BK_Text(mitglied),3} ");
                         ofile.WriteAmount( decJahresbeitrag );
                         ofile.Write($"{ mitglied.Familienmitglied } ");
                         ofile.WriteAmount( decHalbjahresbeitrag );
