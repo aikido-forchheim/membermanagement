@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.Utilities;
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
@@ -182,18 +181,22 @@ namespace AVF.MemberManagement.Utilities
             return m_graduierung.Single(s => s.Id == id);
         }
 
-        public List<Training> TrainingsInPeriod(DateTime datStart, DateTime datEnd)
+        public List<Training> TrainingsInPeriod( int ? idKurs, DateTime datStart, DateTime datEnd )
         {
             var result = m_trainings.Where(training => training.Termin > datStart && training.Termin < datEnd).ToList();
+
+            if ( idKurs != -1 )
+                result = result.Where(training => training.KursID == idKurs).ToList();
+
             return result.OrderBy(x => x.Termin).ToList();
         }
 
-        public List<Training> TrainingsInPeriod(int iJahr)
+        public List<Training> TrainingsInPeriod( int? idKurs, int iJahr )
         {
             DateTime datStart = new DateTime(iJahr, 1, 1);
             DateTime datEnd = new DateTime(iJahr, 12, 31);
 
-            return TrainingsInPeriod(datStart, datEnd);
+            return TrainingsInPeriod(idKurs, datStart, datEnd );
         }
 
         public List<Training> AllTrainings()

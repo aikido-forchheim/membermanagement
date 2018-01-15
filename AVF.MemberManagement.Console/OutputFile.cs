@@ -10,6 +10,7 @@ namespace AVF.MemberManagement.Console
         public OutputFile( string fileName, DatabaseWrapper db ) : base(fileName)
         {
             m_db = db;
+            System.Console.WriteLine(fileName);
         }
 
         public void WriteAmount(decimal amount)

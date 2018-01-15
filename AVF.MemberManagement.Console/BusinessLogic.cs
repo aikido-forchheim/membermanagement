@@ -11,10 +11,23 @@ namespace AVF.MemberManagement.Console
     {
         private DatabaseWrapper m_dbWrapper;
 
+        public BusinessLogic( DatabaseWrapper db )
+        {
+            m_dbWrapper = db;
+        }
+
+        public int[] KursDisplayOrder( )
+        {
+            int[] displayOrder = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0 };  // Should be stored in DB
+            return displayOrder;
+        }
+
+    // Classes for delivering business logic data to user interface
+
         public class KursTeilnahme
         {
-            public int m_idKurs;        // identifier of Kurs
-            public int m_nrTeilnahmen;  // number of partications
+            private int m_idKurs;        // identifier of Kurs
+            private int m_nrTeilnahmen;  // number of partications
 
             public KursTeilnahme(int idKurs)
             {
@@ -65,12 +78,9 @@ namespace AVF.MemberManagement.Console
             }
         }
 
-        public BusinessLogic( DatabaseWrapper db )
-        {
-            m_dbWrapper = db;
-        }
+        // Implementation of business logic
 
-        public List<MitgliedKurse> TeilnahmeKurs( DateTime datStart, DateTime datEnd )
+        public List<MitgliedKurse> TeilnahmeKurs( Kurs kurs, DateTime datStart, DateTime datEnd )
         {
             var result = new List<MitgliedKurse>();
 
@@ -84,20 +94,17 @@ namespace AVF.MemberManagement.Console
                     MitgliedKurse mk = new MitgliedKurse(mitglied.Id);
                     result.Add( mk );
                 
-                    foreach (var kurs in m_dbWrapper.Kurse())
+                    var relevantTrainings = trainingsInTimeRange.Where(training => training.KursID == kurs.Id).ToList();
+
+                    if (m_dbWrapper.HatTeilgenommen(mitglied.Id, relevantTrainings))
                     {
-                        var relevantTrainings = trainingsInTimeRange.Where(training => training.KursID == kurs.Id).ToList();
+                        KursTeilnahme kt = new KursTeilnahme( kurs.Id );
 
-                        if (m_dbWrapper.HatTeilgenommen(mitglied.Id, relevantTrainings))
-                        {
-                            KursTeilnahme kt = new KursTeilnahme( kurs.Id );
+                        foreach (var training in relevantTrainings)
+                            if (m_dbWrapper.HatTeilgenommen(mitglied.Id, training))
+                                kt.Increase();
 
-                            foreach (var training in relevantTrainings)
-                                if (m_dbWrapper.HatTeilgenommen(mitglied.Id, training))
-                                    kt.Increase();
-
-                            mk.Add(kt);
-                        }
+                        mk.Add(kt);
                     }
                 }
             }

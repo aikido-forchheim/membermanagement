@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Windows.Forms.VisualStyles;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
@@ -179,7 +178,7 @@ namespace AVF.MemberManagement.Console
         {
             m_aTrData = InitTrData( db );
 
-            var trainingsInPeriod = db.TrainingsInPeriod( iJahr );
+            var trainingsInPeriod = db.TrainingsInPeriod( -1, iJahr );
 
             // Create summary account
 

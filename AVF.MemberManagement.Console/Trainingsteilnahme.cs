@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.Utilities;
 
@@ -41,7 +39,7 @@ namespace AVF.MemberManagement.Console
             DateTime datStart = new DateTime(iJahr, 1, 1);
             DateTime datEnd = new DateTime(iJahr, 12, 31);
 
-            var trainingsInPeriod = db.TrainingsInPeriod( datStart, datEnd );
+            var trainingsInPeriod = db.TrainingsInPeriod( -1, datStart, datEnd );
 
             OutputFile ofile = new OutputFile( "Trainingsteilnahme.txt", db );
 
@@ -82,8 +80,6 @@ namespace AVF.MemberManagement.Console
 
             int iNrOfKurse = db.Kurse().Count();
             int[] aAnzahlBesucheInKurs = new int[iNrOfKurse + 1];
-            for (int i = 0; i <= iNrOfKurse; ++i)
-                aAnzahlBesucheInKurs[i] = 0;
 
             for (int index = 0; index < aNrOfTrainings.Length; index++)
             {
