@@ -8,6 +8,7 @@ using AVF.MemberManagement.StandardLibrary.Tbo;
 using FakeItEasy;
 using Microsoft.Extensions.Logging;
 using Microsoft.Practices.Unity;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary.Proxies
@@ -24,7 +25,7 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary.Proxies
         }
 
         [Fact]
-        public async void CreateDefaultTestObjectShouldFail()
+        public async Task CreateDefaultTestObjectShouldFail()
         {
             var testBaseProxy = new ProxyBase<TblTestBase, TestObject, string>(_fakeLogger, _phpCrudApiService);
 
@@ -37,7 +38,29 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary.Proxies
         }
 
         [Fact]
-        public async void CreateTest()
+        public async Task CreateTest()
+        {
+            await CreateAndDelete();
+        }
+
+        [Fact]
+        public async Task ReadTest()
+        {
+            var testBaseProxy = new ProxyBase<TblTestBase, TestObject, string>(_fakeLogger, _phpCrudApiService);
+
+            var testBaseObjects = await testBaseProxy.GetAsync();
+
+            Assert.True(testBaseObjects != null);
+        }
+
+        [Fact]
+        public async Task DeleteTest()
+        {
+            await CreateAndDelete();
+        }
+
+
+        private async Task CreateAndDelete()
         {
             var testBaseProxy = new ProxyBase<TblTestBase, TestObject, string>(_fakeLogger, _phpCrudApiService);
 
@@ -49,24 +72,9 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary.Proxies
 
             Assert.True(createResult == 0);
 
-            //TODO: Delete generated TestObject to preserve space in db
-        }
+            var deleteResult = await testBaseProxy.DeleteAsync(id);
 
-        [Fact]
-        public async void ReadTest()
-        {
-            var testBaseProxy = new ProxyBase<TblTestBase, TestObject, string>(_fakeLogger, _phpCrudApiService);
-
-            var testBaseObjects = await testBaseProxy.GetAsync();
-
-            Assert.True(testBaseObjects != null);
-        }
-
-        [Fact]
-        public async void DeleteTest()
-        {
-            //
-            //Assert.True(result != null && result != "null" && result == "1");
+            Assert.True(deleteResult == 1);
         }
     }
 }
