@@ -8,6 +8,22 @@ using Microsoft.Practices.Unity;
 
 namespace AVF.MemberManagement.Utilities
 {
+    public class NrOfTrainings : IComparable<NrOfTrainings>
+    {
+        public int memberId;
+        public int iCount;
+
+        public NrOfTrainings(int m, int i)
+        {
+            memberId = m;
+            iCount = i;
+        }
+
+        public void Increase() => ++iCount;
+
+        public int CompareTo( NrOfTrainings other ) => other.iCount - iCount;
+    };
+
     public class DatabaseWrapper
     {
         private List<Training> m_trainings;
@@ -181,12 +197,18 @@ namespace AVF.MemberManagement.Utilities
             return m_graduierung.Single(s => s.Id == id);
         }
 
+        public List<Training> Filter(List<Training> list, int? idKurs)
+            => list.Where(training => training.KursID == idKurs).ToList();
+
+        public List<Training> Filter(List<Training> list, DateTime datStart, DateTime datEnd)
+            => list.Where(training => training.Termin > datStart && training.Termin < datEnd).ToList();
+
         public List<Training> TrainingsInPeriod( int ? idKurs, DateTime datStart, DateTime datEnd )
         {
-            var result = m_trainings.Where(training => training.Termin > datStart && training.Termin < datEnd).ToList();
+            var result = Filter( m_trainings, datStart, datEnd );
 
             if ( idKurs != -1 )
-                result = result.Where(training => training.KursID == idKurs).ToList();
+                result = Filter( result, idKurs );
 
             return result.OrderBy(x => x.Termin).ToList();
         }

@@ -8,27 +8,16 @@ namespace AVF.MemberManagement.Console
 {
     class Trainingsteilnahme
     {
-        private class NrOfTrainings : IComparable<NrOfTrainings>
+        public int[] KursDisplayOrder()
         {
-            public int memberId;
-            public int iCount;
+            int[] displayOrder = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0 };  // Should be stored in DB
+            return displayOrder;
+        }
 
-            public NrOfTrainings( int m, int i )
-            {
-                memberId = m;
-                iCount = i;
-            }
-
-            public int CompareTo(NrOfTrainings other)
-            {
-                return other.iCount - iCount;
-            }
-        };
-
-        private int WriteNrOfParticipations( DatabaseWrapper db, OutputFile ofile, List<Training> trainingsInTimeRange, int ? kursId, int memberId )
+        private int WriteNrOfParticipations( DatabaseWrapper db, OutputFile ofile, List<Training> trainingsInTimeRange, int ? idKurs, int memberId )
         {
-            var list   = trainingsInTimeRange.Where(training => training.KursID == kursId).ToList();
-            int iCount = db.AnzahleBesuche(memberId, list);
+            var list = db.Filter( trainingsInTimeRange, idKurs );
+            int iCount = db.AnzahleBesuche( memberId, list );
             ofile.Write((iCount > 0) ? $"{ iCount, 7 }" : "       ");
             return iCount;
         }
