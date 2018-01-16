@@ -28,7 +28,8 @@ namespace AVF.MemberManagement.Console
             DateTime datStart = new DateTime(iJahr, 1, 1);
             DateTime datEnd = new DateTime(iJahr, 12, 31);
 
-            var trainingsInPeriod = db.TrainingsInPeriod( -1, datStart, datEnd );
+            int[,] MatrixKursMitglieder = db.TrainingParticipation( datStart, datEnd );
+
 
             OutputFile ofile = new OutputFile( "Trainingsteilnahme.txt", db );
 
@@ -38,8 +39,8 @@ namespace AVF.MemberManagement.Console
             ofile.Write("                       Mitglied  ");
             foreach (var kurs in db.Kurse())
             {
-                string weekDay = db.WeekDay(kurs.WochentagID); 
-                ofile.Write($"    { weekDay.Substring( 0, 2 ) } ");
+                string weekDay = db.WeekDay(kurs.WochentagID).Substring(0, 2); 
+                ofile.Write($"    { weekDay } ");
             }
             ofile.WriteLine( " Lehrgänge" );
 
@@ -47,54 +48,43 @@ namespace AVF.MemberManagement.Console
             foreach (var kurs in db.Kurse())
                 ofile.Write($" {kurs.Zeit:hh}:{kurs.Zeit:mm} ");
             ofile.WriteLine(" Sondertr.  Summe");
+
             ofile.WriteLine();
 
-            NrOfTrainings[] aNrOfTrainings = new NrOfTrainings[db.MaxMitgliedsNr() + 1];
+            ///////////////////////////////////////////////////
 
-            System.Console.WriteLine("acquire data");
-            for (int memberId = 0; memberId < aNrOfTrainings.Length; memberId++)
             {
-                System.Console.Write($"Member {memberId}\r");
-                aNrOfTrainings[memberId] = 
-                    new NrOfTrainings(
-                                         memberId, 
-                                         db.AnzahleBesuche( memberId, trainingsInPeriod )
-                                     );
-            }
+                int iNrOfRows = MatrixKursMitglieder.GetLength(0);
+                int iNrOfCols = MatrixKursMitglieder.GetLength(1);
 
-            System.Console.WriteLine();
-            System.Console.WriteLine("sorting");
-            Array.Sort(aNrOfTrainings);
-            System.Console.WriteLine("generate output");
+                int[] RowSum = new int[iNrOfRows];
+                int[] ColSum = new int[iNrOfCols];
 
-            int iNrOfKurse = db.Kurse().Count();
-            int[] aAnzahlBesucheInKurs = new int[iNrOfKurse + 1];
-
-            for (int index = 0; index < aNrOfTrainings.Length; index++)
-            {
-                if (aNrOfTrainings[index].iCount > 0)
-                {
-                    int memberId = aNrOfTrainings[index].memberId;
-                    System.Console.Write($"Member {memberId}\r");
-                    ofile.WriteMitglied( memberId );
-
-                    foreach (var kurs in db.Kurse())
+                for (int iRow = 0; iRow < RowSum.Length; ++iRow)
+                    for (int iCol = 0; iCol < ColSum.Length; ++iCol)
                     {
-                        aAnzahlBesucheInKurs[kurs.Id] += WriteNrOfParticipations( db, ofile, trainingsInPeriod, kurs.Id, memberId);
+                        RowSum[iRow] += MatrixKursMitglieder[iRow, iCol];
+                        ColSum[iCol] += MatrixKursMitglieder[iRow, iCol];
                     }
 
-                    aAnzahlBesucheInKurs[iNrOfKurse] += WriteNrOfParticipations( db, ofile, trainingsInPeriod, null, memberId);
-
-                    ofile.WriteLine($"{ aNrOfTrainings[index].iCount, 11 }");
+                for (int iRow = 0; iRow < iNrOfRows; ++iRow)
+                {
+                    if (RowSum[iRow] > 0)
+                    {
+                        ofile.WriteMitglied(iRow);
+                        for (int iCol = 0; iCol < iNrOfCols; ++iCol)
+                            ofile.WriteNumber(MatrixKursMitglieder[iRow, iCol]);
+                        ofile.WriteNumber(RowSum[iRow]);
+                        ofile.WriteLine();
+                    }
                 }
+
+                ofile.Write("                     Insgesamt  ");
+                for (int iCol = 0; iCol < iNrOfCols; ++iCol)
+                    ofile.WriteNumber(ColSum[iCol]);
+                ofile.WriteLine();
             }
 
-            ofile.Write("                     Insgesamt  ");
-            for (int i = 0; i <= iNrOfKurse; ++i)
-                ofile.Write( $"{ aAnzahlBesucheInKurs[i], 7 }" );
-
-            System.Console.WriteLine();
-            System.Console.WriteLine( "ready" );
             ofile.Close();
         }
     }

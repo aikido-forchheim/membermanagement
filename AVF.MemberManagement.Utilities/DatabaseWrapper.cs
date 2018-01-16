@@ -100,6 +100,11 @@ namespace AVF.MemberManagement.Utilities
             return m_mitglieder.Max(t => t.Id);
         }
 
+        public int MaxKursNr()
+        {
+            return m_kurs.Max(t => t.Id);
+        }
+
         public Beitragsklasse BK(Mitglied mitglied)
         {
             return m_beitragsklasse.Single(s => s.Id == mitglied.BeitragsklasseID);
@@ -127,7 +132,15 @@ namespace AVF.MemberManagement.Utilities
 
         public Mitglied MitgliedFromId(int id)
         {
-            return m_mitglieder.Single(s => s.Id == id);
+            if (m_mitglieder.Exists(s => s.Id == id))
+                return m_mitglieder.Single(s => s.Id == id);
+            else
+                return null;
+        }
+
+        public Training TrainingFromId(int id)
+        {
+            return m_trainings.Single(s => s.Id == id);
         }
 
         public Boolean HatTeilgenommen(int member, Training training)
@@ -224,6 +237,25 @@ namespace AVF.MemberManagement.Utilities
         public List<Training> AllTrainings()
         {
             return m_trainings;
+        }
+
+        public int[,] TrainingParticipation( DateTime datStart, DateTime datEnd )
+        {
+            int colKursNull = MaxKursNr();
+
+            int iNrOfRows = MaxMitgliedsNr() + 1; // One additional row for pseudo member with Id = -1
+            int iNrOfCols = MaxKursNr() + 1;      // One additional col for "Lehrgänge"
+            int[,] result = new int[iNrOfRows, iNrOfCols];
+
+            foreach (var trainingsTeilnahme in m_trainingsTeilnahme.Where(p => TrainingFromId(p.TrainingID).Termin > datStart && TrainingFromId(p.TrainingID).Termin < datEnd).ToList())
+            {
+                int? idKurs = TrainingFromId(trainingsTeilnahme.TrainingID).KursID;
+                int iCol = idKurs.HasValue ? idKurs.Value : colKursNull;
+                int iRow = trainingsTeilnahme.MitgliedID;
+                ++result[iRow, iCol];
+            }
+
+            return result;
         }
 
         public decimal CalcTravelExpenses(int? idMitglied, DateTime termin)

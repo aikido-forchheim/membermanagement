@@ -20,6 +20,11 @@ namespace AVF.MemberManagement.Console
             Write(s.PadRight(11));
         }
 
+        public void WriteNumber( int i )
+        {
+            Write((i > 0) ? $"{ i, 7 }" : "       ");
+        }
+
         public void WriteTraining(Training training, string weekDay)
         {
             Write($"{training.Termin:yyyy-MM-dd} {weekDay,-10} {training.Zeit:hh}:{training.Zeit:mm} {training.DauerMinuten,3} ");
