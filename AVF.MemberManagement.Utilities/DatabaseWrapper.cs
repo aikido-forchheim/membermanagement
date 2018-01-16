@@ -45,6 +45,7 @@ namespace AVF.MemberManagement.Utilities
 
         private int[] m_RowSum;
         private int[] m_ColSum;
+        private int   m_SumSum;
 
         private string FormatNumber(int i) 
             => (i > 0) ? $"{ i,7 }" : "       ";
@@ -97,6 +98,7 @@ namespace AVF.MemberManagement.Utilities
                 ++m_Matrix[iRow].aiValues[iCol];
                 ++m_ColSum[iCol];
                 ++m_RowSum[iRow];
+                ++m_SumSum;
             }
 
             Array.Sort(m_RowSum, m_Matrix);
@@ -108,20 +110,37 @@ namespace AVF.MemberManagement.Utilities
         {
             string[,] matrix;
 
-            int iNrOfMatrixRows = 0;
-            int iNrOfMatrixCols = m_iNrOfCols;
+            int iNrOfMatrixRows = 3;  // 3 for header rows
 
             for (int iRow = 0; iRow < m_iNrOfRows; ++iRow)
                 if (m_RowSum[iRow] > 0)
                     ++iNrOfMatrixRows;
 
-            ++iNrOfMatrixRows;  // + 1 for col sum
-            ++iNrOfMatrixCols;  // + 1 for row sum
-            ++iNrOfMatrixCols;  // + 1 for member
+            iNrOfMatrixRows += 2;  // + 2 for col sum
+
+            int iNrOfMatrixCols = m_iNrOfCols;  
+            ++iNrOfMatrixCols;                  // + 1 for member
+            ++iNrOfMatrixCols;                  // + 1 for row sum
 
             matrix = new string[iNrOfMatrixRows, iNrOfMatrixCols];
 
-            int iStringRow = 0;
+            matrix[0, 0] = "                       Mitglied  ";
+            matrix[1, 0] = "                         Nummer  ";
+
+            for (int iCol = 1; iCol < m_iNrOfCols - 1; ++iCol)
+            {
+                Kurs kurs = m_db.KursFromId(iCol);
+                matrix[0, iCol] = $"    { m_db.WeekDay(kurs.WochentagID).Substring(0, 2) } ";
+                matrix[1, iCol] = $" {kurs.Zeit:hh}:{kurs.Zeit:mm} ";
+            }
+            matrix[0, m_iNrOfCols - 1] = " Lehrgänge";
+            matrix[1, m_iNrOfCols - 1] = " Sondertr.";
+
+            matrix[0, m_iNrOfCols] = "";
+            matrix[1, m_iNrOfCols] = " Summe";
+
+            int iStringRow = 3;
+
             for (int iRow = 0; iRow < m_iNrOfRows; ++iRow)
             {
                 if (m_RowSum[iRow] > 0)
@@ -131,15 +150,18 @@ namespace AVF.MemberManagement.Utilities
                     {
                         matrix[iStringRow, iCol] = FormatNumber(m_Matrix[iRow].aiValues[iCol-1]);
                     }
-                    matrix[iStringRow, iNrOfMatrixCols - 1] = FormatNumber(m_RowSum[iRow]);
+                    matrix[iStringRow, m_iNrOfCols] = "  " + FormatNumber(m_RowSum[iRow]);
                     ++iStringRow;
                 }
             }
+
+            ++iStringRow;
             matrix[iStringRow, 0] = "                     Insgesamt  ";
-            for (int iCol = 1; iCol < iNrOfMatrixCols - 1; ++iCol)
+            for (int iCol = 1; iCol < m_iNrOfCols; ++iCol)
             {
                 matrix[iStringRow, iCol] = FormatNumber(m_ColSum[iCol-1]);
             }
+            matrix[iStringRow, m_iNrOfCols] = "  " + FormatNumber(m_SumSum);
 
             return matrix;
         }

@@ -22,46 +22,25 @@ namespace AVF.MemberManagement.Console
             return iCount;
         }
 
-        public void Main(DatabaseWrapper db)
+        public void Main(DatabaseWrapper db, int iJahr)
         {
-            int iJahr = 2017;
             DateTime datStart = new DateTime(iJahr, 1, 1);
             DateTime datEnd = new DateTime(iJahr, 12, 31);
-
-            TrainingParticipation tp = new TrainingParticipation(db, datStart, datEnd);
 
             OutputFile ofile = new OutputFile( "Trainingsteilnahme.txt", db );
 
             ofile.WriteLine($"Trainingsteilnahme    {datStart:dd.MM.yyyy} bis {datEnd:dd.MM.yyyy}");
             ofile.WriteLine();
 
-            string[][] ColumnLabels = tp.GetColumnLabels();
+            string[,] matrix = new TrainingParticipation(db, datStart, datEnd).GetMatrix();
 
-            ofile.Write("                       Mitglied  ");
-            foreach (var s in ColumnLabels[0])
-                ofile.Write(s);
-            ofile.WriteLine();
-
-            ofile.Write("                         Nummer  ");
-            foreach (var s in ColumnLabels[1])
-                ofile.Write(s);
-            ofile.WriteLine();
-
-            ofile.WriteLine();
-
-            ///////////////////////////////////////////////////
-
+            for (int iRow = 0; iRow < matrix.GetLength(0); ++iRow)
             {
-                string[,] matrix = tp.GetMatrix();
-
-                for (int iRow = 0; iRow < matrix.GetLength(0); ++iRow)
-                {
-                    for (int iCol = 0; iCol < matrix.GetLength(1); ++iCol)
-                        ofile.Write(matrix[iRow,iCol]);
-                    ofile.WriteLine();
-                }
-
+                for (int iCol = 0; iCol < matrix.GetLength(1); ++iCol)
+                    ofile.Write(matrix[iRow,iCol]);
+                ofile.WriteLine();
             }
+
             ofile.Close();
         }
     }

@@ -77,7 +77,7 @@ namespace AVF.MemberManagement.Console
                             new TeilnahmeKurs().Main(m_dbWrapper);
                             break;
                         case 9:
-                            new Trainingsteilnahme().Main(m_dbWrapper);
+                            new Trainingsteilnahme().Main(m_dbWrapper, 2017);
                             break;
                         default:
                             break;
