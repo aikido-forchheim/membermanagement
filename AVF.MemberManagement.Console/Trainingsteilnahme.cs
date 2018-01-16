@@ -28,63 +28,40 @@ namespace AVF.MemberManagement.Console
             DateTime datStart = new DateTime(iJahr, 1, 1);
             DateTime datEnd = new DateTime(iJahr, 12, 31);
 
-            int[,] MatrixKursMitglieder = db.TrainingParticipation( datStart, datEnd );
-
+            TrainingParticipation tp = new TrainingParticipation(db, datStart, datEnd);
 
             OutputFile ofile = new OutputFile( "Trainingsteilnahme.txt", db );
 
             ofile.WriteLine($"Trainingsteilnahme    {datStart:dd.MM.yyyy} bis {datEnd:dd.MM.yyyy}");
             ofile.WriteLine();
 
+            string[][] ColumnLabels = tp.GetColumnLabels();
+
             ofile.Write("                       Mitglied  ");
-            foreach (var kurs in db.Kurse())
-            {
-                string weekDay = db.WeekDay(kurs.WochentagID).Substring(0, 2); 
-                ofile.Write($"    { weekDay } ");
-            }
-            ofile.WriteLine( " Lehrgänge" );
+            foreach (var s in ColumnLabels[0])
+                ofile.Write(s);
+            ofile.WriteLine();
 
             ofile.Write("                         Nummer  ");
-            foreach (var kurs in db.Kurse())
-                ofile.Write($" {kurs.Zeit:hh}:{kurs.Zeit:mm} ");
-            ofile.WriteLine(" Sondertr.  Summe");
+            foreach (var s in ColumnLabels[1])
+                ofile.Write(s);
+            ofile.WriteLine();
 
             ofile.WriteLine();
 
             ///////////////////////////////////////////////////
 
             {
-                int iNrOfRows = MatrixKursMitglieder.GetLength(0);
-                int iNrOfCols = MatrixKursMitglieder.GetLength(1);
+                string[,] matrix = tp.GetMatrix();
 
-                int[] RowSum = new int[iNrOfRows];
-                int[] ColSum = new int[iNrOfCols];
-
-                for (int iRow = 0; iRow < RowSum.Length; ++iRow)
-                    for (int iCol = 0; iCol < ColSum.Length; ++iCol)
-                    {
-                        RowSum[iRow] += MatrixKursMitglieder[iRow, iCol];
-                        ColSum[iCol] += MatrixKursMitglieder[iRow, iCol];
-                    }
-
-                for (int iRow = 0; iRow < iNrOfRows; ++iRow)
+                for (int iRow = 0; iRow < matrix.GetLength(0); ++iRow)
                 {
-                    if (RowSum[iRow] > 0)
-                    {
-                        ofile.WriteMitglied(iRow);
-                        for (int iCol = 0; iCol < iNrOfCols; ++iCol)
-                            ofile.WriteNumber(MatrixKursMitglieder[iRow, iCol]);
-                        ofile.WriteNumber(RowSum[iRow]);
-                        ofile.WriteLine();
-                    }
+                    for (int iCol = 0; iCol < matrix.GetLength(1); ++iCol)
+                        ofile.Write(matrix[iRow,iCol]);
+                    ofile.WriteLine();
                 }
 
-                ofile.Write("                     Insgesamt  ");
-                for (int iCol = 0; iCol < iNrOfCols; ++iCol)
-                    ofile.WriteNumber(ColSum[iCol]);
-                ofile.WriteLine();
             }
-
             ofile.Close();
         }
     }

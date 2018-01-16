@@ -24,6 +24,129 @@ namespace AVF.MemberManagement.Utilities
         public int CompareTo( NrOfTrainings other ) => other.iCount - iCount;
     };
 
+    public class TrainingParticipation
+    {
+        private DatabaseWrapper m_db;
+
+        private DateTime m_datStart;
+        private DateTime m_datEnd;
+
+        private struct Row
+        {
+            public int   idMember;
+            public int[] aiValues;
+        };
+
+        private int m_iNrOfCols;
+        private int m_iNrOfRows;
+
+        private string[][] m_ColumnLabels;
+        private Row[]      m_Matrix;
+
+        private int[] m_RowSum;
+        private int[] m_ColSum;
+
+        private string FormatNumber(int i) 
+            => (i > 0) ? $"{ i,7 }" : "       ";
+
+        public string FormatMitglied(Mitglied mitglied)
+            => $"{ mitglied.Nachname,-12 } { mitglied.Vorname,-12 } ({ mitglied.Id,3 }) ";
+
+        public string FormatMitglied(int idMember)
+            => FormatMitglied(m_db.MitgliedFromId(idMember));
+
+        public TrainingParticipation( DatabaseWrapper db, DateTime datStart, DateTime datEnd )
+        {
+            m_db = db;
+            m_datStart = datStart;
+            m_datEnd = datEnd;
+
+            int colKursNull = m_db.MaxKursNr();
+
+            m_iNrOfRows = m_db.MaxMitgliedsNr() + 1; // One additional row for pseudo member with Id = -1
+            m_iNrOfCols = m_db.MaxKursNr() + 1;      // One additional col for "Lehrgänge"
+
+            m_ColumnLabels    = new string[2][];
+            m_ColumnLabels[0] = new string[m_iNrOfCols];
+            m_ColumnLabels[1] = new string[m_iNrOfCols];
+            for (int iCol = 0; iCol < m_iNrOfCols - 1; ++iCol)
+            {
+                Kurs kurs = m_db.KursFromId( iCol + 1 );
+                m_ColumnLabels[0][iCol] = $"    { db.WeekDay(kurs.WochentagID).Substring(0, 2) } ";
+                m_ColumnLabels[1][iCol] = $" {kurs.Zeit:hh}:{kurs.Zeit:mm} ";
+            }
+            m_ColumnLabels[0][m_iNrOfCols - 1] = " Lehrgänge";
+            m_ColumnLabels[1][m_iNrOfCols - 1] = " Sondertr.  Summe";
+
+            m_Matrix = new Row[m_iNrOfRows];
+
+            for (int iRow = 0; iRow < m_iNrOfRows; ++iRow)
+            {
+                m_Matrix[iRow].aiValues = new int[m_iNrOfCols];
+                m_Matrix[iRow].idMember = iRow;
+            }
+
+            m_RowSum = new int[m_iNrOfRows];
+            m_ColSum = new int[m_iNrOfCols];
+
+            foreach (var trainingsTeilnahme in m_db.TrainingsTeilnahme(m_datStart, m_datEnd))
+            {
+                int? idKurs = m_db.TrainingFromId(trainingsTeilnahme.TrainingID).KursID;
+                int iCol = idKurs.HasValue ? (idKurs.Value-1) : colKursNull;
+                int iRow = trainingsTeilnahme.MitgliedID;
+                ++m_Matrix[iRow].aiValues[iCol];
+                ++m_ColSum[iCol];
+                ++m_RowSum[iRow];
+            }
+
+            Array.Sort(m_RowSum, m_Matrix);
+            Array.Reverse(m_Matrix);
+            Array.Reverse(m_RowSum);
+        }
+
+        public string[,] GetMatrix()
+        {
+            string[,] matrix;
+
+            int iNrOfMatrixRows = 0;
+            int iNrOfMatrixCols = m_iNrOfCols;
+
+            for (int iRow = 0; iRow < m_iNrOfRows; ++iRow)
+                if (m_RowSum[iRow] > 0)
+                    ++iNrOfMatrixRows;
+
+            ++iNrOfMatrixRows;  // + 1 for col sum
+            ++iNrOfMatrixCols;  // + 1 for row sum
+            ++iNrOfMatrixCols;  // + 1 for member
+
+            matrix = new string[iNrOfMatrixRows, iNrOfMatrixCols];
+
+            int iStringRow = 0;
+            for (int iRow = 0; iRow < m_iNrOfRows; ++iRow)
+            {
+                if (m_RowSum[iRow] > 0)
+                {
+                    matrix[iStringRow, 0] = FormatMitglied(m_Matrix[iRow].idMember);
+                    for (int iCol = 1; iCol < m_iNrOfCols; ++iCol)
+                    {
+                        matrix[iStringRow, iCol] = FormatNumber(m_Matrix[iRow].aiValues[iCol-1]);
+                    }
+                    matrix[iStringRow, iNrOfMatrixCols - 1] = FormatNumber(m_RowSum[iRow]);
+                    ++iStringRow;
+                }
+            }
+            matrix[iStringRow, 0] = "                     Insgesamt  ";
+            for (int iCol = 1; iCol < iNrOfMatrixCols - 1; ++iCol)
+            {
+                matrix[iStringRow, iCol] = FormatNumber(m_ColSum[iCol-1]);
+            }
+
+            return matrix;
+        }
+
+        public string[][] GetColumnLabels() => m_ColumnLabels;
+    }
+
     public class DatabaseWrapper
     {
         private List<Training> m_trainings;
@@ -191,24 +314,22 @@ namespace AVF.MemberManagement.Utilities
         }
 
         public List<Mitglied> Mitglieder()
-        {
-            return m_mitglieder;
-        }
+            => m_mitglieder;
 
         public List<Kurs> Kurse()
-        {
-            return m_kurs;
-        }
+            => m_kurs;
 
-        public List<Pruefung> Pruefungen()
-        {
-            return m_pruefung;
-        }
+        public Kurs KursFromId(int id) 
+            => m_kurs.Single(s => s.Id == id);
+        
+        public List<Pruefung> Pruefungen() 
+            => m_pruefung;
 
-        public Graduierung GraduierungFromId(int id)
-        {
-            return m_graduierung.Single(s => s.Id == id);
-        }
+        public Graduierung GraduierungFromId(int id) 
+            => m_graduierung.Single(s => s.Id == id);
+    
+        public List<TrainingsTeilnahme> TrainingsTeilnahme( DateTime datStart, DateTime datEnd )
+            => m_trainingsTeilnahme.Where(p => TrainingFromId(p.TrainingID).Termin > datStart && TrainingFromId(p.TrainingID).Termin < datEnd).ToList();
 
         public List<Training> Filter(List<Training> list, int? idKurs)
             => list.Where(training => training.KursID == idKurs).ToList();
@@ -235,28 +356,7 @@ namespace AVF.MemberManagement.Utilities
         }
 
         public List<Training> AllTrainings()
-        {
-            return m_trainings;
-        }
-
-        public int[,] TrainingParticipation( DateTime datStart, DateTime datEnd )
-        {
-            int colKursNull = MaxKursNr();
-
-            int iNrOfRows = MaxMitgliedsNr() + 1; // One additional row for pseudo member with Id = -1
-            int iNrOfCols = MaxKursNr() + 1;      // One additional col for "Lehrgänge"
-            int[,] result = new int[iNrOfRows, iNrOfCols];
-
-            foreach (var trainingsTeilnahme in m_trainingsTeilnahme.Where(p => TrainingFromId(p.TrainingID).Termin > datStart && TrainingFromId(p.TrainingID).Termin < datEnd).ToList())
-            {
-                int? idKurs = TrainingFromId(trainingsTeilnahme.TrainingID).KursID;
-                int iCol = idKurs.HasValue ? idKurs.Value : colKursNull;
-                int iRow = trainingsTeilnahme.MitgliedID;
-                ++result[iRow, iCol];
-            }
-
-            return result;
-        }
+            => m_trainings;
 
         public decimal CalcTravelExpenses(int? idMitglied, DateTime termin)
         {

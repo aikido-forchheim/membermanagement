@@ -28,7 +28,7 @@ namespace AVF.MemberManagement.Console
                 DatabaseWrapper m_dbWrapper;
                 m_dbWrapper = new DatabaseWrapper();
                 System.Console.WriteLine("read database");
-                m_dbWrapper.ReadTables( Container );
+                m_dbWrapper.ReadTables(Container);
 
                 System.Console.Clear();
 
