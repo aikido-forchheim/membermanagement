@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AVF.MemberManagement.StandardLibrary.Tbo;
-using AVF.MemberManagement.Utilities;
+using AVF.MemberManagement.BusinessLogic;
 
 namespace AVF.MemberManagement.Console
 {
@@ -27,19 +27,16 @@ namespace AVF.MemberManagement.Console
             DateTime datStart = new DateTime(iJahr, 1, 1);
             DateTime datEnd = new DateTime(iJahr, 12, 31);
 
+            MemberVsCourse tp = new MemberVsCourse(db, datStart, datEnd);
+
             OutputFile ofile = new OutputFile( "Trainingsteilnahme.txt", db );
 
             ofile.WriteLine($"Trainingsteilnahme    {datStart:dd.MM.yyyy} bis {datEnd:dd.MM.yyyy}");
             ofile.WriteLine();
 
-            string[,] matrix = new TrainingParticipation(db, datStart, datEnd).GetMatrix();
+            string[,] matrix = tp.GetMatrix();
 
-            for (int iRow = 0; iRow < matrix.GetLength(0); ++iRow)
-            {
-                for (int iCol = 0; iCol < matrix.GetLength(1); ++iCol)
-                    ofile.Write(matrix[iRow,iCol]);
-                ofile.WriteLine();
-            }
+            ofile.WriteMatrix(matrix);
 
             ofile.Close();
         }

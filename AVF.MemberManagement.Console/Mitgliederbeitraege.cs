@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
-using AVF.MemberManagement.Utilities;
+using AVF.MemberManagement.BusinessLogic;
 
 namespace AVF.MemberManagement.Console
 {

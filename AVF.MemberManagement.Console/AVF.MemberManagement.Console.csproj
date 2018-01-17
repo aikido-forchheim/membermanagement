@@ -89,7 +89,6 @@
     <Compile Include="ClassPrototypeGenerator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BusinessLogic.cs" />
     <Compile Include="StundensatzKalkulator.cs" />
     <Compile Include="TeilnahmeKurs.cs" />
     <Compile Include="Trainingsteilnahme.cs" />
@@ -99,13 +98,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AVF.MemberManagement.StandardLibrary\AVF.MemberManagement.StandardLibrary.csproj">
-      <Project>{06b2e0c1-3277-491c-9aba-a53bbf260f6a}</Project>
-      <Name>AVF.MemberManagement.StandardLibrary</Name>
+    <ProjectReference Include="..\AVF.MemberManagement.BusinessLogic\AVF.MemberManagement.BusinessLogic.csproj">
+      <Project>{7f665b64-c06f-4fe8-8b7e-33d7734ddea5}</Project>
+      <Name>AVF.MemberManagement.BusinessLogic</Name>
     </ProjectReference>
-    <ProjectReference Include="..\AVF.MemberManagement.Utilities\AVF.MemberManagement.Utilities.csproj">
-      <Project>{cc67f294-f1db-4db8-ad31-526b5c25ba79}</Project>
-      <Name>AVF.MemberManagement.Utilities</Name>
+    <ProjectReference Include="..\AVF.MemberManagement.StandardLibrary\AVF.MemberManagement.StandardLibrary.csproj">
+      <Project>{b900104e-d6b5-4a65-85fd-57702e0f6d65}</Project>
+      <Name>AVF.MemberManagement.StandardLibrary</Name>
     </ProjectReference>
     <ProjectReference Include="..\AVF.MemberManagement.xUnitIntegrationTests\AVF.MemberManagement.xUnitIntegrationTests.csproj">
       <Project>{63f993d0-1578-4c5a-a467-ac0f2150b0d3}</Project>

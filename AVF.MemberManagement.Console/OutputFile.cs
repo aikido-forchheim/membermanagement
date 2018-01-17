@@ -1,5 +1,5 @@
 ﻿using AVF.MemberManagement.StandardLibrary.Tbo;
-using AVF.MemberManagement.Utilities;
+using AVF.MemberManagement.BusinessLogic;
 
 namespace AVF.MemberManagement.Console
 {
@@ -49,6 +49,16 @@ namespace AVF.MemberManagement.Console
                 WriteMitglied( pruefung.Pruefer );
             else
                 Write($"{pruefung.Bemerkung}");
+        }
+
+        public void WriteMatrix( string [,] matrix )
+        {
+            for (int iRow = 0; iRow < matrix.GetLength(0); ++iRow)
+            {
+                for (int iCol = 0; iCol < matrix.GetLength(1); ++iCol)
+                    Write(matrix[iRow, iCol]);
+                WriteLine();
+            }
         }
     }
 }

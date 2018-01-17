@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq.Expressions;
 using AVF.MemberManagement.Factories;
 using AVF.MemberManagement.xUnitIntegrationTests;
 using Microsoft.Practices.Unity;
-using AVF.MemberManagement.Utilities;
+using AVF.MemberManagement.BusinessLogic;
 
 namespace AVF.MemberManagement.Console
 {
