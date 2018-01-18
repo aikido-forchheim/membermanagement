@@ -22,17 +22,17 @@ namespace AVF.MemberManagement.Console
 
         public void WriteNumber( int i )
         {
-            Write((i > 0) ? $"{ i, 7 }" : "       ");
+            Write( Utilities.FormatNumber(i));
         }
 
         public void WriteTraining(Training training, string weekDay)
         {
-            Write($"{training.Termin:yyyy-MM-dd} {weekDay,-10} {training.Zeit:hh}:{training.Zeit:mm} {training.DauerMinuten,3} ");
+            Write(Utilities.FormatTraining(training, weekDay));
         }
 
         public void WriteMitglied(Mitglied mitglied)
         {
-            Write($"{ mitglied.Nachname,-12 } { mitglied.Vorname,-12 } ({ mitglied.Id,3 }) ");
+            Write(Utilities.FormatMitglied(mitglied));
         }
 
         public void WriteMitglied( int id )

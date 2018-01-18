@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.BusinessLogic;
 
@@ -8,12 +7,6 @@ namespace AVF.MemberManagement.Console
 {
     class Trainingsteilnahme
     {
-        public int[] KursDisplayOrder()
-        {
-            int[] displayOrder = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0 };  // Should be stored in DB
-            return displayOrder;
-        }
-
         private int WriteNrOfParticipations( DatabaseWrapper db, OutputFile ofile, List<Training> trainingsInTimeRange, int ? idKurs, int memberId )
         {
             var list = db.Filter( trainingsInTimeRange, idKurs );

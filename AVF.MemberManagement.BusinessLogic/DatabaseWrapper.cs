@@ -22,7 +22,7 @@ namespace AVF.MemberManagement.BusinessLogic
         public void Increase() => ++iCount;
 
         public int CompareTo( NrOfTrainings other ) => other.iCount - iCount;
-    };
+    }
 
     public class DatabaseWrapper
     {
@@ -103,6 +103,11 @@ namespace AVF.MemberManagement.BusinessLogic
         public int MaxKursNr()
         {
             return m_kurs.Max(t => t.Id);
+        }
+
+        public int MaxTrainingNr()
+        {
+            return m_trainings.Max(t => t.Id);
         }
 
         public Beitragsklasse BK(Mitglied mitglied)
@@ -196,9 +201,9 @@ namespace AVF.MemberManagement.BusinessLogic
         public List<Kurs> Kurse()
             => m_kurs;
 
-        public Kurs KursFromId(int id) 
+        public Kurs KursFromId(int id)
             => m_kurs.Single(s => s.Id == id);
-        
+
         public List<Pruefung> Pruefungen() 
             => m_pruefung;
 
@@ -231,6 +236,9 @@ namespace AVF.MemberManagement.BusinessLogic
 
             return TrainingsInPeriod(idKurs, datStart, datEnd );
         }
+
+        public List<Training> TrainingsInPeriod(DateTime datStart, DateTime datEnd)
+            => TrainingsInPeriod(null, datStart, datEnd);
 
         public List<Training> AllTrainings()
             => m_trainings;

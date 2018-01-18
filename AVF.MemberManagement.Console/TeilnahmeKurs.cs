@@ -11,6 +11,8 @@ namespace AVF.MemberManagement.Console
             DateTime datStart = new DateTime(iJahr, 1, 1);
             DateTime datEnd   = new DateTime(iJahr, 12, 31);
 
+            MemberVsTraining mt = new MemberVsTraining(db, datStart, datEnd);
+
             foreach (var kurs in db.Kurse())
             {
                 OutputFile ofile = new OutputFile($"Kurs_{kurs.Id}.txt", db );
@@ -19,37 +21,7 @@ namespace AVF.MemberManagement.Console
                 ofile.WriteLine($"{db.WeekDay(kurs.WochentagID)} {kurs.Zeit}");
                 ofile.WriteLine($"{datStart:dd.MM.yyyy} bis {datEnd:dd.MM.yyyy}");
 
-                var relevantTrainings = db.TrainingsInPeriod( kurs.Id, datStart, datEnd );
-
-                ofile.Write("                          Monat ");
-                foreach (var training in relevantTrainings)
-                    ofile.Write($"{training.Termin:MM} ");
-                ofile.WriteLine();
-
-                ofile.Write("                            Tag ");
-                foreach (var training in relevantTrainings)
-                    ofile.Write($"{training.Termin:dd} ");
-                ofile.WriteLine("Summe");
-
-                foreach (var mitglied in db.Mitglieder())
-                {
-                    if (db.HatTeilgenommen(mitglied.Id, relevantTrainings))
-                    {
-                        int iCount = 0;
-                        ofile.WriteMitglied(mitglied);
-                        foreach (var training in relevantTrainings)
-                        {
-                            if (db.HatTeilgenommen(mitglied.Id, training))
-                            {
-                                ofile.Write(" X ");
-                                ++iCount;
-                            }
-                            else
-                                ofile.Write("   ");
-                        }
-                        ofile.WriteLine($"{ iCount,3 }");
-                    }
-                }
+                ofile.WriteMatrix(mt.GetMatrix(kurs.Id));
                 ofile.Close();
             }
         }
