@@ -1,13 +1,10 @@
 ﻿using Prism.Commands;
-using Prism.Mvvm;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
+using System.Windows.Input;
 using AVF.MemberManagement.StandardLibrary.Enums;
 using AVF.MemberManagement.StandardLibrary.Models;
 using AVF.MemberManagement.StandardLibrary.Services;
-using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.Views;
 using Prism.Navigation;
 
@@ -41,15 +38,15 @@ namespace AVF.MemberManagement.ViewModels
 
         public EditTrainingPageViewModel(INavigationService navigationService) : base(navigationService)
         {
-
+            EnterParticipantsCommand = new DelegateCommand(EnterParticipants, CanEnterParticipants);
         }
 
-        public override async void OnNavigatedTo(NavigationParameters parameters)
+        public override void OnNavigatedTo(NavigationParameters parameters)
         {
             try
             {
                 if (!parameters.ContainsKey("SelectedTraining")) return;
-                
+
                 SelectedTraining = (TrainingsModel)parameters["SelectedTraining"];
                 SelectedDateString = (string)parameters["SelectedDateString"];
 
@@ -63,20 +60,35 @@ namespace AVF.MemberManagement.ViewModels
             }
         }
 
+        #region EnterParticipantsCommand
+
+        public ICommand EnterParticipantsCommand { get; }
+
         private void EnterParticipants()
         {
+            var updateAnnotation = SelectedTraining.Training.Bemerkung != Annotation;
+
+            SelectedTraining.Training.Bemerkung = Annotation;
+
             if (SelectedTraining.Training.Id == 0)
             {
-                SelectedTraining.Training.Bemerkung = Annotation;
-
                 //TODO: Training anlegen
                 //TODO: Achtung beim zurück von EnterParticipants usw. darf nicht noch mal angelegt werden
             }
-            else
+            else if (updateAnnotation)
             {
-                var enterParticipantsPageName = Globals.Idiom == Idiom.Phone ? nameof(EnterParticipantsPage) : nameof(EnterParticipantsTabletPage);
-                NavigationService.NavigateAsync(enterParticipantsPageName, new NavigationParameters { { "SelectedTraining", SelectedTraining }, { "SelectedDateString", SelectedDateString } });
+                //TODO: Update Traing on change of Bemerkung
             }
+
+            var enterParticipantsPageName = Globals.Idiom == Idiom.Phone ? nameof(EnterParticipantsPage) : nameof(EnterParticipantsTabletPage);
+            NavigationService.NavigateAsync(enterParticipantsPageName, new NavigationParameters { { "SelectedTraining", SelectedTraining }, { "SelectedDateString", SelectedDateString } });
         }
+
+        private bool CanEnterParticipants()
+        {
+            return true;
+        }
+
+        #endregion
     }
 }
