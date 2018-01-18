@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.BusinessLogic;
 
@@ -15,7 +16,7 @@ namespace AVF.MemberManagement.Console
             return iCount;
         }
 
-        public void Main(DatabaseWrapper db, int iJahr)
+        internal async Task Main(DatabaseWrapper db, int iJahr)
         {
             DateTime datStart = new DateTime(iJahr, 1, 1);
             DateTime datEnd = new DateTime(iJahr, 12, 31);

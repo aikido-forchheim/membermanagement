@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Threading.Tasks;
 using AVF.MemberManagement.BusinessLogic;
 
 namespace AVF.MemberManagement.Console
 {
     class TeilnahmeKurs
     {
-        public void Main( DatabaseWrapper db )
+        internal async Task Main( DatabaseWrapper db )
         {
             int iJahr = 2017;
             DateTime datStart = new DateTime(iJahr, 1, 1);

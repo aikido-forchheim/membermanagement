@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.BusinessLogic;
 
@@ -6,7 +7,7 @@ namespace AVF.MemberManagement.Console
 {
     class CheckConsistancy
     {
-        public void Main(DatabaseWrapper db)
+        internal async Task Main(DatabaseWrapper db)
         {
             OutputFile ofile = new OutputFile( "Findings.txt", db );
 

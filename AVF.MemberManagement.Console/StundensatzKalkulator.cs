@@ -1,13 +1,14 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
-using System.Diagnostics;
+//using System.IO;
+//using System.Linq;
+//using System.Diagnostics;
 using System.Collections.Generic;
-using System.Windows.Forms.VisualStyles;
-using AVF.MemberManagement.StandardLibrary.Interfaces;
+//using System.Windows.Forms.VisualStyles;
+//using AVF.MemberManagement.StandardLibrary.Interfaces;
+using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Tbo;
-using Microsoft.Practices.ObjectBuilder2;
-using Microsoft.Practices.Unity;
+//using Microsoft.Practices.ObjectBuilder2;
+//using Microsoft.Practices.Unity;
 using AVF.MemberManagement.BusinessLogic;
 
 namespace AVF.MemberManagement.Console
@@ -174,7 +175,7 @@ namespace AVF.MemberManagement.Console
             return aTrData;
         }
 
-        public void Main( DatabaseWrapper db, int iJahr )
+        internal async Task Main( DatabaseWrapper db, int iJahr )
         {
             m_aTrData = InitTrData( db );
 
