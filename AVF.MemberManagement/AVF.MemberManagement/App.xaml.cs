@@ -87,13 +87,14 @@ namespace AVF.MemberManagement
             Container.RegisterTypeForNavigation<NavigationPage>();
             Container.RegisterTypeForNavigation<MainPage>();
             Container.RegisterTypeForNavigation<RestApiSettingsPage>();
+            Container.RegisterTypeForNavigation<AdvancedSettingsPage>();
             Container.RegisterTypeForNavigation<PasswordPage>();
             Container.RegisterTypeForNavigation<StartPage>();
             Container.RegisterTypeForNavigation<DaySelectionPage>();
             Container.RegisterTypeForNavigation<KursSelectionPage>();
+            Container.RegisterTypeForNavigation<EditTrainingPage>();
             Container.RegisterTypeForNavigation<EnterParticipantsPage>();
             Container.RegisterTypeForNavigation<EnterParticipantsTabletPage>();
-            Container.RegisterTypeForNavigation<AdvancedSettingsPage>();
         }
 
         private async Task RefreshCache()

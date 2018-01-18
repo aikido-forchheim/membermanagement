@@ -84,9 +84,9 @@ namespace AVF.MemberManagement.ViewModels
 
                 _trainingsCollection.Clear();
 
-                SelectedDate = (DateTime) parameters["Date"];
+                SelectedDate = (DateTime)parameters["Date"];
 
-                var weekday = (int) SelectedDate.DayOfWeek;
+                var weekday = (int)SelectedDate.DayOfWeek;
                 if (weekday == 0) weekday = 7;
 
                 var wochentage = await _wochentageRepository.GetAsync();
@@ -109,7 +109,22 @@ namespace AVF.MemberManagement.ViewModels
 
                     var existingTrainings =
                         trainings.Where(t => t.KursID == classModel.Id && t.Termin == SelectedDate);
+
                     var training = existingTrainings.SingleOrDefault();
+
+                    // ReSharper disable once ConvertIfStatementToNullCoalescingExpression
+                    if (training == null)
+                    {
+                        training = new Training
+                        {
+                            Kindertraining = kurs.Kindertraining,
+                            Trainer = kurs.Trainer,
+                            Kotrainer1 = kurs.Kotrainer1,
+                            Kotrainer2 = kurs.Kotrainer2,
+                            Zeit = kurs.Zeit,
+                            Termin = SelectedDate
+                        };
+                    }
 
                     var trainingsModel = new TrainingsModel
                     {
@@ -121,7 +136,7 @@ namespace AVF.MemberManagement.ViewModels
                     trainigModelsWithoutSort.Add(trainingsModel);
                 }
 
-                foreach (var trainingsModel in trainigModelsWithoutSort.OrderBy(t=>t.Training.Zeit))
+                foreach (var trainingsModel in trainigModelsWithoutSort.OrderBy(t => t.Training.Zeit))
                 {
                     Trainings.Add(trainingsModel);
                 }
@@ -138,15 +153,7 @@ namespace AVF.MemberManagement.ViewModels
 
         private void EnterParticipants()
         {
-            if (Globals.Idiom == Idiom.Phone)
-            {
-                NavigationService.NavigateAsync(nameof(EnterParticipantsPage), new NavigationParameters { { "SelectedTraining", SelectedTraining }, { "SelectedDateString", SelectedDateString } });
-            }
-            else
-            {
-                NavigationService.NavigateAsync(nameof(EnterParticipantsTabletPage), new NavigationParameters { { "SelectedTraining", SelectedTraining }, { "SelectedDateString", SelectedDateString } });
-
-            }
+            NavigationService.NavigateAsync(nameof(EditTrainingPage), new NavigationParameters { { "SelectedTraining", SelectedTraining }, { "SelectedDateString", SelectedDateString } });
         }
 
         private bool CanEnterParticipants()

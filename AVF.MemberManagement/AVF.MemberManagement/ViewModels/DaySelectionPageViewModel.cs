@@ -16,11 +16,33 @@ namespace AVF.MemberManagement.ViewModels
         public DateTime SelectedDate
         {
             get => _selectedDate;
-            set => SetProperty(ref _selectedDate, value);
+            set
+            {
+                SetProperty(ref _selectedDate, value);
+
+                if (_selectedDate.Day == DateTime.Now.Day && _selectedDate.Month == DateTime.Now.Month &&
+                    _selectedDate.Year == DateTime.Now.Year)
+                {
+                    ButtonText = "Heute";
+                }
+                else
+                {
+                    ButtonText = $"{_selectedDate.Day}.{_selectedDate.Month}.{_selectedDate.Year}";
+                }
+            }
         }
 
         public DateTime MinDate { get; set; }
         public DateTime MaxDate { get; set; }
+
+
+        private string _buttonText = "Heute";
+
+        public string ButtonText
+        {
+            get => _buttonText;
+            set => SetProperty(ref _buttonText, value);
+        }
 
         public DaySelectionPageViewModel(INavigationService navigationService) : base(navigationService)
         {
