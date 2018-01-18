@@ -11,9 +11,23 @@ namespace AVF.MemberManagement.ViewModels
 {
     public class DaySelectionPageViewModel : ViewModelBase
     {
+        private DateTime _selectedDate = DateTime.Now;
+
+        public DateTime SelectedDate
+        {
+            get => _selectedDate;
+            set => SetProperty(ref _selectedDate, value);
+        }
+
+        public DateTime MinDate { get; set; }
+        public DateTime MaxDate { get; set; }
+
         public DaySelectionPageViewModel(INavigationService navigationService) : base(navigationService)
         {
             Title = "Trainingsteilnahme";
+
+            MinDate = DateTime.Now - new TimeSpan(64, 0, 0, 0);
+            MaxDate = DateTime.Now;
 
             NavigateToKursSelectionPageCommand = new DelegateCommand(NavigateToKursSelectionPage, CanNavigateToKursSelectionPage);
         }
@@ -24,7 +38,7 @@ namespace AVF.MemberManagement.ViewModels
 
         private void NavigateToKursSelectionPage()
         {
-            var navigationParameters = new NavigationParameters {{"Date", new DateTime(2016, 10, 11)}};
+            var navigationParameters = new NavigationParameters {{"Date", SelectedDate}};
             NavigationService.NavigateAsync(nameof(KursSelectionPage), navigationParameters);
         }
 
