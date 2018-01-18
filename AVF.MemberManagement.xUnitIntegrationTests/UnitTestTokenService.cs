@@ -24,16 +24,14 @@ namespace AVF.MemberManagement.xUnitIntegrationTests
         public override async Task<string> GetTokenAsync(RestApiAccount restApiAccount)
         {
             var start = Environment.GetEnvironmentVariable(AvfStart);
+            var tokenEnvironmentVariable = Environment.GetEnvironmentVariable(AvfToken);
 
-            if (start == null)
+            if (start == null || start != Thread.CurrentThread.ManagedThreadId.ToString())
             {
-                Thread.Sleep(500);
-            }
-            else
-            {
-                if (Thread.CurrentThread.ManagedThreadId.ToString() != start)
+                while (tokenEnvironmentVariable == null)
                 {
-                    Thread.Sleep(500);
+                    Thread.Sleep(100);
+                    tokenEnvironmentVariable = Environment.GetEnvironmentVariable(AvfToken);
                 }
             }
 
@@ -41,7 +39,7 @@ namespace AVF.MemberManagement.xUnitIntegrationTests
 
             var apiUrl = new Uri(restApiAccount.ApiUrl);
 
-            var tokenEnvironmentVariable = Environment.GetEnvironmentVariable(AvfToken);
+            tokenEnvironmentVariable = Environment.GetEnvironmentVariable(AvfToken);
             var sessionIdEnvironmentVariable = Environment.GetEnvironmentVariable(AvfPhpSessionId);
 
             Debug.WriteLine(tokenEnvironmentVariable);
