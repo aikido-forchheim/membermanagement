@@ -93,7 +93,9 @@ namespace AVF.MemberManagement.Console
             m_memberList.Sort();
 
             int iGradIdLast = 0;
-            foreach(ComparableMember cmem in m_memberList)
+            DateTime datFirstReliableData = new DateTime(2017, 1, 1);
+            List<TrainingsTeilnahme> tn = db.TrainingsTeilnahme(datFirstReliableData, DateTime.Now);
+            foreach (ComparableMember cmem in m_memberList)
             {
                 Graduierung grad     = db.GraduierungFromId(cmem.GetGraduierung());
                 Mitglied    mitglied = db.MitgliedFromId(cmem.GetMemberId());
@@ -115,6 +117,12 @@ namespace AVF.MemberManagement.Console
                 ofile.Write($"{ mitglied.Eintritt:yyyy-MM-dd} ");
                 ofile.Write($"{ dateGrad:yyyy-MM-dd} ");
                 ofile.Write($"{ dateNext:yyyy-MM-dd} ");
+
+                if (dateGrad < datFirstReliableData)
+                    ofile.Write("> ");
+                int iCount = db.Filter(db.Filter(tn, dateGrad, DateTime.Now), mitglied.Id).Count;
+                ofile.Write($" { iCount }");
+
                 ofile.WriteLine( );
             }
 

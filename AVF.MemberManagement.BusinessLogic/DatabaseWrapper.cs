@@ -95,45 +95,29 @@ namespace AVF.MemberManagement.BusinessLogic
             return 0;
         }
 
-        public int MaxMitgliedsNr()
-        {
-            return m_mitglieder.Max(t => t.Id);
-        }
+        public int MaxMitgliedsNr() 
+            => m_mitglieder.Max(t => t.Id);
 
-        public int MaxKursNr()
-        {
-            return m_kurs.Max(t => t.Id);
-        }
+        public int MaxKursNr() 
+            => m_kurs.Max(t => t.Id);
 
-        public int MaxTrainingNr()
-        {
-            return m_trainings.Max(t => t.Id);
-        }
+        public int MaxTrainingNr() 
+            => m_trainings.Max(t => t.Id);
 
-        public Beitragsklasse BK(Mitglied mitglied)
-        {
-            return m_beitragsklasse.Single(s => s.Id == mitglied.BeitragsklasseID);
-        }
+        public Beitragsklasse BK(Mitglied mitglied) 
+            => m_beitragsklasse.Single(s => s.Id == mitglied.BeitragsklasseID);
 
-        public string BK_Text(Mitglied mitglied)
-        {
-            return BK(mitglied).BeitragsklasseRomanNumeral.ToString();
-        }
+        public string BK_Text(Mitglied mitglied) 
+            => BK(mitglied).BeitragsklasseRomanNumeral.ToString();
 
-        public int Familienrabatt(Mitglied mitglied)
-        {
-            return m_familienrabatt.Single(s => s.Id == mitglied.Familienmitglied).Faktor;
-        }
+        public int Familienrabatt(Mitglied mitglied) 
+            => m_familienrabatt.Single(s => s.Id == mitglied.Familienmitglied).Faktor;
 
-        public string Trainerstufe(int i)
-        {
-            return m_trainerStufe.Single(s => s.Id == i).Bezeichnung;
-        }
+        public string Trainerstufe(int i) 
+            => m_trainerStufe.Single(s => s.Id == i).Bezeichnung;
 
-        public int MaxTrainerstufe()
-        {
-            return m_trainerStufe.Max(t => t.Id);
-        }
+        public int MaxTrainerstufe 
+            => m_trainerStufe.Max(t => t.Id);
 
         public Mitglied MitgliedFromId(int id)
         {
@@ -143,15 +127,11 @@ namespace AVF.MemberManagement.BusinessLogic
                 return null;
         }
 
-        public Training TrainingFromId(int id)
-        {
-            return m_trainings.Single(s => s.Id == id);
-        }
+        public Training TrainingFromId(int id) 
+            => m_trainings.Single(s => s.Id == id);
 
-        public Boolean HatTeilgenommen(int member, Training training)
-        {
-            return m_trainingsTeilnahme.Exists(x => (x.MitgliedID == member) && (x.TrainingID == training.Id));
-        }
+        public Boolean HatTeilgenommen(int member, Training training) 
+            => m_trainingsTeilnahme.Exists(x => (x.MitgliedID == member) && (x.TrainingID == training.Id));
 
         public Boolean HatTeilgenommen(int member, List<Training> trainings)
         {
@@ -202,16 +182,22 @@ namespace AVF.MemberManagement.BusinessLogic
             => m_kurs;
 
         public Kurs KursFromId(int id)
-            => m_kurs.Single(s => s.Id == id);
-
+            => m_kurs.Single(s => s.Id == id);     
+        
         public List<Pruefung> Pruefungen() 
             => m_pruefung;
 
         public Graduierung GraduierungFromId(int id) 
             => m_graduierung.Single(s => s.Id == id);
-    
-        public List<TrainingsTeilnahme> TrainingsTeilnahme( DateTime datStart, DateTime datEnd )
-            => m_trainingsTeilnahme.Where(p => TrainingFromId(p.TrainingID).Termin > datStart && TrainingFromId(p.TrainingID).Termin < datEnd).ToList();
+
+        public List<TrainingsTeilnahme> Filter(List<TrainingsTeilnahme> list, DateTime datStart, DateTime datEnd)
+            => list.Where(p => TrainingFromId(p.TrainingID).Termin > datStart && TrainingFromId(p.TrainingID).Termin < datEnd).ToList();
+
+        public List<TrainingsTeilnahme> Filter(List<TrainingsTeilnahme> list, int idMember)
+            => list.Where(p => p.MitgliedID == idMember).ToList();
+
+        public List<TrainingsTeilnahme> TrainingsTeilnahme(DateTime datStart, DateTime datEnd)
+            => Filter( m_trainingsTeilnahme, datStart, datEnd).ToList();
 
         public List<Training> Filter(List<Training> list, int? idKurs)
             => list.Where(training => training.KursID == idKurs).ToList();
@@ -237,7 +223,7 @@ namespace AVF.MemberManagement.BusinessLogic
             return TrainingsInPeriod(idKurs, datStart, datEnd );
         }
 
-        public List<Training> TrainingsInPeriod(DateTime datStart, DateTime datEnd)
+        public List<Training> TrainingsInPeriod(DateTime datStart, DateTime datEnd) 
             => TrainingsInPeriod(null, datStart, datEnd);
 
         public List<Training> AllTrainings()

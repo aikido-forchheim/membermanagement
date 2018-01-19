@@ -42,8 +42,9 @@ namespace AVF.MemberManagement.Console
                     System.Console.WriteLine("5: Graduierungsliste");
                     System.Console.WriteLine("6: Mitgliederbeiträge");
                     System.Console.WriteLine("7: Konsistenzprüfungen");
-                    System.Console.WriteLine("8: TeilnahmeKurs");
-                    System.Console.WriteLine("9: Trainingsteilnahme");
+                    System.Console.WriteLine("8: MemberVsTraining");
+                    System.Console.WriteLine("9: MemberVsCourse");
+                    System.Console.WriteLine("10: WeekVsCourse");
                     System.Console.WriteLine();
                     System.Console.Write("Please enter number and press ENTER: ");
 
@@ -73,10 +74,13 @@ namespace AVF.MemberManagement.Console
                             new CheckConsistancy().Main(m_dbWrapper).Wait();
                             break;
                         case 8:
-                            new TeilnahmeKurs().Main(m_dbWrapper).Wait();
+                            Trainingsteilnahme.Report(m_dbWrapper, 2017, Trainingsteilnahme.ReportType.MemberVsTraining);
                             break;
                         case 9:
-                            new Trainingsteilnahme().Main(m_dbWrapper, 2017).Wait();
+                            Trainingsteilnahme.Report(m_dbWrapper, 2017, Trainingsteilnahme.ReportType.MemberVsCourse);
+                            break;
+                        case 10:
+                            Trainingsteilnahme.Report(m_dbWrapper, 2017, Trainingsteilnahme.ReportType.WeekVsCourse);
                             break;
                         default:
                             break;

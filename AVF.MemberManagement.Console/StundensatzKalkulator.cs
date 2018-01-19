@@ -251,7 +251,7 @@ namespace AVF.MemberManagement.Console
                     ofile.WriteLine("3 - Zweiter Kotrainer");
                     ofile.WriteLine();
                     ofile.WriteLine("TS: Trainerstufe");
-                    for (int i = 1; i <= db.MaxTrainerstufe(); i++)
+                    for (int i = 1; i <= db.MaxTrainerstufe; i++)
                         ofile.WriteLine( $"{ i } - { db.Trainerstufe( i )}" );
 
                     ofile.Close();

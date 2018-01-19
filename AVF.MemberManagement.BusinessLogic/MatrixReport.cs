@@ -28,7 +28,6 @@ namespace AVF.MemberManagement.BusinessLogic
         protected int   m_iSumSum;
 
         protected int m_iNrOfHeaderRows;
-        protected int m_iNrOfFooterRows;
         protected int m_iNrOfColsOnLeftSide;
         protected int m_iNrOfColsOnRightSide;
 
@@ -62,13 +61,13 @@ namespace AVF.MemberManagement.BusinessLogic
             m_iSumSum = 0;
         }
 
-        protected void PrepareData()
+        protected void CollectData()
         {
             foreach (var trainingsTeilnahme in m_db.TrainingsTeilnahme(m_datStart, m_datEnd))
             {
                 if (IsRelevant(trainingsTeilnahme))
                 {
-                    int iRow = RowIndexFromTrainingParticipationTrainingParticipation(trainingsTeilnahme);
+                    int iRow = RowIndexFromTrainingParticipation(trainingsTeilnahme);
                     int iCol = ColIndexFromTrainingParticipation(trainingsTeilnahme);
                     ++m_Rows[iRow].aiValues[iCol];
                     ++m_Rows[iRow].iRowSum;
@@ -77,12 +76,31 @@ namespace AVF.MemberManagement.BusinessLogic
                 }
             }
 
-            Array.Sort(m_Rows);
-
-            int iNrOfStringRows = m_Rows.Count(r => r.iRowSum > 0) + m_iNrOfHeaderRows + m_iNrOfFooterRows;
-            int iNrOfStringCols = m_iColSum.Count(c => c > 0) + m_iNrOfColsOnLeftSide + m_iNrOfColsOnRightSide;
+            int iNrOfStringRows = m_Rows   .Count(r => r.iRowSum > 0) + m_iNrOfHeaderRows + 1;  // one footer row
+            int iNrOfStringCols = m_iColSum.Count(c =>         c > 0) + m_iNrOfColsOnLeftSide + m_iNrOfColsOnRightSide;
 
             m_stringMatrix = new string[iNrOfStringRows, iNrOfStringCols];
+        }
+
+        protected void FillCourseHeaderRows()
+        {
+            int iStringCol = m_iNrOfColsOnLeftSide;
+            for (int iCol = 0; iCol < m_iNrOfCols - 1; ++iCol)
+            {
+                if (m_iColSum[iCol] > 0)
+                {
+                    Kurs kurs = m_db.KursFromId(iCol + 1);
+                    m_stringMatrix[0, iStringCol] = $"    { m_db.WeekDay(kurs.WochentagID).Substring(0, 2) } ";
+                    m_stringMatrix[1, iStringCol] = $" {kurs.Zeit:hh}:{kurs.Zeit:mm} ";
+                    ++iStringCol;
+                }
+            }
+            m_stringMatrix[0, iStringCol] = " Lehrgänge";
+            m_stringMatrix[1, iStringCol] = " Sondertr.";
+            ++iStringCol;
+
+            m_stringMatrix[0, iStringCol] = "";
+            m_stringMatrix[1, iStringCol] = " Summe";
         }
 
         protected void FillMainRows()
@@ -109,12 +127,12 @@ namespace AVF.MemberManagement.BusinessLogic
             }
         }
 
-        protected void FillFooterRows()
+        protected void FillFooterRow( string description )
         {
-            int iStringRow = m_stringMatrix.GetLength(0) - m_iNrOfFooterRows;
+            int iStringRow = m_stringMatrix.GetLength(0) - 1;  // one footer row
             int iStringCol = m_iNrOfColsOnLeftSide;
 
-            m_stringMatrix[iStringRow, 0] = "                     Insgesamt  ";
+            m_stringMatrix[iStringRow, 0] = description;
             for (int iCol = 0; iCol < m_iNrOfCols; ++iCol)
             {
                 if (m_iColSum[iCol] > 0)
@@ -127,11 +145,12 @@ namespace AVF.MemberManagement.BusinessLogic
         }
 
         abstract protected bool IsRelevant(TrainingsTeilnahme tn);
-        abstract protected int  RowIndexFromTrainingParticipationTrainingParticipation(TrainingsTeilnahme tn);
+        abstract protected int  RowIndexFromTrainingParticipation(TrainingsTeilnahme tn);
         abstract protected int  ColIndexFromTrainingParticipation(TrainingsTeilnahme tn);
-        abstract protected string FormatFirstColElement(int i);
-        abstract protected string FormatMatrixElement(int i);
-        abstract protected string FormatColSumElement(int i);
+        abstract protected string FormatFirstColElement(int iRow);
+        abstract protected string FormatMatrixElement(int iValue);
+        abstract protected string FormatColSumElement(int iValue);
         abstract protected void FillHeaderRows();
+//        abstract protected int GetFirstColWidth();
     }
 }

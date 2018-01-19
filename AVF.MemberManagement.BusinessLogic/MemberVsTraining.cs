@@ -16,7 +16,7 @@ namespace AVF.MemberManagement.BusinessLogic
             return idKurs.HasValue ? (idKurs.Value == m_idKurs) : false;
         }
 
-        protected override int RowIndexFromTrainingParticipationTrainingParticipation(TrainingsTeilnahme tn)
+        protected override int RowIndexFromTrainingParticipation(TrainingsTeilnahme tn)
         {
             return tn.MitgliedID - 1;  // db ids start with 1, array indeices with 0
         }
@@ -62,7 +62,6 @@ namespace AVF.MemberManagement.BusinessLogic
             m_iNrOfColsOnLeftSide = 1;   // column for Mitglieder
             m_iNrOfColsOnRightSide = 1;  // column for row sum
             m_iNrOfHeaderRows = 2;
-            m_iNrOfFooterRows = 2;
 
             Initialize
             (
@@ -70,11 +69,13 @@ namespace AVF.MemberManagement.BusinessLogic
                 m_db.MaxTrainingNr () + 1
             );
 
-            PrepareData( );
+            CollectData( );
+
+            Array.Sort(m_Rows);
 
             FillHeaderRows();
             FillMainRows();
-            FillFooterRows();
+            FillFooterRow("                     Insgesamt  ");
 
             return m_stringMatrix;
         }

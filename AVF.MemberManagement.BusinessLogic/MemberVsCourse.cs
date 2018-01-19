@@ -13,9 +13,9 @@ namespace AVF.MemberManagement.BusinessLogic
             return true;
         }
 
-        protected override int RowIndexFromTrainingParticipationTrainingParticipation(TrainingsTeilnahme tn)
+        protected override int RowIndexFromTrainingParticipation(TrainingsTeilnahme tn)
         {
-            return tn.MitgliedID - 1;  // db ids start with 1, array indeices with 0
+            return tn.MitgliedID - 1;  // db ids start with 1, array indices with 0
         }
 
         protected override int ColIndexFromTrainingParticipation(TrainingsTeilnahme tn)
@@ -29,23 +29,7 @@ namespace AVF.MemberManagement.BusinessLogic
             m_stringMatrix[0, 0] = "                       Mitglied  ";
             m_stringMatrix[1, 0] = "                         Nummer  ";
 
-            int iStringCol = m_iNrOfColsOnLeftSide;
-            for (int iCol = 0; iCol < m_iNrOfCols - 1; ++iCol)
-            {
-                if (m_iColSum[iCol] > 0)
-                {
-                    Kurs kurs = m_db.KursFromId(iCol+1);
-                    m_stringMatrix[0, iStringCol] = $"    { m_db.WeekDay(kurs.WochentagID).Substring(0, 2) } ";
-                    m_stringMatrix[1, iStringCol] = $" {kurs.Zeit:hh}:{kurs.Zeit:mm} ";
-                    ++iStringCol;
-                }
-            }
-            m_stringMatrix[0, iStringCol] = " Lehrgänge";
-            m_stringMatrix[1, iStringCol] = " Sondertr.";
-            ++iStringCol;
-
-            m_stringMatrix[0, iStringCol] = "";
-            m_stringMatrix[1, iStringCol] = " Summe";
+            FillCourseHeaderRows();
         }
 
         protected override string FormatFirstColElement(int iRow)
@@ -68,7 +52,6 @@ namespace AVF.MemberManagement.BusinessLogic
             m_iNrOfColsOnLeftSide = 1;   // column for Mitglieder
             m_iNrOfColsOnRightSide = 1;  // column for row sum
             m_iNrOfHeaderRows = 3;       // one empty row
-            m_iNrOfFooterRows = 2;
 
             Initialize
             ( 
@@ -76,11 +59,13 @@ namespace AVF.MemberManagement.BusinessLogic
                 m_db.MaxKursNr() + 1         // One additional col for "Lehrgänge"
             );
 
-            PrepareData();
+            CollectData();
+
+            Array.Sort(m_Rows);
 
             FillHeaderRows();
             FillMainRows();
-            FillFooterRows();
+            FillFooterRow("                     Insgesamt  ");
 
             return m_stringMatrix;
         }
