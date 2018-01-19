@@ -164,6 +164,22 @@ namespace AVF.MemberManagement.StandardLibrary.Services
         #endregion
 
 
+        #region Properties
+
+        public async Task<string> GetTablePropertiesAsync(string tableName)
+        {
+            var propertyUri = AddQueryOption(tableName, "columns", "ID");
+
+            propertyUri = AddQueryOption(propertyUri, "order", "ID,desc");
+            propertyUri = AddQueryOption(propertyUri, "page", "1,1");
+            propertyUri = AddQueryOption(propertyUri, "order", "ID,desc");
+
+            return await GetDataAsync(propertyUri, true);
+        }
+
+        #endregion
+
+
         #region Helper
 
         private async Task<string> GetFullUriWithCsrfToken(string resourcePathAndQueryOptions, bool forceTokenRefresh = false)

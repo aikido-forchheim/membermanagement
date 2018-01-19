@@ -97,5 +97,15 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary
 
             Assert.True(rowsCountAfterInsertAndDelete == initialRowsCount);
         }
+
+        [Fact]
+        public async void GetTablePropertiesAsyncTest()
+        {
+            var phpCrudApiService = Bootstrapper.Container.Resolve<IPhpCrudApiService>();
+
+            var tablePropertiesJson = await phpCrudApiService.GetTablePropertiesAsync("tbTraining");
+
+            Assert.True(tablePropertiesJson.Contains("ID"));
+        }
     }
 }
