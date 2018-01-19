@@ -46,6 +46,7 @@ namespace AVF.MemberManagement.StandardLibrary.Tbo
             set;
         }
 
+        [JsonConverter(typeof(LongToBooleanConverter))]
         public bool Kindertraining
         {
             get;
