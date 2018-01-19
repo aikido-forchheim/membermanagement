@@ -166,13 +166,12 @@ namespace AVF.MemberManagement.StandardLibrary.Services
 
         #region Properties
 
-        public async Task<string> GetTablePropertiesAsync(string tableName)
+        public async Task<string> GetTablePropertiesAsync(string tableName, string columnNameId)
         {
-            var propertyUri = AddQueryOption(tableName, "columns", "ID");
+            var propertyUri = AddQueryOption(tableName, "columns", columnNameId);
 
-            propertyUri = AddQueryOption(propertyUri, "order", "ID,desc");
+            propertyUri = AddQueryOption(propertyUri, "order", $"{columnNameId},desc");
             propertyUri = AddQueryOption(propertyUri, "page", "1,1");
-            propertyUri = AddQueryOption(propertyUri, "order", "ID,desc");
 
             return await GetDataAsync(propertyUri, true);
         }

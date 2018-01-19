@@ -17,6 +17,6 @@ namespace AVF.MemberManagement.StandardLibrary.Interfaces
 
 	    Task<string> DeleteDataAsync(string url);
 
-        Task<string> GetTablePropertiesAsync(string tableName);
+        Task<string> GetTablePropertiesAsync(string tableName, string columnNameId);
 	}
 }

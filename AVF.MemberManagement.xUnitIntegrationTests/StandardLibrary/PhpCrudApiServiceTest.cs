@@ -6,6 +6,7 @@ using AVF.MemberManagement.StandardLibrary.Tbo;
 using Microsoft.Practices.Unity;
 using System.Threading.Tasks;
 using Xunit;
+using System.Text.RegularExpressions;
 
 namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary
 {
@@ -102,10 +103,13 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary
         public async void GetTablePropertiesAsyncTest()
         {
             var phpCrudApiService = Bootstrapper.Container.Resolve<IPhpCrudApiService>();
+            const string columnNameId = "ID";
 
-            var tablePropertiesJson = await phpCrudApiService.GetTablePropertiesAsync("tbTraining");
+            var tablePropertiesJson = await phpCrudApiService.GetTablePropertiesAsync("tbTraining", columnNameId);
 
-            Assert.True(tablePropertiesJson.Contains("ID"));
+            int count = new Regex(Regex.Escape(columnNameId)).Matches(tablePropertiesJson).Count;
+
+            Assert.True(count == 1);
         }
     }
 }
