@@ -46,7 +46,7 @@ namespace AVF.MemberManagement.StandardLibrary.Services
 
             var jsonData = JsonConvert.SerializeObject(dataObject, jsonSettings);
 
-            jsonData = jsonData.Replace("true", "1").Replace("false", "0");
+            //jsonData = jsonData.Replace("true", "1").Replace("false", "0");
 
             var sendResult = await SendDataAsync(url, jsonData, "POST");
             if (sendResult == null) throw new IOException("PhpCrudApiService could not create object");
