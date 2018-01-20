@@ -7,6 +7,8 @@ namespace AVF.MemberManagement.StandardLibrary.Tbo
     public class Familienrabatt : IIntId
     {
         public const string PrimaryKey = "Familienmitglied";
+
+        [JsonIgnore]
         public string PrimaryKeyName { get; set; } = PrimaryKey;
 
         [JsonProperty(PropertyName = PrimaryKey)]

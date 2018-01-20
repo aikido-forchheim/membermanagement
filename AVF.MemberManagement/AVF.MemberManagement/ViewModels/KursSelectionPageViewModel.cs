@@ -122,7 +122,12 @@ namespace AVF.MemberManagement.ViewModels
                             Kotrainer1 = kurs.Kotrainer1,
                             Kotrainer2 = kurs.Kotrainer2,
                             Zeit = kurs.Zeit,
-                            Termin = SelectedDate
+                            Termin = SelectedDate,
+                            KursID = kurs.Id,
+                            DatensatzAngelegtAm = DateTime.Now,
+                            DatensatzGeaendertAm = DateTime.Now,
+                            DatensatzAngelegtVon = 1, //TODO: User logged in MemberId
+                            DatensatzGeaendertVon = 1
                         };
                     }
 

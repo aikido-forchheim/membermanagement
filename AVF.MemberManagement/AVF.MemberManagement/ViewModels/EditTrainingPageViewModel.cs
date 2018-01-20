@@ -7,11 +7,15 @@ using AVF.MemberManagement.StandardLibrary.Models;
 using AVF.MemberManagement.StandardLibrary.Services;
 using AVF.MemberManagement.Views;
 using Prism.Navigation;
+using AVF.MemberManagement.StandardLibrary.Interfaces;
+using AVF.MemberManagement.StandardLibrary.Tbo;
 
 namespace AVF.MemberManagement.ViewModels
 {
     public class EditTrainingPageViewModel : ViewModelBase
     {
+        private readonly IRepository<Training> _trainingsRepository;
+
         private string _selectedDate;
 
         public string SelectedDateString
@@ -36,8 +40,10 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _annotation, value);
         }
 
-        public EditTrainingPageViewModel(INavigationService navigationService) : base(navigationService)
+        public EditTrainingPageViewModel(INavigationService navigationService, IRepository<Training> trainingsRepository) : base(navigationService)
         {
+            _trainingsRepository = trainingsRepository;
+
             EnterParticipantsCommand = new DelegateCommand(EnterParticipants, CanEnterParticipants);
         }
 
@@ -64,24 +70,33 @@ namespace AVF.MemberManagement.ViewModels
 
         public ICommand EnterParticipantsCommand { get; }
 
-        private void EnterParticipants()
+        private async void EnterParticipants()
         {
-            var updateAnnotation = SelectedTraining.Training.Bemerkung != Annotation;
-
-            SelectedTraining.Training.Bemerkung = Annotation;
-
-            if (SelectedTraining.Training.Id == 0)
+            try
             {
-                //TODO: Training anlegen
-                //TODO: Achtung beim zurück von EnterParticipants usw. darf nicht noch mal angelegt werden
-            }
-            else if (updateAnnotation)
-            {
-                //TODO: Update Traing on change of Bemerkung
-            }
+                var updateAnnotation = SelectedTraining.Training.Bemerkung != Annotation;
 
-            var enterParticipantsPageName = Globals.Idiom == Idiom.Phone ? nameof(EnterParticipantsPage) : nameof(EnterParticipantsTabletPage);
-            NavigationService.NavigateAsync(enterParticipantsPageName, new NavigationParameters { { "SelectedTraining", SelectedTraining }, { "SelectedDateString", SelectedDateString } });
+                SelectedTraining.Training.Bemerkung = Annotation;
+
+                if (SelectedTraining.Training.Id == 0)
+                {
+                    //TODO: Training anlegen
+                    await _trainingsRepository.CreateAsync(SelectedTraining.Training);
+                    //TODO: Achtung beim zurück von EnterParticipants usw. darf nicht noch mal angelegt werden
+                }
+                else if (updateAnnotation)
+                {
+                    //TODO: Update Traing on change of Bemerkung
+                }
+
+                var enterParticipantsPageName = Globals.Idiom == Idiom.Phone ? nameof(EnterParticipantsPage) : nameof(EnterParticipantsTabletPage);
+                await NavigationService.NavigateAsync(enterParticipantsPageName, new NavigationParameters { { "SelectedTraining", SelectedTraining }, { "SelectedDateString", SelectedDateString } });
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
         }
 
         private bool CanEnterParticipants()

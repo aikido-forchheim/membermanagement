@@ -7,6 +7,8 @@ namespace AVF.MemberManagement.StandardLibrary.Tbo
     public class TrainerErnennung : IIntId
     {
         public const string PrimaryKey = "ID";
+
+        [JsonIgnore]
         public string PrimaryKeyName { get; set; } = PrimaryKey;
 
         [JsonProperty(PropertyName = PrimaryKey)]

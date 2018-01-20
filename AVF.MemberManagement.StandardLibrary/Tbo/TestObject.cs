@@ -9,6 +9,8 @@ namespace AVF.MemberManagement.StandardLibrary.Tbo
     public class TestObject : IId<string>
     {
         public const string PrimaryKey = "Key";
+
+        [JsonIgnore]
         public string PrimaryKeyName { get; set; } = PrimaryKey;
 
         [JsonProperty(PropertyName = PrimaryKey)]
