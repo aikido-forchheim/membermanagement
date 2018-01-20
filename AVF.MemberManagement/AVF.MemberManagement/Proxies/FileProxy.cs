@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
+using AVF.MemberManagement.StandardLibrary.Models;
 using AVF.MemberManagement.StandardLibrary.Options;
 using AVF.MemberManagement.StandardLibrary.Proxies;
 using Microsoft.Extensions.Logging;
@@ -14,6 +15,11 @@ namespace AVF.MemberManagement.Proxies
     {
         public FileProxy(IOptions<FileProxyOptions> fileProxyOptions) : base(fileProxyOptions)
         {
+        }
+
+        public new Task<TableProperties> GetTablePropertiesAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

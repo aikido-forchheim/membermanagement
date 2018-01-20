@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Proxies;
 using AVF.MemberManagement.StandardLibrary.Tables;
@@ -12,8 +13,17 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary.Proxies
 {
     public class ProxyTest : TestBase
     {
+        private readonly IPhpCrudApiService _phpCrudApiService;
+        private readonly ILogger _fakeLogger;
+
+        public ProxyTest()
+        {
+            _phpCrudApiService = Bootstrapper.Container.Resolve<IPhpCrudApiService>();
+            _fakeLogger = A.Fake<ILogger>();
+        }
+
         [Fact]
-        public async void CreateTestShouldFail()
+        public async Task CreateTestShouldFail()
         {   
             var phpCrudApiService = Bootstrapper.Container.Resolve<IPhpCrudApiService>();
             var fakeLogger = A.Fake<ILogger>();
@@ -27,6 +37,18 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary.Proxies
             {
                 await testProxy.CreateAsync(test);
             });
+        }
+
+        [Fact]
+        public async Task GetTablePropertiesTest()
+        {
+            var mitgliederProxy = new Proxy<TblMitglieder, Mitglied>(_fakeLogger, _phpCrudApiService);
+
+            var mitglieder = await mitgliederProxy.GetAsync();
+
+            var tableProperties = await mitgliederProxy.GetTablePropertiesAsync();
+
+            Assert.True(mitglieder.Count == tableProperties.RowCount);
         }
     }
 }

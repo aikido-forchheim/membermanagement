@@ -68,7 +68,7 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary.Proxies
 
             var tableProperties = await settingsProxy.GetTablePropertiesAsync();
 
-            Assert.True(settings.Count() == tableProperties.RowCount);
+            Assert.True(settings.Count == tableProperties.RowCount);
         }
 
 
