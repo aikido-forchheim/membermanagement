@@ -8,10 +8,19 @@ using AVF.MemberManagement.StandardLibrary.Factories;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 
 namespace AVF.MemberManagement.StandardLibrary.Services
 {
+    public class DateFormatConverter : IsoDateTimeConverter
+    {
+        public DateFormatConverter(string format)
+        {
+            DateTimeFormat = format;
+        }
+    }
+
     public class PhpCrudApiService : IPhpCrudApiService
     {
         private readonly IAccountService _accountService;
@@ -32,7 +41,13 @@ namespace AVF.MemberManagement.StandardLibrary.Services
 
         public async Task<string> SendDataAsync<T>(string url, T dataObject)
         {
-            var jsonData = JsonConvert.SerializeObject(dataObject);
+            var jsonSettings = new JsonSerializerSettings();
+            jsonSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
+
+            var jsonData = JsonConvert.SerializeObject(dataObject, jsonSettings);
+
+            jsonData = jsonData.Replace("true", "1").Replace("false", "0");
+
             var sendResult = await SendDataAsync(url, jsonData, "POST");
             if (sendResult == null) throw new IOException("PhpCrudApiService could not create object");
             return sendResult;

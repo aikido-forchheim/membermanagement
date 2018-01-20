@@ -1,6 +1,7 @@
 ﻿using System;
 using AVF.MemberManagement.StandardLibrary.Converters;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
+using AVF.MemberManagement.StandardLibrary.Services;
 using Newtonsoft.Json;
 
 namespace AVF.MemberManagement.StandardLibrary.Tbo
@@ -19,12 +20,14 @@ namespace AVF.MemberManagement.StandardLibrary.Tbo
             set;
         }
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int? KursID
         {
             get;
             set;
         }
 
+        [JsonConverter(typeof(DateFormatConverter), "yyyy-MM-dd")]
         public DateTime Termin
         {
             get;
@@ -80,6 +83,7 @@ namespace AVF.MemberManagement.StandardLibrary.Tbo
             set;
         }
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Bemerkung
         {
             get;

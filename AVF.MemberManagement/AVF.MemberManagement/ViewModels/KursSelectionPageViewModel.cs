@@ -119,15 +119,18 @@ namespace AVF.MemberManagement.ViewModels
                         {
                             Kindertraining = kurs.Kindertraining,
                             Trainer = kurs.Trainer,
-                            Kotrainer1 = kurs.Kotrainer1,
-                            Kotrainer2 = kurs.Kotrainer2,
+                            Kotrainer1 = kurs.Kotrainer1 ?? -1,
+                            Kotrainer2 = kurs.Kotrainer2 ?? -1,
                             Zeit = kurs.Zeit,
                             Termin = SelectedDate,
                             KursID = kurs.Id,
                             DatensatzAngelegtAm = DateTime.Now,
                             DatensatzGeaendertAm = DateTime.Now,
                             DatensatzAngelegtVon = 1, //TODO: User logged in MemberId
-                            DatensatzGeaendertVon = 1
+                            DatensatzGeaendertVon = 1,
+                            WochentagID = kurs.WochentagID,
+                            DauerMinuten = kurs.DauerMinuten, 
+                            Bemerkung = string.Empty
                         };
                     }
 
