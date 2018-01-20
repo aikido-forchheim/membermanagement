@@ -11,7 +11,7 @@ namespace AVF.MemberManagement.StandardLibrary.Interfaces
 
         Task<int> UpdateAsync(T obj);
 
-        //Task<int> DeleteAsync(T obj);
-        //Task<int> DeleteAsync(TId id);
+        Task<int> DeleteAsync(T obj);
+        Task<int> DeleteAsync(TId id);
     }
 }

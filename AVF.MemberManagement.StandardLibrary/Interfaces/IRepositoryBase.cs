@@ -5,8 +5,12 @@ namespace AVF.MemberManagement.StandardLibrary.Interfaces
 {
     public interface IRepositoryBase<T, in TId>
     {
+        Task<int> CreateAsync(T obj);
+        
         Task<List<T>> GetAsync();
 
         Task<T> GetAsync(TId id);
+
+        Task<int> DeleteAsync(T obj);
     }
 }

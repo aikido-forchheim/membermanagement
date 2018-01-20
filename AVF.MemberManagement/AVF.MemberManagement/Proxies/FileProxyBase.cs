@@ -54,6 +54,40 @@ namespace AVF.MemberManagement.Proxies
             throw new NotImplementedException();
         }
 
+        public async Task<int> DeleteAsync(T obj)
+        {
+            var list = await GetDataFromJsonFileAsync();
+
+            if (!list.Select(l => l.Id).Contains(obj.Id))
+            {
+                throw new KeyNotFoundException("Id is not is List<T>");
+            }
+
+            list.Remove(obj);
+
+            await SaveDataToJsonFileAsync(list);
+
+            return 1;
+        }
+
+        public async Task<int> DeleteAsync(TId id)
+        {
+            var list = await GetDataFromJsonFileAsync();
+
+            if (!list.Select(l=>l.Id).Contains(id))
+            {
+                throw new KeyNotFoundException("Id is not is List<T>");
+            }
+
+            var objToRemove = list.Single(l => l.Id.Equals(id));
+
+            list.Remove(objToRemove);
+
+            await SaveDataToJsonFileAsync(list);
+
+            return 1;
+        }
+
         public async Task<TablePropertiesBase> GetTablePropertiesAsync()
         {
             var list = await GetDataFromJsonFileAsync();

@@ -34,5 +34,12 @@ namespace AVF.MemberManagement.StandardLibrary.Repositories
         {
             return await _proxy.GetAsync(id);
         }
+
+        //Update
+
+        public virtual async Task<int> DeleteAsync(T obj)
+        {
+            return await _proxy.DeleteAsync(obj);
+        }
     }
 }
