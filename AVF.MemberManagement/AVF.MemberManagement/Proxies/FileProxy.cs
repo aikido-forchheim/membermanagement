@@ -15,10 +15,5 @@ namespace AVF.MemberManagement.Proxies
         public FileProxy(IOptions<FileProxyOptions> fileProxyOptions) : base(fileProxyOptions)
         {
         }
-
-        public Task<string> UpdateAsync(T obj)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

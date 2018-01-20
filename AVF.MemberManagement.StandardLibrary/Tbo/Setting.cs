@@ -5,7 +5,8 @@ namespace AVF.MemberManagement.StandardLibrary.Tbo
 {
     public class Setting : IId<string>
     {
-	    public const string PrimaryKey = "Key";
+        public const string PrimaryKey = "Key";
+        public string PrimaryKeyName { get; set; } = PrimaryKey;
 
 	    [JsonProperty(PropertyName = PrimaryKey)]
         public string Id

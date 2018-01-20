@@ -8,6 +8,7 @@ namespace AVF.MemberManagement.StandardLibrary.Tbo
     public class TrainingsTeilnahme : IIntId
     {
         public const string PrimaryKey = "ID";
+        public string PrimaryKeyName { get; set; } = PrimaryKey;
 
         [JsonProperty(PropertyName = PrimaryKey)]
         public int Id

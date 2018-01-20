@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
+using AVF.MemberManagement.StandardLibrary.Models;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 
 namespace AVF.MemberManagement.StandardLibrary.Proxies
 {
     public class ProxyBase<TTbl, T, TId> : IProxyBase<T, TId> where TTbl : ITable<T>, new()
-        where T : IId<TId>
+        where T : IId<TId>, new()
     {
         private readonly string _uri;
 
@@ -38,7 +40,7 @@ namespace AVF.MemberManagement.StandardLibrary.Proxies
         public async Task<List<T>> GetAsync()
         {
             var table = await _phpCrudApiService.GetDataAsync<TTbl>(_uri);
-            
+
             return table.Rows;
         }
 
@@ -67,10 +69,32 @@ namespace AVF.MemberManagement.StandardLibrary.Proxies
         public async Task<int> DeleteAsync(T obj) => await DeleteAsync(obj.Id);
 
         public async Task<int> DeleteAsync(TId id)
-        {   
+        {
             var deleteResult = await _phpCrudApiService.DeleteDataAsync($"{_uri}/{id}"); //mysql has no guid or uuid type, so we use id without .ToString()
 
             return int.Parse(deleteResult);
+        }
+
+        #endregion
+
+        #region Properties
+
+        public async Task<TablePropertiesBase> GetTablePropertiesAsync()
+        {
+            var tbl = new TTbl();
+            var t = new T();
+
+            var json = await _phpCrudApiService.GetTablePropertiesAsync(tbl.Uri, t.PrimaryKeyName);
+
+            JContainer obj = (JContainer)Newtonsoft.Json.JsonConvert.DeserializeObject(json);
+
+            var tableProperties = new TablePropertiesBase
+            {
+                LastPrimaryKey = obj.First.First.First.First.First.ToString(),
+                RowCount = int.Parse(obj.Last.First.ToString())
+            };
+
+            return tableProperties;
         }
 
         #endregion

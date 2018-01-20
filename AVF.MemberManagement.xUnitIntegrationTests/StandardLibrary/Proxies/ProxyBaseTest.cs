@@ -59,6 +59,18 @@ namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary.Proxies
             await CreateAndDelete();
         }
 
+        [Fact]
+        public async Task GetTablePropertiesTest()
+        {
+            var settingsProxy = new ProxyBase<TblSettings, Setting, string>(_fakeLogger, _phpCrudApiService);
+
+            var settings = await settingsProxy.GetAsync();
+
+            var tableProperties = await settingsProxy.GetTablePropertiesAsync();
+
+            Assert.True(settings.Count() == tableProperties.RowCount);
+        }
+
 
         private async Task CreateAndDelete()
         {

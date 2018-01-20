@@ -49,6 +49,13 @@ namespace AVF.MemberManagement.Proxies
             throw new NotImplementedException();
         }
 
+        public Task<TablePropertiesBase> GetTablePropertiesAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        #region private
+
         private static async Task<List<T>> GetDataFromJsonFileAsync()
         {
             var tboTypeName = typeof(T).Name;
@@ -79,5 +86,7 @@ namespace AVF.MemberManagement.Proxies
                 await Task.Delay(delayFunc.Invoke());
             }
         }
+
+        #endregion
     }
 }

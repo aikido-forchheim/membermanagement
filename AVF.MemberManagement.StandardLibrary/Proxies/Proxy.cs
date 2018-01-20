@@ -6,7 +6,7 @@ namespace AVF.MemberManagement.StandardLibrary.Proxies
 {
     public class Proxy<TTbl, T> : ProxyBase<TTbl, T, int>, IProxy<T> 
         where TTbl : ITable<T>, new()
-        where T : IIntId
+        where T : IIntId, new()
     {
         public Proxy(ILogger logger, IPhpCrudApiService phpCrudApiService) : base(logger, phpCrudApiService)
         {
