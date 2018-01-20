@@ -5,7 +5,7 @@ namespace AVF.MemberManagement.StandardLibrary.Interfaces
 {
     public interface IProxyBase<T, in TId> : IReadOnlyProxy<T, TId>
     {
-        //Task<int> CreateAsync(T obj);
+        Task<int> CreateAsync(T obj);
 
         //Read is definded in ReadOnlyProxy
 

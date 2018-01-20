@@ -13,6 +13,18 @@ namespace AVF.MemberManagement.StandardLibrary.Repositories
             _proxy = proxy;
         }
 
+        public virtual async Task<int> CreateAsync(T obj)
+        {
+            if (obj.Id == 0)
+            {
+                var tableProperties = await _proxy.GetTablePropertiesAsync();
+                var newId = tableProperties.LastPrimaryKey + 1;
+                obj.Id = newId;
+            }
+
+            return await _proxy.CreateAsync(obj);
+        }
+
         public virtual async Task<List<T>> GetAsync()
         {
             return await _proxy.GetAsync();
