@@ -18,6 +18,14 @@ namespace AVF.MemberManagement.Views
 
         private async void OnClosePageRequested()
         {
+            var bindingContext = ((EnterParticipantsTabletPageViewModel)BindingContext);
+
+            if (!bindingContext.IsDirty())
+            {
+                await bindingContext.GoBackAsync();
+                return;
+            }
+
             var result = await DisplayActionSheet("Möchten Sie das aktuelle Training speichern?", null, null, "Ja",
                 "Nein", "Abbrechen");
 
@@ -25,7 +33,9 @@ namespace AVF.MemberManagement.Views
             {
                 //TODO: Inherit EnterParticipantsTabletPage and EnterParticipantsPage from base
                 //TODO: Implement Save or Discard on Yes or No
-                await ((EnterParticipantsPageViewModel)BindingContext).GoBackAsync();
+
+
+                await bindingContext.GoBackAsync();
             }
         }
     }
