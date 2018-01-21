@@ -318,7 +318,7 @@ namespace AVF.MemberManagement.ViewModels
 
                 var trainingsOnWeekDay = trainings.Where(training =>
                 {
-                    var daysToCheck = Training.Training.Termin - TimeSpan.FromDays(30);
+                    var daysToCheck = Training.Training.Termin - TimeSpan.FromDays(120);
 
                     return training.KursID == Training.Training.KursID && training.Id != Training.Training.Id &&
                                training.Termin < Training.Training.Termin && training.Termin > daysToCheck;
