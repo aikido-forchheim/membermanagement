@@ -71,6 +71,7 @@
     <Compile Include="Views\EditTrainingPage.xaml.cs">
       <DependentUpon>EditTrainingPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\EnterParticipantsBase.cs" />
     <Compile Include="Views\EnterParticipantsPage.xaml.cs">
       <DependentUpon>EnterParticipantsPage.xaml</DependentUpon>
     </Compile>

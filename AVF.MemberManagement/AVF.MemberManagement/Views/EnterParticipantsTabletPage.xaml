@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TabbedPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:userControls="clr-namespace:AVF.MemberManagement.UserControls;assembly=AVF.MemberManagement" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms" prism:ViewModelLocator.AutowireViewModel="True" x:Class="AVF.MemberManagement.Views.EnterParticipantsTabletPage" xmlns:ctrl="clr-namespace:AVF.MemberManagement.UserControls;assembly=AVF.MemberManagement" Title="{Binding Title}">
+<views:EnterParticipantsBase xmlns="http://xamarin.com/schemas/2014/forms" xmlns:userControls="clr-namespace:AVF.MemberManagement.UserControls;assembly=AVF.MemberManagement" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms" prism:ViewModelLocator.AutowireViewModel="True" x:Class="AVF.MemberManagement.Views.EnterParticipantsTabletPage" xmlns:ctrl="clr-namespace:AVF.MemberManagement.UserControls;assembly=AVF.MemberManagement"
+                       xmlns:views="clr-namespace:AVF.MemberManagement.Views;assembly=AVF.MemberManagement"
+                       Title="{Binding Title}">
     <ContentPage Title="Regelmäßige Teilnehmer">
         <Grid>
             <Grid.ColumnDefinitions>
@@ -28,4 +30,4 @@
             </userControls:FindMembersView>
         </Grid>
     </ContentPage>
-</TabbedPage>
+</views:EnterParticipantsBase>
