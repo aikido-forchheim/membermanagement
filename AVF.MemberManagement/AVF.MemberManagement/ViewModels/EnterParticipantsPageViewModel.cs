@@ -208,6 +208,7 @@ namespace AVF.MemberManagement.ViewModels
         {
             var parameters = new NavigationParameters
             {
+                {"SelectedTraining", Training },
                 {"DeletedList", "TODO: add the deletedList"},
                 {"InsertList", "TODO: add the insertList"}
             };
