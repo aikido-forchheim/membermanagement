@@ -61,6 +61,7 @@
     <Compile Include="ViewModels\KursSelectionPageViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\PasswordPageViewModel.cs" />
+    <Compile Include="ViewModels\SaveParticipantsPageViewModel.cs" />
     <Compile Include="ViewModels\StartPageViewModel.cs" />
     <Compile Include="Views\AdvancedSettingsPage.xaml.cs">
       <DependentUpon>AdvancedSettingsPage.xaml</DependentUpon>
@@ -86,6 +87,9 @@
     </Compile>
     <Compile Include="Views\RestApiSettingsPage.xaml.cs">
       <DependentUpon>RestApiSettingsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SaveParticipantsPage.xaml.cs">
+      <DependentUpon>SaveParticipantsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\StartPage.xaml.cs">
       <DependentUpon>StartPage.xaml</DependentUpon>
@@ -298,6 +302,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\EditTrainingPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\SaveParticipantsPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

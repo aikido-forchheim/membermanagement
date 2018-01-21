@@ -9,6 +9,7 @@ using AVF.MemberManagement.StandardLibrary.Models;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Prism.Navigation;
 using System.Windows.Input;
+using AVF.MemberManagement.Views;
 using Prism.Commands;
 
 namespace AVF.MemberManagement.ViewModels
@@ -171,6 +172,8 @@ namespace AVF.MemberManagement.ViewModels
 
         public override async void OnNavigatedTo(NavigationParameters parameters)
         {
+            if (!parameters.ContainsKey("SelectedTraining")) return;
+
             _participants.Clear();
 
             SelectedDateString = (string)parameters["SelectedDateString"];
@@ -199,6 +202,17 @@ namespace AVF.MemberManagement.ViewModels
         public async Task<bool> GoBackAsync()
         {
             return await NavigationService.GoBackAsync();
+        }
+
+        public async Task NavigateToSaveParticipantsPage()
+        {
+            var parameters = new NavigationParameters
+            {
+                {"DeletedList", "TODO: add the deletedList"},
+                {"InsertList", "TODO: add the insertList"}
+            };
+
+            await NavigationService.NavigateAsync(nameof(SaveParticipantsPage), parameters);
         }
 
 

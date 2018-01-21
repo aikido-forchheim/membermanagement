@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AVF.MemberManagement.ViewModels;
+﻿using AVF.MemberManagement.ViewModels;
 using Xamarin.Forms;
 
 namespace AVF.MemberManagement.Views
@@ -18,7 +13,7 @@ namespace AVF.MemberManagement.Views
 
         private async void OnClosePageRequested()
         {
-            var bindingContext = ((EnterParticipantsTabletPageViewModel)BindingContext);
+            var bindingContext = (EnterParticipantsPageViewModel)BindingContext;
 
             if (!bindingContext.IsDirty())
             {
@@ -26,14 +21,17 @@ namespace AVF.MemberManagement.Views
                 return;
             }
 
-            var result = await DisplayActionSheet("Möchten Sie das aktuelle Training speichern?", null, null, "Ja",
+            var shouldSaveTraining = await DisplayActionSheet("Möchten Sie das aktuelle Training speichern?", null, null, "Ja",
                 "Nein", "Abbrechen");
 
-            if (result == "Ja" || result == "Nein")
+            switch (shouldSaveTraining)
             {
-                //TODO: Implement Save or Discard on Yes or No
-
-                await bindingContext.GoBackAsync();
+                case "Ja":
+                    await bindingContext.NavigateToSaveParticipantsPage();
+                    break;
+                case "Nein":
+                    await bindingContext.GoBackAsync();
+                    break;
             }
         }
     }
