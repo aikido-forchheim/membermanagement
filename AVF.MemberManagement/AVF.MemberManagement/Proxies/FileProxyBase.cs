@@ -24,6 +24,11 @@ namespace AVF.MemberManagement.Proxies
             _fileProxyDelayTimes = GetFileProxyDelayTimes();
         }
 
+        public virtual async Task<int> CreateAsync(T obj)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<List<T>> GetAsync()
         {
             Debug.WriteLine(new TTbl().Uri);
@@ -44,25 +49,89 @@ namespace AVF.MemberManagement.Proxies
             return list.Single(t => t.Id.Equals(id));
         }
 
-        public Task<string> UpdateAsync(T obj, TId id)
+        public Task<int> UpdateAsync(T obj)
         {
             throw new NotImplementedException();
         }
 
-        private static async Task<List<T>> GetDataFromJsonFileAsync()
+        public async Task<int> DeleteAsync(T obj)
+        {
+            var list = await GetDataFromJsonFileAsync();
+
+            if (!list.Select(l => l.Id).Contains(obj.Id))
+            {
+                throw new KeyNotFoundException("Id is not is List<T>");
+            }
+
+            list.Remove(obj);
+
+            await SaveDataToJsonFileAsync(list);
+
+            return 1;
+        }
+
+        public async Task<int> DeleteAsync(TId id)
+        {
+            var list = await GetDataFromJsonFileAsync();
+
+            if (!list.Select(l=>l.Id).Contains(id))
+            {
+                throw new KeyNotFoundException("Id is not is List<T>");
+            }
+
+            var objToRemove = list.Single(l => l.Id.Equals(id));
+
+            list.Remove(objToRemove);
+
+            await SaveDataToJsonFileAsync(list);
+
+            return 1;
+        }
+
+        public async Task<TablePropertiesBase> GetTablePropertiesAsync()
+        {
+            var list = await GetDataFromJsonFileAsync();
+
+            var tablePropertiesBase = new TablePropertiesBase
+            {
+                LastPrimaryKey = list.Select(obj => obj.Id.ToString()).Max(),
+                RowCount = list.Count
+            };
+
+            return tablePropertiesBase;
+        }
+
+        #region private
+
+        protected static async Task<List<T>> GetDataFromJsonFileAsync()
         {
             var tboTypeName = typeof(T).Name;
-
             var localStorage = FileSystem.Current.LocalStorage;
             var avfFolder = await localStorage.CreateFolderAsync("AVF",
                 CreationCollisionOption.OpenIfExists);
-
             var fileName = $"List{tboTypeName}.json";
+
             var jsonFile = await avfFolder.GetFileAsync(fileName);
+
             var json = await jsonFile.ReadAllTextAsync();
 
             var list = Newtonsoft.Json.JsonConvert.DeserializeObject<List<T>>(json);
             return list;
+        }
+
+        protected static async Task SaveDataToJsonFileAsync(List<T> list)
+        {
+            var tboTypeName = typeof(T).Name;
+            var localStorage = FileSystem.Current.LocalStorage;
+            var avfFolder = await localStorage.CreateFolderAsync("AVF",
+                CreationCollisionOption.OpenIfExists);
+            var fileName = $"List{tboTypeName}.json";
+
+            var jsonFile = await avfFolder.GetFileAsync(fileName);
+
+            string json = Newtonsoft.Json.JsonConvert.SerializeObject(list);
+
+            await jsonFile.WriteAllTextAsync(json);
         }
 
         private IFileProxyDelayTimes GetFileProxyDelayTimes()
@@ -79,5 +148,7 @@ namespace AVF.MemberManagement.Proxies
                 await Task.Delay(delayFunc.Invoke());
             }
         }
+
+        #endregion
     }
 }

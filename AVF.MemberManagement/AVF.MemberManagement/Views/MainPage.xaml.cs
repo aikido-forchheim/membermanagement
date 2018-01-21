@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using AVF.MemberManagement.ViewModels;
+using Xamarin.Forms;
 
 namespace AVF.MemberManagement.Views
 {
@@ -10,6 +11,23 @@ namespace AVF.MemberManagement.Views
         public MainPage()
         {
             InitializeComponent();
+        }
+
+        void Handle_Appearing(object sender, System.EventArgs e)
+        {
+            EntryUsername.Focus();
+        }
+
+        void Handle_Completed(object sender, System.EventArgs e)
+        {
+            if (( (MainPageViewModel) BindingContext). IsInitialPassword)
+            {
+                ButtonNewPassword.Command.Execute(null);
+            }
+            else
+            {
+                ButtonStart.Command.Execute(null);
+            }
         }
 
         protected override void OnSizeAllocated(double width, double height)

@@ -220,12 +220,16 @@
     <Compile Include="StandardLibrary\Models\Tables\TblTestsTest.cs" />
     <Compile Include="StandardLibrary\PhpCrudApiServiceTest.cs" />
     <Compile Include="StandardLibrary\Proxies\BeitragsklassenProxyTest.cs" />
+    <Compile Include="StandardLibrary\Proxies\ProxyBaseTest.cs" />
+    <Compile Include="StandardLibrary\Proxies\ProxyTest.cs" />
     <Compile Include="StandardLibrary\SettingsProxyTest.cs" />
     <Compile Include="StandardLibrary\TestsProxyTest.cs" />
     <Compile Include="StandardLibrary\UsersProxyTest.cs" />
     <Compile Include="TestBase.cs" />
     <Compile Include="StandardLibrary\Repositories\RepositoriesTest.cs" />
     <Compile Include="StandardLibrary\SettingsRepositoryTest.cs" />
+    <Compile Include="UnitTestTokenService.cs" />
+    <Compile Include="StandardLibrary\Repositories\RepositoryTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

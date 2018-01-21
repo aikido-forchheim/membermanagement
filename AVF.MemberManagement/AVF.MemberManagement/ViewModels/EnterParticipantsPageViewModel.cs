@@ -48,8 +48,9 @@ namespace AVF.MemberManagement.ViewModels
 
         #region Participants
 
-        private ObservableCollection<Mitglied> _participants = new ObservableCollection<Mitglied>();
+        private ObservableCollection<Mitglied> _originalParticipantsList = new ObservableCollection<Mitglied>();
 
+        private ObservableCollection<Mitglied> _participants = new ObservableCollection<Mitglied>();
         public ObservableCollection<Mitglied> Participants
         {
             get => _participants;
@@ -57,7 +58,6 @@ namespace AVF.MemberManagement.ViewModels
         }
 
         private Mitglied _selectedParticipant;
-
         public Mitglied SelectedParticipant
         {
             get => _selectedParticipant;
@@ -106,6 +106,8 @@ namespace AVF.MemberManagement.ViewModels
                 SetProperty(ref _searchText, value);
                 FindMembers(_searchText);
                 RaisePropertyChanged(nameof(FoundMembersCountText));
+                ((DelegateCommand)ClearSearchTextCommand).RaiseCanExecuteChanged();
+                ((DelegateCommand)AddAndClearSearchTextCommand).RaiseCanExecuteChanged();
             }
         }
 
@@ -148,6 +150,8 @@ namespace AVF.MemberManagement.ViewModels
         public ICommand RemoveParticipantCommand { get; set; }
         public ICommand AddPreviousParticipantCommand { get; set; }
         public ICommand AddFoundMemberCommand { get; set; }
+        public ICommand ClearSearchTextCommand { get; set; }
+        public ICommand AddAndClearSearchTextCommand { get; set; }
 
 
         public EnterParticipantsPageViewModel(IRepository<Mitglied> mitgliederRepository, IRepository<Training> trainingsRepository, IRepository<TrainingsTeilnahme> trainingsTeilnahmenRepository, INavigationService navigationService) : base(navigationService)
@@ -159,6 +163,8 @@ namespace AVF.MemberManagement.ViewModels
             AddPreviousParticipantCommand = new DelegateCommand(AddPreviousParticipant, CanAddPreviousParticipant);
             AddFoundMemberCommand = new DelegateCommand(AddFoundMember, CanAddFoundMember);
             RemoveParticipantCommand = new DelegateCommand(RemoveParticipant, CanRemoveParticipant);
+            ClearSearchTextCommand = new DelegateCommand(ClearSearchText, CanClearSearchText);
+            AddAndClearSearchTextCommand = new DelegateCommand(AddAndClearSearchText, CanAddAndClearSearchText);
         }
 
         #region INavigatedAware
@@ -176,7 +182,12 @@ namespace AVF.MemberManagement.ViewModels
             _mitglieder = await _mitgliederRepository.GetAsync();
             _mitglieder.Sort(CompareMemberNames);
 
-            GetExistingParticipants();
+            #region GetExistingParticipants()
+            foreach (var existingParticipant in GetExistingParticipants())
+            {
+                _originalParticipantsList.Add(existingParticipant);
+            }
+            #endregion
             await FindPreviousParticipants();
             FindMembers(_searchText);
 
@@ -250,12 +261,49 @@ namespace AVF.MemberManagement.ViewModels
             ((DelegateCommand)AddFoundMemberCommand).RaiseCanExecuteChanged();
 
             RaiseCounterPropertiesChanged();
+
+            if (FoundMembers.Count == 0) ClearSearchText();
+        }
+
+        #endregion
+
+        #region ClearSearchTextCommand
+
+        private void ClearSearchText()
+        {
+            SearchText = string.Empty;
+        }
+
+        private bool CanClearSearchText()
+        {
+            return !string.IsNullOrEmpty(SearchText);
+        }
+
+        #endregion
+
+        #region AddAndClearSearchTextCommand
+
+        private void AddAndClearSearchText()
+        {
+            if (FoundMembers != null && FoundMembers.Count == 1)
+            {
+                SelectedMember = FoundMembers[0];
+
+                AddFoundMember();
+
+                SearchText = string.Empty;
+            }
+        }
+
+        private bool CanAddAndClearSearchText()
+        {
+            return FoundMembers != null && FoundMembers.Count == 1;
         }
 
         #endregion
 
 
-        private void GetExistingParticipants()
+        private ObservableCollection<Mitglied> GetExistingParticipants()
         {
             foreach (var trainingParticipation in Training.Participations)
             {
@@ -263,6 +311,8 @@ namespace AVF.MemberManagement.ViewModels
 
                 Participants.Add(member);
             }
+
+            return Participants;
         }
 
         private async Task FindPreviousParticipants()
@@ -275,7 +325,7 @@ namespace AVF.MemberManagement.ViewModels
 
                 var trainingsOnWeekDay = trainings.Where(training =>
                 {
-                    var daysToCheck = Training.Training.Termin - TimeSpan.FromDays(30);
+                    var daysToCheck = Training.Training.Termin - TimeSpan.FromDays(120);
 
                     return training.KursID == Training.Training.KursID && training.Id != Training.Training.Id &&
                                training.Termin < Training.Training.Termin && training.Termin > daysToCheck;
@@ -392,6 +442,37 @@ namespace AVF.MemberManagement.ViewModels
             var resignDate = (DateTime)mitglied.Austritt;
 
             return resignDate < DateTime.Now;
+        }
+
+        public bool IsDirty()
+        {
+            //clear insertList
+            //clear deletedList
+
+            if (_originalParticipantsList.Count != _participants.Count)
+            {
+                return true;
+            }
+
+            foreach (var participant in _participants)
+            {
+                if (!_originalParticipantsList.Contains(participant))
+                {
+                    //add to insertList
+                    return true;
+                }
+            }
+
+            foreach (var participant in _originalParticipantsList)
+            {
+                if (!_participants.Contains(participant))
+                {
+                    //add to deletedList
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         #endregion

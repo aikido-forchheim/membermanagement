@@ -8,7 +8,7 @@ namespace AVF.MemberManagement.xUnitIntegrationTests
 {
     public class InformationSchemaTest : TestBase
     {
-        [Fact]
+        //[Fact]
         public async void CountTablesViaInformationSchemaTest()
         {
             var phpCrudApiService = Bootstrapper.Container.Resolve<IPhpCrudApiService>();
@@ -23,7 +23,7 @@ namespace AVF.MemberManagement.xUnitIntegrationTests
             Assert.True(tableNames.Count == 18);
         }
 
-        [Fact]
+        //[Fact]
         public async void ReadTableColumnsTest()
         {
             var phpCrudApiService = Bootstrapper.Container.Resolve<IPhpCrudApiService>();
@@ -31,7 +31,7 @@ namespace AVF.MemberManagement.xUnitIntegrationTests
             await ProcessTable(phpCrudApiService, tableObjectGenerator, "tblMitglieder");
         }
 
-        [Fact]
+        //[Fact]
         public async void ProcessAllTables()
         {
             var phpCrudApiService = Bootstrapper.Container.Resolve<IPhpCrudApiService>();

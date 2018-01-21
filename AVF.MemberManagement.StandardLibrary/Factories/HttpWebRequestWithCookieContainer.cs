@@ -7,7 +7,7 @@ namespace AVF.MemberManagement.StandardLibrary.Factories
 {
     public class HttpWebRequestWithCookieContainer
     {
-        private static readonly CookieContainer CookieContainer = new CookieContainer();
+        public static CookieContainer CookieContainer = new CookieContainer();
         
         public static HttpWebRequest Create(string url)
         {

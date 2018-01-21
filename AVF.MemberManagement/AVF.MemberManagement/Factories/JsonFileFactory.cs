@@ -29,7 +29,7 @@ namespace AVF.MemberManagement.Factories
 
             foreach (var tboType in tboTypes)
             {
-                if (tboType.Name == "Setting") continue;
+                if (tboType.Name == "Setting" || tboType.Name == "TestObject") continue;
 
                 Debug.WriteLine(tboType.Name);
 

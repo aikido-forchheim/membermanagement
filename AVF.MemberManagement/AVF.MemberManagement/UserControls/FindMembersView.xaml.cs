@@ -21,5 +21,11 @@ namespace AVF.MemberManagement.UserControls
         {
             ((EnterParticipantsPageViewModel)BindingContext).AddFoundMemberCommand.Execute(null);
         }
+
+        void Handle_Completed(object sender, System.EventArgs e)
+        {
+            ((EnterParticipantsPageViewModel)BindingContext).AddAndClearSearchTextCommand.Execute(null);
+            EntrySearchText.Focus();
+        }
     }
 }

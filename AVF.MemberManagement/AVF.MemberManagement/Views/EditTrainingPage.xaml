@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="AVF.MemberManagement.Views.EditTrainingPage"
+             Title="{Binding Title}"
+             >
+    <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+
+        <Label Text="Trainer:" FontAttributes="Bold"></Label>
+        <StackLayout Orientation="Vertical" Margin="0,0,0,0">
+            <Label Text="Max Mustermann"></Label>
+            <Button Text="ändern"></Button>
+        </StackLayout>
+
+        <Label Text="Kotrainer 1:" FontAttributes="Bold"></Label>
+        <StackLayout Orientation="Vertical" Margin="0,0,0,0">
+            <Label Text="- keiner -"></Label>
+            <Button Text="ändern"></Button>
+        </StackLayout>
+
+        <Label Text="Kotrainer 2:" FontAttributes="Bold"></Label>
+        <StackLayout Orientation="Vertical" Margin="0,0,0,0">
+            <Label Text="- keiner -"></Label>
+            <Button Text="ändern"></Button>
+        </StackLayout>
+
+        <Label Text="Bemerkung:" Margin="0,0,0,16" FontAttributes="Bold"></Label>
+        <Editor Text="{Binding Annotation}" HeightRequest="128"></Editor>
+
+        <StackLayout Orientation="Horizontal" Margin="0,32,0,0">
+            <Button Text="Abbrechen" WidthRequest="256"></Button>
+            <Button Text="Teilnehmer eintragen" WidthRequest="256" Command="{Binding EnterParticipantsCommand}"></Button>
+        </StackLayout>
+
+    </StackLayout>
+</ContentPage>

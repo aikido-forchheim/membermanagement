@@ -8,6 +8,9 @@ namespace AVF.MemberManagement.StandardLibrary.Tbo
     {
         public const string PrimaryKey = "ID";
 
+        [JsonIgnore]
+        public string PrimaryKeyName { get; set; } = PrimaryKey;
+
         [JsonProperty(PropertyName = PrimaryKey)]
         public int Id
         {
