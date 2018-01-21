@@ -85,13 +85,8 @@ namespace AVF.MemberManagement.ViewModels
                 _trainingsCollection.Clear();
 
                 SelectedDate = (DateTime)parameters["Date"];
-
-                var weekday = (int)SelectedDate.DayOfWeek;
-                if (weekday == 0) weekday = 7;
-
-                var wochentage = await _wochentageRepository.GetAsync();
-
-                Wochentag = wochentage.Single(wd => wd.Id == weekday);
+                
+                Wochentag = await Globals.GetWochentagFromDayOfWeek(_wochentageRepository, SelectedDate.DayOfWeek);
 
                 SelectedDateString =
                     $"{SelectedDate.Day.ToString().PadLeft(2, '0')}.{SelectedDate.Month.ToString().PadLeft(2, '0')}.{SelectedDate.Year} ({Wochentag.Bezeichnung})";
@@ -102,7 +97,7 @@ namespace AVF.MemberManagement.ViewModels
                 var trainings = await _trainings.GetAsync();
                 var trainingsTeilnahmen = await _trainingsTeilnahmen.GetAsync();
 
-                List<TrainingsModel> trainigModelsWithoutSort = new List<TrainingsModel>();
+                var trainigModelsWithoutSort = new List<TrainingsModel>();
                 foreach (var kurs in alleKurse.Where(k => k.WochentagID == Wochentag.Id))
                 {
                     var classModel = await _classModelService.GetAsync(kurs);
@@ -129,7 +124,7 @@ namespace AVF.MemberManagement.ViewModels
                             DatensatzAngelegtVon = 1, //TODO: User logged in MemberId
                             DatensatzGeaendertVon = 1,
                             WochentagID = kurs.WochentagID,
-                            DauerMinuten = kurs.DauerMinuten, 
+                            DauerMinuten = kurs.DauerMinuten,
                             Bemerkung = string.Empty
                         };
                     }
