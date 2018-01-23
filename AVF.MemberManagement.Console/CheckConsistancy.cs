@@ -9,7 +9,7 @@ namespace AVF.MemberManagement.Console
     {
         internal async Task Main(DatabaseWrapper db)
         {
-            OutputFile ofile = new OutputFile( "Findings.txt", db );
+            OutputTarget oTarget = new OutputTarget( "Findings.txt", db );
 
             int iFinding = 0;
 
@@ -17,18 +17,18 @@ namespace AVF.MemberManagement.Console
 
             DateTime dateStart = new DateTime(2017, 1, 1);
 
-            foreach (Training training in db.AllTrainings())
+            foreach (Training training in db.m_trainings)
             {
                 int? trainer = training.Trainer;
                 if ( ( training.Termin > dateStart ) && (trainer.HasValue && trainer > 0) )
                 {
                     if (!db.HatTeilgenommen(training.Trainer, training))
                     {
-                        ofile.Write($"Finding { ++iFinding }: Trainer hat nicht an Training teilgenommen. ");
-                        ofile.WriteMitglied( trainer.Value );
-                        ofile.Write( $" Training Nr. {training.Id} " );
-                        ofile.WriteTraining(training, db.WeekDay(training.WochentagID));
-                        ofile.WriteLine("");
+                        oTarget.Write($"Finding { ++iFinding }: Trainer hat nicht an Training teilgenommen. ");
+                        oTarget.WriteMitglied( trainer.Value );
+                        oTarget.Write( $" Training Nr. {training.Id} " );
+                        oTarget.WriteTraining(training, training.WochentagID);
+                        oTarget.WriteLine("");
                     }
                 }
             }
@@ -37,10 +37,10 @@ namespace AVF.MemberManagement.Console
             // Am Prüfungstag muss ein Training stattgefunden haben
             // Prüfling and Prüfer müssen Teilnehmer sein
 
-            foreach (Pruefung pruefung in db.Pruefungen())
+            foreach (Pruefung pruefung in db.m_pruefung)
             {
                 bool found = false;
-                foreach (Training training in db.AllTrainings())
+                foreach (Training training in db.m_trainings)
                 {
                      if ( 
                           ( training.Termin == pruefung.Datum ) &&
@@ -59,15 +59,15 @@ namespace AVF.MemberManagement.Console
                       (pruefung.Pruefer != 374)          // Kindertrainings nicht vollständig erfasst
                    )
                 {
-                    ofile.Write($"Finding { ++iFinding }: Kein passendes Training am Prüfungstag. ");
-                    ofile.WritePruefung( pruefung );
-                    ofile.Write( "Prüfling: " );
-                    ofile.WriteMitglied( pruefung.Pruefling );
-                    ofile.WriteLine();
+                    oTarget.Write($"Finding { ++iFinding }: Kein passendes Training am Prüfungstag. ");
+                    oTarget.WritePruefung( pruefung );
+                    oTarget.Write( "Prüfling: " );
+                    oTarget.WriteMitglied( pruefung.Pruefling );
+                    oTarget.WriteLine();
                 }
             }
 
-            ofile.Close();
+            oTarget.CloseAndReset2Console();
         }
     }
 }

@@ -4,43 +4,28 @@ using System.Linq;
 using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
+using AVF.MemberManagement.BusinessLogic;
 using Microsoft.Practices.Unity;
 
 namespace AVF.MemberManagement.BusinessLogic
 {
-    public class NrOfTrainings : IComparable<NrOfTrainings>
-    {
-        public int memberId;
-        public int iCount;
-
-        public NrOfTrainings(int m, int i)
-        {
-            memberId = m;
-            iCount = i;
-        }
-
-        public void Increase() => ++iCount;
-
-        public int CompareTo( NrOfTrainings other ) => other.iCount - iCount;
-    }
-
     public class DatabaseWrapper
     {
-        private List<Training> m_trainings;
-        private List<Mitglied> m_mitglieder;
-        private List<TrainerErnennung> m_trainerErnennungen;
-        private List<Stundensatz> m_stundensaetze;
-        private List<ZuschlagKindertraining> m_zuschlagKinderTraining;
-        private List<TrainerStufe> m_trainerStufe;
-        private List<Wohnung> m_wohnung;
-        private List<Wohnungsbezug> m_wohnungsbezug;
-        private List<Wochentag> m_wochentag;
-        private List<Pruefung> m_pruefung;
-        private List<Graduierung> m_graduierung;
-        private List<Beitragsklasse> m_beitragsklasse;
-        private List<Familienrabatt> m_familienrabatt;
-        private List<TrainingsTeilnahme> m_trainingsTeilnahme;
-        private List<Kurs> m_kurs;
+        public List<Training> m_trainings { get; private set; }
+        public List<Mitglied> m_mitglieder { get; private set; }
+        public List<TrainerErnennung> m_trainerErnennungen { get; private set; }
+        public List<Stundensatz> m_stundensaetze { get; private set; }
+        public List<ZuschlagKindertraining> m_zuschlagKinderTraining { get; private set; }
+        public List<TrainerStufe> m_trainerStufe { get; private set; }
+        public List<Wohnung> m_wohnung { get; private set; }
+        public List<Wohnungsbezug> m_wohnungsbezug { get; private set; }
+        public List<Wochentag> m_wochentag { get; private set; }
+        public List<Pruefung> m_pruefung { get; private set; }
+        public List<Graduierung> m_graduierung { get; private set; }
+        public List<Beitragsklasse> m_beitragsklasse { get; private set; }
+        public List<Familienrabatt> m_familienrabatt { get; private set; }
+        public List<TrainingsTeilnahme> m_trainingsTeilnahme { get; private set; }
+        public List<Kurs> m_kurs { get; private set; }
 
         public async Task ReadTables( IUnityContainer Container )
         {
@@ -62,37 +47,26 @@ namespace AVF.MemberManagement.BusinessLogic
             m_mitglieder.RemoveAt(0);   // Mitglied 0 is a dummy
         }
 
-        public int TrainerLevel(int? trainerId, DateTime termin)  // calculates level (Vereinstrainer, Lehrer ...) of a trainer at a given date
-        {
-            var ernennungen = m_trainerErnennungen.Where(t => (t.MitgliedID == trainerId) && ((t.Datum == null) || (t.Datum <= termin)));
-            return ernennungen.Any() ? ernennungen.Max(t => t.StufeID) : 1;
-        }
-
         public string WeekDay(int id)
         {
             var wochentag = m_wochentag.Single(s => s.Id == id);
             return wochentag.Bezeichnung;
         }
 
-        public decimal TrainingAward(int level, Training training, int trainerNr)
+        public Boolean IstNochMitglied(int? id)
         {
-            decimal decResult = 0;
-            if (!training.VHS)
-            {
-                var stundensatz = m_stundensaetze.Single(s => (s.TrainerStufenID == level) && (s.TrainerNummer == trainerNr) && (s.Dauer == training.DauerMinuten));
-                decResult = stundensatz.Betrag;
-            }
-            return decResult;
-        }
+            if (!id.HasValue)
+                return false;
 
-        public decimal ExtraAmount(Training training, int trainerNr)
-        {
-            if (training.Kindertraining)
-            {
-                var zuschlag = m_zuschlagKinderTraining.Single(s => (s.Trainernummer == trainerNr) && (s.Dauer == training.DauerMinuten));
-                return zuschlag.Betrag;
-            }
-            return 0;
+            if (id < 0)
+                return false;
+
+            DateTime? austritt = MitgliedFromId(id.Value).Austritt;
+
+            if (!austritt.HasValue)
+                return true;
+
+            return (austritt.Value.Year == 0);
         }
 
         public int MaxMitgliedsNr() 
@@ -119,13 +93,8 @@ namespace AVF.MemberManagement.BusinessLogic
         public int MaxTrainerstufe 
             => m_trainerStufe.Max(t => t.Id);
 
-        public Mitglied MitgliedFromId(int id)
-        {
-            if (m_mitglieder.Exists(s => s.Id == id))
-                return m_mitglieder.Single(s => s.Id == id);
-            else
-                return null;
-        }
+        public Mitglied MitgliedFromId(int id) 
+            => m_mitglieder.Single(s => s.Id == id);
 
         public Training TrainingFromId(int id) 
             => m_trainings.Single(s => s.Id == id);
@@ -159,34 +128,9 @@ namespace AVF.MemberManagement.BusinessLogic
             return iCount;
         }
 
-        public Boolean IstNochMitglied(int? id)
-        {
-            if (!id.HasValue)
-                return false;
-
-            if (id < 0)
-                return false;
-
-            DateTime? austritt = MitgliedFromId(id.Value).Austritt;
-
-            if (!austritt.HasValue)
-                return true;
-
-            return (austritt.Value.Year == 0);
-        }
-
-        public List<Mitglied> Mitglieder()
-            => m_mitglieder;
-
-        public List<Kurs> Kurse()
-            => m_kurs;
-
         public Kurs KursFromId(int id)
             => m_kurs.Single(s => s.Id == id);     
         
-        public List<Pruefung> Pruefungen() 
-            => m_pruefung;
-
         public Graduierung GraduierungFromId(int id) 
             => m_graduierung.Single(s => s.Id == id);
 
@@ -225,25 +169,5 @@ namespace AVF.MemberManagement.BusinessLogic
 
         public List<Training> TrainingsInPeriod(DateTime datStart, DateTime datEnd) 
             => TrainingsInPeriod(null, datStart, datEnd);
-
-        public List<Training> AllTrainings()
-            => m_trainings;
-
-        public decimal CalcTravelExpenses(int? idMitglied, DateTime termin)
-        {
-            var wohnungsbezug = m_wohnungsbezug.Where(t => (t.MitgliedId == idMitglied) && ((t.Datum == null) || (t.Datum <= termin)));
-            if (wohnungsbezug.Any())
-            {
-                var letzterUmzug = wohnungsbezug.Max(t => t.Datum);
-                var wohnungId = wohnungsbezug.Single(s => (s.Datum == letzterUmzug)).WohnungId;
-                var wohnung = m_wohnung.Single(s => (s.Id == wohnungId));
-                if (wohnung.Fahrtstrecke.HasValue)
-                {
-                    Decimal Cents = wohnung.Fahrtstrecke.Value * 17;
-                    return Decimal.Floor(Cents + 0.5M) / 100;
-                }
-            }
-            return 0;
-        }
     }
 }

@@ -9,13 +9,13 @@ namespace AVF.MemberManagement.Console
     {
         internal async Task Main( DatabaseWrapper db )
         {
-            OutputFile ofile = new OutputFile("Pruefungsliste.txt", db );
+            OutputTarget oTarget = new OutputTarget("Pruefungsliste.txt", db );
 
-            foreach ( Mitglied mitglied in db.Mitglieder() )
+            foreach ( Mitglied mitglied in db.m_mitglieder)
             {
                 var pruefungen = new List<Pruefung>();
 
-                foreach ( Pruefung pruefung in db.Pruefungen() )
+                foreach ( Pruefung pruefung in db.m_pruefung )
                 {
                     if ( pruefung.Pruefling == mitglied.Id )
                     {
@@ -25,17 +25,17 @@ namespace AVF.MemberManagement.Console
 
                 if (pruefungen.Count > 0)
                 {
-                    ofile.WriteMitglied(mitglied);
-                    ofile.WriteLine();
+                    oTarget.WriteMitglied(mitglied);
+                    oTarget.WriteLine();
                     foreach (Pruefung pruefung in pruefungen)
                     {
-                        ofile.WritePruefung( pruefung );
-                        ofile.WriteLine();
+                        oTarget.WritePruefung( pruefung );
+                        oTarget.WriteLine();
                     }
-                    ofile.WriteLine();
+                    oTarget.WriteLine();
                 }
             }
-            ofile.Close();
+            oTarget.CloseAndReset2Console();
         }
     }
 }

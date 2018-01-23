@@ -9,12 +9,12 @@ namespace AVF.MemberManagement.Console
     {
         internal async Task Main( DatabaseWrapper db )
         {
-            OutputFile ofile = new OutputFile( "Mitgliederbeitraege.txt", db );
+            OutputTarget oTarget = new OutputTarget( "Mitgliederbeitraege.txt", db );
 
             decimal decHalbjahresSumme = 0;
             int iLfdNr = 0;
 
-            foreach (Mitglied mitglied in db.Mitglieder())
+            foreach (Mitglied mitglied in db.m_mitglieder)
             {
                 if (mitglied.Faktor > 0)
                 {
@@ -25,22 +25,22 @@ namespace AVF.MemberManagement.Console
                         decimal decJahresbeitrag     = decStdJahresbeitrag * iProzentsatz / 100;
                         decimal decHalbjahresbeitrag = decJahresbeitrag / 2;
                         decHalbjahresSumme += decHalbjahresbeitrag;
-                        ofile.Write($"{ ++iLfdNr, 3}  ");
-                        ofile.WriteMitglied( mitglied) ;
-                        ofile.Write($"{ db.BK_Text(mitglied),3} ");
-                        ofile.WriteAmount( decJahresbeitrag );
-                        ofile.Write($"{ mitglied.Familienmitglied } ");
-                        ofile.WriteAmount( decHalbjahresbeitrag );
-                        ofile.WriteLine();
+                        oTarget.Write($"{ ++iLfdNr, 3}  ");
+                        oTarget.WriteMitglied( mitglied) ;
+                        oTarget.Write($"{ db.BK_Text(mitglied),3} ");
+                        oTarget.WriteAmount( decJahresbeitrag );
+                        oTarget.Write($"{ mitglied.Familienmitglied } ");
+                        oTarget.WriteAmount( decHalbjahresbeitrag );
+                        oTarget.WriteLine();
                     }
                 }
             }
 
-            ofile.WriteLine();
-            ofile.WriteLine("Halbjahressumme: ");
-            ofile.WriteAmount( decHalbjahresSumme );
+            oTarget.WriteLine();
+            oTarget.WriteLine("Halbjahressumme: ");
+            oTarget.WriteAmount( decHalbjahresSumme );
 
-            ofile.Close();
+            oTarget.CloseAndReset2Console();
         }
     }
 }

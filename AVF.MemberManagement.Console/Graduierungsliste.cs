@@ -64,13 +64,13 @@ namespace AVF.MemberManagement.Console
     {
         internal async Task Main(DatabaseWrapper db)
         {
-            OutputFile ofile = new OutputFile( "Graduierungsliste.txt", db );
+            OutputTarget oTarget = new OutputTarget( "Graduierungsliste.txt", db );
 
             List<ComparableMember> m_memberList = new List<ComparableMember>();
 
             DateTime dateZero = new DateTime(1, 1, 1);
 
-            foreach (Mitglied mitglied in db.Mitglieder())
+            foreach (Mitglied mitglied in db.m_mitglieder)
             {
                 if (db.IstNochMitglied(mitglied.Id))
                 {
@@ -78,7 +78,7 @@ namespace AVF.MemberManagement.Console
                     DateTime iStartDate = (mitglied.Eintritt.HasValue) ? mitglied.Eintritt.Value : dateZero;
                     ComparableMember member = new ComparableMember(mitglied.Id, iStartGrad, iStartDate);
 
-                    foreach (Pruefung pruefung in db.Pruefungen())
+                    foreach (Pruefung pruefung in db.m_pruefung)
                     {
                         if (pruefung.Pruefling == mitglied.Id)
                         {
@@ -109,24 +109,24 @@ namespace AVF.MemberManagement.Console
                         sGrad += $"({grad.Japanisch}) ";
                     iGradIdLast = grad.Id;
                 }
-                ofile.Write(sGrad.PadRight(20));
-                ofile.WriteMitglied( mitglied );
-                ofile.Write($"{ mitglied.Geburtsdatum:yyyy-MM-dd} ");
-                ofile.Write($"{ mitglied.Geburtsort, -20} ");
-                ofile.Write($"{ db.BK_Text(mitglied), 3} ");
-                ofile.Write($"{ mitglied.Eintritt:yyyy-MM-dd} ");
-                ofile.Write($"{ dateGrad:yyyy-MM-dd} ");
-                ofile.Write($"{ dateNext:yyyy-MM-dd} ");
+                oTarget.Write(sGrad.PadRight(20));
+                oTarget.WriteMitglied( mitglied );
+                oTarget.Write($"{ mitglied.Geburtsdatum:yyyy-MM-dd} ");
+                oTarget.Write($"{ mitglied.Geburtsort, -20} ");
+                oTarget.Write($"{ db.BK_Text(mitglied), 3} ");
+                oTarget.Write($"{ mitglied.Eintritt:yyyy-MM-dd} ");
+                oTarget.Write($"{ dateGrad:yyyy-MM-dd} ");
+                oTarget.Write($"{ dateNext:yyyy-MM-dd} ");
 
                 if (dateGrad < datFirstReliableData)
-                    ofile.Write("> ");
+                    oTarget.Write("> ");
                 int iCount = db.Filter(db.Filter(tn, dateGrad, DateTime.Now), mitglied.Id).Count;
-                ofile.Write($" { iCount }");
+                oTarget.Write($" { iCount }");
 
-                ofile.WriteLine( );
+                oTarget.WriteLine( );
             }
 
-            ofile.Close();
+            oTarget.CloseAndReset2Console();
         }
     }
 }

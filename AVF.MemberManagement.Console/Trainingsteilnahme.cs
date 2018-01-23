@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using AVF.MemberManagement.BusinessLogic;
 
 namespace AVF.MemberManagement.Console
@@ -8,59 +7,90 @@ namespace AVF.MemberManagement.Console
     {
         public enum ReportType { MemberVsTraining, MemberVsCourse, WeekVsCourse  };
 
-        internal static void Report(DatabaseWrapper db, int iJahr, ReportType type )
+        private static int GetUserInput( int iMax, string str )
         {
+            int iResult;
+            System.Console.WriteLine();
+            do
+            {
+                System.Console.Write($"Please enter {str} (1..{iMax}) or 0 to exit and press ENTER: ");
+                int.TryParse(System.Console.ReadLine(), out iResult);
+            } while ((iResult < 0) || (iMax < iResult));
+
+            return iResult;
+        }
+
+        internal static void Report(DatabaseWrapper db, int iJahr )
+        {
+            OutputTarget oTarget = new OutputTarget( db );
+
             DateTime datStart = new DateTime(iJahr, 1, 1);
             DateTime datEnd = new DateTime(iJahr, 12, 31);
 
-            switch ( type )
+            var input = 0;
+            while (input == 0)
             {
-                case ReportType.MemberVsCourse:
-                    {
-                        MemberVsCourse tp = new MemberVsCourse(db, datStart, datEnd);
+                System.Console.Clear();
+                System.Console.WriteLine();
+                System.Console.WriteLine("1: MemberVsTraining");
+                System.Console.WriteLine("2: MemberVsCourse");
+                System.Console.WriteLine("3: WeekVsCourse");
 
-                        OutputFile ofile = new OutputFile("TeilnahmeMitgliedKurs.txt", db);
+                input = GetUserInput(3, "number");
 
-                        ofile.WriteLine($"Trainingsteilnahme    {datStart:dd.MM.yyyy} bis {datEnd:dd.MM.yyyy}");
-
-                        ofile.WriteLine();
-                        ofile.WriteMatrix(tp.GetMatrix());
-
-                        ofile.Close();
-                    }
-                    break;
-
-                case ReportType.WeekVsCourse:
-                    {
-                        WeekVsCourse tp = new WeekVsCourse(db, datStart, datEnd, 144);
-
-                        OutputFile ofile = new OutputFile("TeilnahmeWocheKurs.txt", db);
-
-                        ofile.WriteLine($"Trainingsteilnahme    {datStart:dd.MM.yyyy} bis {datEnd:dd.MM.yyyy}");
-                        ofile.WriteLine();
-                        ofile.WriteMatrix(tp.GetMatrix());
-
-                        ofile.Close();
-                    }
-                    break;
-
-                case ReportType.MemberVsTraining:
-                    {
-                        MemberVsTraining mt = new MemberVsTraining(db, datStart, datEnd);
-
-                        foreach (var kurs in db.Kurse())
+                switch (input)
+                {
+                    case 1:
                         {
-                            OutputFile ofile = new OutputFile($"Kurs_{kurs.Id}.txt", db);
+                            MemberVsCourse tp = new MemberVsCourse(db, datStart, datEnd);
 
-                            ofile.WriteLine($"Kurs Nr. {kurs.Id}");
-                            ofile.WriteLine($"{db.WeekDay(kurs.WochentagID)} {kurs.Zeit}");
-                            ofile.WriteLine($"{datStart:dd.MM.yyyy} bis {datEnd:dd.MM.yyyy}");
+                            oTarget.SetOutputFile("TeilnahmeMitgliedKurs.txt");
 
-                            ofile.WriteMatrix(mt.GetMatrix(kurs.Id));
-                            ofile.Close();
+                            oTarget.WriteLine($"Trainingsteilnahme    {datStart:dd.MM.yyyy} bis {datEnd:dd.MM.yyyy}");
+
+                            oTarget.WriteLine();
+                            oTarget.WriteMatrix(tp.GetMatrix());
+
+                            oTarget.CloseAndReset2Console();
                         }
-                    }
-                    break;
+                        break;
+                    case 2:
+                        {
+                            WeekVsCourse tp = new WeekVsCourse(db, datStart, datEnd, 144);
+
+                            oTarget.SetOutputFile("TeilnahmeWocheKurs.txt");
+
+                            oTarget.WriteLine($"Trainingsteilnahme    {datStart:dd.MM.yyyy} bis {datEnd:dd.MM.yyyy}");
+                            oTarget.WriteLine();
+                            oTarget.WriteMatrix(tp.GetMatrix());
+
+                            oTarget.CloseAndReset2Console();
+                        }
+                        break;
+                    case 3:
+                        {
+                            MemberVsTraining mt = new MemberVsTraining(db, datStart, datEnd);
+
+                            System.Console.Clear();
+                            input = GetUserInput(db.MaxKursNr(), "Course Id");
+                             
+                            if (input == 0)
+                                break;
+
+                            var kurs = db.KursFromId(input);
+                            oTarget.SetOutputFile($"Kurs_{kurs.Id}.txt");
+
+                            oTarget.WriteLine($"Kurs Nr. {kurs.Id}");
+                            oTarget.WriteLine($"{db.WeekDay(kurs.WochentagID)} {kurs.Zeit}");
+                            oTarget.WriteLine($"{datStart:dd.MM.yyyy} bis {datEnd:dd.MM.yyyy}");
+
+                            oTarget.WriteMatrix(mt.GetMatrix(kurs.Id));
+                            oTarget.CloseAndReset2Console();
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }

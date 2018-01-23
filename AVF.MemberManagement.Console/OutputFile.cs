@@ -1,38 +1,87 @@
-﻿using AVF.MemberManagement.StandardLibrary.Tbo;
+﻿
+using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.BusinessLogic;
 
 namespace AVF.MemberManagement.Console
 {
-    internal class OutputFile : System.IO.StreamWriter
+    internal class OutputTarget // : System.IO.StreamWriter
     {
         private DatabaseWrapper m_db;
+        private System.IO.StreamWriter m_ofile;
+        private System.IO.TextWriter m_ConsoleOut;
 
-        public OutputFile( string fileName, DatabaseWrapper db ) : base(fileName)
+        private void initialize(DatabaseWrapper db)
         {
             m_db = db;
+            m_ConsoleOut = System.Console.Out;
+        }
+
+        public OutputTarget(DatabaseWrapper db)
+        {
+            initialize( db );
+        }
+
+        public OutputTarget(string fileName, DatabaseWrapper db )
+        {
+            m_db = db;
+            m_ConsoleOut = System.Console.Out;
+            SetOutputFile(fileName);
+        }
+
+        public void SetOutputFile(string fileName) // : base(fileName)
+        {
+            m_ofile = new System.IO.StreamWriter(fileName);
             System.Console.WriteLine(fileName);
+            System.Console.SetOut(m_ofile);
+        }
+
+        public void CloseAndReset2Console()
+        {
+            m_ofile.Close();
+            m_ofile = null;
+            System.Console.SetOut(m_ConsoleOut);
+        }
+
+        public void Write(string str)
+        {
+            System.Console.Write(str);
+        }
+
+        public void WriteLine()
+        {
+            System.Console.WriteLine();
+        }
+
+        public void WriteLine(string str)
+        {
+            System.Console.WriteLine(str);
         }
 
         public void WriteAmount(decimal amount)
         {
             string s = (amount > 0) ? $" { amount,7 } € " : "";
 
-            Write(s.PadRight(11));
+            System.Console.Write(s.PadRight(11));
         }
 
         public void WriteNumber( int i )
         {
-            Write( Utilities.FormatNumber(i));
+            System.Console.Write( Utilities.FormatNumber(i) );
         }
 
         public void WriteTraining(Training training, string weekDay)
         {
-            Write(Utilities.FormatTraining(training, weekDay));
+            System.Console.Write(Utilities.FormatTraining(training, weekDay));
+        }
+
+        public void WriteTraining(Training training, int id )
+        {
+            WriteTraining(training, m_db.WeekDay(id));
         }
 
         public void WriteMitglied(Mitglied mitglied)
         {
-            Write(Utilities.FormatMitglied(mitglied));
+            System.Console.Write(Utilities.FormatMitglied(mitglied));
         }
 
         public void WriteMitglied( int id )
@@ -44,11 +93,11 @@ namespace AVF.MemberManagement.Console
         {
             Graduierung grad = m_db.GraduierungFromId(pruefung.GraduierungID);
 
-            Write($"{grad.Bezeichnung} {pruefung.Datum:yyyy-MM-dd} Prüfer: ");
+            System.Console.Write($"{grad.Bezeichnung} {pruefung.Datum:yyyy-MM-dd} Prüfer: ");
             if (pruefung.Pruefer > 0)
                 WriteMitglied( pruefung.Pruefer );
             else
-                Write($"{pruefung.Bemerkung}");
+                System.Console.Write($"{pruefung.Bemerkung}");
         }
 
         public void WriteMatrix( string [,] matrix )
@@ -56,8 +105,8 @@ namespace AVF.MemberManagement.Console
             for (int iRow = 0; iRow < matrix.GetLength(0); ++iRow)
             {
                 for (int iCol = 0; iCol < matrix.GetLength(1); ++iCol)
-                    Write(matrix[iRow, iCol]);
-                WriteLine();
+                    System.Console.Write(matrix[iRow, iCol]);
+                System.Console.WriteLine();
             }
         }
     }
