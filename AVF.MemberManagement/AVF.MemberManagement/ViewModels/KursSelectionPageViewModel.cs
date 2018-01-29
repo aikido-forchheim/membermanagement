@@ -146,6 +146,7 @@ namespace AVF.MemberManagement.ViewModels
             }
             catch (Exception ex)
             {
+                //TODO: write to own logger
                 System.Diagnostics.Debug.WriteLine(ex);
             }
         }
