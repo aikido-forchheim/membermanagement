@@ -13,7 +13,7 @@ namespace AVF.MemberManagement.Console
 
             int iFinding = 0;
 
-            // Trainer has to be participant of training
+            // Trainer muss auch als Teilnehmer gelistet sein
 
             DateTime dateStart = new DateTime(2017, 1, 1);
 

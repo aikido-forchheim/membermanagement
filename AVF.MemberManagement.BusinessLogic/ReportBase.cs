@@ -4,7 +4,7 @@ using AVF.MemberManagement.StandardLibrary.Tbo;
 
 namespace AVF.MemberManagement.BusinessLogic
 {
-    public abstract class MatrixReport
+    public abstract class ReportBase
     {
         protected DatabaseWrapper m_db;
 
@@ -33,7 +33,7 @@ namespace AVF.MemberManagement.BusinessLogic
 
         protected string[,] m_stringMatrix;
 
-        public MatrixReport(DatabaseWrapper db, DateTime datStart, DateTime datEnd)
+        public ReportBase(DatabaseWrapper db, DateTime datStart, DateTime datEnd)
         {
             m_db = db;
             m_datStart = datStart;

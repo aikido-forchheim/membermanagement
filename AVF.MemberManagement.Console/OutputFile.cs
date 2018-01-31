@@ -93,9 +93,12 @@ namespace AVF.MemberManagement.Console
         {
             Graduierung grad = m_db.GraduierungFromId(pruefung.GraduierungID);
 
-            System.Console.Write($"{grad.Bezeichnung} {pruefung.Datum:yyyy-MM-dd} Prüfer: ");
+            System.Console.Write($"{grad.Bezeichnung} {pruefung.Datum:dd-MM-yyyy} Prüfer: ");
             if (pruefung.Pruefer > 0)
-                WriteMitglied( pruefung.Pruefer );
+            {
+                Mitglied pruefer = m_db.MitgliedFromId(pruefung.Pruefer);
+                System.Console.Write( $"{ pruefer.Nachname }, { pruefer.Vorname } ({ pruefer.Id }) " );
+            }
             else
                 System.Console.Write($"{pruefung.Bemerkung}");
         }

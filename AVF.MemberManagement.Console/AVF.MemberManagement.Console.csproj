@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CheckConsistancy.cs" />
+    <Compile Include="Excel.cs" />
     <Compile Include="Graduierungsliste.cs" />
     <Compile Include="Mitgliederbeitraege.cs" />
     <Compile Include="OutputFile.cs" />

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-//using AVF.MemberManagement.StandardLibrary.Interfaces;
 using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.BusinessLogic;
@@ -103,12 +102,17 @@ namespace AVF.MemberManagement.Console
         private void SettlePeriod
         (
             TrainerAward   ta,
-            OutputTarget     oTarget, 
+            OutputTarget   oTarget, 
             Mitglied       trainer,                       // null means: no specific trainer, do for all trainers
             List<Training> trainings,
             bool           print
         )
         {
+            if (oTarget == null)
+            {
+                throw new System.ArgumentNullException(nameof(oTarget));
+            }
+
             foreach (Training training in trainings)
             {
                 for (int trainerNr = 1; trainerNr <= 3; ++trainerNr)

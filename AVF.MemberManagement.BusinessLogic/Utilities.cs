@@ -12,6 +12,5 @@ namespace AVF.MemberManagement.BusinessLogic
 
         public static string FormatTraining(Training training, string weekDay)
             => $"{training.Termin:yyyy-MM-dd} {weekDay,-10} {training.Zeit:hh}:{training.Zeit:mm} {training.DauerMinuten,3} ";
-
     }
 }

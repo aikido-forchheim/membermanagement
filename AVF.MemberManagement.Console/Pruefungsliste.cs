@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.BusinessLogic;
@@ -13,23 +14,14 @@ namespace AVF.MemberManagement.Console
 
             foreach ( Mitglied mitglied in db.m_mitglieder)
             {
-                var pruefungen = new List<Pruefung>();
-
-                foreach ( Pruefung pruefung in db.m_pruefung )
-                {
-                    if ( pruefung.Pruefling == mitglied.Id )
-                    {
-                        pruefungen.Add(pruefung);
-                    }
-                }
-
-                if (pruefungen.Count > 0)
+                var examinations = Examinations.GetListOfExaminations(db, mitglied);
+                if (examinations.Length > 0)
                 {
                     oTarget.WriteMitglied(mitglied);
                     oTarget.WriteLine();
-                    foreach (Pruefung pruefung in pruefungen)
+                    foreach (Examination examination in examinations)
                     {
-                        oTarget.WritePruefung( pruefung );
+                        oTarget.WritePruefung(examination.exam);
                         oTarget.WriteLine();
                     }
                     oTarget.WriteLine();

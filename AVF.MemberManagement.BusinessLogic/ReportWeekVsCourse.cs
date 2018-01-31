@@ -4,13 +4,13 @@ using AVF.MemberManagement.StandardLibrary.Tbo;
 
 namespace AVF.MemberManagement.BusinessLogic
 {
-    public class WeekVsCourse : MatrixReport
+    public class ReportWeekVsCourse : ReportBase
     {
         DateTimeFormatInfo m_dfi;
         Calendar           m_cal;
         int ?              m_idMember;
 
-        public WeekVsCourse(DatabaseWrapper db, DateTime datStart, DateTime datEnd, int ? idMember)
+        public ReportWeekVsCourse(DatabaseWrapper db, DateTime datStart, DateTime datEnd, int ? idMember)
             : base(db, datStart, datEnd)
         {
             m_dfi = DateTimeFormatInfo.CurrentInfo;

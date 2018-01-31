@@ -43,6 +43,7 @@ namespace AVF.MemberManagement.Console
                     System.Console.WriteLine("6: Mitgliederbeiträge");
                     System.Console.WriteLine("7: Konsistenzprüfungen");
                     System.Console.WriteLine("8: Trainingsteilnahme");
+                    System.Console.WriteLine("9: Excel-Test");
                     System.Console.WriteLine();
                     System.Console.Write("Please enter number and press ENTER: ");
 
@@ -72,7 +73,10 @@ namespace AVF.MemberManagement.Console
                             new CheckConsistancy().Main(m_dbWrapper).Wait();
                             break;
                         case 8:
-                            Trainingsteilnahme.Report(m_dbWrapper, 2017 );
+                            Trainingsteilnahme.Report(m_dbWrapper, 2017);
+                            break;
+                        case 9:
+                            new Excel().Test(m_dbWrapper);
                             break;
                         default:
                             break;

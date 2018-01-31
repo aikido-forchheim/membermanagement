@@ -42,7 +42,7 @@ namespace AVF.MemberManagement.Console
                 {
                     case 1:
                         {
-                            MemberVsCourse tp = new MemberVsCourse(db, datStart, datEnd);
+                            ReportMemberVsCourse tp = new ReportMemberVsCourse(db, datStart, datEnd);
 
                             oTarget.SetOutputFile("TeilnahmeMitgliedKurs.txt");
 
@@ -56,7 +56,7 @@ namespace AVF.MemberManagement.Console
                         break;
                     case 2:
                         {
-                            WeekVsCourse tp = new WeekVsCourse(db, datStart, datEnd, 144);
+                            ReportWeekVsCourse tp = new ReportWeekVsCourse(db, datStart, datEnd, 144);
 
                             oTarget.SetOutputFile("TeilnahmeWocheKurs.txt");
 
@@ -69,7 +69,7 @@ namespace AVF.MemberManagement.Console
                         break;
                     case 3:
                         {
-                            MemberVsTraining mt = new MemberVsTraining(db, datStart, datEnd);
+                            ReportMemberVsTraining mt = new ReportMemberVsTraining(db, datStart, datEnd);
 
                             System.Console.Clear();
                             input = GetUserInput(db.MaxKursNr(), "Course Id");

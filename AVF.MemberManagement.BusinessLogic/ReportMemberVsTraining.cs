@@ -3,11 +3,11 @@ using AVF.MemberManagement.StandardLibrary.Tbo;
 
 namespace AVF.MemberManagement.BusinessLogic
 {
-    public class MemberVsTraining: MatrixReport
+    public class ReportMemberVsTraining: ReportBase
     {
         private int m_idKurs;
 
-        public MemberVsTraining(DatabaseWrapper db, DateTime datStart, DateTime datEnd)
+        public ReportMemberVsTraining(DatabaseWrapper db, DateTime datStart, DateTime datEnd)
             : base(db, datStart, datEnd) { }
 
         protected override bool IsRelevant(TrainingsTeilnahme tn)

@@ -101,7 +101,10 @@ namespace AVF.MemberManagement.Console
                 Mitglied    mitglied = db.MitgliedFromId(cmem.GetMemberId());
                 DateTime    dateGrad = cmem.GetDatumGraduierung();
                 DateTime    dateNext = dateGrad.AddYears(grad.WartezeitJahre).AddMonths(grad.WartezeitMonate);
-                string      sGrad    = "";
+                var         tnMember = db.Filter(tn, mitglied.Id);
+                int         iCount   = db.Filter(tnMember, dateGrad, DateTime.Now).Count;
+
+                string sGrad = "";
                 if (grad.Id != iGradIdLast)
                 {
                     sGrad = $"{grad.Bezeichnung} ";
@@ -111,18 +114,14 @@ namespace AVF.MemberManagement.Console
                 }
                 oTarget.Write(sGrad.PadRight(20));
                 oTarget.WriteMitglied( mitglied );
-                oTarget.Write($"{ mitglied.Geburtsdatum:yyyy-MM-dd} ");
+                oTarget.Write($"{ mitglied.Geburtsdatum:dd.MM.yyyy} ");
                 oTarget.Write($"{ mitglied.Geburtsort, -20} ");
                 oTarget.Write($"{ db.BK_Text(mitglied), 3} ");
-                oTarget.Write($"{ mitglied.Eintritt:yyyy-MM-dd} ");
-                oTarget.Write($"{ dateGrad:yyyy-MM-dd} ");
-                oTarget.Write($"{ dateNext:yyyy-MM-dd} ");
-
-                if (dateGrad < datFirstReliableData)
-                    oTarget.Write("> ");
-                int iCount = db.Filter(db.Filter(tn, dateGrad, DateTime.Now), mitglied.Id).Count;
+                oTarget.Write($"{ mitglied.Eintritt:dd.MM.yyyy} ");
+                oTarget.Write($"{ dateGrad:dd.MM.yyyy} ");
+                oTarget.Write($"{ dateNext:dd.MM.yyyy} ");
+                oTarget.Write((dateGrad < datFirstReliableData) ? "> " : "  ");
                 oTarget.Write($" { iCount }");
-
                 oTarget.WriteLine( );
             }
 
