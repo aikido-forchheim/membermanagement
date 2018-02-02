@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Tbo;
-using AVF.MemberManagement.BusinessLogic;
+using AVF.MemberManagement.ReportBusinessLogic;
 
 namespace AVF.MemberManagement.Console
 {

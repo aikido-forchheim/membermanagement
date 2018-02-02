@@ -4,10 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
-using AVF.MemberManagement.BusinessLogic;
 using Microsoft.Practices.Unity;
 
-namespace AVF.MemberManagement.BusinessLogic
+namespace AVF.MemberManagement.ReportBusinessLogic
 {
     public class DatabaseWrapper
     {

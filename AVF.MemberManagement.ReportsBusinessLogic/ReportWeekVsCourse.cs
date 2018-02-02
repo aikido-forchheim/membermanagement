@@ -2,7 +2,7 @@
 using System.Globalization;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 
-namespace AVF.MemberManagement.BusinessLogic
+namespace AVF.MemberManagement.ReportBusinessLogic
 {
     public class ReportWeekVsCourse : ReportBase
     {
@@ -40,8 +40,8 @@ namespace AVF.MemberManagement.BusinessLogic
 
         protected override void FillHeaderRows()
         {
-            m_stringMatrix[0, 0] = "Kalender";
-            m_stringMatrix[1, 0] = "woche   ";
+            StringMatrix[0, 0] = "Kalender";
+            StringMatrix[1, 0] = "woche   ";
 
             FillCourseHeaderRows();
         }
@@ -79,7 +79,7 @@ namespace AVF.MemberManagement.BusinessLogic
             FillMainRows();
             FillFooterRow("Summe  ");
 
-            return m_stringMatrix;
+            return StringMatrix;
         }
     }
 }

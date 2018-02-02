@@ -98,10 +98,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AVF.MemberManagement.BusinessLogic\AVF.MemberManagement.BusinessLogic.csproj">
-      <Project>{7f665b64-c06f-4fe8-8b7e-33d7734ddea5}</Project>
-      <Name>AVF.MemberManagement.BusinessLogic</Name>
-    </ProjectReference>
     <ProjectReference Include="..\AVF.MemberManagement.StandardLibrary\AVF.MemberManagement.StandardLibrary.csproj">
       <Project>{b900104e-d6b5-4a65-85fd-57702e0f6d65}</Project>
       <Name>AVF.MemberManagement.StandardLibrary</Name>

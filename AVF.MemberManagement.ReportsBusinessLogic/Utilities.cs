@@ -1,6 +1,6 @@
 ﻿using AVF.MemberManagement.StandardLibrary.Tbo;
 
-namespace AVF.MemberManagement.BusinessLogic
+namespace AVF.MemberManagement.ReportBusinessLogic
 {
     public static class Utilities
     {

@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Windows.Forms;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 
-namespace AVF.MemberManagement.BusinessLogic
+namespace AVF.MemberManagement.ReportBusinessLogic
 {
     public class ReportMemberVsCourse : ReportBase
     {
@@ -26,8 +27,8 @@ namespace AVF.MemberManagement.BusinessLogic
 
         protected override void FillHeaderRows()
         {
-            m_stringMatrix[0, 0] = "                       Mitglied  ";
-            m_stringMatrix[1, 0] = "                         Nummer  ";
+            StringMatrix[0, 0] = "                       Mitglied  ";
+            StringMatrix[1, 0] = "                         Nummer  ";
 
             FillCourseHeaderRows();
         }
@@ -47,7 +48,7 @@ namespace AVF.MemberManagement.BusinessLogic
             return Utilities.FormatNumber( iValue );
         }
 
-        public string[,] GetMatrix()
+        public DataGridView GetMatrix()
         {
             m_iNrOfColsOnLeftSide = 1;   // column for Mitglieder
             m_iNrOfColsOnRightSide = 1;  // column for row sum
@@ -67,7 +68,7 @@ namespace AVF.MemberManagement.BusinessLogic
             FillMainRows();
             FillFooterRow("                     Insgesamt  ");
 
-            return m_stringMatrix;
+            return ReportDataGridView;
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 
-namespace AVF.MemberManagement.BusinessLogic
+namespace AVF.MemberManagement.ReportBusinessLogic
 {
     public class ReportMemberVsTraining: ReportBase
     {
@@ -29,16 +29,16 @@ namespace AVF.MemberManagement.BusinessLogic
         protected override void FillHeaderRows( )
         {
             int iCol = 0;
-            m_stringMatrix[0, iCol] = "                          Monat ";
-            m_stringMatrix[1, iCol] = "                            Tag ";
+            StringMatrix[0, iCol] = "                          Monat ";
+            StringMatrix[1, iCol] = "                            Tag ";
             foreach (var training in m_db.TrainingsInPeriod(m_idKurs, m_datStart, m_datEnd))
             {
                 ++iCol;
-                m_stringMatrix[0, iCol] = $" {training.Termin:MM}";
-                m_stringMatrix[1, iCol] = $" {training.Termin:dd}";
+                StringMatrix[0, iCol] = $" {training.Termin:MM}";
+                StringMatrix[1, iCol] = $" {training.Termin:dd}";
             }
             ++iCol;
-            m_stringMatrix[1, iCol] = "    Summe";
+            StringMatrix[1, iCol] = "    Summe";
         }
 
         protected override string FormatFirstColElement(int iRow)
@@ -77,7 +77,7 @@ namespace AVF.MemberManagement.BusinessLogic
             FillMainRows();
             FillFooterRow("                     Insgesamt  ");
 
-            return m_stringMatrix;
+            return StringMatrix;
         }
     }
 }
