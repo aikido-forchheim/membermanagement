@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
-using AVF.MemberManagement.StandardLibrary.Tbo;
+using AVF.MemberManagement.ReportsBusinessLogic;
 
-namespace AVF.MemberManagement.ReportBusinessLogic
+namespace AVF.MemberManagement.Reports
 {
     public class ReportMemberVsCourse : ReportBase
     {
@@ -15,25 +15,18 @@ namespace AVF.MemberManagement.ReportBusinessLogic
             m_iNrOfColsOnRightSide = 1;  // column for row sum
             m_iNrOfHeaderRows = 3;       // one empty row
 
-            Initialize
+            m_coreReport.Initialize
             (
+                datStart,
+                datEnd,
                 m_db.MaxMitgliedsNr() + 1,   // One additional row for pseudo member with Id = -1
-                m_db.MaxKursNr() + 1         // One additional col for "Lehrgänge"
-            );
-
-            CollectData
-            (
+                m_db.MaxKursNr() + 1,         // One additional col for "Lehrgänge"
                 tn => true,
                 tn => tn.MitgliedID - 1,  // db ids start with 1, array indices with 0
-                tn => 
-                {
-                    return m_db.KursIdFromTrainingId(tn.TrainingID);
-//                    int idKurs = m_db.KursIdFromTrainingId(tn.TrainingID);
-//                    return ((idKurs == 0) ? idKurs : m_iNrOfCols) - 1;
-                }
+                tn => m_db.KursIdFromTrainingId(tn.TrainingID)
             );
 
-            Array.Sort(m_Rows);
+            m_coreReport.SortRows();
         }
 
         protected override void FillHeaderRows()
@@ -46,7 +39,7 @@ namespace AVF.MemberManagement.ReportBusinessLogic
 
         protected override string FormatFirstColElement(int iRow)
         {
-            return Utilities.FormatMitglied(m_db.MitgliedFromId(m_Rows[iRow].idRow));
+            return Utilities.FormatMitglied(m_db.MitgliedFromId(m_coreReport.GetRowId(iRow)));
         }
 
         protected override string FormatMatrixElement(int iValue)

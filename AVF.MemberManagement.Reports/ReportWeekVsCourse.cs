@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Forms;
-using AVF.MemberManagement.StandardLibrary.Tbo;
+using AVF.MemberManagement.ReportsBusinessLogic;
 
-namespace AVF.MemberManagement.ReportBusinessLogic
+namespace AVF.MemberManagement.Reports
 {
     public class ReportWeekVsCourse : ReportBase
     {
@@ -24,21 +24,15 @@ namespace AVF.MemberManagement.ReportBusinessLogic
             m_iNrOfColsOnRightSide = 1;  // column for row sum
             m_iNrOfHeaderRows = 3;       // one empty row
 
-            Initialize
+            m_coreReport.Initialize
             (
+                datStart,
+                datEnd,
                 52,                    // Number of calendar weeks in year
-                m_db.MaxKursNr() + 1   // One additional col for "Lehrgänge"
-            );
-
-            CollectData
-            (
+                m_db.MaxKursNr() + 1,   // One additional col for "Lehrgänge"
                 tn => ( m_idMember.HasValue ) ? (m_idMember.Value == tn.MitgliedID) :  true,
                 tn => m_cal.GetWeekOfYear(m_db.TrainingFromId(tn.TrainingID).Termin, m_dfi.CalendarWeekRule, m_dfi.FirstDayOfWeek) - 1,
-                tn => 
-                {
-                    int idKurs = m_db.KursIdFromTrainingId(tn.TrainingID);
-                    return ((idKurs == 0) ? idKurs : m_iNrOfCols) - 1;
-                }
+                tn => m_db.KursIdFromTrainingId(tn.TrainingID)
             );
         }
 

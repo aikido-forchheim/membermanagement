@@ -6,7 +6,7 @@ using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Microsoft.Practices.Unity;
 
-namespace AVF.MemberManagement.ReportBusinessLogic
+namespace AVF.MemberManagement.ReportsBusinessLogic
 {
     public class DatabaseWrapper
     {

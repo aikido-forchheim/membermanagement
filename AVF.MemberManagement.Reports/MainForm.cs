@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AVF.MemberManagement.ReportBusinessLogic;
+using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {

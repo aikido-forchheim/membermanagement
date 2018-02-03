@@ -4,7 +4,7 @@ using System.Linq;
 using System.Collections.Generic;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 
-namespace AVF.MemberManagement.ReportBusinessLogic
+namespace AVF.MemberManagement.ReportsBusinessLogic
 {
     public class Examination
     {

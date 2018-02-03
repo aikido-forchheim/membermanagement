@@ -2,8 +2,9 @@
 using System.Linq;
 using System.Windows.Forms;
 using AVF.MemberManagement.StandardLibrary.Tbo;
+using AVF.MemberManagement.ReportsBusinessLogic;
 
-namespace AVF.MemberManagement.ReportBusinessLogic
+namespace AVF.MemberManagement.Reports
 {
     public abstract class ReportBase
     {
@@ -12,80 +13,25 @@ namespace AVF.MemberManagement.ReportBusinessLogic
         protected DateTime m_datStart;
         protected DateTime m_datEnd;
 
-        protected int m_iNrOfCols;  // nr of cols of core matrix, without key/sum columns
-        protected int m_iNrOfRows;  // nr of rows of core matrix, without header/footer rows
-
-        protected class Row : IComparable<Row>
-        {
-            public int idRow;
-            public int iRowSum;
-            public int[] aiValues;
-
-            public int CompareTo(Row other) => other.iRowSum - iRowSum;
-        };
-
-        protected Row[] m_Rows;
-        protected int[] m_iColSum;
-        protected int   m_iSumSum;
-
         protected int m_iNrOfHeaderRows;
         protected int m_iNrOfColsOnLeftSide;
         protected int m_iNrOfColsOnRightSide;
+
+        protected TrainingParticipationReport m_coreReport;
 
         public ReportBase(DatabaseWrapper db, DateTime datStart, DateTime datEnd)
         {
             m_db = db;
             m_datStart = datStart;
             m_datEnd = datEnd;
+            m_coreReport = new TrainingParticipationReport(db);
         }
-
-        protected void Initialize( int iNrOfRows, int iNrOfCols )
-        {
-            m_iNrOfRows = iNrOfRows;
-            m_iNrOfCols = iNrOfCols;
-
-            m_Rows = new Row[m_iNrOfRows];
-
-            for (int iRow = 0; iRow < m_iNrOfRows; ++iRow)
-            {
-                m_Rows[iRow] = new Row
-                {
-                    aiValues = new int[m_iNrOfCols],
-                    idRow = iRow + 1,   // id 0 not used in database
-                    iRowSum = 0
-                };
-            }
-
-            m_iColSum = new int[m_iNrOfCols];
-            m_iSumSum = 0;
-        }
-
-        protected void CollectData
-        ( 
-            Func<TrainingsTeilnahme, bool> isRelevant,
-            Func<TrainingsTeilnahme, int>  rowIndex,
-            Func<TrainingsTeilnahme, int>  colIndex
-        )
-        {
-            foreach (var trainingsTeilnahme in m_db.TrainingsTeilnahme(m_datStart, m_datEnd))
-            {
-                if (isRelevant(trainingsTeilnahme))
-                {
-                    int iRow = rowIndex(trainingsTeilnahme);
-                    int iCol = colIndex(trainingsTeilnahme);
-                    ++m_Rows[iRow].aiValues[iCol];
-                    ++m_Rows[iRow].iRowSum;
-                    ++m_iColSum[iCol];
-                    ++m_iSumSum;
-                }
-            }
-       }
 
         protected int GetNrOfRows()
-            => m_Rows.Count(r => r.iRowSum > 0) + m_iNrOfHeaderRows + 1;  // one footer row
+            => m_coreReport.GetNrOfActiveRows() + m_iNrOfHeaderRows + 1;  // one footer row
 
         protected int GetNrOfCols()
-            => m_iColSum.Count(c => c > 0) + m_iNrOfColsOnLeftSide + m_iNrOfColsOnRightSide;
+            => m_coreReport.GetNrOfActiveCols() + m_iNrOfColsOnLeftSide + m_iNrOfColsOnRightSide;
 
         protected void FillCourseHeaderRows(DataGridView dgv)
         {
@@ -95,9 +41,9 @@ namespace AVF.MemberManagement.ReportBusinessLogic
             dgv[iStringCol, 1].Value = " Sondertr.";
             ++iStringCol;
 
-            for (int iCol = 0; iCol < m_iNrOfCols - 1; ++iCol)
+            for (int iCol = 0; iCol < m_coreReport.m_iNrOfCols - 1; ++iCol)
             {
-                if (m_iColSum[iCol] > 0)
+                if (m_coreReport.GetColSum(iCol) > 0)
                 {
                     Kurs kurs = m_db.KursFromId(iCol + 1);
                     dgv[iStringCol, 0].Value = $"    { m_db.WeekDay(kurs.WochentagID).Substring(0, 2) } ";
@@ -113,21 +59,21 @@ namespace AVF.MemberManagement.ReportBusinessLogic
         {
             int iStringRow = m_iNrOfHeaderRows;
 
-            for (int iRow = 0; iRow < m_Rows.Length; ++iRow)
+            for (int iRow = 0; iRow < m_coreReport.m_iNrOfRows; ++iRow)
             {
-                if (m_Rows[iRow].iRowSum > 0)
+                if (m_coreReport.GetRowSum(iRow) > 0)
                 {
                     int iStringCol = 1;
                     dgv[0,iStringRow].Value = FormatFirstColElement(iRow);
-                    for (int iCol = 0; iCol < m_iNrOfCols; ++iCol)
+                    for (int iCol = 0; iCol < m_coreReport.m_iNrOfCols; ++iCol)
                     {
-                        if (m_iColSum[iCol] > 0)
+                        if (m_coreReport.GetColSum(iCol) > 0)
                         {
-                            dgv[iStringCol,iStringRow].Value = FormatMatrixElement(m_Rows[iRow].aiValues[iCol]);
+                            dgv[iStringCol,iStringRow].Value = FormatMatrixElement(m_coreReport.GetCell( iRow, iCol ));
                             ++iStringCol;
                         }
                     }
-                    dgv[iStringCol, iStringRow].Value = "  " + Utilities.FormatNumber(m_Rows[iRow].iRowSum);
+                    dgv[iStringCol, iStringRow].Value = "  " + Utilities.FormatNumber(m_coreReport.GetRowSum(iRow));
                     ++iStringRow;
                 }
             }
@@ -139,21 +85,20 @@ namespace AVF.MemberManagement.ReportBusinessLogic
             int iStringCol = m_iNrOfColsOnLeftSide;
 
             dgv[0,iStringRow].Value = description;
-            for (int iCol = 0; iCol < m_iNrOfCols; ++iCol)
+            for (int iCol = 0; iCol < m_coreReport.m_iNrOfCols; ++iCol)
             {
-                if (m_iColSum[iCol] > 0)
+                if (m_coreReport.GetColSum(iCol) > 0)
                 {
-                    dgv[iStringCol, iStringRow].Value = FormatColSumElement(m_iColSum[iCol]);
+                    dgv[iStringCol, iStringRow].Value = FormatColSumElement(m_coreReport.GetColSum(iCol));
                     ++iStringCol;
                 }
             }
-            dgv[iStringCol, iStringRow].Value = "  " + Utilities.FormatNumber(m_iSumSum);
+            dgv[iStringCol, iStringRow].Value = "  " + Utilities.FormatNumber(m_coreReport.GetSumSum());
         }
 
         abstract protected string FormatFirstColElement(int iRow);
         abstract protected string FormatMatrixElement(int iValue);
         abstract protected string FormatColSumElement(int iValue);
-        abstract protected void FillHeaderRows();
-//        abstract protected int GetFirstColWidth();
+        abstract protected void   FillHeaderRows();
     }
 }

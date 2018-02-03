@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Windows.Forms;
 using AVF.MemberManagement.StandardLibrary.Tbo;
+using AVF.MemberManagement.ReportsBusinessLogic;
 
-namespace AVF.MemberManagement.ReportBusinessLogic
+namespace AVF.MemberManagement.Reports
 {
     public class ReportMemberVsTraining: ReportBase
     {
@@ -24,20 +25,18 @@ namespace AVF.MemberManagement.ReportBusinessLogic
             m_iNrOfColsOnRightSide = 1;  // column for row sum
             m_iNrOfHeaderRows = 2;
 
-            Initialize
+            m_coreReport.Initialize
             (
+                datStart, 
+                datEnd,
                 m_db.MaxMitgliedsNr() + 1,   // One additional row for pseudo member with Id = -1
-                m_db.MaxTrainingNr() + 1
-            );
-
-            CollectData
-            (
+                m_db.MaxTrainingNr() + 1,
                 tn => m_db.KursIdFromTrainingId(tn.TrainingID) == m_idKurs,
                 tn => tn.MitgliedID - 1,  // db ids start with 1, array indeices with 0
                 tn => tn.TrainingID - 1 // db ids start with 1, array indeices with 0
             );
 
-            Array.Sort(m_Rows);
+            m_coreReport.SortRows();
         }
 
         protected override void FillHeaderRows( )
@@ -57,7 +56,7 @@ namespace AVF.MemberManagement.ReportBusinessLogic
 
         protected override string FormatFirstColElement(int iRow)
         {
-            return Utilities.FormatMitglied(m_db.MitgliedFromId(m_Rows[iRow].idRow));
+            return Utilities.FormatMitglied(m_db.MitgliedFromId( m_coreReport.GetRowId(iRow) ));
         }
 
         protected override string FormatMatrixElement(int iValue)

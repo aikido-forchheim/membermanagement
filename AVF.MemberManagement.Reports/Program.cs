@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using Microsoft.Practices.Unity;
 using AVF.MemberManagement.xUnitIntegrationTests;
-using AVF.MemberManagement.ReportBusinessLogic;
+using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
