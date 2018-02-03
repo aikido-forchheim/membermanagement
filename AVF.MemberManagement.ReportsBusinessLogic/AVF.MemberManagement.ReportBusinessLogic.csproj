@@ -47,10 +47,6 @@
     <Compile Include="DatabaseWrapper.cs" />
     <Compile Include="Examinations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReportBase.cs" />
-    <Compile Include="ReportMemberVsCourse.cs" />
-    <Compile Include="ReportMemberVsTraining.cs" />
-    <Compile Include="ReportWeekVsCourse.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
