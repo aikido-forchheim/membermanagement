@@ -32,23 +32,14 @@ namespace AVF.MemberManagement.ReportBusinessLogic
 
             CollectData
             (
-                tn => ( m_idMember.HasValue ) ? (m_idMember.Value == tn.MitgliedID) :  true
+                tn => ( m_idMember.HasValue ) ? (m_idMember.Value == tn.MitgliedID) :  true,
+                tn => m_cal.GetWeekOfYear(m_db.TrainingFromId(tn.TrainingID).Termin, m_dfi.CalendarWeekRule, m_dfi.FirstDayOfWeek) - 1,
+                tn => 
+                {
+                    int idKurs = m_db.KursIdFromTrainingId(tn.TrainingID);
+                    return ((idKurs == 0) ? idKurs : m_iNrOfCols) - 1;
+                }
             );
-        }
-
-        protected override int RowIndexFromTrainingParticipation(TrainingsTeilnahme tn)
-        {
-            DateTime date = m_db.TrainingFromId(tn.TrainingID).Termin;
-
-            int iCalendarWeek = m_cal.GetWeekOfYear(date, m_dfi.CalendarWeekRule, m_dfi.FirstDayOfWeek );
-
-            return iCalendarWeek - 1;
-        }
-
-        protected override int ColIndexFromTrainingParticipation(TrainingsTeilnahme tn)
-        {
-            int? idKurs = m_db.TrainingFromId(tn.TrainingID).KursID;
-            return idKurs.HasValue ? (idKurs.Value - 1) : m_iNrOfCols - 1;
         }
 
         protected override void FillHeaderRows()

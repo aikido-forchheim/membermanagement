@@ -60,14 +60,19 @@ namespace AVF.MemberManagement.ReportBusinessLogic
             m_iSumSum = 0;
         }
 
-        protected void CollectData( Func<TrainingsTeilnahme, bool> R )
+        protected void CollectData
+        ( 
+            Func<TrainingsTeilnahme, bool> isRelevant,
+            Func<TrainingsTeilnahme, int>  rowIndex,
+            Func<TrainingsTeilnahme, int>  colIndex
+        )
         {
             foreach (var trainingsTeilnahme in m_db.TrainingsTeilnahme(m_datStart, m_datEnd))
             {
-                if (R(trainingsTeilnahme))
+                if (isRelevant(trainingsTeilnahme))
                 {
-                    int iRow = RowIndexFromTrainingParticipation(trainingsTeilnahme);
-                    int iCol = ColIndexFromTrainingParticipation(trainingsTeilnahme);
+                    int iRow = rowIndex(trainingsTeilnahme);
+                    int iCol = colIndex(trainingsTeilnahme);
                     ++m_Rows[iRow].aiValues[iCol];
                     ++m_Rows[iRow].iRowSum;
                     ++m_iColSum[iCol];
@@ -85,6 +90,11 @@ namespace AVF.MemberManagement.ReportBusinessLogic
         protected void FillCourseHeaderRows(DataGridView dgv)
         {
             int iStringCol = m_iNrOfColsOnLeftSide;
+
+            dgv[iStringCol, 0].Value = " Lehrgänge";
+            dgv[iStringCol, 1].Value = " Sondertr.";
+            ++iStringCol;
+
             for (int iCol = 0; iCol < m_iNrOfCols - 1; ++iCol)
             {
                 if (m_iColSum[iCol] > 0)
@@ -95,10 +105,6 @@ namespace AVF.MemberManagement.ReportBusinessLogic
                     ++iStringCol;
                 }
             }
-            dgv[iStringCol, 0].Value = " Lehrgänge";
-            dgv[iStringCol, 1].Value = " Sondertr.";
-            ++iStringCol;
-
             dgv[iStringCol, 0].Value = "";
             dgv[iStringCol, 1].Value = " Summe";
         }
@@ -144,8 +150,6 @@ namespace AVF.MemberManagement.ReportBusinessLogic
             dgv[iStringCol, iStringRow].Value = "  " + Utilities.FormatNumber(m_iSumSum);
         }
 
-        abstract protected int  RowIndexFromTrainingParticipation(TrainingsTeilnahme tn);
-        abstract protected int  ColIndexFromTrainingParticipation(TrainingsTeilnahme tn);
         abstract protected string FormatFirstColElement(int iRow);
         abstract protected string FormatMatrixElement(int iValue);
         abstract protected string FormatColSumElement(int iValue);

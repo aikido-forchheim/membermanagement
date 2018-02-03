@@ -32,24 +32,12 @@ namespace AVF.MemberManagement.ReportBusinessLogic
 
             CollectData
             (
-                tn => 
-                {
-                    int? idKursX = m_db.TrainingFromId(tn.TrainingID).KursID;
-                    return idKursX.HasValue ? (idKursX.Value == m_idKurs) : false;
-                }
+                tn => m_db.KursIdFromTrainingId(tn.TrainingID) == m_idKurs,
+                tn => tn.MitgliedID - 1,  // db ids start with 1, array indeices with 0
+                tn => tn.TrainingID - 1 // db ids start with 1, array indeices with 0
             );
 
             Array.Sort(m_Rows);
-        }
-
-        protected override int RowIndexFromTrainingParticipation(TrainingsTeilnahme tn)
-        {
-            return tn.MitgliedID - 1;  // db ids start with 1, array indeices with 0
-        }
-
-        protected override int ColIndexFromTrainingParticipation(TrainingsTeilnahme tn)
-        {
-            return tn.TrainingID - 1; // db ids start with 1, array indeices with 0
         }
 
         protected override void FillHeaderRows( )

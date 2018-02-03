@@ -95,8 +95,14 @@ namespace AVF.MemberManagement.ReportBusinessLogic
         public Mitglied MitgliedFromId(int id) 
             => m_mitglieder.Single(s => s.Id == id);
 
-        public Training TrainingFromId(int id) 
+        public Training TrainingFromId(int id)
             => m_trainings.Single(s => s.Id == id);
+
+        public int KursIdFromTrainingId(int id)
+        {
+            int? idKurs = TrainingFromId(id).KursID;    // Kurs NULL => 0
+            return idKurs.HasValue ? idKurs.Value : 0;
+        }
 
         public Boolean HatTeilgenommen(int member, Training training) 
             => m_trainingsTeilnahme.Exists(x => (x.MitgliedID == member) && (x.TrainingID == training.Id));

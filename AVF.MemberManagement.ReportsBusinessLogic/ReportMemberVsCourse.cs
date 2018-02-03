@@ -21,20 +21,19 @@ namespace AVF.MemberManagement.ReportBusinessLogic
                 m_db.MaxKursNr() + 1         // One additional col for "Lehrgänge"
             );
 
-            CollectData( tn => true );
+            CollectData
+            (
+                tn => true,
+                tn => tn.MitgliedID - 1,  // db ids start with 1, array indices with 0
+                tn => 
+                {
+                    return m_db.KursIdFromTrainingId(tn.TrainingID);
+//                    int idKurs = m_db.KursIdFromTrainingId(tn.TrainingID);
+//                    return ((idKurs == 0) ? idKurs : m_iNrOfCols) - 1;
+                }
+            );
 
             Array.Sort(m_Rows);
-        }
-
-        protected override int RowIndexFromTrainingParticipation(TrainingsTeilnahme tn)
-        {
-            return tn.MitgliedID - 1;  // db ids start with 1, array indices with 0
-        }
-
-        protected override int ColIndexFromTrainingParticipation(TrainingsTeilnahme tn)
-        {
-            int? idKurs = m_db.TrainingFromId(tn.TrainingID).KursID;
-            return idKurs.HasValue ? (idKurs.Value - 1) : m_iNrOfCols-1;
         }
 
         protected override void FillHeaderRows()
