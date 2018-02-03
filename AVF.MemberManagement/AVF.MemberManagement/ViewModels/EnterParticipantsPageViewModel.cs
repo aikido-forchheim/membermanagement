@@ -24,6 +24,8 @@ namespace AVF.MemberManagement.ViewModels
         public string PreviousParticipantsCountText => $"Zuletzt anwesend ({PreviousParticipants.Count}):";
         public string FoundMembersCountText => $"Gefundene Mitglieder ({FoundMembers.Count}):";
 
+        public event EventHandler<EventArgs> OnNavigatedFromEvent;
+
 
         #region Mitglieder, aktuelles Datum und Training
 
@@ -197,6 +199,12 @@ namespace AVF.MemberManagement.ViewModels
             RaiseCounterPropertiesChanged();
         }
 
+        public override void OnNavigatedFrom(NavigationParameters parameters)
+        {
+            //parameters["__NavigationMode"] = "Back" in both cases
+            OnNavigatedFromEvent?.Invoke(this, new EventArgs());
+        }
+
         #endregion
 
         public async Task<bool> GoBackAsync()
@@ -208,7 +216,7 @@ namespace AVF.MemberManagement.ViewModels
         {
             var parameters = new NavigationParameters
             {
-                {"SelectedTraining", Training },
+                {NavigationParameter.SelectedTraining, Training },
                 {"DeletedList", "TODO: add the deletedList"},
                 {"InsertList", "TODO: add the insertList"}
             };
