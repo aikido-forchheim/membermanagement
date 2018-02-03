@@ -11,12 +11,6 @@ namespace AVF.MemberManagement.Reports
 
         private int m_idKurs;
 
-        static bool isAlwaysRelevant(TrainingsTeilnahme tn)
-           => true;
-
-        static bool isNeverRelevant(TrainingsTeilnahme tn)
-            => false;
-
         public ReportMemberVsTraining(DatabaseWrapper db, DateTime datStart, DateTime datEnd, int idKurs)
             : base(db, datStart, datEnd)
         {
@@ -69,7 +63,7 @@ namespace AVF.MemberManagement.Reports
             return (iValue > 0) ? $"{ iValue,3 }" : "   ";
         }
 
-        public DataGridView GetMatrix( )
+        public DataGridView GetMatrix()
         {
             m_dataGridView.RowCount = GetNrOfRows();  // one footer row
             m_dataGridView.ColumnCount = GetNrOfCols();

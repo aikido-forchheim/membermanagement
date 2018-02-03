@@ -41,16 +41,19 @@ namespace AVF.MemberManagement.Reports
             dgv[iStringCol, 1].Value = " Sondertr.";
             ++iStringCol;
 
-            for (int iCol = 0; iCol < m_coreReport.m_iNrOfCols - 1; ++iCol)
-            {
-                if (m_coreReport.GetColSum(iCol) > 0)
+            m_coreReport.ForAllActiveColumns
+            (
+                iCol =>
                 {
-                    Kurs kurs = m_db.KursFromId(iCol + 1);
-                    dgv[iStringCol, 0].Value = $"    { m_db.WeekDay(kurs.WochentagID).Substring(0, 2) } ";
-                    dgv[iStringCol, 1].Value = $" {kurs.Zeit:hh}:{kurs.Zeit:mm} ";
-                    ++iStringCol;
+                    if (iCol > 0)
+                    {
+                        Kurs kurs = m_db.KursFromId(iCol);
+                        dgv[iStringCol, 0].Value = $"    { m_db.WeekDay(kurs.WochentagID).Substring(0, 2) } ";
+                        dgv[iStringCol, 1].Value = $" {kurs.Zeit:hh}:{kurs.Zeit:mm} ";
+                        ++iStringCol;
+                    }
                 }
-            }
+            );
             dgv[iStringCol, 0].Value = "";
             dgv[iStringCol, 1].Value = " Summe";
         }
@@ -59,24 +62,24 @@ namespace AVF.MemberManagement.Reports
         {
             int iStringRow = m_iNrOfHeaderRows;
 
-            for (int iRow = 0; iRow < m_coreReport.m_iNrOfRows; ++iRow)
-            {
-                if (m_coreReport.GetRowSum(iRow) > 0)
+            m_coreReport.ForAllActiveRows
+            (
+                iRow =>
                 {
-                    int iStringCol = 1;
-                    dgv[0,iStringRow].Value = FormatFirstColElement(iRow);
-                    for (int iCol = 0; iCol < m_coreReport.m_iNrOfCols; ++iCol)
-                    {
-                        if (m_coreReport.GetColSum(iCol) > 0)
-                        {
-                            dgv[iStringCol,iStringRow].Value = FormatMatrixElement(m_coreReport.GetCell( iRow, iCol ));
-                            ++iStringCol;
-                        }
-                    }
-                    dgv[iStringCol, iStringRow].Value = "  " + Utilities.FormatNumber(m_coreReport.GetRowSum(iRow));
-                    ++iStringRow;
+                       int iStringCol = 1;
+                       dgv[0, iStringRow].Value = FormatFirstColElement(iRow);
+                       m_coreReport.ForAllActiveColumns
+                       (
+                           iCol =>
+                           {
+                               dgv[iStringCol, iStringRow].Value = FormatMatrixElement(m_coreReport.GetCell(iRow, iCol));
+                               ++iStringCol;
+                           }
+                       );
+                       dgv[iStringCol, iStringRow].Value = "  " + Utilities.FormatNumber(m_coreReport.GetRowSum(iRow));
+                       ++iStringRow;
                 }
-            }
+            );
         }
 
         protected void FillFooterRow(DataGridView dgv,string description )
@@ -85,14 +88,14 @@ namespace AVF.MemberManagement.Reports
             int iStringCol = m_iNrOfColsOnLeftSide;
 
             dgv[0,iStringRow].Value = description;
-            for (int iCol = 0; iCol < m_coreReport.m_iNrOfCols; ++iCol)
-            {
-                if (m_coreReport.GetColSum(iCol) > 0)
+            m_coreReport.ForAllActiveColumns
+            (
+                iCol =>
                 {
                     dgv[iStringCol, iStringRow].Value = FormatColSumElement(m_coreReport.GetColSum(iCol));
                     ++iStringCol;
                 }
-            }
+            );
             dgv[iStringCol, iStringRow].Value = "  " + Utilities.FormatNumber(m_coreReport.GetSumSum());
         }
 

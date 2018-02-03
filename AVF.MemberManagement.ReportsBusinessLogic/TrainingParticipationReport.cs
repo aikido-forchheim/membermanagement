@@ -8,8 +8,8 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
     {
         private DatabaseWrapper m_db;
 
-        public int m_iNrOfCols { get; private set; }
-        public int m_iNrOfRows { get; private set; }
+        private int m_iNrOfCols;
+        private int m_iNrOfRows;
 
         private class Row : IComparable<Row>
         {
@@ -95,5 +95,19 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 
         public int GetRowId(int iRow)
             => m_Rows[iRow].idRow;
+
+        public void ForAllActiveColumns(Action<int> action)
+        {
+            for (int iCol = 0; iCol < m_iNrOfCols; ++iCol)
+                if (GetColSum(iCol) > 0)
+                    action(iCol);
+        }
+
+        public void ForAllActiveRows(Action<int> action)
+        {
+            for (int iRow = 0; iRow < m_iNrOfRows; ++iRow)
+                if (GetRowSum(iRow) > 0)
+                    action(iRow);
+        }
     }
 }

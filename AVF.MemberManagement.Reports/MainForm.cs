@@ -72,6 +72,8 @@ namespace AVF.MemberManagement.Reports
             Controls.Add(dataGridView);
             dataGridView.CellMouseClick += new DataGridViewCellMouseEventHandler(CellMouseClick);
 
+            dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+
             Size = new Size(1000, 500);
         }
     }

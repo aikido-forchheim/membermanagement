@@ -1,11 +1,11 @@
 ﻿using AVF.MemberManagement.StandardLibrary.Tbo;
 
-namespace AVF.MemberManagement.ReportsBusinessLogic
+namespace AVF.MemberManagement.Reports
 {
     public static class Utilities
     {
         public static string FormatNumber(int i)
-            => (i > 0) ? $"{ i,7 }" : "       ";
+            => (i > 0) ? $"{ i,-3 }" : "   ";
 
         public static string FormatMitglied(Mitglied mitglied)
             => $"{ mitglied.Nachname,-12 } { mitglied.Vorname,-12 } ({ mitglied.Id,3 }) ";
