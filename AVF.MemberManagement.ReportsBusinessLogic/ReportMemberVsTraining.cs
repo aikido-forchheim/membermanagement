@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Forms;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 
 namespace AVF.MemberManagement.ReportBusinessLogic
@@ -29,16 +30,16 @@ namespace AVF.MemberManagement.ReportBusinessLogic
         protected override void FillHeaderRows( )
         {
             int iCol = 0;
-            StringMatrix[0, iCol] = "                          Monat ";
-            StringMatrix[1, iCol] = "                            Tag ";
+            ReportDataGridView[iCol, 0].Value = "                          Monat ";
+            ReportDataGridView[iCol, 1].Value = "                            Tag ";
             foreach (var training in m_db.TrainingsInPeriod(m_idKurs, m_datStart, m_datEnd))
             {
                 ++iCol;
-                StringMatrix[0, iCol] = $" {training.Termin:MM}";
-                StringMatrix[1, iCol] = $" {training.Termin:dd}";
+                ReportDataGridView[iCol, 0].Value = $" {training.Termin:MM}";
+                ReportDataGridView[iCol, 1].Value = $" {training.Termin:dd}";
             }
             ++iCol;
-            StringMatrix[1, iCol] = "    Summe";
+            ReportDataGridView[iCol, 1].Value = "    Summe";
         }
 
         protected override string FormatFirstColElement(int iRow)
@@ -56,7 +57,7 @@ namespace AVF.MemberManagement.ReportBusinessLogic
             return (iValue > 0) ? $"{ iValue,3 }" : "   ";
         }
 
-        public string[,] GetMatrix( int idKurs )
+        public DataGridView GetMatrix( int idKurs )
         {
             m_idKurs = idKurs;
             m_iNrOfColsOnLeftSide = 1;   // column for Mitglieder
@@ -77,7 +78,7 @@ namespace AVF.MemberManagement.ReportBusinessLogic
             FillMainRows();
             FillFooterRow("                     Insgesamt  ");
 
-            return StringMatrix;
+            return ReportDataGridView;
         }
     }
 }

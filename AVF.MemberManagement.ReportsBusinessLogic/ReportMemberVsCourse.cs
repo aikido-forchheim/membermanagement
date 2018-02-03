@@ -27,8 +27,8 @@ namespace AVF.MemberManagement.ReportBusinessLogic
 
         protected override void FillHeaderRows()
         {
-            StringMatrix[0, 0] = "                       Mitglied  ";
-            StringMatrix[1, 0] = "                         Nummer  ";
+            ReportDataGridView[0, 0].Value = "                       Mitglied  ";
+            ReportDataGridView[0, 1].Value = "                         Nummer  ";
 
             FillCourseHeaderRows();
         }

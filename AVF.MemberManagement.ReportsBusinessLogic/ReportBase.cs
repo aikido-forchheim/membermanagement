@@ -32,11 +32,8 @@ namespace AVF.MemberManagement.ReportBusinessLogic
         protected int m_iNrOfColsOnLeftSide;
         protected int m_iNrOfColsOnRightSide;
 
-        private string[,] m_stringMatrix;
-
         private DataGridView m_dataGridView = new DataGridView();
 
-        protected string[,] StringMatrix { get => m_stringMatrix; set => m_stringMatrix = value; }
         protected DataGridView ReportDataGridView { get => m_dataGridView; set => m_dataGridView = value; }
 
         public ReportBase(DatabaseWrapper db, DateTime datStart, DateTime datEnd)
@@ -82,12 +79,8 @@ namespace AVF.MemberManagement.ReportBusinessLogic
                 }
             }
 
-            int iNrOfStringRows = m_Rows   .Count(r => r.iRowSum > 0) + m_iNrOfHeaderRows + 1;  // one footer row
-            int iNrOfStringCols = m_iColSum.Count(c =>         c > 0) + m_iNrOfColsOnLeftSide + m_iNrOfColsOnRightSide;
-
-            StringMatrix = new string[iNrOfStringRows, iNrOfStringCols];
-            ReportDataGridView.ColumnCount = iNrOfStringCols;
-            ReportDataGridView.RowCount = iNrOfStringRows;
+            ReportDataGridView.RowCount    = m_Rows   .Count(r => r.iRowSum > 0) + m_iNrOfHeaderRows + 1;  // one footer row
+            ReportDataGridView.ColumnCount = m_iColSum.Count(c =>         c > 0) + m_iNrOfColsOnLeftSide + m_iNrOfColsOnRightSide;
         }
 
         protected void FillCourseHeaderRows()
@@ -98,23 +91,17 @@ namespace AVF.MemberManagement.ReportBusinessLogic
                 if (m_iColSum[iCol] > 0)
                 {
                     Kurs kurs = m_db.KursFromId(iCol + 1);
-                    StringMatrix[0, iStringCol] = $"    { m_db.WeekDay(kurs.WochentagID).Substring(0, 2) } ";
-                    StringMatrix[1, iStringCol] = $" {kurs.Zeit:hh}:{kurs.Zeit:mm} ";
-                    ReportDataGridView.Rows[0].Cells[iStringCol].Value = $"    { m_db.WeekDay(kurs.WochentagID).Substring(0, 2) } ";
-                    ReportDataGridView.Rows[1].Cells[iStringCol].Value = $" {kurs.Zeit:hh}:{kurs.Zeit:mm} ";
+                    ReportDataGridView[iStringCol, 0].Value = $"    { m_db.WeekDay(kurs.WochentagID).Substring(0, 2) } ";
+                    ReportDataGridView[iStringCol, 1].Value = $" {kurs.Zeit:hh}:{kurs.Zeit:mm} ";
                     ++iStringCol;
                 }
             }
-            StringMatrix[0, iStringCol] = " Lehrgänge";
-            StringMatrix[1, iStringCol] = " Sondertr.";
-            ReportDataGridView.Rows[0].Cells[iStringCol].Value = " Lehrgänge";
-            ReportDataGridView.Rows[1].Cells[iStringCol].Value = " Sondertr.";
+            ReportDataGridView[iStringCol, 0].Value = " Lehrgänge";
+            ReportDataGridView[iStringCol, 1].Value = " Sondertr.";
             ++iStringCol;
 
-            StringMatrix[0, iStringCol] = "";
-            StringMatrix[1, iStringCol] = " Summe";
-            ReportDataGridView.Rows[0].Cells[iStringCol].Value = "";
-            ReportDataGridView.Rows[1].Cells[iStringCol].Value = " Summe";
+            ReportDataGridView[iStringCol, 0].Value = "";
+            ReportDataGridView[iStringCol, 1].Value = " Summe";
         }
 
         protected void FillMainRows()
@@ -126,19 +113,16 @@ namespace AVF.MemberManagement.ReportBusinessLogic
                 if (m_Rows[iRow].iRowSum > 0)
                 {
                     int iStringCol = 1;
-                    StringMatrix[iStringRow, 0] = FormatFirstColElement(iRow);
-                    ReportDataGridView.Rows[iStringRow].Cells[0].Value = FormatFirstColElement(iRow);
+                    ReportDataGridView[0,iStringRow].Value = FormatFirstColElement(iRow);
                     for (int iCol = 0; iCol < m_iNrOfCols; ++iCol)
                     {
                         if (m_iColSum[iCol] > 0)
                         {
-                            StringMatrix[iStringRow, iStringCol] = FormatMatrixElement(m_Rows[iRow].aiValues[iCol]);
-                            ReportDataGridView.Rows[iStringRow].Cells[iStringCol].Value = FormatMatrixElement(m_Rows[iRow].aiValues[iCol]);
+                            ReportDataGridView[iStringCol,iStringRow].Value = FormatMatrixElement(m_Rows[iRow].aiValues[iCol]);
                             ++iStringCol;
                         }
                     }
-                    StringMatrix[iStringRow, iStringCol] = "  " + Utilities.FormatNumber(m_Rows[iRow].iRowSum);
-                    ReportDataGridView.Rows[iStringRow].Cells[iStringCol].Value = "  " + Utilities.FormatNumber(m_Rows[iRow].iRowSum);
+                    ReportDataGridView[iStringCol, iStringRow].Value = "  " + Utilities.FormatNumber(m_Rows[iRow].iRowSum);
                     ++iStringRow;
                 }
             }
@@ -146,22 +130,19 @@ namespace AVF.MemberManagement.ReportBusinessLogic
 
         protected void FillFooterRow( string description )
         {
-            int iStringRow = StringMatrix.GetLength(0) - 1;  // one footer row
+            int iStringRow = ReportDataGridView.RowCount - 1;  // one footer row
             int iStringCol = m_iNrOfColsOnLeftSide;
 
-            StringMatrix[iStringRow, 0] = description;
-            ReportDataGridView.Rows[iStringRow].Cells[0].Value = description;
+            ReportDataGridView[0,iStringRow].Value = description;
             for (int iCol = 0; iCol < m_iNrOfCols; ++iCol)
             {
                 if (m_iColSum[iCol] > 0)
                 {
-                    StringMatrix[iStringRow, iStringCol] = FormatColSumElement(m_iColSum[iCol]);
-                    ReportDataGridView.Rows[iStringRow].Cells[iStringCol].Value = FormatColSumElement(m_iColSum[iCol]);
+                    ReportDataGridView[iStringCol, iStringRow].Value = FormatColSumElement(m_iColSum[iCol]);
                     ++iStringCol;
                 }
             }
-            StringMatrix[iStringRow, iStringCol] = "  " + Utilities.FormatNumber(m_iSumSum);
-            ReportDataGridView.Rows[iStringRow].Cells[iStringCol].Value = "  " + Utilities.FormatNumber(m_iSumSum);
+            ReportDataGridView[iStringCol, iStringRow].Value = "  " + Utilities.FormatNumber(m_iSumSum);
         }
 
         abstract protected bool IsRelevant(TrainingsTeilnahme tn);

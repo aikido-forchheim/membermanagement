@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Windows.Forms;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 
 namespace AVF.MemberManagement.ReportBusinessLogic
@@ -40,8 +41,8 @@ namespace AVF.MemberManagement.ReportBusinessLogic
 
         protected override void FillHeaderRows()
         {
-            StringMatrix[0, 0] = "Kalender";
-            StringMatrix[1, 0] = "woche   ";
+            ReportDataGridView[0, 0].Value = "Kalender";
+            ReportDataGridView[0, 1].Value = "woche   ";
 
             FillCourseHeaderRows();
         }
@@ -61,7 +62,7 @@ namespace AVF.MemberManagement.ReportBusinessLogic
             return Utilities.FormatNumber(iValue);
         }
 
-        public string[,] GetMatrix()
+        public DataGridView GetMatrix()
         {
             m_iNrOfColsOnLeftSide = 1;   // column for Mitglieder
             m_iNrOfColsOnRightSide = 1;  // column for row sum
@@ -79,7 +80,7 @@ namespace AVF.MemberManagement.ReportBusinessLogic
             FillMainRows();
             FillFooterRow("Summe  ");
 
-            return StringMatrix;
+            return ReportDataGridView;
         }
     }
 }

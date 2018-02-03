@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Microsoft.Practices.Unity;
 using AVF.MemberManagement.ReportBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
@@ -60,7 +54,7 @@ namespace AVF.MemberManagement.Reports
 
             dataGridView.Location = new Point(8, 8);
             dataGridView.Size = new Size(500, 250);
-            dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
+            dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dataGridView.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
             dataGridView.CellBorderStyle = DataGridViewCellBorderStyle.Single;
             dataGridView.GridColor = Color.Black;
@@ -78,8 +72,7 @@ namespace AVF.MemberManagement.Reports
             Controls.Add(dataGridView);
             dataGridView.CellMouseClick += new DataGridViewCellMouseEventHandler(CellMouseClick);
 
-            Size = new Size(600, 500);
+            Size = new Size(1000, 500);
         }
-
     }
 }
