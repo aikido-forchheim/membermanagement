@@ -6,15 +6,40 @@ namespace AVF.MemberManagement.ReportBusinessLogic
 {
     public class ReportMemberVsTraining: ReportBase
     {
+        private DataGridView m_dataGridView = new DataGridView();
+
         private int m_idKurs;
 
-        public ReportMemberVsTraining(DatabaseWrapper db, DateTime datStart, DateTime datEnd)
-            : base(db, datStart, datEnd) { }
+        static bool isAlwaysRelevant(TrainingsTeilnahme tn)
+           => true;
 
-        protected override bool IsRelevant(TrainingsTeilnahme tn)
+        static bool isNeverRelevant(TrainingsTeilnahme tn)
+            => false;
+
+        public ReportMemberVsTraining(DatabaseWrapper db, DateTime datStart, DateTime datEnd, int idKurs)
+            : base(db, datStart, datEnd)
         {
-            int? idKurs = m_db.TrainingFromId(tn.TrainingID).KursID;
-            return idKurs.HasValue ? (idKurs.Value == m_idKurs) : false;
+            m_idKurs = idKurs;
+            m_iNrOfColsOnLeftSide = 1;   // column for Mitglieder
+            m_iNrOfColsOnRightSide = 1;  // column for row sum
+            m_iNrOfHeaderRows = 2;
+
+            Initialize
+            (
+                m_db.MaxMitgliedsNr() + 1,   // One additional row for pseudo member with Id = -1
+                m_db.MaxTrainingNr() + 1
+            );
+
+            CollectData
+            (
+                tn => 
+                {
+                    int? idKursX = m_db.TrainingFromId(tn.TrainingID).KursID;
+                    return idKursX.HasValue ? (idKursX.Value == m_idKurs) : false;
+                }
+            );
+
+            Array.Sort(m_Rows);
         }
 
         protected override int RowIndexFromTrainingParticipation(TrainingsTeilnahme tn)
@@ -30,16 +55,16 @@ namespace AVF.MemberManagement.ReportBusinessLogic
         protected override void FillHeaderRows( )
         {
             int iCol = 0;
-            ReportDataGridView[iCol, 0].Value = "                          Monat ";
-            ReportDataGridView[iCol, 1].Value = "                            Tag ";
+            m_dataGridView[iCol, 0].Value = "                          Monat ";
+            m_dataGridView[iCol, 1].Value = "                            Tag ";
             foreach (var training in m_db.TrainingsInPeriod(m_idKurs, m_datStart, m_datEnd))
             {
                 ++iCol;
-                ReportDataGridView[iCol, 0].Value = $" {training.Termin:MM}";
-                ReportDataGridView[iCol, 1].Value = $" {training.Termin:dd}";
+                m_dataGridView[iCol, 0].Value = $" {training.Termin:MM}";
+                m_dataGridView[iCol, 1].Value = $" {training.Termin:dd}";
             }
             ++iCol;
-            ReportDataGridView[iCol, 1].Value = "    Summe";
+            m_dataGridView[iCol, 1].Value = "    Summe";
         }
 
         protected override string FormatFirstColElement(int iRow)
@@ -57,28 +82,16 @@ namespace AVF.MemberManagement.ReportBusinessLogic
             return (iValue > 0) ? $"{ iValue,3 }" : "   ";
         }
 
-        public DataGridView GetMatrix( int idKurs )
+        public DataGridView GetMatrix( )
         {
-            m_idKurs = idKurs;
-            m_iNrOfColsOnLeftSide = 1;   // column for Mitglieder
-            m_iNrOfColsOnRightSide = 1;  // column for row sum
-            m_iNrOfHeaderRows = 2;
-
-            Initialize
-            (
-                m_db.MaxMitgliedsNr() + 1,   // One additional row for pseudo member with Id = -1
-                m_db.MaxTrainingNr () + 1
-            );
-
-            CollectData( );
-
-            Array.Sort(m_Rows);
+            m_dataGridView.RowCount = GetNrOfRows();  // one footer row
+            m_dataGridView.ColumnCount = GetNrOfCols();
 
             FillHeaderRows();
-            FillMainRows();
-            FillFooterRow("                     Insgesamt  ");
+            FillMainRows(m_dataGridView);
+            FillFooterRow(m_dataGridView, "                     Insgesamt  ");
 
-            return ReportDataGridView;
+            return m_dataGridView;
         }
     }
 }

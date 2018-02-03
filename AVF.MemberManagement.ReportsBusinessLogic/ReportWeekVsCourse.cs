@@ -7,9 +7,11 @@ namespace AVF.MemberManagement.ReportBusinessLogic
 {
     public class ReportWeekVsCourse : ReportBase
     {
-        DateTimeFormatInfo m_dfi;
-        Calendar           m_cal;
-        int ?              m_idMember;
+        private DataGridView m_dataGridView = new DataGridView();
+
+        private DateTimeFormatInfo m_dfi;
+        private Calendar           m_cal;
+        private int?               m_idMember;
 
         public ReportWeekVsCourse(DatabaseWrapper db, DateTime datStart, DateTime datEnd, int ? idMember)
             : base(db, datStart, datEnd)
@@ -17,11 +19,21 @@ namespace AVF.MemberManagement.ReportBusinessLogic
             m_dfi = DateTimeFormatInfo.CurrentInfo;
             m_cal = m_dfi.Calendar;
             m_idMember = idMember;
-        }
 
-        protected override bool IsRelevant(TrainingsTeilnahme tn)
-        {
-            return ( m_idMember.HasValue ) ? (m_idMember.Value == tn.MitgliedID) :  true;
+            m_iNrOfColsOnLeftSide = 1;   // column for Mitglieder
+            m_iNrOfColsOnRightSide = 1;  // column for row sum
+            m_iNrOfHeaderRows = 3;       // one empty row
+
+            Initialize
+            (
+                52,                    // Number of calendar weeks in year
+                m_db.MaxKursNr() + 1   // One additional col for "Lehrgänge"
+            );
+
+            CollectData
+            (
+                tn => ( m_idMember.HasValue ) ? (m_idMember.Value == tn.MitgliedID) :  true
+            );
         }
 
         protected override int RowIndexFromTrainingParticipation(TrainingsTeilnahme tn)
@@ -41,10 +53,10 @@ namespace AVF.MemberManagement.ReportBusinessLogic
 
         protected override void FillHeaderRows()
         {
-            ReportDataGridView[0, 0].Value = "Kalender";
-            ReportDataGridView[0, 1].Value = "woche   ";
+            m_dataGridView[0, 0].Value = "Kalender";
+            m_dataGridView[0, 1].Value = "woche   ";
 
-            FillCourseHeaderRows();
+            FillCourseHeaderRows(m_dataGridView);
         }
 
         protected override string FormatFirstColElement(int iRow)
@@ -64,23 +76,14 @@ namespace AVF.MemberManagement.ReportBusinessLogic
 
         public DataGridView GetMatrix()
         {
-            m_iNrOfColsOnLeftSide = 1;   // column for Mitglieder
-            m_iNrOfColsOnRightSide = 1;  // column for row sum
-            m_iNrOfHeaderRows = 3;       // one empty row
-
-            Initialize
-            (
-                52,                    // Number of calendar weeks in year
-                m_db.MaxKursNr() + 1   // One additional col for "Lehrgänge"
-            );
-
-            CollectData();
+            m_dataGridView.RowCount = GetNrOfRows();  // one footer row
+            m_dataGridView.ColumnCount = GetNrOfCols();
 
             FillHeaderRows();
-            FillMainRows();
-            FillFooterRow("Summe  ");
+            FillMainRows(m_dataGridView);
+            FillFooterRow(m_dataGridView, "Summe  ");
 
-            return ReportDataGridView;
+            return m_dataGridView;
         }
     }
 }

@@ -6,12 +6,24 @@ namespace AVF.MemberManagement.ReportBusinessLogic
 {
     public class ReportMemberVsCourse : ReportBase
     {
-        public ReportMemberVsCourse(DatabaseWrapper db, DateTime datStart, DateTime datEnd)
-            : base(db, datStart, datEnd) { }
+        private DataGridView m_dataGridView = new DataGridView();
 
-        protected override bool IsRelevant(TrainingsTeilnahme tn)
+        public ReportMemberVsCourse(DatabaseWrapper db, DateTime datStart, DateTime datEnd)
+            : base(db, datStart, datEnd)
         {
-            return true;
+            m_iNrOfColsOnLeftSide = 1;   // column for Mitglieder
+            m_iNrOfColsOnRightSide = 1;  // column for row sum
+            m_iNrOfHeaderRows = 3;       // one empty row
+
+            Initialize
+            (
+                m_db.MaxMitgliedsNr() + 1,   // One additional row for pseudo member with Id = -1
+                m_db.MaxKursNr() + 1         // One additional col for "Lehrgänge"
+            );
+
+            CollectData( tn => true );
+
+            Array.Sort(m_Rows);
         }
 
         protected override int RowIndexFromTrainingParticipation(TrainingsTeilnahme tn)
@@ -27,10 +39,10 @@ namespace AVF.MemberManagement.ReportBusinessLogic
 
         protected override void FillHeaderRows()
         {
-            ReportDataGridView[0, 0].Value = "                       Mitglied  ";
-            ReportDataGridView[0, 1].Value = "                         Nummer  ";
+            m_dataGridView[0, 0].Value = "                       Mitglied  ";
+            m_dataGridView[0, 1].Value = "                         Nummer  ";
 
-            FillCourseHeaderRows();
+            FillCourseHeaderRows(m_dataGridView);
         }
 
         protected override string FormatFirstColElement(int iRow)
@@ -50,25 +62,14 @@ namespace AVF.MemberManagement.ReportBusinessLogic
 
         public DataGridView GetMatrix()
         {
-            m_iNrOfColsOnLeftSide = 1;   // column for Mitglieder
-            m_iNrOfColsOnRightSide = 1;  // column for row sum
-            m_iNrOfHeaderRows = 3;       // one empty row
-
-            Initialize
-            ( 
-                m_db.MaxMitgliedsNr() + 1,   // One additional row for pseudo member with Id = -1
-                m_db.MaxKursNr() + 1         // One additional col for "Lehrgänge"
-            );
-
-            CollectData();
-
-            Array.Sort(m_Rows);
+            m_dataGridView.RowCount = GetNrOfRows();  // one footer row
+            m_dataGridView.ColumnCount = GetNrOfCols();
 
             FillHeaderRows();
-            FillMainRows();
-            FillFooterRow("                     Insgesamt  ");
+            FillMainRows(m_dataGridView);
+            FillFooterRow(m_dataGridView, "                     Insgesamt  ");
 
-            return ReportDataGridView;
+            return m_dataGridView;
         }
     }
 }
