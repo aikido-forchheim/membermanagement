@@ -13,7 +13,6 @@ namespace AVF.MemberManagement.Reports
         protected DateTime m_datStart;
         protected DateTime m_datEnd;
 
-        protected int m_iNrOfHeaderRows;
         protected int m_iNrOfColsOnLeftSide;
         protected int m_iNrOfColsOnRightSide;
 
@@ -27,81 +26,109 @@ namespace AVF.MemberManagement.Reports
             m_coreReport = new TrainingParticipationReport(db);
         }
 
-        protected int GetNrOfRows()
-            => m_coreReport.GetNrOfActiveRows() + m_iNrOfHeaderRows + 1;  // one footer row
+        protected int GetNrOfDgvRows()
+            => m_coreReport.GetNrOfActiveRows() + 1;  // one footer row
 
-        protected int GetNrOfCols()
+        protected int GetNrOfDgvCols()
             => m_coreReport.GetNrOfActiveCols() + m_iNrOfColsOnLeftSide + m_iNrOfColsOnRightSide;
 
         protected void FillCourseHeaderRows(DataGridView dgv)
         {
-            int iStringCol = m_iNrOfColsOnLeftSide;
+            int iDgvCol = m_iNrOfColsOnLeftSide;
 
-            dgv[iStringCol, 0].Value = " Lehrgänge";
-            dgv[iStringCol, 1].Value = " Sondertr.";
-            ++iStringCol;
+            dgv.Columns[iDgvCol].HeaderText = "Lehrg.\netc.";
+            dgv.Columns[iDgvCol].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 
+            iDgvCol++;
             m_coreReport.ForAllActiveColumns
             (
                 iCol =>
                 {
+                    dgv.Columns[iDgvCol].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                     if (iCol > 0)
                     {
                         Kurs kurs = m_db.KursFromId(iCol);
-                        dgv[iStringCol, 0].Value = $"    { m_db.WeekDay(kurs.WochentagID).Substring(0, 2) } ";
-                        dgv[iStringCol, 1].Value = $" {kurs.Zeit:hh}:{kurs.Zeit:mm} ";
-                        ++iStringCol;
+                        dgv.Columns[iDgvCol++].HeaderText = $"{ m_db.WeekDay(kurs.WochentagID).Substring(0, 2) }\n{kurs.Zeit:hh}:{kurs.Zeit:mm}";
                     }
                 }
             );
-            dgv[iStringCol, 0].Value = "";
-            dgv[iStringCol, 1].Value = " Summe";
+            dgv.Columns[dgv.ColumnCount - 1].HeaderText = "\nSumme";
+            dgv.Columns[dgv.ColumnCount - 1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
         }
 
-        protected void FillMainRows(DataGridView dgv)
+        protected void FillMemberRowHeaderColumns(DataGridView dgv)
         {
-            int iStringRow = m_iNrOfHeaderRows;
-
+            int iDgvRow = 0;
+            dgv.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             m_coreReport.ForAllActiveRows
             (
                 iRow =>
                 {
-                       int iStringCol = 1;
-                       dgv[0, iStringRow].Value = FormatFirstColElement(iRow);
-                       m_coreReport.ForAllActiveColumns
-                       (
-                           iCol =>
-                           {
-                               dgv[iStringCol, iStringRow].Value = FormatMatrixElement(m_coreReport.GetCell(iRow, iCol));
-                               ++iStringCol;
-                           }
-                       );
-                       dgv[iStringCol, iStringRow].Value = "  " + Utilities.FormatNumber(m_coreReport.GetRowSum(iRow));
-                       ++iStringRow;
+                    Mitglied mitglied = m_db.MitgliedFromId(m_coreReport.GetRowId(iRow));
+                    dgv[0, iDgvRow].Value = mitglied.Nachname;
+                    dgv[1, iDgvRow].Value = mitglied.Vorname;
+                    dgv[2, iDgvRow].Value = mitglied.Id;
+                    ++iDgvRow;
                 }
             );
         }
 
-        protected void FillFooterRow(DataGridView dgv,string description )
+        protected void FillMainRows(DataGridView dgv)
         {
-            int iStringRow = dgv.RowCount - 1;  // one footer row
-            int iStringCol = m_iNrOfColsOnLeftSide;
+            int iDgvRow = 0;
+            dgv.Rows[dgv.RowCount - 1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            m_coreReport.ForAllActiveRows
+            (
+                iRow =>
+                {
+                    int iDgvCol = m_iNrOfColsOnLeftSide;
+                    m_coreReport.ForAllActiveColumns
+                    (
+                        iCol => dgv[iDgvCol++, iDgvRow].Value = FormatMatrixElement( m_coreReport.GetCell(iRow, iCol) )
+                    );
+                    ++iDgvRow;
+                }
+            );
+        }
 
-            dgv[0,iStringRow].Value = description;
+        protected void FillRowSumColumn(DataGridView dgv)
+        {
+            int iDgvRow = 0;
+            m_coreReport.ForAllActiveRows
+            (
+                iRow => dgv[dgv.ColumnCount - 1, iDgvRow++].Value = m_coreReport.GetRowSum(iRow)
+            );
+        }
+
+        protected void FillFooterRow(DataGridView dgv )
+        {
+            int iDgvRow = dgv.RowCount - 1;  // one footer row
+
+  //          dgv[m_iNrOfColsOnLeftSide-1, iDgvRow].Value = "Summe";
+
+            int iDgvCol = m_iNrOfColsOnLeftSide;
             m_coreReport.ForAllActiveColumns
             (
-                iCol =>
-                {
-                    dgv[iStringCol, iStringRow].Value = FormatColSumElement(m_coreReport.GetColSum(iCol));
-                    ++iStringCol;
-                }
+                iCol => dgv[iDgvCol++, iDgvRow].Value = m_coreReport.GetColSum(iCol)
             );
-            dgv[iStringCol, iStringRow].Value = "  " + Utilities.FormatNumber(m_coreReport.GetSumSum());
+
+            dgv[dgv.ColumnCount - 1, iDgvRow].Value = m_coreReport.GetSumSum();
         }
 
-        abstract protected string FormatFirstColElement(int iRow);
+        public void PopulateGridView(DataGridView dgv)
+        {
+            dgv.RowCount = GetNrOfDgvRows();  // one footer row
+            dgv.ColumnCount = GetNrOfDgvCols();
+
+            FillHeaderRows(dgv);
+            FillRowHeaderColumns(dgv);
+            FillMainRows(dgv);
+            FillRowSumColumn(dgv);
+            FillFooterRow(dgv);
+        }
+
         abstract protected string FormatMatrixElement(int iValue);
-        abstract protected string FormatColSumElement(int iValue);
-        abstract protected void   FillHeaderRows();
+        abstract protected void FillRowHeaderColumns(DataGridView dgv);
+        abstract protected void FillHeaderRows(DataGridView dgv);
     }
 }

@@ -47,7 +47,8 @@ namespace AVF.MemberManagement.Reports
             DateTime datEnd = new DateTime(iJahr, 12, 31);
 
             ReportMemberVsCourse tp = new ReportMemberVsCourse(m_dbWrapper, datStart, datEnd);
-            DataGridView dataGridView = tp.GetMatrix();
+            DataGridView dataGridView = new DataGridView();
+            tp.PopulateGridView(dataGridView);
 
             dataGridView.ColumnHeadersDefaultCellStyle.BackColor = Color.Navy;
             dataGridView.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
@@ -65,14 +66,12 @@ namespace AVF.MemberManagement.Reports
             dataGridView.Dock = DockStyle.Fill;
 
             dataGridView.RowHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.True;
-            dataGridView.Columns[0].HeaderText = "ABC\nDEF";
-            dataGridView.AutoResizeColumnHeadersHeight();
-            dataGridView.AutoResizeColumns();
 
             Controls.Add(dataGridView);
             dataGridView.CellMouseClick += new DataGridViewCellMouseEventHandler(CellMouseClick);
 
             dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 
             Size = new Size(1000, 500);
         }

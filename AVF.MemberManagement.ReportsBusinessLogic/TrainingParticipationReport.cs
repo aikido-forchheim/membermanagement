@@ -109,5 +109,21 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
                 if (GetRowSum(iRow) > 0)
                     action(iRow);
         }
+
+        public void ForAllActiveCells(Action<int,int> action)
+        {
+            for (int iRow = 0; iRow < m_iNrOfRows; ++iRow)
+            {
+                if (GetRowSum(iRow) > 0)
+                {
+                    for (int iCol = 0; iCol < m_iNrOfCols; ++iCol)
+                    {
+                        int iCellValue = GetCell(iRow, iCol);
+                        if (iCellValue != 0)
+                            action(iRow, iCol);
+                    }
+                }
+            }
+        }
     }
 }

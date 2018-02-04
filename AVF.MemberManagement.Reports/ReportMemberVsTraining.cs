@@ -7,17 +7,14 @@ namespace AVF.MemberManagement.Reports
 {
     public class ReportMemberVsTraining: ReportBase
     {
-        private DataGridView m_dataGridView = new DataGridView();
-
         private int m_idKurs;
 
         public ReportMemberVsTraining(DatabaseWrapper db, DateTime datStart, DateTime datEnd, int idKurs)
             : base(db, datStart, datEnd)
         {
             m_idKurs = idKurs;
-            m_iNrOfColsOnLeftSide = 1;   // column for Mitglieder
-            m_iNrOfColsOnRightSide = 1;  // column for row sum
-            m_iNrOfHeaderRows = 2;
+            m_iNrOfColsOnLeftSide  = 3;   // 3 columns for Mitglieder
+            m_iNrOfColsOnRightSide = 1;   // 1 column for row sum
 
             m_coreReport.Initialize
             (
@@ -26,53 +23,32 @@ namespace AVF.MemberManagement.Reports
                 m_db.MaxMitgliedsNr() + 1,   // One additional row for pseudo member with Id = -1
                 m_db.MaxTrainingNr() + 1,
                 tn => m_db.KursIdFromTrainingId(tn.TrainingID) == m_idKurs,
-                tn => tn.MitgliedID - 1,  // db ids start with 1, array indeices with 0
-                tn => tn.TrainingID - 1 // db ids start with 1, array indeices with 0
+                tn => tn.MitgliedID - 1,    // db ids start with 1, array indeices with 0
+                tn => tn.TrainingID - 1     // db ids start with 1, array indeices with 0
             );
 
             m_coreReport.SortRows();
         }
 
-        protected override void FillHeaderRows( )
+        protected override void FillHeaderRows(DataGridView dgv)
         {
-            int iCol = 0;
-            m_dataGridView[iCol, 0].Value = "                          Monat ";
-            m_dataGridView[iCol, 1].Value = "                            Tag ";
+            dgv.Columns[0].HeaderText = "Monat\nTag";
+            int iCol = m_iNrOfColsOnLeftSide;
             foreach (var training in m_db.TrainingsInPeriod(m_idKurs, m_datStart, m_datEnd))
             {
-                ++iCol;
-                m_dataGridView[iCol, 0].Value = $" {training.Termin:MM}";
-                m_dataGridView[iCol, 1].Value = $" {training.Termin:dd}";
+                dgv.Columns[iCol++].HeaderText = $"{training.Termin:MM}\n{training.Termin:dd}";
             }
-            ++iCol;
-            m_dataGridView[iCol, 1].Value = "    Summe";
+            dgv.Columns[dgv.ColumnCount - 1].HeaderText = "\nSumme";
         }
 
-        protected override string FormatFirstColElement(int iRow)
+        protected override void FillRowHeaderColumns(DataGridView dgv)
         {
-            return Utilities.FormatMitglied(m_db.MitgliedFromId( m_coreReport.GetRowId(iRow) ));
+            FillMemberRowHeaderColumns(dgv);
         }
 
         protected override string FormatMatrixElement(int iValue)
         {
-            return (iValue == 1) ? "  X" : "   ";
-        }
-
-        protected override string FormatColSumElement(int iValue)
-        {
-            return (iValue > 0) ? $"{ iValue,3 }" : "   ";
-        }
-
-        public DataGridView GetMatrix()
-        {
-            m_dataGridView.RowCount = GetNrOfRows();  // one footer row
-            m_dataGridView.ColumnCount = GetNrOfCols();
-
-            FillHeaderRows();
-            FillMainRows(m_dataGridView);
-            FillFooterRow(m_dataGridView, "                     Insgesamt  ");
-
-            return m_dataGridView;
+            return (iValue == 1) ? " X " : "   ";
         }
     }
 }

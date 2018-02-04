@@ -7,8 +7,6 @@ namespace AVF.MemberManagement.Reports
 {
     public class ReportWeekVsCourse : ReportBase
     {
-        private DataGridView m_dataGridView = new DataGridView();
-
         private DateTimeFormatInfo m_dfi;
         private Calendar           m_cal;
         private int?               m_idMember;
@@ -20,9 +18,8 @@ namespace AVF.MemberManagement.Reports
             m_cal = m_dfi.Calendar;
             m_idMember = idMember;
 
-            m_iNrOfColsOnLeftSide = 1;   // column for Mitglieder
-            m_iNrOfColsOnRightSide = 1;  // column for row sum
-            m_iNrOfHeaderRows = 3;       // one empty row
+            m_iNrOfColsOnLeftSide  = 1;  // 1 columns for week number
+            m_iNrOfColsOnRightSide = 1;  // 1 column for row sum
 
             m_coreReport.Initialize
             (
@@ -36,39 +33,22 @@ namespace AVF.MemberManagement.Reports
             );
         }
 
-        protected override void FillHeaderRows()
+        protected override void FillHeaderRows(DataGridView dgv)
         {
-            m_dataGridView[0, 0].Value = "Kalender";
-            m_dataGridView[0, 1].Value = "woche   ";
+            dgv.Columns[0].HeaderText = "Kalender\nwoche";
 
-            FillCourseHeaderRows(m_dataGridView);
+            FillCourseHeaderRows(dgv);
         }
 
-        protected override string FormatFirstColElement(int iRow)
+        protected override void FillRowHeaderColumns(DataGridView dgv)
         {
-            return Utilities.FormatNumber(iRow + 1);
+            int iDgvRow = 0;
+            m_coreReport.ForAllActiveRows( iRow => dgv[0, iDgvRow].Value = iRow + 1 );
         }
 
         protected override string FormatMatrixElement(int iValue)
         {
-            return Utilities.FormatNumber(iValue);
-        }
-
-        protected override string FormatColSumElement(int iValue)
-        {
-            return Utilities.FormatNumber(iValue);
-        }
-
-        public DataGridView GetMatrix()
-        {
-            m_dataGridView.RowCount = GetNrOfRows();  // one footer row
-            m_dataGridView.ColumnCount = GetNrOfCols();
-
-            FillHeaderRows();
-            FillMainRows(m_dataGridView);
-            FillFooterRow(m_dataGridView, "Summe  ");
-
-            return m_dataGridView;
+            return (iValue > 0) ? $"{ iValue, -3 }" : "   ";
         }
     }
 }
