@@ -24,8 +24,6 @@ namespace AVF.MemberManagement.ViewModels
         public string PreviousParticipantsCountText => $"Zuletzt anwesend ({PreviousParticipants.Count}):";
         public string FoundMembersCountText => $"Gefundene Mitglieder ({FoundMembers.Count}):";
 
-        public event EventHandler<EventArgs> OnNavigatedFromEvent;
-
 
         #region Mitglieder, aktuelles Datum und Training
 
@@ -149,6 +147,8 @@ namespace AVF.MemberManagement.ViewModels
 
         #endregion
 
+        List<Mitglied> _insertList = new List<Mitglied>();
+        List<Mitglied> _deletedList = new List<Mitglied>();
 
         public ICommand RemoveParticipantCommand { get; set; }
         public ICommand AddPreviousParticipantCommand { get; set; }
@@ -201,28 +201,14 @@ namespace AVF.MemberManagement.ViewModels
 
         public override void OnNavigatedFrom(NavigationParameters parameters)
         {
-            //parameters["__NavigationMode"] = "Back" in both cases
-            OnNavigatedFromEvent?.Invoke(this, new EventArgs());
+            IsDirty();
+
+            parameters.Add(NavigationParameter.SelectedTraining, Training);
+            parameters.Add("DeletedList", _deletedList);
+            parameters.Add("InsertList", _insertList);
         }
 
         #endregion
-
-        public async Task<bool> GoBackAsync()
-        {
-            return await NavigationService.GoBackAsync();
-        }
-
-        public async Task NavigateToSaveParticipantsPage()
-        {
-            var parameters = new NavigationParameters
-            {
-                {NavigationParameter.SelectedTraining, Training },
-                {"DeletedList", "TODO: add the deletedList"},
-                {"InsertList", "TODO: add the insertList"}
-            };
-
-            await NavigationService.NavigateAsync(nameof(SaveParticipantsPage), parameters);
-        }
 
 
         #region RemoveParticipantCommand
@@ -469,20 +455,14 @@ namespace AVF.MemberManagement.ViewModels
 
         public bool IsDirty()
         {
-            //clear insertList
-            //clear deletedList
-
-            if (_originalParticipantsList.Count != _participants.Count)
-            {
-                return true;
-            }
+            _insertList.Clear();
+            _deletedList.Clear();
 
             foreach (var participant in _participants)
             {
                 if (!_originalParticipantsList.Contains(participant))
                 {
-                    //add to insertList
-                    return true;
+                    _insertList.Add(participant);
                 }
             }
 
@@ -490,12 +470,11 @@ namespace AVF.MemberManagement.ViewModels
             {
                 if (!_participants.Contains(participant))
                 {
-                    //add to deletedList
-                    return true;
+                    _deletedList.Add(participant);
                 }
             }
 
-            return false;
+            return _insertList.Count != 0 || _deletedList.Count != 0;
         }
 
         #endregion

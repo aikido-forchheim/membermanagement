@@ -23,7 +23,7 @@ namespace AVF.MemberManagement.Views
 
         //protected override bool OnBackButtonPressed()
         //{
-        //    OnClosePageRequested();
+        //    //OnClosePageRequested();
         //    return true;
         //}
 
