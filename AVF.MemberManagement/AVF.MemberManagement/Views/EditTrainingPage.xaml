@@ -2,30 +2,20 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms" prism:ViewModelLocator.AutowireViewModel="True" x:Class="AVF.MemberManagement.Views.EditTrainingPage" Title="{Binding Title}">
     <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
         <StackLayout WidthRequest="256" Margin="0,0,0,0">
-            <Label Text="Trainer:" FontAttributes="Bold">
+            <Label Text="Übungsleiter:">
             </Label>
-            <Button Text="Max Mustermann">
+            <StackLayout Orientation="Horizontal" Margin="0,0,0,0">
+                <Button Text="Rudi Schneider" BackgroundColor="#EEEEEE" HorizontalOptions="FillAndExpand">
+                </Button>
+                <Button Text="+" BackgroundColor="#EEEEEE" WidthRequest="44" HorizontalOptions="End">
+                </Button>
+            </StackLayout>
+        </StackLayout>
+        <StackLayout WidthRequest="256" Margin="0,0,0,64">
+            <Button Text="🗈" FontSize="48" BackgroundColor="#FFFFFF" HeightRequest="128">
             </Button>
         </StackLayout>
-        <StackLayout WidthRequest="256" Margin="0,0,0,0">
-            <Label Text="Kotrainer 1:">
-            </Label>
-            <Button Text="- keiner -">
-            </Button>
-        </StackLayout>
-        <StackLayout WidthRequest="256" Margin="0,0,0,0">
-            <Label Text="Kotrainer 2:">
-            </Label>
-            <Button Text="- keiner -">
-            </Button>
-        </StackLayout>
-        <StackLayout WidthRequest="256" Margin="0,0,0,0">
-            <Label Text="Bemerkung:" Margin="0,0,0,16">
-            </Label>
-            <Editor Text="{Binding Annotation}" HeightRequest="64">
-            </Editor>
-        </StackLayout>
-        <Button Text="Weiter" WidthRequest="256" Command="{Binding EnterParticipantsCommand}">
+        <Button Text="Weiter" WidthRequest="256" Command="{Binding EnterParticipantsCommand}" BackgroundColor="#EEEEEE">
         </Button>
     </StackLayout>
 </ContentPage>
