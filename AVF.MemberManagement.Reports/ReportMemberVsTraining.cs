@@ -30,6 +30,12 @@ namespace AVF.MemberManagement.Reports
             m_coreReport.SortRows();
         }
 
+        protected override void SizeDataGridView(DataGridView dgv)
+        {
+            dgv.RowCount    = m_coreReport.GetNrOfActiveRows() + 1;  // one footer row
+            dgv.ColumnCount = m_coreReport.GetNrOfActiveCols() + m_iNrOfColsOnLeftSide + m_iNrOfColsOnRightSide;
+        }
+
         protected override void FillHeaderRows(DataGridView dgv)
         {
             dgv.Columns[0].HeaderText = "Monat\nTag";

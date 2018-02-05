@@ -11,6 +11,8 @@ namespace AVF.MemberManagement.Reports
         private Calendar           m_cal;
         private int?               m_idMember;
 
+        private const int NR_OF_CALENDAR_WEEKS = 52;
+
         public ReportWeekVsCourse(DatabaseWrapper db, DateTime datStart, DateTime datEnd, int ? idMember)
             : base(db, datStart, datEnd)
         {
@@ -25,12 +27,18 @@ namespace AVF.MemberManagement.Reports
             (
                 datStart,
                 datEnd,
-                52,                    // Number of calendar weeks in year
+                NR_OF_CALENDAR_WEEKS,              
                 m_db.MaxKursNr() + 1,   // One additional col for "Lehrgänge"
                 tn => ( m_idMember.HasValue ) ? (m_idMember.Value == tn.MitgliedID) :  true,
                 tn => m_cal.GetWeekOfYear(m_db.TrainingFromId(tn.TrainingID).Termin, m_dfi.CalendarWeekRule, m_dfi.FirstDayOfWeek) - 1,
                 tn => m_db.KursIdFromTrainingId(tn.TrainingID)
             );
+        }
+
+        protected override void SizeDataGridView(DataGridView dgv)
+        {
+            dgv.RowCount    = NR_OF_CALENDAR_WEEKS + 1;  // one footer row
+            dgv.ColumnCount = m_db.MaxKursNr() + 1 + m_iNrOfColsOnLeftSide + m_iNrOfColsOnRightSide;
         }
 
         protected override void FillHeaderRows(DataGridView dgv)
@@ -43,7 +51,7 @@ namespace AVF.MemberManagement.Reports
         protected override void FillRowHeaderColumns(DataGridView dgv)
         {
             int iDgvRow = 0;
-            m_coreReport.ForAllActiveRows( iRow => dgv[0, iDgvRow].Value = iRow + 1 );
+            m_coreReport.ForAllRows( action: iRow => dgv[0, iDgvRow++].Value = iRow + 1, activeRowsOnly: false );
         }
 
         protected override string FormatMatrixElement(int iValue)

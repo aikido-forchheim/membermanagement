@@ -96,21 +96,21 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         public int GetRowId(int iRow)
             => m_Rows[iRow].idRow;
 
-        public void ForAllActiveColumns(Action<int> action)
+        public void ForAllColumns(Action<int> action, bool activeColumnsOnly  )
         {
             for (int iCol = 0; iCol < m_iNrOfCols; ++iCol)
-                if (GetColSum(iCol) > 0)
+                if ( !activeColumnsOnly || ( GetColSum(iCol) > 0 ) )
                     action(iCol);
         }
 
-        public void ForAllActiveRows(Action<int> action)
+        public void ForAllRows(Action<int> action, bool activeRowsOnly)
         {
             for (int iRow = 0; iRow < m_iNrOfRows; ++iRow)
-                if (GetRowSum(iRow) > 0)
+                if (!activeRowsOnly || (GetRowSum(iRow) > 0))
                     action(iRow);
         }
 
-        public void ForAllActiveCells(Action<int,int> action)
+        public void ForAllActiveCells(Action<int, int> action)
         {
             for (int iRow = 0; iRow < m_iNrOfRows; ++iRow)
             {
@@ -118,12 +118,17 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
                 {
                     for (int iCol = 0; iCol < m_iNrOfCols; ++iCol)
                     {
-                        int iCellValue = GetCell(iRow, iCol);
-                        if (iCellValue != 0)
+                        if (GetCell(iRow, iCol) != 0)
                             action(iRow, iCol);
                     }
                 }
             }
+        }
+        public void ForAllCells(Action<int, int> action)
+        {
+            for (int iRow = 0; iRow < m_iNrOfRows; ++iRow)
+                for (int iCol = 0; iCol < m_iNrOfCols; ++iCol)
+                    action(iRow, iCol);
         }
     }
 }
