@@ -2,6 +2,7 @@
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Prism.Navigation;
 using AVF.MemberManagement.StandardLibrary.Services;
@@ -13,12 +14,31 @@ namespace AVF.MemberManagement.ViewModels
 {
     public class SaveParticipantsPageViewModel : ViewModelBase
     {
+        private ObservableCollection<Mitglied> _inserts = new ObservableCollection<Mitglied>();
+
+        public ObservableCollection<Mitglied> Inserts
+        {
+            get => _inserts;
+            set => SetProperty(ref _inserts, value);
+        }
+
+        private ObservableCollection<Mitglied> _deletes = new ObservableCollection<Mitglied>();
+
+        public ObservableCollection<Mitglied> Deletes
+        {
+            get => _deletes;
+            set => SetProperty(ref _deletes, value);
+        }
+
         public SaveParticipantsPageViewModel(INavigationService navigationService) : base(navigationService)
         {
         }
 
         public override async void OnNavigatedTo(NavigationParameters parameters)
         {
+            Inserts.Clear();
+            Deletes.Clear();
+
             if (parameters == null || !parameters.Any()) return;
            
             if (parameters["__NavigationMode"].ToString() != "Back")
@@ -48,12 +68,18 @@ namespace AVF.MemberManagement.ViewModels
 
         private void InsertParticipants(List<Mitglied> insertList)
         {
-            
+            foreach (var mitglied in insertList)
+            {
+                Inserts.Add(mitglied);
+            }
         }
 
         private void DeleteParticipants(List<Mitglied> deletedList)
         {
-            
+            foreach (var mitglied in deletedList)
+            {
+                Deletes.Add(mitglied);
+            }
         }
     }
 }
