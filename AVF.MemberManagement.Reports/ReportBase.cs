@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Linq;
 using System.Windows.Forms;
-using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
@@ -18,58 +16,23 @@ namespace AVF.MemberManagement.Reports
 
         protected TrainingParticipationReport m_coreReport;
 
-        public ReportBase(DatabaseWrapper db, DateTime datStart, DateTime datEnd)
+        protected VerticalAxis   m_yAxis;
+        protected HorizontalAxis m_xAxis;
+
+        public ReportBase
+        (
+            DatabaseWrapper db, 
+            DateTime datStart, 
+            DateTime datEnd
+        )
         {
             m_db = db;
             m_datStart = datStart;
             m_datEnd = datEnd;
-            m_coreReport = new TrainingParticipationReport(db);
+            m_coreReport = new TrainingParticipationReport(db, datStart, datEnd);
         }
 
-        protected void FillCourseHeaderRows(DataGridView dgv)
-        {
-            int iDgvCol = m_iNrOfColsOnLeftSide;
-
-            dgv.Columns[iDgvCol].HeaderText = "Lehrg.\netc.";
-            dgv.Columns[iDgvCol].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-
-            iDgvCol++;
-            m_coreReport.ForAllColumns
-            (
-                action: iCol =>
-                {
-                    dgv.Columns[iDgvCol].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                    if (iCol > 0)
-                    {
-                        Kurs kurs = m_db.KursFromId(iCol);
-                        dgv.Columns[iDgvCol++].HeaderText = $"{ m_db.WeekDay(kurs.WochentagID).Substring(0, 2) }\n{kurs.Zeit:hh}:{kurs.Zeit:mm}";
-                    }
-                },
-                activeColumnsOnly: false
-            );
-            dgv.Columns[dgv.ColumnCount - 1].HeaderText = "\nSumme";
-            dgv.Columns[dgv.ColumnCount - 1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-        }
-
-        protected void FillMemberRowHeaderColumns(DataGridView dgv)
-        {
-            int iDgvRow = 0;
-            dgv.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            m_coreReport.ForAllRows
-            (
-                action: iRow =>
-                {
-                    Mitglied mitglied = m_db.MitgliedFromId(m_coreReport.GetRowId(iRow));
-                    dgv[0, iDgvRow].Value = mitglied.Nachname;
-                    dgv[1, iDgvRow].Value = mitglied.Vorname;
-                    dgv[2, iDgvRow].Value = mitglied.Id;
-                    ++iDgvRow;
-                },
-                activeRowsOnly: true
-            );
-        }
-
-        protected void FillMainRows(DataGridView dgv, bool activeCellsOnly)
+        protected void FillMainRows(DataGridView dgv)
         {
             int iDgvRow = 0;
             dgv.Rows[dgv.RowCount - 1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
@@ -81,52 +44,26 @@ namespace AVF.MemberManagement.Reports
                     m_coreReport.ForAllColumns
                     (
                         iCol => dgv[iDgvCol++, iDgvRow].Value = FormatMatrixElement( m_coreReport.GetCell(iRow, iCol) ),
-                        activeCellsOnly
+                        m_xAxis.m_activeColumnsOnly
                     );
                     ++iDgvRow;
                 },
-                activeCellsOnly
+                m_yAxis.m_activeRowsOnly
             );
         }
 
-        protected void FillRowSumColumn(DataGridView dgv, bool activeRowsOnly)
+        public void PopulateGridView(DataGridView dgv)
         {
-            int iDgvRow = 0;
-            m_coreReport.ForAllRows
-            (
-                iRow => dgv[dgv.ColumnCount - 1, iDgvRow++].Value = m_coreReport.GetRowSum(iRow),
-                activeRowsOnly
-            );
+            dgv.RowCount    = m_yAxis.GetNrOfDgvRows() + 1;  // one footer row
+            dgv.ColumnCount = m_xAxis.GetNrOfDgvColumns() + m_iNrOfColsOnLeftSide + m_iNrOfColsOnRightSide;
+
+            m_xAxis.FillHeaderRows( dgv, m_yAxis.m_iNrOfColsOnLeftSide );
+            m_xAxis.FillFooterRow ( dgv, m_yAxis.m_iNrOfColsOnLeftSide );
+            m_yAxis.FillRowHeaderColumns( dgv );
+            m_yAxis.FillRowSumColumns   ( dgv );
+            FillMainRows( dgv );
         }
 
-        protected void FillFooterRow(DataGridView dgv )
-        {
-            int iDgvRow = dgv.RowCount - 1;  // one footer row
-
-            dgv[m_iNrOfColsOnLeftSide-1, iDgvRow].Value = "Summe";
-
-            int iDgvCol = m_iNrOfColsOnLeftSide;
-            m_coreReport.ForAllColumns
-            (
-                action: iCol => dgv[iDgvCol++, iDgvRow].Value = m_coreReport.GetColSum(iCol),
-                activeColumnsOnly: true
-            );
-
-            dgv[dgv.ColumnCount - 1, iDgvRow].Value = m_coreReport.GetSumSum();
-        }
-
-        public void PopulateGridView(DataGridView dgv, bool activeCellsOnly)
-        {
-            SizeDataGridView(dgv);
-            FillHeaderRows(dgv);
-            FillRowHeaderColumns(dgv);
-            FillMainRows(dgv, activeCellsOnly);
-            FillRowSumColumn(dgv, activeCellsOnly);
-            FillFooterRow(dgv);
-        }
-        abstract protected void SizeDataGridView(DataGridView dgv);
-        abstract protected void FillRowHeaderColumns(DataGridView dgv);
-        abstract protected void FillHeaderRows(DataGridView dgv);
         abstract protected string FormatMatrixElement(int iValue);
     }
 }

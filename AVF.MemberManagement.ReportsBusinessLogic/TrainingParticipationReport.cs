@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Collections.Generic;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 
 namespace AVF.MemberManagement.ReportsBusinessLogic
@@ -24,15 +25,16 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         private int[] m_iColSum;
         private int   m_iSumSum;
 
-        public TrainingParticipationReport(DatabaseWrapper db)
+        private List<TrainingsTeilnahme> m_listRelevantTrainingParticipations;
+
+        public TrainingParticipationReport(DatabaseWrapper db, DateTime datStart, DateTime datEnd)
         {
             m_db = db;
+            m_listRelevantTrainingParticipations = m_db.TrainingsTeilnahme(datStart, datEnd);
         }
 
         public void Initialize
         (
-            DateTime datStart, 
-            DateTime datEnd,
             int iNrOfRows, 
             int iNrOfCols,
             Func<TrainingsTeilnahme, bool> isRelevant,
@@ -58,7 +60,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             m_iColSum = new int[m_iNrOfCols];
             m_iSumSum = 0;
 
-            foreach (var trainingsTeilnahme in m_db.TrainingsTeilnahme(datStart, datEnd))
+            foreach (var trainingsTeilnahme in m_listRelevantTrainingParticipations)
             {
                 if (isRelevant(trainingsTeilnahme))
                 {
