@@ -27,10 +27,10 @@ namespace AVF.MemberManagement.Reports
             m_activeColumnsOnly = true;
         }
 
-        public override int GetNrOfSrcColumns()
+        public override int GetNrOfSrcElements()
             => m_db.MaxTrainingNr();
 
-        public override int GetRowIndexFromTrainingsParticipation(TrainingsTeilnahme tn)
+        public override int GetIndexFromTrainingsParticipation(TrainingsTeilnahme tn)
             => tn.TrainingID - 1;   // db ids start with 1, array indices with 0
 
         public override void FillHeaderRows(DataGridView dgv, int iNrOfColsOnLeftSide)

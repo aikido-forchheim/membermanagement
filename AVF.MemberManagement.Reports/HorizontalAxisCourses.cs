@@ -12,10 +12,10 @@ namespace AVF.MemberManagement.Reports
             m_activeColumnsOnly = false;
         }
 
-        public override int GetNrOfSrcColumns()
+        public override int GetNrOfSrcElements()
             => m_db.MaxKursNr() + 1;
 
-        public override int GetRowIndexFromTrainingsParticipation(TrainingsTeilnahme tn)
+        public override int GetIndexFromTrainingsParticipation(TrainingsTeilnahme tn)
             => m_db.KursIdFromTrainingId(tn.TrainingID);
 
         public override void FillHeaderRows(DataGridView dgv, int iNrOfColsOnLeftSide)

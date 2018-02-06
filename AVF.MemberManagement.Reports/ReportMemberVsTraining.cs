@@ -18,11 +18,9 @@ namespace AVF.MemberManagement.Reports
 
             m_coreReport.Initialize
             (
-                m_yAxis.GetNrOfSrcRows( ),
-                m_xAxis.GetNrOfSrcColumns(),
-                tn => m_db.KursIdFromTrainingId(tn.TrainingID) == m_idKurs,
-                tn => m_yAxis.GetColumnIndexFromTrainingsParticipation(tn),
-                tn => m_xAxis.GetRowIndexFromTrainingsParticipation(tn)
+                m_xAxis,
+                m_yAxis,
+                tn => m_db.KursIdFromTrainingId(tn.TrainingID) == m_idKurs
             );
 
             m_coreReport.SortRows();

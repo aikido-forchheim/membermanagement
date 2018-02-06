@@ -20,10 +20,10 @@ namespace AVF.MemberManagement.Reports
             m_cal = m_dfi.Calendar;
         }
 
-        public override int GetNrOfSrcRows()
+        public override int GetNrOfSrcElements()
             => NR_OF_CALENDAR_WEEKS;
 
-        public override int GetColumnIndexFromTrainingsParticipation(TrainingsTeilnahme tn)
+        public override int GetIndexFromTrainingsParticipation(TrainingsTeilnahme tn)
             => m_cal.GetWeekOfYear(m_db.TrainingFromId(tn.TrainingID).Termin, m_dfi.CalendarWeekRule, m_dfi.FirstDayOfWeek) - 1;
 
         public override void FillRowHeaderColumns(DataGridView dgv)

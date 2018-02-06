@@ -1,7 +1,5 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using AVF.MemberManagement.ReportsBusinessLogic;
-using AVF.MemberManagement.StandardLibrary.Tbo;
 
 namespace AVF.MemberManagement.Reports
 {
@@ -13,12 +11,10 @@ namespace AVF.MemberManagement.Reports
             : base(db, coreReport)
         { }
 
-        abstract public int GetNrOfSrcColumns();
-        abstract public int GetRowIndexFromTrainingsParticipation( TrainingsTeilnahme tn );
-        abstract public void FillHeaderRows(DataGridView dgv, int iNrOfColsOnLeftSide);
+        public abstract void FillHeaderRows(DataGridView dgv, int iNrOfColsOnLeftSide);
 
         public int GetNrOfDgvColumns()
-            => m_activeColumnsOnly ? m_coreReport.GetNrOfActiveCols() : GetNrOfSrcColumns();
+            => m_activeColumnsOnly ? m_coreReport.GetNrOfActiveCols() : GetNrOfSrcElements();
         
         public void FillFooterRow(DataGridView dgv, int iNrOfColsOnLeftSide)
         {

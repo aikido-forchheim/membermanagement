@@ -64,6 +64,6 @@ namespace AVF.MemberManagement.Reports
             FillMainRows( dgv );
         }
 
-        abstract protected string FormatMatrixElement(int iValue);
+        protected abstract string FormatMatrixElement(int iValue);
     }
 }

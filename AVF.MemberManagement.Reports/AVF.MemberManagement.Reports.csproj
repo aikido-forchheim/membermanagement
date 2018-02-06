@@ -59,7 +59,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Axis.cs" />
     <Compile Include="HorizontalAxis.cs" />
     <Compile Include="HorizontalAxisCourses.cs" />
     <Compile Include="MainForm.cs">

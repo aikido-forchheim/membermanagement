@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Axis.cs" />
     <Compile Include="DatabaseWrapper.cs" />
     <Compile Include="Examinations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

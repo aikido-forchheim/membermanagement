@@ -1,6 +1,5 @@
 ﻿using System.Windows.Forms;
 using AVF.MemberManagement.ReportsBusinessLogic;
-using AVF.MemberManagement.StandardLibrary.Tbo;
 
 namespace AVF.MemberManagement.Reports
 {
@@ -18,13 +17,11 @@ namespace AVF.MemberManagement.Reports
             : base(db, coreReport)
         { }
 
-        abstract public int GetNrOfSrcRows();
-        abstract public int GetColumnIndexFromTrainingsParticipation(TrainingsTeilnahme tn );
-        abstract public void FillRowHeaderColumns(DataGridView dgv);
+        public abstract void FillRowHeaderColumns(DataGridView dgv);
         abstract public void FillRowSumColumns(DataGridView dgv);
 
         public int GetNrOfDgvRows()
-            => m_activeRowsOnly ? m_coreReport.GetNrOfActiveRows() : GetNrOfSrcRows();
+            => m_activeRowsOnly ? m_coreReport.GetNrOfActiveRows() : GetNrOfSrcElements();
         
         protected void FillRowSumColumns(DataGridView dgv, bool activeRowsOnly)
         {

@@ -22,11 +22,9 @@ namespace AVF.MemberManagement.Reports
 
             m_coreReport.Initialize
             (
-                m_yAxis.GetNrOfSrcRows(),
-                m_xAxis.GetNrOfSrcColumns(),
-                tn => (m_idMember.HasValue) ? (m_idMember.Value == tn.MitgliedID) : true,
-                tn => m_yAxis.GetColumnIndexFromTrainingsParticipation(tn),
-                tn => m_xAxis.GetRowIndexFromTrainingsParticipation(tn)
+                m_xAxis,
+                m_yAxis,
+                tn => (m_idMember.HasValue) ? (m_idMember.Value == tn.MitgliedID) : true
             );
         }
 

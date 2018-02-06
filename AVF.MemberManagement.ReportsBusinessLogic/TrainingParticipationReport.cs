@@ -35,15 +35,13 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 
         public void Initialize
         (
-            int iNrOfRows, 
-            int iNrOfCols,
-            Func<TrainingsTeilnahme, bool> isRelevant,
-            Func<TrainingsTeilnahme, int> rowIndex,
-            Func<TrainingsTeilnahme, int> colIndex
+            Axis xAxis,
+            Axis yAxis,
+            Func<TrainingsTeilnahme, bool> isRelevant
         )
         {
-            m_iNrOfRows = iNrOfRows;
-            m_iNrOfCols = iNrOfCols;
+            m_iNrOfRows = yAxis.GetNrOfSrcElements();
+            m_iNrOfCols = xAxis.GetNrOfSrcElements();
 
             m_Rows = new Row[m_iNrOfRows];
 
@@ -64,8 +62,8 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             {
                 if (isRelevant(trainingsTeilnahme))
                 {
-                    int iRow = rowIndex(trainingsTeilnahme);
-                    int iCol = colIndex(trainingsTeilnahme);
+                    int iRow = yAxis.GetIndexFromTrainingsParticipation(trainingsTeilnahme);
+                    int iCol = xAxis.GetIndexFromTrainingsParticipation(trainingsTeilnahme);
                     ++m_Rows[iRow].aiValues[iCol];
                     ++m_Rows[iRow].iRowSum;
                     ++m_iColSum[iCol];

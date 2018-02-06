@@ -1,6 +1,7 @@
-﻿using AVF.MemberManagement.ReportsBusinessLogic;
+﻿using AVF.MemberManagement.StandardLibrary.Tbo;
+using AVF.MemberManagement.ReportsBusinessLogic;
 
-namespace AVF.MemberManagement.Reports
+namespace AVF.MemberManagement.ReportsBusinessLogic
 {
     public abstract class Axis
     {
@@ -12,5 +13,8 @@ namespace AVF.MemberManagement.Reports
             m_db = db;
             m_coreReport = coreReport;
         }
+
+        public abstract int GetNrOfSrcElements();
+        public abstract int GetIndexFromTrainingsParticipation(TrainingsTeilnahme tn);
     }
 }

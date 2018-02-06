@@ -13,10 +13,10 @@ namespace AVF.MemberManagement.Reports
             m_activeRowsOnly = true;
         }
 
-        public override int GetNrOfSrcRows()
+        public override int GetNrOfSrcElements()
             => m_db.MaxMitgliedsNr() + 1;     // One additional row for pseudo member with Id = -1
 
-        public override int GetColumnIndexFromTrainingsParticipation( TrainingsTeilnahme tn )
+        public override int GetIndexFromTrainingsParticipation( TrainingsTeilnahme tn )
             => tn.MitgliedID - 1;    // db ids start with 1, array indices with 0
 
         public override void FillRowHeaderColumns( DataGridView dgv )
