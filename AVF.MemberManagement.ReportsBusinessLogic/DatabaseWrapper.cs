@@ -47,10 +47,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         }
 
         public string WeekDay(int id)
-        {
-            var wochentag = m_wochentag.Single(s => s.Id == id);
-            return wochentag.Bezeichnung;
-        }
+            => m_wochentag.Single(s => s.Id == id).Bezeichnung;
 
         public Boolean IstNochMitglied(int? id)
         {
@@ -121,18 +118,6 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             return found;
         }
 
-        public int AnzahleBesuche(int member, List<Training> trainings)
-        {
-            int iCount = 0;
-            foreach (var training in trainings)
-            {
-                if (HatTeilgenommen(member, training))
-                    ++iCount;
-            }
-
-            return iCount;
-        }
-
         public Kurs KursFromId(int id)
             => m_kurs.Single(s => s.Id == id);     
         
@@ -158,19 +143,14 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         {
             var result = Filter( m_trainings, datStart, datEnd );
 
-            if ( idKurs != -1 )
+            if ( idKurs.HasValue )
                 result = Filter( result, idKurs );
 
             return result.OrderBy(x => x.Termin).ToList();
         }
 
         public List<Training> TrainingsInPeriod( int? idKurs, int iJahr )
-        {
-            DateTime datStart = new DateTime(iJahr, 1, 1);
-            DateTime datEnd = new DateTime(iJahr, 12, 31);
-
-            return TrainingsInPeriod(idKurs, datStart, datEnd );
-        }
+            => TrainingsInPeriod(idKurs, new DateTime(iJahr, 1, 1), new DateTime(iJahr, 12, 31));
 
         public List<Training> TrainingsInPeriod(DateTime datStart, DateTime datEnd) 
             => TrainingsInPeriod(null, datStart, datEnd);

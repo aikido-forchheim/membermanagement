@@ -18,7 +18,7 @@ namespace AVF.MemberManagement.Reports
             (
                 m_xAxis,
                 m_yAxis,
-                tn => true
+                isRelevant: tn => true
             );
 
             m_coreReport.SortRows();
