@@ -6,12 +6,12 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
     public abstract class Axis
     {
         protected DatabaseWrapper             m_db;
-        protected TrainingParticipationReport m_coreReport;
+        protected TrainingParticipationMatrix m_tpMatrix;
 
-        protected Axis(DatabaseWrapper db, TrainingParticipationReport coreReport)
+        protected Axis(DatabaseWrapper db, TrainingParticipationMatrix tpMatrix)
         {
             m_db = db;
-            m_coreReport = coreReport;
+            m_tpMatrix = tpMatrix;
         }
 
         public abstract int GetNrOfSrcElements();

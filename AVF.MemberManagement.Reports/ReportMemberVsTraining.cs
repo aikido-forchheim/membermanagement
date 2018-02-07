@@ -11,19 +11,18 @@ namespace AVF.MemberManagement.Reports
             : base(db, datStart, datEnd )
         {
             m_idKurs = idKurs;
-            m_iNrOfColsOnLeftSide = 3;   // 3 columns for Mitglieder
 
-            m_xAxis = new HorizontalAxisTrainings(db, m_coreReport, datStart, datEnd, idKurs );
-            m_yAxis = new VerticalAxisMembers(db, m_coreReport);
+            m_xAxis = new HorizontalAxisTrainings(db, m_tpMatrix, datStart, datEnd, idKurs );
+            m_yAxis = new VerticalAxisMembers(db, m_tpMatrix);
 
-            m_coreReport.Initialize
+            m_tpMatrix.Initialize
             (
                 m_xAxis,
                 m_yAxis,
                 tn => m_db.KursIdFromTrainingId(tn.TrainingID) == m_idKurs
             );
 
-            m_coreReport.SortRows();
+            m_tpMatrix.SortRows();
         }
 
         protected override string FormatMatrixElement(int iValue)

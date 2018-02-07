@@ -28,7 +28,7 @@ namespace AVF.MemberManagement.Reports
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm(m_dbWrapper));
+            Application.Run(new ReportForm(m_dbWrapper, new ReportDescriptor(ReportType.MemberVsCourse)));
         }
     }
 }

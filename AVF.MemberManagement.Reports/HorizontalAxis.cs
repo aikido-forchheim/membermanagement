@@ -5,16 +5,20 @@ namespace AVF.MemberManagement.Reports
 {
     public abstract class HorizontalAxis : Axis
     {
-        public bool m_activeColumnsOnly;
+        public int m_iNrOfFooterRows { get; protected set; }
 
-        protected HorizontalAxis(DatabaseWrapper db, TrainingParticipationReport coreReport)
-            : base(db, coreReport)
-        { }
+        public bool m_activeColsOnly;
+
+        protected HorizontalAxis(DatabaseWrapper db, TrainingParticipationMatrix tpMatrix)
+            : base(db, tpMatrix)
+        {
+            m_iNrOfFooterRows = 1; // 1 row for column sum
+        }
 
         public abstract void FillHeaderRows(DataGridView dgv, int iNrOfColsOnLeftSide);
 
-        public int GetNrOfDgvColumns()
-            => m_activeColumnsOnly ? m_coreReport.GetNrOfActiveCols() : GetNrOfSrcElements();
+        public int GetNrOfDgvCols()
+            => m_activeColsOnly ? m_tpMatrix.GetNrOfActiveCols() : GetNrOfSrcElements();
         
         public void FillFooterRow(DataGridView dgv, int iNrOfColsOnLeftSide)
         {
@@ -23,13 +27,13 @@ namespace AVF.MemberManagement.Reports
             dgv[iNrOfColsOnLeftSide - 1, iDgvRow].Value = "Summe";
 
             int iDgvCol = iNrOfColsOnLeftSide;
-            m_coreReport.ForAllColumns
+            m_tpMatrix.ForAllCols
             (
-                action: iCol => dgv[iDgvCol++, iDgvRow].Value = m_coreReport.GetColSum(iCol),
-                activeColumnsOnly: m_activeColumnsOnly
+                action: iCol => dgv[iDgvCol++, iDgvRow].Value = m_tpMatrix.GetColSum(iCol),
+                activeColsOnly: m_activeColsOnly
             );
 
-            dgv[dgv.ColumnCount - 1, iDgvRow].Value = m_coreReport.GetSumSum();
+            dgv[dgv.ColumnCount - 1, iDgvRow].Value = m_tpMatrix.GetSumSum();
         }
     }
 }

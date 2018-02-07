@@ -6,10 +6,10 @@ namespace AVF.MemberManagement.Reports
 {
     class HorizontalAxisCourses : HorizontalAxis
     {
-        public HorizontalAxisCourses(DatabaseWrapper db, TrainingParticipationReport coreReport)
-            : base(db, coreReport)
+        public HorizontalAxisCourses(DatabaseWrapper db, TrainingParticipationMatrix tpMatrix)
+            : base(db, tpMatrix)
         {
-            m_activeColumnsOnly = false;
+            m_activeColsOnly = false;
         }
 
         public override int GetNrOfSrcElements()
@@ -28,7 +28,7 @@ namespace AVF.MemberManagement.Reports
             dgv.Columns[iDgvCol].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 
             iDgvCol++;
-            m_coreReport.ForAllColumns
+            m_tpMatrix.ForAllCols
             (
                 action: iCol =>
                 {
@@ -39,7 +39,7 @@ namespace AVF.MemberManagement.Reports
                         dgv.Columns[iDgvCol++].HeaderText = $"{ m_db.WeekDay(kurs.WochentagID).Substring(0, 2) }\n{kurs.Zeit:hh}:{kurs.Zeit:mm}";
                     }
                 },
-                activeColumnsOnly: m_activeColumnsOnly
+                activeColsOnly: m_activeColsOnly
             );
             dgv.Columns[dgv.ColumnCount - 1].HeaderText = "\nSumme";
             dgv.Columns[dgv.ColumnCount - 1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;

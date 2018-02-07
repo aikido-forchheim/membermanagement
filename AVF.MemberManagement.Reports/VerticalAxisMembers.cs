@@ -6,8 +6,8 @@ namespace AVF.MemberManagement.Reports
 {
     class VerticalAxisMembers : VerticalAxis
     {
-        public VerticalAxisMembers(DatabaseWrapper db, TrainingParticipationReport coreReport) 
-            : base(db, coreReport)
+        public VerticalAxisMembers(DatabaseWrapper db, TrainingParticipationMatrix tpMatrix) 
+            : base(db, tpMatrix)
         {
             m_iNrOfColsOnLeftSide  = 3;   // 3 columns for Mitglieder
             m_activeRowsOnly = true;
@@ -19,7 +19,7 @@ namespace AVF.MemberManagement.Reports
         public override int GetIndexFromTrainingsParticipation( TrainingsTeilnahme tn )
             => tn.MitgliedID - 1;    // db ids start with 1, array indices with 0
 
-        public override void FillRowHeaderColumns( DataGridView dgv )
+        public override void FillRowHeaderCols( DataGridView dgv )
         {
             dgv.Columns[0].HeaderText = "Vorname";
             dgv.Columns[1].HeaderText = "Nachname";
@@ -27,11 +27,11 @@ namespace AVF.MemberManagement.Reports
 
             int iDgvRow = 0;
             dgv.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            m_coreReport.ForAllRows
+            m_tpMatrix.ForAllRows
             (
                 action: iRow =>
                 {
-                    Mitglied mitglied = m_db.MitgliedFromId(m_coreReport.GetRowId(iRow));
+                    Mitglied mitglied = m_db.MitgliedFromId(m_tpMatrix.GetRowId(iRow));
                     dgv[0, iDgvRow].Value = mitglied.Nachname;
                     dgv[1, iDgvRow].Value = mitglied.Vorname;
                     dgv[2, iDgvRow].Value = mitglied.Id;
@@ -41,9 +41,9 @@ namespace AVF.MemberManagement.Reports
             );
         }
 
-        public override void FillRowSumColumns(DataGridView dgv)
+        public override void FillRowSumCols(DataGridView dgv)
         {
-            FillRowSumColumns(dgv, activeRowsOnly: m_activeRowsOnly);
+            FillRowSumCols(dgv, activeRowsOnly: m_activeRowsOnly);
         }
     }
 }

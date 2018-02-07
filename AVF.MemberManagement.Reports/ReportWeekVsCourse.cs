@@ -14,17 +14,14 @@ namespace AVF.MemberManagement.Reports
         {
             m_idMember = idMember;
 
-            m_iNrOfColsOnLeftSide  = 1;  // 1 columns for week number
-            m_iNrOfColsOnRightSide = 1;  // 1 column for row sum
+            m_xAxis = new HorizontalAxisCourses(db, m_tpMatrix);
+            m_yAxis = new VerticalAxisWeeks(db, m_tpMatrix);
 
-            m_xAxis = new HorizontalAxisCourses(db, m_coreReport);
-            m_yAxis = new VerticalAxisWeeks(db, m_coreReport);
-
-            m_coreReport.Initialize
+            m_tpMatrix.Initialize
             (
                 m_xAxis,
                 m_yAxis,
-                tn => (m_idMember.HasValue) ? (m_idMember.Value == tn.MitgliedID) : true
+                tn => m_idMember.Value == tn.MitgliedID
             );
         }
 

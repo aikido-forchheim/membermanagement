@@ -14,17 +14,17 @@ namespace AVF.MemberManagement.Reports
         public HorizontalAxisTrainings
         (
             DatabaseWrapper db, 
-            TrainingParticipationReport coreReport, 
+            TrainingParticipationMatrix tpMatrix, 
             DateTime datStart, 
             DateTime datEnd, 
             int idKurs
         )
-            : base(db, coreReport)
+            : base(db, tpMatrix)
         {
             m_datStart = datStart;
             m_datEnd   = datEnd;
             m_idKurs   = idKurs;
-            m_activeColumnsOnly = true;
+            m_activeColsOnly = true;
         }
 
         public override int GetNrOfSrcElements()
