@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
@@ -78,25 +81,38 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DatabaseWrapper.cs" />
+    <Compile Include="CheckConsistancy.cs" />
+    <Compile Include="Excel.cs" />
+    <Compile Include="Graduierungsliste.cs" />
+    <Compile Include="Mitgliederbeitraege.cs" />
+    <Compile Include="OutputFile.cs" />
     <Compile Include="Pruefungsliste.cs" />
     <Compile Include="ClassPrototypeGenerator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StundensatzKalkulator.cs" />
+    <Compile Include="Trainingsteilnahme.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AVF.MemberManagement.BusinessLogic\AVF.MemberManagement.BusinessLogic.csproj">
+      <Project>{7f665b64-c06f-4fe8-8b7e-33d7734ddea5}</Project>
+      <Name>AVF.MemberManagement.BusinessLogic</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AVF.MemberManagement.StandardLibrary\AVF.MemberManagement.StandardLibrary.csproj">
-      <Project>{06b2e0c1-3277-491c-9aba-a53bbf260f6a}</Project>
+      <Project>{b900104e-d6b5-4a65-85fd-57702e0f6d65}</Project>
       <Name>AVF.MemberManagement.StandardLibrary</Name>
     </ProjectReference>
     <ProjectReference Include="..\AVF.MemberManagement.xUnitIntegrationTests\AVF.MemberManagement.xUnitIntegrationTests.csproj">
       <Project>{63f993d0-1578-4c5a-a467-ac0f2150b0d3}</Project>
       <Name>AVF.MemberManagement.xUnitIntegrationTests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AVF.MemberManagement.xUnitTests\AVF.MemberManagement.xUnitTests.csproj">
+      <Project>{62e51f14-4650-42f9-9192-f53b5c917a5d}</Project>
+      <Name>AVF.MemberManagement.xUnitTests</Name>
     </ProjectReference>
     <ProjectReference Include="..\AVF.MemberManagement\AVF.MemberManagement\AVF.MemberManagement.csproj">
       <Project>{5fbac065-134e-46ba-8181-c87e2d2af1af}</Project>

@@ -1,51 +1,10 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Windows.Forms.VisualStyles;
-using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
-using Microsoft.Practices.ObjectBuilder2;
-using Microsoft.Practices.Unity;
+using AVF.MemberManagement.BusinessLogic;
 
 namespace AVF.MemberManagement.Console
 {
-    internal class OutputFile : System.IO.StreamWriter
-    {
-
-        public OutputFile( string fileName ) : base( fileName )
-        {
-        }
-
-        public void WriteAmount( string prefix, decimal amount)
-        {
-            string s = $"{prefix} { amount,7 } € ";
-
-            if ( amount > 0 )
-            {
-                Write(s);
-            }
-            else
-            {
-                for (int i = 0; i < s.Length; ++i)
-                    Write($" ");
-            }
-        }
-
-        public void WriteTraining( Training training, string weekDay )
-        {
-            Write($"{training.Termin:yyyy-MM-dd} {weekDay,-10} {training.Zeit:hh}:{training.Zeit:mm}, {training.DauerMinuten,3} min, ");
-        }
-
-        public void WriteMitglied( Mitglied mitglied )
-        {
-            Write($"{ mitglied.Nachname,-10 } { mitglied.Vorname,-10 } ({ mitglied.Id,3 }) ");
-        }
-
-    }
-
     internal class TrainerVerguetung
     {
         public TrainerVerguetung()
@@ -89,11 +48,13 @@ namespace AVF.MemberManagement.Console
             return (decGrundVerguetung == 0) && (decZuschlagKindertraining == 0) && (decFahrtkosten == 0);
         }
 
-        public void WriteSum( OutputFile o )
+        public void WriteSum( OutputTarget o )
         {
-            o.WriteAmount( " ", decGrundVerguetung + decZuschlagKindertraining );
-            o.WriteAmount( "+", decFahrtkosten) ;
-            o.WriteAmount( "=", decGrundVerguetung + decZuschlagKindertraining + decFahrtkosten );
+            o.WriteAmount( decGrundVerguetung + decZuschlagKindertraining );
+            o.Write("+");
+            o.WriteAmount( decFahrtkosten);
+            o.Write("=");
+            o.WriteAmount( decGrundVerguetung + decZuschlagKindertraining + decFahrtkosten );
         }
 
         public decimal Summe()
@@ -123,7 +84,6 @@ namespace AVF.MemberManagement.Console
 
     internal class StundensatzKalkulator
     {
-        private DatabaseWrapper     m_dbWrapper;
         private TrainerVerguetung[] m_aTrData;
 
         private int? TrainerIdFromNr(Training training, int trainerNr )
@@ -141,12 +101,18 @@ namespace AVF.MemberManagement.Console
 
         private void SettlePeriod
         (
-            OutputFile      ofile, 
-            Mitglied        trainer,                       // null means: no specific trainer, do for all trainers
-            List<Training>  trainings,
-            bool            print
+            TrainerAward   ta,
+            OutputTarget   oTarget, 
+            Mitglied       trainer,                       // null means: no specific trainer, do for all trainers
+            List<Training> trainings,
+            bool           print
         )
         {
+            if (oTarget == null)
+            {
+                throw new System.ArgumentNullException(nameof(oTarget));
+            }
+
             foreach (Training training in trainings)
             {
                 for (int trainerNr = 1; trainerNr <= 3; ++trainerNr)
@@ -155,38 +121,38 @@ namespace AVF.MemberManagement.Console
                     {
                         int? trainerId = TrainerIdFromNr(training, trainerNr);
 
-                        if ((trainerId.HasValue) && (trainerId >= 0))
+                        if ( ta.IstNochMitglied(trainerId) )
                         {
-                            int trainerstufe = m_dbWrapper.TrainerLevel(trainerId, training.Termin);
+                            int trainerstufe = ta.TrainerLevel(trainerId, training.Termin);
 
                             TrainerVerguetung tv = new TrainerVerguetung
                             (
-                                m_dbWrapper.TrainingAward(trainerstufe, training, trainerNr),
-                                m_dbWrapper.ExtraAmount(training, trainerNr),
-                                m_dbWrapper.CalcTravelExpenses(trainerId, training.Termin)
+                                ta.TrainingAward(trainerstufe, training, trainerNr),
+                                ta.ExtraAmount(training, trainerNr),
+                                ta.CalcTravelExpenses(trainerId, training.Termin)
                             );
 
                             m_aTrData[trainerId.Value].Add(tv);
 
                             if ( print )
                             {
-                                ofile.WriteTraining(training, m_dbWrapper.WeekDay(training.WochentagID));
-                                ofile.Write($"{trainerNr}. Trainer, ");
-                                ofile.Write($" Stufe { trainerstufe }, ");
+                                oTarget.WriteTraining(training, training.WochentagID);
+                                oTarget.Write($"{trainerNr} ");
+                                oTarget.Write($"{trainerstufe} ");
 
                                 if (training.VHS)
                                 {
-                                    ofile.Write($"  -------------- VHS -------------- ");
+                                    oTarget.Write($"  ------- VHS ------- ");
                                 }
                                 else
                                 {
-                                    ofile.WriteAmount(" ", tv.GrundVerguetung());
-                                    ofile.WriteAmount(" ", tv.ZuschlagKindertraining());
+                                    oTarget.WriteAmount( tv.GrundVerguetung());
+                                    oTarget.WriteAmount( tv.ZuschlagKindertraining());
                                 }
 
-                                ofile.WriteAmount(" ", tv.Fahrtkosten());
-                                ofile.WriteAmount(" ", tv.Summe());
-                                ofile.WriteLine();
+                                oTarget.WriteAmount( tv.Fahrtkosten());
+                                oTarget.WriteAmount( tv.Summe());
+                                oTarget.WriteLine();
                             }
                         }
                     }
@@ -194,9 +160,9 @@ namespace AVF.MemberManagement.Console
             }
         }
 
-        private TrainerVerguetung[] InitTrData( )
+        private TrainerVerguetung[] InitTrData( DatabaseWrapper db )
         {
-            TrainerVerguetung[] aTrData = new TrainerVerguetung[m_dbWrapper.MaxMitgliedsNr() + 1];
+            TrainerVerguetung[] aTrData = new TrainerVerguetung[db.MaxMitgliedsNr() + 1];
 
             for (int i = 0; i < aTrData.Length; i++)
             {
@@ -206,85 +172,87 @@ namespace AVF.MemberManagement.Console
             return aTrData;
         }
 
-        public async Task Main( int iJahr )
+        internal async Task Main( DatabaseWrapper db, int iJahr )
         {
-            m_dbWrapper = new DatabaseWrapper();
+            m_aTrData = InitTrData( db );
 
-            await m_dbWrapper.ReadTables();
+            var trainingsInPeriod = db.TrainingsInPeriod( -1, iJahr );
+            var trainerAward = new TrainerAward(db);
 
-            m_aTrData = InitTrData( );
-
-            List<Training> trainingsInPeriod = m_dbWrapper.Prepare( iJahr );
-
-         // Create summary account
+            // Create summary account
 
             {
-                OutputFile ofile = new OutputFile(@"Trainerverguetung.txt");
+                OutputTarget oTarget = new OutputTarget( @"Trainerverguetung.txt", db );
 
-                SettlePeriod( ofile, null, trainingsInPeriod, false );
+                SettlePeriod(trainerAward, oTarget, null, trainingsInPeriod, false );
 
-                ofile.WriteLine();
-                ofile.WriteLine($"Nachname   Vorname     Nr.   Unterricht  Fahrtkosten    Summe");
-                ofile.WriteLine();
+                oTarget.WriteLine();
+                oTarget.WriteLine($"Nachname   Vorname     Nr.   Unterricht  Fahrtkosten    Summe");
+                oTarget.WriteLine();
 
                 TrainerVerguetung tvSum = new TrainerVerguetung(0, 0, 0);
 
-                foreach (Mitglied mitglied in m_dbWrapper.Mitglieder())
+                foreach (Mitglied mitglied in db.m_mitglieder)
                 {
                     TrainerVerguetung tv = m_aTrData[mitglied.Id];
 
                     if (!tv.IsEmpty())
                     {
-                        ofile.WriteMitglied(mitglied);
+                        oTarget.WriteMitglied(mitglied);
 
-                        tv.WriteSum(ofile);
-                        ofile.WriteLine();
+                        tv.WriteSum(oTarget);
+                        oTarget.WriteLine();
 
                         tvSum.Add(tv);
                     }
                 }
 
-                ofile.WriteLine();
-                ofile.Write($"Gesamtbeträge               ");
-                tvSum.WriteSum(ofile);
-                ofile.WriteLine();
+                oTarget.WriteLine();
+                oTarget.Write($"Gesamtbeträge                   ");
+                tvSum.WriteSum(oTarget);
+                oTarget.WriteLine();
 
-                ofile.Close();
+                oTarget.CloseAndReset2Console();
             }
 
          // Create individual accounts
 
-            foreach ( Mitglied mitglied in m_dbWrapper.Mitglieder( ) )
+            foreach ( Mitglied mitglied in db.m_mitglieder )
             {
                 if ( ! m_aTrData[mitglied.Id].IsEmpty( ) )    // filled by summary account calculation if trainer
                 {
-                    OutputFile ofile = new OutputFile($"{ mitglied.Nachname }_{ mitglied.Vorname }.txt  ");
+                    OutputTarget oTarget = new OutputTarget( $"{ mitglied.Nachname }_{ mitglied.Vorname }.txt  ", db );
 
-                    ofile.WriteLine( $"{ mitglied.Nachname,-10 } { mitglied.Vorname,-10 } MitgliedsNr. ({ mitglied.Id,3 }) ") ;
-                    ofile.WriteLine();
+                    oTarget.WriteLine( $"{ mitglied.Nachname,-10 } { mitglied.Vorname,-10 } MitgliedsNr. ({ mitglied.Id,3 }) ") ;
+                    oTarget.WriteLine();
 
                     m_aTrData[mitglied.Id].SetEmpty();     // reset individual account to avoid double counting
 
-                    ofile.WriteLine("Tag des Trainings     Zeit   Dauer    Trainernr.   Trainer    Grundver-    Kinder-      Fahrt-      Summe");
-                    ofile.WriteLine("                                                   -stufe     guetung      zuschlag     kosten           ");
-                    ofile.WriteLine();
+                    oTarget.WriteLine("Tag des Trainings     Zeit  Min T T  Grundver-    Kinder-     Fahrt-    Summe");
+                    oTarget.WriteLine("                                N S   guetung     zuschlag    kosten         ");
+                    oTarget.WriteLine();
 
-                    SettlePeriod( ofile, mitglied, trainingsInPeriod, true );
+                    SettlePeriod(trainerAward, oTarget, mitglied, trainingsInPeriod, true );
 
-                    ofile.WriteLine();
-                    ofile.Write      (" Summe                                                      ");
-                    ofile.WriteAmount(" ", m_aTrData[mitglied.Id].GrundVerguetung());
-                    ofile.WriteAmount(" ", m_aTrData[mitglied.Id].ZuschlagKindertraining());
-                    ofile.WriteAmount(" ", m_aTrData[mitglied.Id].Fahrtkosten());
-                    ofile.WriteAmount(" ", m_aTrData[mitglied.Id].Summe());
-                    ofile.WriteLine();
-                    ofile.WriteLine();
+                    oTarget.WriteLine();
+                    oTarget.Write      ("Summe                               ");
+                    oTarget.WriteAmount( m_aTrData[mitglied.Id].GrundVerguetung());
+                    oTarget.WriteAmount( m_aTrData[mitglied.Id].ZuschlagKindertraining());
+                    oTarget.WriteAmount( m_aTrData[mitglied.Id].Fahrtkosten());
+                    oTarget.WriteAmount( m_aTrData[mitglied.Id].Summe());
+                    oTarget.WriteLine();
+                    oTarget.WriteLine();
 
-                    ofile.WriteLine( "Legende Trainerstufen:" ); 
-                    for (int i = 1; i <= m_dbWrapper.MaxTrainerstufe(); i++)
-                        ofile.WriteLine( $"{ i } - { m_dbWrapper.Trainerstufe( i )}" );
+                    oTarget.WriteLine("TN: Trainernummer");
+                    oTarget.WriteLine("1 - Hauptrainer");
+                    oTarget.WriteLine("2 - Erster Kotrainer");
+                    oTarget.WriteLine("3 - Zweiter Kotrainer");
+                    oTarget.WriteLine();
+                    oTarget.WriteLine("TS: Trainerstufe");
+                    for (int i = 1; i <= db.MaxTrainerstufe; i++)
+                        oTarget.WriteLine( $"{ i } - { db.Trainerstufe( i )}" );
 
-                    ofile.Close();
+                    oTarget.CloseAndReset2Console();
                 }
             }
         }

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq.Expressions;
 using AVF.MemberManagement.Factories;
 using AVF.MemberManagement.xUnitIntegrationTests;
 using Microsoft.Practices.Unity;
+using AVF.MemberManagement.BusinessLogic;
 
 namespace AVF.MemberManagement.Console
 {
@@ -24,6 +24,11 @@ namespace AVF.MemberManagement.Console
 
                 Container = bootstrapper.Container;
 
+                DatabaseWrapper m_dbWrapper;
+                m_dbWrapper = new DatabaseWrapper();
+                System.Console.WriteLine("read database");
+                m_dbWrapper.ReadTables(Container).Wait();
+
                 System.Console.Clear();
 
                 var input = 0;
@@ -33,6 +38,12 @@ namespace AVF.MemberManagement.Console
                     System.Console.WriteLine("1: Generate class prototypes");
                     System.Console.WriteLine("2: Stundensatz-Kalkulator");
                     System.Console.WriteLine("3: Cache Database");
+                    System.Console.WriteLine("4: Prüfungsliste");
+                    System.Console.WriteLine("5: Graduierungsliste");
+                    System.Console.WriteLine("6: Mitgliederbeiträge");
+                    System.Console.WriteLine("7: Konsistenzprüfungen");
+                    System.Console.WriteLine("8: Trainingsteilnahme");
+                    System.Console.WriteLine("9: Excel-Test");
                     System.Console.WriteLine();
                     System.Console.Write("Please enter number and press ENTER: ");
 
@@ -44,10 +55,30 @@ namespace AVF.MemberManagement.Console
                             new ClassPrototypeGenerator().Main().Wait();
                             break;
                         case 2:
-                            new StundensatzKalkulator().Main( 2017 ).Wait();
+                            new StundensatzKalkulator().Main(m_dbWrapper, 2017).Wait();
                             break;
                         case 3:
                             new JsonFileFactory(Container).RefreshFileCache().Wait();
+                            break;
+                        case 4:
+                            new Pruefungsliste().Main(m_dbWrapper).Wait();
+                            break;
+                        case 5:
+                            new Graduierungsliste().Main(m_dbWrapper).Wait();
+                            break;
+                        case 6:
+                            new Mitgliederbeitraege().Main(m_dbWrapper).Wait();
+                            break;
+                        case 7:
+                            new CheckConsistancy().Main(m_dbWrapper).Wait();
+                            break;
+                        case 8:
+                            Trainingsteilnahme.Report(m_dbWrapper, 2017);
+                            break;
+                        case 9:
+                            new Excel().Test(m_dbWrapper);
+                            break;
+                        default:
                             break;
                     }
                 }

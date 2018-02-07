@@ -1,32 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
+using AVF.MemberManagement.BusinessLogic;
 
 namespace AVF.MemberManagement.Console
 {
     class Pruefungsliste
     {
-        private DatabaseWrapper m_dbWrapper;
-
-        public async Task Main()
+        internal async Task Main( DatabaseWrapper db )
         {
-            m_dbWrapper = new DatabaseWrapper();
+            OutputTarget oTarget = new OutputTarget("Pruefungsliste.txt", db );
 
-            await m_dbWrapper.ReadTables();
-
-            foreach ( Mitglied mitglied in m_dbWrapper.Mitglieder() )
+            foreach ( Mitglied mitglied in db.m_mitglieder)
             {
- //               List<Pruefung> pruefungen = new List<Pruefung>;
-
-                foreach ( Pruefung pruefung in m_dbWrapper.Pruefungen() )
+                var examinations = Examinations.GetListOfExaminations(db, mitglied);
+                if (examinations.Length > 0)
                 {
-
+                    oTarget.WriteMitglied(mitglied);
+                    oTarget.WriteLine();
+                    foreach (Examination examination in examinations)
+                    {
+                        oTarget.WritePruefung(examination.exam);
+                        oTarget.WriteLine();
+                    }
+                    oTarget.WriteLine();
                 }
             }
+            oTarget.CloseAndReset2Console();
         }
     }
 }

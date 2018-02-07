@@ -21,8 +21,13 @@ namespace AVF.MemberManagement.Console
         private List<Wohnungsbezug> m_wohnungsbezug;
         private List<Wochentag> m_wochentag;
         private List<Pruefung> m_pruefung;
+        private List<Graduierung> m_graduierung;
+        private List<Beitragsklasse> m_beitragsklasse;
+        private List<Familienrabatt> m_familienrabatt;
+        private List<TrainingsTeilnahme> m_trainingsTeilnahme;
+        private List<Kurs> m_kurs;
 
-        public async Task ReadTables()
+        public async Task ReadTables( )
         {
             m_trainings = await Program.Container.Resolve<IRepository<Training>>().GetAsync();
             m_mitglieder = await Program.Container.Resolve<IRepository<Mitglied>>().GetAsync();
@@ -34,6 +39,11 @@ namespace AVF.MemberManagement.Console
             m_wohnungsbezug = await Program.Container.Resolve<IRepository<Wohnungsbezug>>().GetAsync();
             m_wochentag = await Program.Container.Resolve<IRepository<Wochentag>>().GetAsync();
             m_pruefung = await Program.Container.Resolve<IRepository<Pruefung>>().GetAsync();
+            m_graduierung = await Program.Container.Resolve<IRepository<Graduierung>>().GetAsync();
+            m_beitragsklasse = await Program.Container.Resolve<IRepository<Beitragsklasse>>().GetAsync();
+            m_familienrabatt = await Program.Container.Resolve<IRepository<Familienrabatt>>().GetAsync();
+            m_trainingsTeilnahme = await Program.Container.Resolve<IRepository<TrainingsTeilnahme>>().GetAsync();
+            m_kurs = await Program.Container.Resolve<IRepository<Kurs>>().GetAsync();
             m_mitglieder.RemoveAt(0);   // Mitglied 0 is a dummy
         }
 
@@ -75,6 +85,21 @@ namespace AVF.MemberManagement.Console
             return m_mitglieder.Max(t => t.Id);
         }
 
+        public Beitragsklasse BK(Mitglied mitglied)
+        {
+            return m_beitragsklasse.Single(s => s.Id == mitglied.BeitragsklasseID);
+        }
+
+        public string BK_Text(Mitglied mitglied)
+        {
+            return BK( mitglied ).BeitragsklasseRomanNumeral.ToString();
+        }
+
+        public int Familienrabatt(Mitglied mitglied)
+        {
+            return m_familienrabatt.Single(s => s.Id == mitglied.Familienmitglied).Faktor;
+        }
+
         public string Trainerstufe(int i)
         {
             return m_trainerStufe.Single(s => s.Id == i).Bezeichnung;
@@ -90,9 +115,61 @@ namespace AVF.MemberManagement.Console
             return m_mitglieder.Single(s => s.Id == id);
         }
 
+        public Boolean HatTeilgenommen(int member, Training training)
+        {
+            return m_trainingsTeilnahme.Exists(x => (x.MitgliedID == member) && (x.TrainingID == training.Id));
+        }
+
+        public Boolean HatTeilgenommen(int member, List<Training> trainings)
+        {
+            bool found = false;
+            foreach (var training in trainings)
+            {
+                if (HatTeilgenommen(member, training))
+                {
+                    found = true;
+                    break;
+                }
+            }
+            return found;
+        }
+
+        public int AnzahleBesuche(int member, List<Training> trainings)
+        {
+            int iCount = 0;
+            foreach (var training in trainings)
+            {
+                if (HatTeilgenommen(member, training))
+                    ++iCount;
+            }
+
+            return iCount;
+        }
+
+        public Boolean IstNochMitglied(int? id)
+        {
+            if (!id.HasValue)
+                return false;
+
+            if ( id < 0 )
+                return false;
+
+            DateTime? austritt = MitgliedFromId( id.Value ).Austritt;
+
+            if (!austritt.HasValue)
+                return true;
+
+            return (austritt.Value.Year == 0);
+        }
+
         public List<Mitglied> Mitglieder()
         {
             return m_mitglieder;
+        }
+
+        public List<Kurs> Kurse()
+        {
+            return m_kurs;
         }
 
         public List<Pruefung> Pruefungen()
@@ -100,14 +177,28 @@ namespace AVF.MemberManagement.Console
             return m_pruefung;
         }
 
-        public List<Training> Prepare(int iJahr)
+        public Graduierung GraduierungFromId(int id)
         {
-            int iArraySize = MaxMitgliedsNr() + 1;
+            return m_graduierung.Single(s => s.Id == id);
+        }
 
-            DateTime datStart = new DateTime(iJahr,  1,  1);
-            DateTime datEnd   = new DateTime(iJahr, 12, 31);
+        public List<Training> TrainingsInPeriod( DateTime datStart, DateTime datEnd )
+        {
+            var result = m_trainings.Where(training => training.Termin > datStart && training.Termin < datEnd).ToList();
+            return result.OrderBy(x => x.Termin).ToList();
+        }
 
-            return m_trainings.Where(training => training.Termin > datStart && training.Termin < datEnd).ToList();
+        public List<Training> TrainingsInPeriod(int iJahr)
+        {
+            DateTime datStart = new DateTime(iJahr, 1, 1);
+            DateTime datEnd = new DateTime(iJahr, 12, 31);
+
+            return TrainingsInPeriod( datStart, datEnd );
+        }
+
+        public List<Training> AllTrainings( )
+        {
+            return m_trainings;
         }
 
         public decimal CalcTravelExpenses(int? idMitglied, DateTime termin)
