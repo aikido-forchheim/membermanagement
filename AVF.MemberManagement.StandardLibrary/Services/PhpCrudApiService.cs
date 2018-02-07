@@ -8,10 +8,19 @@ using AVF.MemberManagement.StandardLibrary.Factories;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 
 namespace AVF.MemberManagement.StandardLibrary.Services
 {
+    public class DateFormatConverter : IsoDateTimeConverter
+    {
+        public DateFormatConverter(string format)
+        {
+            DateTimeFormat = format;
+        }
+    }
+
     public class PhpCrudApiService : IPhpCrudApiService
     {
         private readonly IAccountService _accountService;
@@ -32,17 +41,21 @@ namespace AVF.MemberManagement.StandardLibrary.Services
 
         public async Task<string> SendDataAsync<T>(string url, T dataObject)
         {
-            var jsonData = JsonConvert.SerializeObject(dataObject);
-            return await SendDataAsync(url, jsonData, "POST");
+            var jsonSettings = new JsonSerializerSettings();
+            jsonSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
+
+            var jsonData = JsonConvert.SerializeObject(dataObject, jsonSettings);
+
+            //jsonData = jsonData.Replace("true", "1").Replace("false", "0");
+
+            var sendResult = await SendDataAsync(url, jsonData, "POST");
+            if (sendResult == null) throw new IOException("PhpCrudApiService could not create object");
+            return sendResult;
         }
 
         private async Task<string> SendDataAsync(string uri, string jsonData, string method = "POST")
         {
-            var fullUri = await GetFullUriWithCsrfToken(uri);
-
-            var request = HttpWebRequestWithCookieContainer.Create(fullUri);
-            request.ContentType = "application/json";
-            request.Method = method;
+            var request = await GetRequest(uri, method);
 
             var stream = await request.GetRequestStreamAsync();
             using (var writer = new StreamWriter(stream))
@@ -52,13 +65,7 @@ namespace AVF.MemberManagement.StandardLibrary.Services
                 writer.Dispose();
             }
 
-            var response = await request.GetResponseAsync();
-            var responseStream = response.GetResponseStream();
-
-            using (var streamReader = new StreamReader(responseStream))
-            {
-                return streamReader.ReadToEnd();
-            }
+            return await GetResponse(request);
         }
 
         #endregion
@@ -138,10 +145,21 @@ namespace AVF.MemberManagement.StandardLibrary.Services
 
         public async Task<string> UpdateDataAsync<T>(string url, T dataObject)
         {
+            var jsonData = JsonConvert.SerializeObject(dataObject);
+            var responseResult = await SendDataAsync(url, jsonData, "PUT");
+            if (responseResult == null) throw new IOException("PhpCrudApiService could not update object");
+            return responseResult;
+        }
+
+        #endregion
+
+        #region Delete
+
+        public async Task<string> DeleteDataAsync(string url)
+        {
             try
             {
-                var jsonData = JsonConvert.SerializeObject(dataObject);
-                var response = await SendDataAsync(url, jsonData, "PUT");
+                var response = await DeleteDataAsyncInternal(url);
                 return response;
             }
             catch (Exception ex)
@@ -151,9 +169,27 @@ namespace AVF.MemberManagement.StandardLibrary.Services
             }
         }
 
+        private async Task<string> DeleteDataAsyncInternal(string uri)
+        {
+            var request = await GetRequest(uri, "DELETE");
+
+            return await GetResponse(request);
+        }
+
         #endregion
 
-        #region Delete
+
+        #region Properties
+
+        public async Task<string> GetTablePropertiesAsync(string tableName, string columnNameId)
+        {
+            var propertyUri = AddQueryOption(tableName, "columns", columnNameId);
+
+            propertyUri = AddQueryOption(propertyUri, "order", $"{columnNameId},desc");
+            propertyUri = AddQueryOption(propertyUri, "page", "1,1");
+
+            return await GetDataAsync(propertyUri, true);
+        }
 
         #endregion
 
@@ -187,6 +223,29 @@ namespace AVF.MemberManagement.StandardLibrary.Services
             if (!uri.Contains("?")) uri = uri + $"?{paramName}={paramValue}";
             else uri = uri + $"&{paramName}={paramValue}";
             return uri;
+        }
+
+        private static async Task<string> GetResponse(System.Net.HttpWebRequest request)
+        {
+            var response = await request.GetResponseAsync();
+            var responseStream = response.GetResponseStream();
+
+            using (var streamReader = new StreamReader(responseStream))
+            {
+                var responseString = streamReader.ReadToEnd();
+
+                return responseString == "null" ? null : responseString;
+            }
+        }
+
+        private async Task<System.Net.HttpWebRequest> GetRequest(string uri, string method)
+        {
+            var fullUri = await GetFullUriWithCsrfToken(uri);
+
+            var request = HttpWebRequestWithCookieContainer.Create(fullUri);
+            request.ContentType = "application/json";
+            request.Method = method;
+            return request;
         }
 
         #endregion

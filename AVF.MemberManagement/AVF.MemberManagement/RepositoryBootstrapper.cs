@@ -47,8 +47,8 @@ namespace AVF.MemberManagement
             _container.RegisterType<IRepository<Test>, Repository<Test>>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IRepository<TrainerErnennung>, Repository<TrainerErnennung>>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IRepository<TrainerStufe>, Repository<TrainerStufe>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IRepository<Training>, Repository<Training>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IRepository<TrainingsTeilnahme>, Repository<TrainingsTeilnahme>>();
+            _container.RegisterType<IRepository<Training>, CachedRepository<Training>>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<IRepository<TrainingsTeilnahme>, CachedRepository<TrainingsTeilnahme>>();
             _container.RegisterType<IRepository<User>, CachedRepository<User>>();
             _container.RegisterType<IRepository<Wochentag>, CachedRepository<Wochentag>>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IRepository<Wohnung>, Repository<Wohnung>>(new ContainerControlledLifetimeManager());

@@ -1,6 +1,7 @@
 ﻿using System;
 using AVF.MemberManagement.StandardLibrary.Converters;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
+using AVF.MemberManagement.StandardLibrary.Services;
 using Newtonsoft.Json;
 
 namespace AVF.MemberManagement.StandardLibrary.Tbo
@@ -9,6 +10,9 @@ namespace AVF.MemberManagement.StandardLibrary.Tbo
     {
         public const string PrimaryKey = "ID";
 
+        [JsonIgnore]
+        public string PrimaryKeyName { get; set; } = PrimaryKey;
+
         [JsonProperty(PropertyName = PrimaryKey)]
         public int Id
         {
@@ -16,12 +20,14 @@ namespace AVF.MemberManagement.StandardLibrary.Tbo
             set;
         }
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int? KursID
         {
             get;
             set;
         }
 
+        [JsonConverter(typeof(DateFormatConverter), "yyyy-MM-dd")]
         public DateTime Termin
         {
             get;
@@ -46,12 +52,14 @@ namespace AVF.MemberManagement.StandardLibrary.Tbo
             set;
         }
 
+        [JsonConverter(typeof(LongToBooleanConverter))]
         public bool Kindertraining
         {
             get;
             set;
         }
 
+        [JsonConverter(typeof(LongToBooleanConverter))]
         public bool VHS
         {
             get;
@@ -76,6 +84,7 @@ namespace AVF.MemberManagement.StandardLibrary.Tbo
             set;
         }
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Bemerkung
         {
             get;

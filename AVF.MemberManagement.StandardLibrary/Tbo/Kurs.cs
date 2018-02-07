@@ -9,6 +9,9 @@ namespace AVF.MemberManagement.StandardLibrary.Tbo
     {
         public const string PrimaryKey = "ID";
 
+        [JsonIgnore]
+        public string PrimaryKeyName { get; set; } = PrimaryKey;
+
         [JsonProperty(PropertyName = PrimaryKey)]
         public int Id
         {
@@ -34,7 +37,7 @@ namespace AVF.MemberManagement.StandardLibrary.Tbo
             set;
         }
 
-        [JsonConverter(typeof(IntStringToBooleanConverter))]
+        [JsonConverter(typeof(LongToBooleanConverter))]
         public bool Kindertraining
         {
             get;

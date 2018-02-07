@@ -26,6 +26,11 @@ namespace AVF.MemberManagement.StandardLibrary.Repositories
             _logger = logger;
         }
 
+        public Task<int> CreateAsync(Setting s)
+        {
+            throw new NotImplementedException(); 
+        }
+
         public async Task<List<Setting>> GetAsync()
         {
             if (_allEntriesAreInCache)
@@ -86,6 +91,11 @@ namespace AVF.MemberManagement.StandardLibrary.Repositories
 
                 throw;
             }
+        }
+
+        public Task<int> DeleteAsync(Setting s)
+        {
+            throw new NotImplementedException();
         }
     }
 }

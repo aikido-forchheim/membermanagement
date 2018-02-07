@@ -9,6 +9,7 @@ using AVF.MemberManagement.StandardLibrary.Models;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Prism.Navigation;
 using System.Windows.Input;
+using AVF.MemberManagement.Views;
 using Prism.Commands;
 
 namespace AVF.MemberManagement.ViewModels
@@ -48,8 +49,9 @@ namespace AVF.MemberManagement.ViewModels
 
         #region Participants
 
-        private ObservableCollection<Mitglied> _participants = new ObservableCollection<Mitglied>();
+        private ObservableCollection<Mitglied> _originalParticipantsList = new ObservableCollection<Mitglied>();
 
+        private ObservableCollection<Mitglied> _participants = new ObservableCollection<Mitglied>();
         public ObservableCollection<Mitglied> Participants
         {
             get => _participants;
@@ -57,7 +59,6 @@ namespace AVF.MemberManagement.ViewModels
         }
 
         private Mitglied _selectedParticipant;
-
         public Mitglied SelectedParticipant
         {
             get => _selectedParticipant;
@@ -106,6 +107,8 @@ namespace AVF.MemberManagement.ViewModels
                 SetProperty(ref _searchText, value);
                 FindMembers(_searchText);
                 RaisePropertyChanged(nameof(FoundMembersCountText));
+                ((DelegateCommand)ClearSearchTextCommand).RaiseCanExecuteChanged();
+                ((DelegateCommand)AddAndClearSearchTextCommand).RaiseCanExecuteChanged();
             }
         }
 
@@ -144,10 +147,14 @@ namespace AVF.MemberManagement.ViewModels
 
         #endregion
 
+        List<Mitglied> _insertList = new List<Mitglied>();
+        List<Mitglied> _deletedList = new List<Mitglied>();
 
         public ICommand RemoveParticipantCommand { get; set; }
         public ICommand AddPreviousParticipantCommand { get; set; }
         public ICommand AddFoundMemberCommand { get; set; }
+        public ICommand ClearSearchTextCommand { get; set; }
+        public ICommand AddAndClearSearchTextCommand { get; set; }
 
 
         public EnterParticipantsPageViewModel(IRepository<Mitglied> mitgliederRepository, IRepository<Training> trainingsRepository, IRepository<TrainingsTeilnahme> trainingsTeilnahmenRepository, INavigationService navigationService) : base(navigationService)
@@ -159,12 +166,16 @@ namespace AVF.MemberManagement.ViewModels
             AddPreviousParticipantCommand = new DelegateCommand(AddPreviousParticipant, CanAddPreviousParticipant);
             AddFoundMemberCommand = new DelegateCommand(AddFoundMember, CanAddFoundMember);
             RemoveParticipantCommand = new DelegateCommand(RemoveParticipant, CanRemoveParticipant);
+            ClearSearchTextCommand = new DelegateCommand(ClearSearchText, CanClearSearchText);
+            AddAndClearSearchTextCommand = new DelegateCommand(AddAndClearSearchText, CanAddAndClearSearchText);
         }
 
         #region INavigatedAware
 
         public override async void OnNavigatedTo(NavigationParameters parameters)
         {
+            if (!parameters.ContainsKey("SelectedTraining")) return;
+
             _participants.Clear();
 
             SelectedDateString = (string)parameters["SelectedDateString"];
@@ -176,19 +187,28 @@ namespace AVF.MemberManagement.ViewModels
             _mitglieder = await _mitgliederRepository.GetAsync();
             _mitglieder.Sort(CompareMemberNames);
 
-            GetExistingParticipants();
+            #region GetExistingParticipants()
+            foreach (var existingParticipant in GetExistingParticipants())
+            {
+                _originalParticipantsList.Add(existingParticipant);
+            }
+            #endregion
             await FindPreviousParticipants();
             FindMembers(_searchText);
 
             RaiseCounterPropertiesChanged();
         }
 
-        #endregion
-
-        public async Task<bool> GoBackAsync()
+        public override void OnNavigatedFrom(NavigationParameters parameters)
         {
-            return await NavigationService.GoBackAsync();
+            IsDirty();
+
+            parameters.Add(NavigationParameter.SelectedTraining, Training);
+            parameters.Add("DeletedList", _deletedList);
+            parameters.Add("InsertList", _insertList);
         }
+
+        #endregion
 
 
         #region RemoveParticipantCommand
@@ -250,12 +270,49 @@ namespace AVF.MemberManagement.ViewModels
             ((DelegateCommand)AddFoundMemberCommand).RaiseCanExecuteChanged();
 
             RaiseCounterPropertiesChanged();
+
+            if (FoundMembers.Count == 0) ClearSearchText();
+        }
+
+        #endregion
+
+        #region ClearSearchTextCommand
+
+        private void ClearSearchText()
+        {
+            SearchText = string.Empty;
+        }
+
+        private bool CanClearSearchText()
+        {
+            return !string.IsNullOrEmpty(SearchText);
+        }
+
+        #endregion
+
+        #region AddAndClearSearchTextCommand
+
+        private void AddAndClearSearchText()
+        {
+            if (FoundMembers != null && FoundMembers.Count == 1)
+            {
+                SelectedMember = FoundMembers[0];
+
+                AddFoundMember();
+
+                SearchText = string.Empty;
+            }
+        }
+
+        private bool CanAddAndClearSearchText()
+        {
+            return FoundMembers != null && FoundMembers.Count == 1;
         }
 
         #endregion
 
 
-        private void GetExistingParticipants()
+        private ObservableCollection<Mitglied> GetExistingParticipants()
         {
             foreach (var trainingParticipation in Training.Participations)
             {
@@ -263,6 +320,8 @@ namespace AVF.MemberManagement.ViewModels
 
                 Participants.Add(member);
             }
+
+            return Participants;
         }
 
         private async Task FindPreviousParticipants()
@@ -275,7 +334,7 @@ namespace AVF.MemberManagement.ViewModels
 
                 var trainingsOnWeekDay = trainings.Where(training =>
                 {
-                    var daysToCheck = Training.Training.Termin - TimeSpan.FromDays(30);
+                    var daysToCheck = Training.Training.Termin - TimeSpan.FromDays(120);
 
                     return training.KursID == Training.Training.KursID && training.Id != Training.Training.Id &&
                                training.Termin < Training.Training.Termin && training.Termin > daysToCheck;
@@ -392,6 +451,30 @@ namespace AVF.MemberManagement.ViewModels
             var resignDate = (DateTime)mitglied.Austritt;
 
             return resignDate < DateTime.Now;
+        }
+
+        public bool IsDirty()
+        {
+            _insertList.Clear();
+            _deletedList.Clear();
+
+            foreach (var participant in _participants)
+            {
+                if (!_originalParticipantsList.Contains(participant))
+                {
+                    _insertList.Add(participant);
+                }
+            }
+
+            foreach (var participant in _originalParticipantsList)
+            {
+                if (!_participants.Contains(participant))
+                {
+                    _deletedList.Add(participant);
+                }
+            }
+
+            return _insertList.Count != 0 || _deletedList.Count != 0;
         }
 
         #endregion

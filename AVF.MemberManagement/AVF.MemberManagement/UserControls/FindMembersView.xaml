@@ -1,38 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:userControls="clr-namespace:AVF.MemberManagement.UserControls;assembly=AVF.MemberManagement"
-             x:Class="AVF.MemberManagement.UserControls.FindMembersView">
-  <ContentView.Content>
-      <StackLayout Margin="8,8,8,8">
-          <Label Text="{Binding FoundMembersCountText}" Margin="8,8,8,16">
-          </Label>
-          <ListView x:Name="parent" ItemsSource="{Binding FoundMembers}" SelectedItem="{Binding SelectedMember}" Margin="16,0,0,0" ItemSelected="Parent_OnItemSelected">
-              <ListView.ItemTemplate>
-                  <DataTemplate>
-                      <ViewCell x:Name="child">
-                          <userControls:MemberView 
-                                OriginalBindingContext="{Binding Source={x:Reference child}, Path=BindingContext}" 
-                                BindingContext="{Binding Source={x:Reference parent}, Path=BindingContext}" 
-                                Command="{Binding AddFoundMemberCommand}"
-                                ButtonText="+"
-                                ButtonTextColor="Green"
-                                >
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:userControls="clr-namespace:AVF.MemberManagement.UserControls;assembly=AVF.MemberManagement" x:Class="AVF.MemberManagement.UserControls.FindMembersView">
+    <ContentView.Content>
+        <StackLayout Margin="8,8,8,8">
+            <Label Text="{Binding FoundMembersCountText}" Margin="8,8,8,16">
+            </Label>
+            <ListView x:Name="parent" ItemsSource="{Binding FoundMembers}" SelectedItem="{Binding SelectedMember}" Margin="16,0,0,0" ItemSelected="Parent_OnItemSelected">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell x:Name="child">
+                            <userControls:MemberView OriginalBindingContext="{Binding Source={x:Reference child}, Path=BindingContext}" BindingContext="{Binding Source={x:Reference parent}, Path=BindingContext}" Command="{Binding AddFoundMemberCommand}" ButtonText="+" ButtonTextColor="Green">
                             </userControls:MemberView>
-                      </ViewCell>
-                  </DataTemplate>
-              </ListView.ItemTemplate>
-          </ListView>
-          <StackLayout Orientation="Horizontal" Margin="16,32,16,8">
-              <Label Text="Kinder: " VerticalOptions="Center">
-              </Label>
-              <Switch VerticalOptions="Center" IsToggled="{Binding ChildrenOnly}">
-              </Switch>
-          </StackLayout>
-          <Entry Text="{Binding SearchText}" Margin="16,0,16,0">
-          </Entry>
-          <Button Text="Hinzufügen" Margin="16,8,16,32" Command="{Binding AddFoundMemberCommand}">
-          </Button>
-      </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <StackLayout Orientation="Horizontal" Margin="16,32,16,8">
+                <Label Text="Kinder: " VerticalOptions="Center">
+                </Label>
+                <Switch VerticalOptions="Center" IsToggled="{Binding ChildrenOnly}">
+                </Switch>
+            </StackLayout>
+            <Grid Margin="16,0,16,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="24">
+                    </ColumnDefinition>
+                    <ColumnDefinition Width="*">
+                    </ColumnDefinition>
+                    <ColumnDefinition Width="24">
+                    </ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Text="X" Command="{Binding ClearSearchTextCommand}">
+                </Button>
+                <Entry Grid.Column="1" x:Name="EntrySearchText" Text="{Binding SearchText}" Keyboard="Email" HeightRequest="24" BackgroundColor="#EEEEEE" Completed="Handle_Completed">
+                </Entry>
+                <Button Grid.Column="2" Text="+" FontAttributes="Bold" Command="{Binding AddAndClearSearchTextCommand}">
+                </Button>
+            </Grid>
+            <Button Text="Hinzufügen" Margin="16,8,16,32" Command="{Binding AddFoundMemberCommand}">
+            </Button>
+        </StackLayout>
     </ContentView.Content>
 </ContentView>

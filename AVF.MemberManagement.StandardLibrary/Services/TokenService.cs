@@ -8,7 +8,7 @@ namespace AVF.MemberManagement.StandardLibrary.Services
 {
     public class TokenService : ITokenService
     {
-        public async Task<string> GetTokenAsync(RestApiAccount restApiAccount)
+        public virtual async Task<string> GetTokenAsync(RestApiAccount restApiAccount)
         {
             var tokenAsync = await GetTokenAsync(restApiAccount.ApiUrl, restApiAccount.Username, restApiAccount.Password);
             restApiAccount.HasChanged = false;

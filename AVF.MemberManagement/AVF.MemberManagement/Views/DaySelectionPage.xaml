@@ -5,7 +5,7 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="AVF.MemberManagement.Views.DaySelectionPage" Appearing="DaySelectionPage_OnAppearing" Title="{Binding Title}">
     <StackLayout Grid.Row="1" VerticalOptions="Center" HorizontalOptions="Center">
-        <DatePicker></DatePicker>
-        <Button x:Name="BtnToday" Text="Heute" Command="{Binding NavigateToKursSelectionPageCommand}" WidthRequest="256"></Button>
+        <DatePicker Date="{Binding SelectedDate}" MinimumDate="{Binding MinDate}" MaximumDate="{Binding MaxDate}"></DatePicker>
+        <Button x:Name="BtnToday" Text="{Binding ButtonText}" Command="{Binding NavigateToKursSelectionPageCommand}" WidthRequest="256"></Button>
     </StackLayout>
 </ContentPage>

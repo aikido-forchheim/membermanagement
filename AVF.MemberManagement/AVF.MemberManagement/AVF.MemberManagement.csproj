@@ -55,11 +55,13 @@
     </Compile>
     <Compile Include="ViewModels\AdvancedSettingsPageViewModel.cs" />
     <Compile Include="ViewModels\DaySelectionPageViewModel.cs" />
+    <Compile Include="ViewModels\EditTrainingPageViewModel.cs" />
     <Compile Include="ViewModels\EnterParticipantsPageViewModel.cs" />
     <Compile Include="ViewModels\EnterParticipantsTabletPageViewModel.cs" />
     <Compile Include="ViewModels\KursSelectionPageViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\PasswordPageViewModel.cs" />
+    <Compile Include="ViewModels\SaveParticipantsPageViewModel.cs" />
     <Compile Include="ViewModels\StartPageViewModel.cs" />
     <Compile Include="Views\AdvancedSettingsPage.xaml.cs">
       <DependentUpon>AdvancedSettingsPage.xaml</DependentUpon>
@@ -67,6 +69,10 @@
     <Compile Include="Views\DaySelectionPage.xaml.cs">
       <DependentUpon>DaySelectionPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\EditTrainingPage.xaml.cs">
+      <DependentUpon>EditTrainingPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EnterParticipantsBase.cs" />
     <Compile Include="Views\EnterParticipantsPage.xaml.cs">
       <DependentUpon>EnterParticipantsPage.xaml</DependentUpon>
     </Compile>
@@ -82,6 +88,9 @@
     <Compile Include="Views\RestApiSettingsPage.xaml.cs">
       <DependentUpon>RestApiSettingsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SaveParticipantsPage.xaml.cs">
+      <DependentUpon>SaveParticipantsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\StartPage.xaml.cs">
       <DependentUpon>StartPage.xaml</DependentUpon>
     </Compile>
@@ -90,6 +99,7 @@
     </Compile>
     <Compile Include="IRepositoryBootstrapper.cs" />
     <Compile Include="ViewModelBase.cs" />
+    <Compile Include="NavigationParameter.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App.xaml">
@@ -287,6 +297,18 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\AdvancedSettingsPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\EditTrainingPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\SaveParticipantsPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

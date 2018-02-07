@@ -1,4 +1,7 @@
-﻿namespace AVF.MemberManagement.xUnitIntegrationTests
+﻿using AVF.MemberManagement.StandardLibrary.Interfaces;
+using Microsoft.Practices.Unity;
+
+namespace AVF.MemberManagement.xUnitIntegrationTests
 {
     public class TestBase
     {
@@ -10,6 +13,8 @@
         {
             Bootstrapper = new Bootstrapper(false);
             Bootstrapper.Run();
+
+            Bootstrapper.Container.RegisterType<ITokenService, UnitTestTokenService>();
         }
     }
 }

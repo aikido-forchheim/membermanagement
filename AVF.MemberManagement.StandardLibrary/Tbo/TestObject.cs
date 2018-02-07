@@ -1,54 +1,38 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using Newtonsoft.Json;
 
 namespace AVF.MemberManagement.StandardLibrary.Tbo
 {
-    public class TrainerStufe : IIntId
+    public class TestObject : IId<string>
     {
-        public const string PrimaryKey = "ID";
+        public const string PrimaryKey = "Key";
 
         [JsonIgnore]
         public string PrimaryKeyName { get; set; } = PrimaryKey;
 
         [JsonProperty(PropertyName = PrimaryKey)]
-        public int Id
+        public string Id
         {
             get;
             set;
         }
 
-        public string Bezeichnung
+        public string VarChar50
         {
             get;
             set;
         }
 
-        public string Bemerkung
+        public string Json
         {
             get;
             set;
         }
 
-        public DateTime DatensatzAngelegtAm
-        {
-            get;
-            set;
-        }
-
-        public int DatensatzAngelegtVon
-        {
-            get;
-            set;
-        }
-
-        public DateTime DatensatzGeaendertAm
-        {
-            get;
-            set;
-        }
-
-        public int DatensatzGeaendertVon
+        public int Int
         {
             get;
             set;

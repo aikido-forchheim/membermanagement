@@ -84,14 +84,9 @@ namespace AVF.MemberManagement.ViewModels
 
                 _trainingsCollection.Clear();
 
-                SelectedDate = (DateTime) parameters["Date"];
-
-                var weekday = (int) SelectedDate.DayOfWeek;
-                if (weekday == 0) weekday = 7;
-
-                var wochentage = await _wochentageRepository.GetAsync();
-
-                Wochentag = wochentage.Single(wd => wd.Id == weekday);
+                SelectedDate = (DateTime)parameters["Date"];
+                
+                Wochentag = await Globals.GetWochentagFromDayOfWeek(_wochentageRepository, SelectedDate.DayOfWeek);
 
                 SelectedDateString =
                     $"{SelectedDate.Day.ToString().PadLeft(2, '0')}.{SelectedDate.Month.ToString().PadLeft(2, '0')}.{SelectedDate.Year} ({Wochentag.Bezeichnung})";
@@ -102,14 +97,37 @@ namespace AVF.MemberManagement.ViewModels
                 var trainings = await _trainings.GetAsync();
                 var trainingsTeilnahmen = await _trainingsTeilnahmen.GetAsync();
 
-                List<TrainingsModel> trainigModelsWithoutSort = new List<TrainingsModel>();
+                var trainigModelsWithoutSort = new List<TrainingsModel>();
                 foreach (var kurs in alleKurse.Where(k => k.WochentagID == Wochentag.Id))
                 {
                     var classModel = await _classModelService.GetAsync(kurs);
 
                     var existingTrainings =
                         trainings.Where(t => t.KursID == classModel.Id && t.Termin == SelectedDate);
+
                     var training = existingTrainings.SingleOrDefault();
+
+                    // ReSharper disable once ConvertIfStatementToNullCoalescingExpression
+                    if (training == null)
+                    {
+                        training = new Training
+                        {
+                            Kindertraining = kurs.Kindertraining,
+                            Trainer = kurs.Trainer,
+                            Kotrainer1 = kurs.Kotrainer1 ?? -1,
+                            Kotrainer2 = kurs.Kotrainer2 ?? -1,
+                            Zeit = kurs.Zeit,
+                            Termin = SelectedDate,
+                            KursID = kurs.Id,
+                            DatensatzAngelegtAm = DateTime.Now,
+                            DatensatzGeaendertAm = DateTime.Now,
+                            DatensatzAngelegtVon = 1, //TODO: User logged in MemberId
+                            DatensatzGeaendertVon = 1,
+                            WochentagID = kurs.WochentagID,
+                            DauerMinuten = kurs.DauerMinuten,
+                            Bemerkung = string.Empty
+                        };
+                    }
 
                     var trainingsModel = new TrainingsModel
                     {
@@ -121,13 +139,14 @@ namespace AVF.MemberManagement.ViewModels
                     trainigModelsWithoutSort.Add(trainingsModel);
                 }
 
-                foreach (var trainingsModel in trainigModelsWithoutSort.OrderBy(t=>t.Training.Zeit))
+                foreach (var trainingsModel in trainigModelsWithoutSort.OrderBy(t => t.Training.Zeit))
                 {
                     Trainings.Add(trainingsModel);
                 }
             }
             catch (Exception ex)
             {
+                //TODO: write to own logger
                 System.Diagnostics.Debug.WriteLine(ex);
             }
         }
@@ -138,15 +157,7 @@ namespace AVF.MemberManagement.ViewModels
 
         private void EnterParticipants()
         {
-            if (Globals.Idiom == Idiom.Phone)
-            {
-                NavigationService.NavigateAsync(nameof(EnterParticipantsPage), new NavigationParameters { { "SelectedTraining", SelectedTraining }, { "SelectedDateString", SelectedDateString } });
-            }
-            else
-            {
-                NavigationService.NavigateAsync(nameof(EnterParticipantsTabletPage), new NavigationParameters { { "SelectedTraining", SelectedTraining }, { "SelectedDateString", SelectedDateString } });
-
-            }
+            NavigationService.NavigateAsync(nameof(EditTrainingPage), new NavigationParameters { { "SelectedTraining", SelectedTraining }, { "SelectedDateString", SelectedDateString } });
         }
 
         private bool CanEnterParticipants()

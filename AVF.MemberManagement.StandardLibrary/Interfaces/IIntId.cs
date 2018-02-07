@@ -7,6 +7,8 @@
 
     public interface IId<T>
     {
+        string PrimaryKeyName { get; set; }
+
         T Id { get; set; }
     }
 }
