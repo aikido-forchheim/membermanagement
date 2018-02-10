@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:userControls="clr-namespace:AVF.MemberManagement.UserControls;assembly=AVF.MemberManagement" x:Class="AVF.MemberManagement.UserControls.PreviousParticipantsView">
     <ContentView.Content>
-        <StackLayout Margin="8,8,8,8">
+        <Grid Margin="8,8,8,8">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="56"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
             <Label Text="{Binding PreviousParticipantsCountText}" Margin="8,8,8,16">
             </Label>
-            <ListView x:Name="parent" ItemsSource="{Binding PreviousParticipants}" SelectedItem="{Binding SelectedPreviousParticipant}" Margin="16,0,0,0" ItemSelected="Parent_OnItemSelected">
+            <ListView Grid.Row="1" x:Name="parent" ItemsSource="{Binding PreviousParticipants}" SelectedItem="{Binding SelectedPreviousParticipant}" Margin="16,0,0,64" ItemSelected="Parent_OnItemSelected">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell x:Name="child">
@@ -20,8 +24,6 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <Button Text="Hinzufügen" Margin="16,32,16,32" Command="{Binding AddPreviousParticipantCommand}">
-            </Button>
-        </StackLayout>
+        </Grid>
     </ContentView.Content>
 </ContentView>
