@@ -12,3 +12,6 @@ build_script:
 artifacts:
   - path: AVF.MemberManagement\AVF.MemberManagement.Droid\bin\Release\AVF.MemberManagement.Droid-Signed.apk
 test: off
+branches:
+  only:
+  - master
