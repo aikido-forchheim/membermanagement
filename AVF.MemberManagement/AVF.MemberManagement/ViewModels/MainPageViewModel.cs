@@ -275,5 +275,13 @@ namespace AVF.MemberManagement.ViewModels
         }
 
         #endregion
+
+        public override void OnNavigatedTo(NavigationParameters parameters)
+        {
+            if (parameters.ContainsKey("__NavigationMode") && parameters["__NavigationMode"].ToString() == "Back")
+            {
+                Password = string.Empty;
+            }
+        }
     }
 }

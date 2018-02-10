@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
-using Org.BouncyCastle.Security;
 using PCLCrypto;
 
 namespace AVF.MemberManagement.PortableLibrary.Services
@@ -65,8 +64,7 @@ namespace AVF.MemberManagement.PortableLibrary.Services
         private byte[] GenerateSecureRandomSalt()
         {
             var saltBytes = new byte[SaltByteSize];
-            var secureRandom = SecureRandom.GetInstance($"{_hashAlgorithmForSecureRandom}PRNG", true);
-            secureRandom.NextBytes(saltBytes);
+            NetFxCrypto.RandomNumberGenerator.GetBytes(saltBytes);
             return saltBytes;
         }
     }

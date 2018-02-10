@@ -153,6 +153,8 @@ namespace AVF.MemberManagement.ViewModels
         {
             var userFromNavigationParameters = (User) parameters["User"];
 
+            if (userFromNavigationParameters == null) NavigationService.GoBackAsync();
+
             User = userFromNavigationParameters;
         }
     }
