@@ -1,20 +1,19 @@
 ﻿using AVF.MemberManagement.StandardLibrary.Tbo;
-using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.ReportsBusinessLogic
 {
     public abstract class Axis
     {
-        protected DatabaseWrapper             m_db;
-        protected TrainingParticipationMatrix m_tpMatrix;
+        public int NrOfLeadingElements  { get; protected set; }
+        public int NrOfTrailingElements { get; protected set; }
 
-        protected Axis(DatabaseWrapper db, TrainingParticipationMatrix tpMatrix)
-        {
-            m_db = db;
-            m_tpMatrix = tpMatrix;
-        }
+        public int GetMrOfAdditionalElements( )
+            => NrOfLeadingElements + NrOfTrailingElements;
 
-        public abstract int GetNrOfSrcElements();
+        public bool ActiveElementsOnly { get; protected set; }
+
+        public abstract int NrOfSrcElements { get; }
+
         public abstract int GetIndexFromTrainingsParticipation(TrainingsTeilnahme tn);
     }
 }

@@ -3,31 +3,22 @@ using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
-    public class ReportWeekVsCourse : ReportBase
+    class ReportWeekVsCourse : ReportForm
     {
-        private int? m_idMember;
-
-        private const int NR_OF_CALENDAR_WEEKS = 52;
-
-        public ReportWeekVsCourse(DatabaseWrapper db, DateTime datStart, DateTime datEnd, int ? idMember)
-            : base(db, datStart, datEnd)
+        public ReportWeekVsCourse(DateTime datStart, DateTime datEnd, int idMember)
+            : base(datStart, datEnd)
         {
-            m_idMember = idMember;
+            m_xAxis = new HorizontalAxisCourses();
+            m_yAxis = new VerticalAxisWeeks();
 
-            m_xAxis = new HorizontalAxisCourses(db, m_tpMatrix);
-            m_yAxis = new VerticalAxisWeeks(db, m_tpMatrix);
-
-            m_tpMatrix.Initialize
+            m_tpModel = new TrainingParticipationModel
             (
+                datStart,
+                datEnd,
                 m_xAxis,
                 m_yAxis,
-                tn => m_idMember.Value == tn.MitgliedID
+                (tn => idMember == tn.MitgliedID)
             );
-        }
-
-        protected override string FormatMatrixElement(int iValue)
-        {
-            return (iValue > 0) ? $"{ iValue, -3 }" : "   ";
         }
     }
 }

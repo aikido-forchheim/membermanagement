@@ -1,29 +1,63 @@
 ﻿using System;
+using System.Windows.Forms;
 using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
-    public class ReportMemberVsCourse : ReportBase
+    class ReportMemberVsCourse : ReportForm
     {
-        public ReportMemberVsCourse(DatabaseWrapper db, DateTime datStart, DateTime datEnd)
-            : base(db, datStart, datEnd )
+        public ReportMemberVsCourse( DateTime datStart, DateTime datEnd )
+            : base(datStart, datEnd )
         {
-            m_xAxis = new HorizontalAxisCourses(db, m_tpMatrix);
-            m_yAxis = new VerticalAxisMembers(db, m_tpMatrix);
+            m_xAxis = new HorizontalAxisCourses();
+            m_yAxis = new VerticalAxisMembers();
 
-            m_tpMatrix.Initialize
+            m_tpModel = new TrainingParticipationModel
             (
+                datStart,
+                datEnd,
                 m_xAxis,
                 m_yAxis,
-                tn => true
+                (tn => true)
             );
 
-            m_tpMatrix.SortRows();
+            m_dataGridView.CellMouseClick += new DataGridViewCellMouseEventHandler(CellMouseClick);
         }
 
-        protected override string FormatMatrixElement(int iValue)
+        protected void CellMouseClick(Object sender, DataGridViewCellMouseEventArgs e)
         {
-            return (iValue > 0) ? $"{ iValue, -3 }" : "   ";
+            bool isOnMainAreaRow = (0 <= e.RowIndex) && (e.RowIndex < m_dataGridView.RowCount);
+            bool IsOnMainAreaCol = (m_yAxis.NrOfLeadingElements <= e.ColumnIndex) && (e.ColumnIndex < m_dataGridView.ColumnCount);
+
+            if (isOnMainAreaRow)
+            {
+                if (IsOnMainAreaCol)
+                {
+                    int idKurs = (e.ColumnIndex == m_yAxis.NrOfLeadingElements) ? 0 : e.ColumnIndex - m_yAxis.NrOfLeadingElements;
+                    var newForm = new ReportMemberVsTraining(m_datStart, m_datEnd, idKurs);
+                    newForm.Show();
+                }
+                else // row header or row sum
+                {
+                    int idMember = (int)m_dataGridView[2, e.RowIndex].Value;
+                    var newForm = new ReportWeekVsCourse(m_datStart, m_datEnd, idMember);
+                    newForm.Show();
+                }
+            }
+            else  // header or footer 
+            {
+                if (IsOnMainAreaCol)
+                {
+                    int idKurs = e.ColumnIndex - m_yAxis.NrOfLeadingElements;
+                    var newForm = new ReportMemberVsTraining(m_datStart, m_datEnd, idKurs);
+                    newForm.Show();
+                }
+                else
+                {
+
+                }
+            }
         }
+
     }
 }

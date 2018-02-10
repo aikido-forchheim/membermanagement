@@ -9,7 +9,6 @@ namespace AVF.MemberManagement.Reports
     static class Program
     {
         private static IUnityContainer m_container;
-        private static DatabaseWrapper m_dbWrapper;
 
         /// <summary>
         /// The main entry point for the application.
@@ -22,13 +21,15 @@ namespace AVF.MemberManagement.Reports
             bootstrapper.Run();
 
             m_container = bootstrapper.Container;
-            m_dbWrapper = new DatabaseWrapper();
             System.Console.WriteLine("read database");
-            m_dbWrapper.ReadTables(m_container).Wait();
+            Globals.Initialize(m_container);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ReportForm(m_dbWrapper, new ReportDescriptor(ReportType.MemberVsCourse)));
+
+            int iJahr = 2017;
+
+            Application.Run(new ReportMemberVsCourse(new DateTime(iJahr, 1, 1), new DateTime(iJahr, 12, 31)));
         }
     }
 }

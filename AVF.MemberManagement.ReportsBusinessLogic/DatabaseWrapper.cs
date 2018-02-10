@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Microsoft.Practices.Unity;
@@ -144,6 +144,9 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 
         public List<TrainingsTeilnahme> Filter(List<TrainingsTeilnahme> list, int idMember)
             => list.Where(p => p.MitgliedID == idMember).ToList();
+
+        public List<TrainingsTeilnahme> Filter(List<TrainingsTeilnahme> list, Func<TrainingsTeilnahme, bool> filter)
+            => list.Where(p => filter(p)).ToList();
 
         public List<TrainingsTeilnahme> TrainingsTeilnahme(DateTime datStart, DateTime datEnd)
             => Filter( m_trainingsTeilnahme, datStart, datEnd).ToList();

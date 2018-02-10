@@ -47,8 +47,9 @@
     <Compile Include="Axis.cs" />
     <Compile Include="DatabaseWrapper.cs" />
     <Compile Include="Examinations.cs" />
+    <Compile Include="Globals.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TrainingParticipationMatrix.cs" />
+    <Compile Include="TrainingParticipationModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AVF.MemberManagement.StandardLibrary\AVF.MemberManagement.StandardLibrary.csproj">

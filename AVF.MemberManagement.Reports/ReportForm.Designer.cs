@@ -36,16 +36,19 @@ namespace AVF.MemberManagement.Reports
             // 
             // m_dataGridView
             // 
+            this.m_dataGridView.AllowUserToAddRows = false;
+            this.m_dataGridView.AllowUserToDeleteRows = false;
             this.m_dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.m_dataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.m_dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.m_dataGridView.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.m_dataGridView.EnableHeadersVisualStyles = false;
-            this.m_dataGridView.Location = new System.Drawing.Point(0, 0);
+            this.m_dataGridView.Location = new System.Drawing.Point(0, 491);
             this.m_dataGridView.MultiSelect = false;
             this.m_dataGridView.Name = "m_dataGridView";
             this.m_dataGridView.RowHeadersVisible = false;
             this.m_dataGridView.RowTemplate.Height = 28;
-            this.m_dataGridView.Size = new System.Drawing.Size(950, 500);
+            this.m_dataGridView.Size = new System.Drawing.Size(1377, 500);
             this.m_dataGridView.TabIndex = 0;
             // 
             // ReportForm
@@ -63,6 +66,6 @@ namespace AVF.MemberManagement.Reports
 
         #endregion
 
-        private DataGridView m_dataGridView;
+        protected DataGridView m_dataGridView;
     }
 }

@@ -5,35 +5,50 @@ namespace AVF.MemberManagement.Reports
 {
     public abstract class HorizontalAxis : Axis
     {
-        public int m_iNrOfFooterRows { get; protected set; }
-
-        public bool m_activeColsOnly;
-
-        protected HorizontalAxis(DatabaseWrapper db, TrainingParticipationMatrix tpMatrix)
-            : base(db, tpMatrix)
+        protected HorizontalAxis()
         {
-            m_iNrOfFooterRows = 1; // 1 row for column sum
+            NrOfLeadingElements  = 0; // header not counted, is part of DataGridView
+            NrOfTrailingElements = 1; // 1 row for column sum
         }
 
-        public abstract void FillHeaderRows(DataGridView dgv, int iNrOfColsOnLeftSide);
+        public int GetNrOfDgvCols(TrainingParticipationModel tpModel)
+            => ActiveElementsOnly ? tpModel.GetNrOfActiveCols() : NrOfSrcElements;
 
-        public int GetNrOfDgvCols()
-            => m_activeColsOnly ? m_tpMatrix.GetNrOfActiveCols() : GetNrOfSrcElements();
-        
-        public void FillFooterRow(DataGridView dgv, int iNrOfColsOnLeftSide)
+        protected abstract void FillHeaderCell(DataGridView dgv, int iDgvCol, int iCol);
+
+        public abstract void FillHeaderCells(DataGridView dgv, TrainingParticipationModel tpModel, int iStartIndex);
+
+        public void FillMainHeaderCells(DataGridView dgv, TrainingParticipationModel tpModel, int iStartIndex)
+        {
+            int iDgvCol = iStartIndex;
+            tpModel.ForAllCols
+                (
+                    action: iCol =>
+                    {
+                        dgv.Columns[iDgvCol].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                        if (iCol > 0)
+                        {
+                            FillHeaderCell(dgv, iDgvCol++, iCol);
+                        }
+                    },
+                    activeColsOnly: ActiveElementsOnly
+                );
+        }
+
+        public void FillSumCells(DataGridView dgv, TrainingParticipationModel tpModel, int iNrOfColsOnLeftSide)
         {
             int iDgvRow = dgv.RowCount - 1;  // one footer row
 
             dgv[iNrOfColsOnLeftSide - 1, iDgvRow].Value = "Summe";
 
             int iDgvCol = iNrOfColsOnLeftSide;
-            m_tpMatrix.ForAllCols
+            tpModel.ForAllCols
             (
-                action: iCol => dgv[iDgvCol++, iDgvRow].Value = m_tpMatrix.GetColSum(iCol),
-                activeColsOnly: m_activeColsOnly
+                action: iCol => dgv[iDgvCol++, iDgvRow].Value = tpModel.GetColSum(iCol),
+                activeColsOnly: ActiveElementsOnly
             );
 
-            dgv[dgv.ColumnCount - 1, iDgvRow].Value = m_tpMatrix.GetSumSum();
+            dgv[dgv.ColumnCount - 1, iDgvRow].Value = tpModel.GetSumSum();
         }
     }
 }

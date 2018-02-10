@@ -6,43 +6,31 @@ namespace AVF.MemberManagement.Reports
 {
     class HorizontalAxisCourses : HorizontalAxis
     {
-        public HorizontalAxisCourses(DatabaseWrapper db, TrainingParticipationMatrix tpMatrix)
-            : base(db, tpMatrix)
-        {
-            m_activeColsOnly = false;
-        }
+        public HorizontalAxisCourses() 
+            => ActiveElementsOnly = false;
 
-        public override int GetNrOfSrcElements()
-            => m_db.MaxKursNr() + 1;
+        public override int NrOfSrcElements => Globals.DatabaseWrapper.MaxKursNr() + 1;
 
         public override int GetIndexFromTrainingsParticipation(TrainingsTeilnahme tn)
-            => m_db.KursIdFromTrainingId(tn.TrainingID);
+            => Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID);
 
-        public override void FillHeaderRows(DataGridView dgv, int iNrOfColsOnLeftSide)
+        public override void FillHeaderCells(DataGridView dgv, TrainingParticipationModel tpModel, int iStartIndex)
         {
             dgv.Columns[0].HeaderText = "Kalender\nwoche";
 
-            int iDgvCol = iNrOfColsOnLeftSide;
+            dgv.Columns[iStartIndex].HeaderText = "Lehrg.\netc.";
+            dgv.Columns[iStartIndex].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 
-            dgv.Columns[iDgvCol].HeaderText = "Lehrg.\netc.";
-            dgv.Columns[iDgvCol].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-
-            iDgvCol++;
-            m_tpMatrix.ForAllCols
-            (
-                action: iCol =>
-                {
-                    dgv.Columns[iDgvCol].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                    if (iCol > 0)
-                    {
-                        Kurs kurs = m_db.KursFromId(iCol);
-                        dgv.Columns[iDgvCol++].HeaderText = $"{ m_db.WeekDay(kurs.WochentagID).Substring(0, 2) }\n{kurs.Zeit:hh}:{kurs.Zeit:mm}";
-                    }
-                },
-                activeColsOnly: m_activeColsOnly
-            );
+            FillMainHeaderCells(dgv, tpModel, iStartIndex + 1);
             dgv.Columns[dgv.ColumnCount - 1].HeaderText = "\nSumme";
             dgv.Columns[dgv.ColumnCount - 1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+        }
+
+        protected override void FillHeaderCell(DataGridView dgv, int iDgvCol, int iCol)
+        {
+            Kurs kurs = Globals.DatabaseWrapper.KursFromId(iCol);
+            dgv.Columns[iDgvCol].HeaderText = $"{ Globals.DatabaseWrapper.WeekDay(kurs.WochentagID).Substring(0, 2) }\n{kurs.Zeit:hh}:{kurs.Zeit:mm}";
+            dgv.Columns[iDgvCol].SortMode = DataGridViewColumnSortMode.NotSortable;
         }
     }
 }

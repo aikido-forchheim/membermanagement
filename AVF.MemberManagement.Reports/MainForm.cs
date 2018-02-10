@@ -7,17 +7,15 @@ namespace AVF.MemberManagement.Reports
 {
     public partial class MainForm : Form
     {
-        private DatabaseWrapper m_dbWrapper;
-        private DataGridView    m_dataGridView;
-        private DateTime        m_datStart;
-        private DateTime        m_datEnd;
-        private ReportBase      m_Report;
+        private DataGridView m_dataGridView;
+        private DateTime     m_datStart;
+        private DateTime     m_datEnd;
+        private ReportBase   m_Report;
 
-        public MainForm(DatabaseWrapper db)
+        public MainForm()
         {
             InitializeComponent();
             Load += new EventHandler(MainFormLoad);
-            m_dbWrapper = db;
         }
 
         private void MainFormLoad(System.Object sender, EventArgs e)
@@ -48,7 +46,7 @@ namespace AVF.MemberManagement.Reports
 
             Size = new Size(1000, 500);
 
-            m_Report = new ReportMemberVsCourse(m_dbWrapper, m_datStart, m_datEnd);
+            m_Report = new ReportMemberVsCourse(m_datStart, m_datEnd);
             m_Report.ShowReport(new ReportDescriptor(ReportType.MemberVsCourse) );
         }
     }

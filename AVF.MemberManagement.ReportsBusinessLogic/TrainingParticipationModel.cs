@@ -5,10 +5,8 @@ using AVF.MemberManagement.StandardLibrary.Tbo;
 
 namespace AVF.MemberManagement.ReportsBusinessLogic
 {
-    public class TrainingParticipationMatrix
+    public class TrainingParticipationModel
     {
-        private DatabaseWrapper m_db;
-
         private int m_iNrOfCols;
         private int m_iNrOfRows;
 
@@ -25,23 +23,17 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         private int[] m_iColSum;
         private int   m_iSumSum;
 
-        private List<TrainingsTeilnahme> m_listRelevantTrainingParticipations;
-
-        public TrainingParticipationMatrix(DatabaseWrapper db, DateTime datStart, DateTime datEnd)
-        {
-            m_db = db;
-            m_listRelevantTrainingParticipations = m_db.TrainingsTeilnahme(datStart, datEnd);
-        }
-
-        public void Initialize
+        public TrainingParticipationModel
         (
+            DateTime datStart, 
+            DateTime datEnd,
             Axis xAxis,
             Axis yAxis,
-            Func<TrainingsTeilnahme, bool> isRelevant
+            Func<TrainingsTeilnahme, bool> filter
         )
         {
-            m_iNrOfRows = yAxis.GetNrOfSrcElements();
-            m_iNrOfCols = xAxis.GetNrOfSrcElements();
+            m_iNrOfRows = yAxis.NrOfSrcElements;
+            m_iNrOfCols = xAxis.NrOfSrcElements;
 
             m_Rows = new Row[m_iNrOfRows];
 
@@ -58,17 +50,16 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             m_iColSum = new int[m_iNrOfCols];
             m_iSumSum = 0;
 
-            foreach (var trainingsTeilnahme in m_listRelevantTrainingParticipations)
+            var tnList  = Globals.DatabaseWrapper.TrainingsTeilnahme(datStart, datEnd);
+            var tnList2 = Globals.DatabaseWrapper.Filter(tnList, filter);
+            foreach (var trainingsTeilnahme in tnList2)
             {
-                if (isRelevant(trainingsTeilnahme))
-                {
-                    int iRow = yAxis.GetIndexFromTrainingsParticipation(trainingsTeilnahme);
-                    int iCol = xAxis.GetIndexFromTrainingsParticipation(trainingsTeilnahme);
-                    ++m_Rows[iRow].aiValues[iCol];
-                    ++m_Rows[iRow].iRowSum;
-                    ++m_iColSum[iCol];
-                    ++m_iSumSum;
-                }
+                int iRow = yAxis.GetIndexFromTrainingsParticipation(trainingsTeilnahme);
+                int iCol = xAxis.GetIndexFromTrainingsParticipation(trainingsTeilnahme);
+                ++m_Rows[iRow].aiValues[iCol];
+                ++m_Rows[iRow].iRowSum;
+                ++m_iColSum[iCol];
+                ++m_iSumSum;
             }
         }
 
