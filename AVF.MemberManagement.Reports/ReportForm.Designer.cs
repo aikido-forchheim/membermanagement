@@ -38,10 +38,7 @@ namespace AVF.MemberManagement.Reports
             // 
             this.m_dataGridView.AllowUserToAddRows = false;
             this.m_dataGridView.AllowUserToDeleteRows = false;
-            this.m_dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-            this.m_dataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
-            this.m_dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.m_dataGridView.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.m_dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.m_dataGridView.EnableHeadersVisualStyles = false;
             this.m_dataGridView.Location = new System.Drawing.Point(0, 491);
             this.m_dataGridView.MultiSelect = false;
@@ -61,7 +58,6 @@ namespace AVF.MemberManagement.Reports
             this.Text = "PopupReport";
             ((System.ComponentModel.ISupportInitialize)(this.m_dataGridView)).EndInit();
             this.ResumeLayout(false);
-
         }
 
         #endregion

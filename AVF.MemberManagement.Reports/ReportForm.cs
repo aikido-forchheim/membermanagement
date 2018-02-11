@@ -24,13 +24,19 @@ namespace AVF.MemberManagement.Reports
 
         private void ReportFormLoad(System.Object sender, EventArgs e)
         {
-            m_dataGridView.RowCount = m_yAxis.GetNrOfDgvRows(m_tpModel) + m_xAxis.GetMrOfAdditionalElements();
+            // define dimensions of DataGridView
+
+            m_dataGridView.RowCount    = m_yAxis.GetNrOfDgvRows(m_tpModel) + m_xAxis.GetMrOfAdditionalElements();
             m_dataGridView.ColumnCount = m_xAxis.GetNrOfDgvCols(m_tpModel) + m_yAxis.GetMrOfAdditionalElements();
+
+            // Fill cells of DataGridView
 
             m_xAxis.FillHeaderCells(m_dataGridView, m_tpModel, m_yAxis.NrOfLeadingElements);
             m_xAxis.FillSumCells   (m_dataGridView, m_tpModel, m_yAxis.NrOfLeadingElements);
             m_yAxis.FillHeaderCells(m_dataGridView, m_tpModel, m_xAxis.NrOfLeadingElements);
             m_yAxis.FillSumCells   (m_dataGridView, m_tpModel, m_xAxis.NrOfLeadingElements);
+
+            // Fill main area of DataGridView
 
             int iDgvRow = 0;
             m_dataGridView.Rows[m_dataGridView.RowCount - 1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
@@ -49,6 +55,10 @@ namespace AVF.MemberManagement.Reports
                 m_yAxis.ActiveElementsOnly
             );
 
+            m_dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            m_dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            m_dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+
             Controls.Add(m_dataGridView);
             Size = new Size(1000, 500);
         }
@@ -59,3 +69,4 @@ namespace AVF.MemberManagement.Reports
         }
     }
 }
+
