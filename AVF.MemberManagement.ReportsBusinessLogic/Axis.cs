@@ -10,10 +10,17 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         public int GetMrOfAdditionalElements( )
             => NrOfLeadingElements + NrOfTrailingElements;
 
+        public abstract int MaxDatabaseId { get; }
+
+        public abstract int MinDatabaseId { get; }
+
+        public int DatabaseIdRange()
+            => MaxDatabaseId - MinDatabaseId + 1;
+
+        public abstract int ModelRange();
+
         public bool ActiveElementsOnly { get; protected set; }
 
-        public abstract int NrOfSrcElements { get; }
-
-        public abstract int GetIndexFromTrainingsParticipation(TrainingsTeilnahme tn);
+        public abstract int GetModelIndexFromTrainingsParticipation(TrainingsTeilnahme tn);
     }
 }

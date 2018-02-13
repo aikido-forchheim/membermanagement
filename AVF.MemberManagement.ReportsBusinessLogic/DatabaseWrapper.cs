@@ -44,6 +44,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             m_trainingsTeilnahme = await Container.Resolve<IRepository<TrainingsTeilnahme>>().GetAsync();
             m_kurs = await Container.Resolve<IRepository<Kurs>>().GetAsync();
             m_mitglieder.RemoveAt(0);   // Mitglied 0 is a dummy
+            m_trainings = m_trainings.OrderBy(t => t.Termin).ToList();
         }
 
         public string WeekDay(int id)
@@ -68,14 +69,23 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             return (austritt.Value.Year == 0);
         }
 
-        public int MaxMitgliedsNr() 
+        public int MaxMitgliedsNr()
             => m_mitglieder.Max(t => t.Id);
 
-        public int MaxKursNr() 
+        public int MinMitgliedsNr()
+            => m_mitglieder.Min(t => t.Id);
+
+        public int MaxKursNr()
             => m_kurs.Max(t => t.Id);
 
-        public int MaxTrainingNr() 
+        public int MinKursNr()
+            => m_kurs.Min(t => t.Id);
+
+        public int MaxTrainingNr()
             => m_trainings.Max(t => t.Id);
+
+        public int MinTrainingNr()
+            => m_trainings.Min(t => t.Id);
 
         public Beitragsklasse BK(Mitglied mitglied) 
             => m_beitragsklasse.Single(s => s.Id == mitglied.BeitragsklasseID);

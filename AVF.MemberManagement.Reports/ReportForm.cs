@@ -38,21 +38,20 @@ namespace AVF.MemberManagement.Reports
 
             // Fill main area of DataGridView
 
-            int iDgvRow = 0;
-            m_dataGridView.Rows[m_dataGridView.RowCount - 1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            int iDgvRow = m_xAxis.NrOfLeadingElements;
             m_tpModel.ForAllRows
             (
-                iRow =>
+                action: iModelRow =>
                 {
                     int iDgvCol = m_yAxis.NrOfLeadingElements;
                     m_tpModel.ForAllCols
                     (
-                        iCol => m_dataGridView[iDgvCol++, iDgvRow].Value = FormatMatrixElement(m_tpModel.GetCell(iRow, iCol)),
-                        m_xAxis.ActiveElementsOnly
+                        action: iModelCol => m_dataGridView[iDgvCol++, iDgvRow].Value = FormatMatrixElement(m_tpModel.GetCell(iModelRow, iModelCol)),
+                        activeColsOnly: m_xAxis.ActiveElementsOnly
                     );
                     ++iDgvRow;
                 },
-                m_yAxis.ActiveElementsOnly
+                activeRowsOnly: m_yAxis.ActiveElementsOnly
             );
 
             m_dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
@@ -65,7 +64,7 @@ namespace AVF.MemberManagement.Reports
 
         private string FormatMatrixElement(int iValue)
         {
-            return (iValue > 0) ? $"{ iValue,-3 }" : "   ";
+            return (iValue > 0) ? $"{ iValue, -3 }" : "   ";
         }
     }
 }

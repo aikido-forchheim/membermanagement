@@ -18,7 +18,7 @@ namespace AVF.MemberManagement.Reports
                 datEnd,
                 m_xAxis,
                 m_yAxis,
-                (tn => true)
+                filter: tn => true
             );
 
             m_dataGridView.CellMouseClick += new DataGridViewCellMouseEventHandler(CellMouseClick);

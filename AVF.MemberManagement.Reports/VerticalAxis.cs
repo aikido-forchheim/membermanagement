@@ -8,29 +8,32 @@ namespace AVF.MemberManagement.Reports
         protected VerticalAxis() 
             => NrOfTrailingElements = 1;  // 1 column for row sum
 
-        protected abstract void FillHeaderCell(TrainingParticipationModel tpModel, DataGridView dgv, int iDgvRow, int iRow);
+        public override int ModelRange()
+            => DatabaseIdRange();
+
+        protected abstract void FillHeaderCell(TrainingParticipationModel tpModel, DataGridView dgv, int iDgvRow, int iModelRow);
 
         public int GetNrOfDgvRows(TrainingParticipationModel tpModel)
-            => ActiveElementsOnly ? tpModel.GetNrOfActiveRows() : NrOfSrcElements;
+            => ActiveElementsOnly ? tpModel.GetNrOfActiveRows() : DatabaseIdRange();
 
-        public abstract void FillHeaderCells(DataGridView dgv, TrainingParticipationModel tpModel, int iStartIndex);
+        public abstract void FillHeaderCells(DataGridView dgv, TrainingParticipationModel tpModel, int iDgvStartIndex);
 
-        public void FillMainHeaderCells(DataGridView dgv, TrainingParticipationModel tpModel, int iStartIndex)
+        public void FillMainHeaderCells(DataGridView dgv, TrainingParticipationModel tpModel, int iDgvStartIndex)
         {
-            int iDgvRow = iStartIndex;
+            int iDgvRow = iDgvStartIndex;
             tpModel.ForAllRows
             (
-                action: iRow => FillHeaderCell(tpModel, dgv, iDgvRow++, iRow),
+                action: iModelRow => FillHeaderCell(tpModel, dgv, iDgvRow++, iModelRow),
                 activeRowsOnly: ActiveElementsOnly
             );
         }
 
-        public void FillSumCells(DataGridView dgv, TrainingParticipationModel tpModel, int iStartIndex)
+        public void FillSumCells(DataGridView dgv, TrainingParticipationModel tpModel, int iDgvStartIndex)
         {
-            int iDgvRow = iStartIndex;
+            int iDgvRow = iDgvStartIndex;
             tpModel.ForAllRows
             (
-                iRow => dgv[dgv.ColumnCount - 1, iDgvRow++].Value = tpModel.GetRowSum(iRow),
+                iModelRow => dgv[dgv.ColumnCount - 1, iDgvRow++].Value = tpModel.GetRowSum(iModelRow),
                 ActiveElementsOnly
             );
         }

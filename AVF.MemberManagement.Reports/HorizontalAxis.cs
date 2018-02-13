@@ -1,5 +1,6 @@
 ﻿using System.Windows.Forms;
 using AVF.MemberManagement.ReportsBusinessLogic;
+using AVF.MemberManagement.StandardLibrary.Tbo;
 
 namespace AVF.MemberManagement.Reports
 {
@@ -11,28 +12,27 @@ namespace AVF.MemberManagement.Reports
             NrOfTrailingElements = 1; // 1 row for column sum
         }
 
-        public int GetNrOfDgvCols(TrainingParticipationModel tpModel)
-            => ActiveElementsOnly ? tpModel.GetNrOfActiveCols() : NrOfSrcElements;
+        protected abstract int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn);
 
-        protected abstract void FillHeaderCell(DataGridView dgv, int iDgvCol, int iCol);
+        protected abstract int GetModelIndexFromId(int id);
 
-        public abstract void FillHeaderCells(DataGridView dgv, TrainingParticipationModel tpModel, int iStartIndex);
+        public override int GetModelIndexFromTrainingsParticipation(TrainingsTeilnahme tn)
+            => GetModelIndexFromId(GetIdFromTrainingsParticipation(tn));
 
-        public void FillMainHeaderCells(DataGridView dgv, TrainingParticipationModel tpModel, int iStartIndex)
+        public abstract int GetNrOfDgvCols(TrainingParticipationModel tpModel);
+
+        protected abstract void FillHeaderCell(DataGridView dgv, int iDgvCol, int iModelCol);
+
+        public abstract void FillHeaderCells(DataGridView dgv, TrainingParticipationModel tpModel, int iDgvStartIndex);
+
+        public void FillMainHeaderCells(DataGridView dgv, TrainingParticipationModel tpModel, int iDgvStartIndex)
         {
-            int iDgvCol = iStartIndex;
+            int iDgvCol = iDgvStartIndex;
             tpModel.ForAllCols
-                (
-                    action: iCol =>
-                    {
-                        dgv.Columns[iDgvCol].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                        if (iCol > 0)
-                        {
-                            FillHeaderCell(dgv, iDgvCol++, iCol);
-                        }
-                    },
-                    activeColsOnly: ActiveElementsOnly
-                );
+            (
+                action: iModelCol => FillHeaderCell(dgv, iDgvCol++, iModelCol),
+                activeColsOnly: ActiveElementsOnly
+            );
         }
 
         public void FillSumCells(DataGridView dgv, TrainingParticipationModel tpModel, int iNrOfColsOnLeftSide)
@@ -44,7 +44,7 @@ namespace AVF.MemberManagement.Reports
             int iDgvCol = iNrOfColsOnLeftSide;
             tpModel.ForAllCols
             (
-                action: iCol => dgv[iDgvCol++, iDgvRow].Value = tpModel.GetColSum(iCol),
+                action: iModelCol => dgv[iDgvCol++, iDgvRow].Value = tpModel.GetColSum(iModelCol),
                 activeColsOnly: ActiveElementsOnly
             );
 

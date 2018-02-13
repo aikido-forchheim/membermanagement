@@ -12,28 +12,33 @@ namespace AVF.MemberManagement.Reports
             ActiveElementsOnly = true;
         }
 
-        public override int NrOfSrcElements 
-            => Globals.DatabaseWrapper.MaxMitgliedsNr() + 1;     // One additional row for pseudo member with Id = -1
+        public override int MaxDatabaseId
+            => Globals.DatabaseWrapper.MaxMitgliedsNr();
 
-        public override int GetIndexFromTrainingsParticipation( TrainingsTeilnahme tn )
-            => tn.MitgliedID - 1;    // db ids start with 1, array indices with 0
+        public override int MinDatabaseId
+            => Globals.DatabaseWrapper.MinMitgliedsNr();
 
-        public override void FillHeaderCells( DataGridView dgv, TrainingParticipationModel tpModel, int iStartIndex)
+        public override int GetModelIndexFromTrainingsParticipation(TrainingsTeilnahme tn)
+            => Globals.DatabaseWrapper.m_mitglieder.FindIndex(t => tn.MitgliedID == t.Id);
+
+        private int GetDbIndexFromModelIndex(int iModelIndex)
+            => iModelIndex;
+
+        public override void FillHeaderCells( DataGridView dgv, TrainingParticipationModel tpModel, int iDgvStartIndex)
         {
             dgv.Columns[0].HeaderText = "Vorname";
             dgv.Columns[1].HeaderText = "Nachname";
             dgv.Columns[2].HeaderText = "Nr";
 
-            dgv.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-
-            FillMainHeaderCells(dgv, tpModel, iStartIndex);
+            FillMainHeaderCells(dgv, tpModel, iDgvStartIndex);
         }
 
-        protected override void FillHeaderCell( TrainingParticipationModel tpModel, DataGridView dgv, int iDgvRow, int iRow)
+        protected override void FillHeaderCell( TrainingParticipationModel tpModel, DataGridView dgv, int iDgvRow, int iModelRow)
         {
-            Mitglied mitglied = Globals.DatabaseWrapper.MitgliedFromId(tpModel.GetRowId(iRow));
-            dgv[0, iDgvRow].Value = mitglied.Nachname;
-            dgv[1, iDgvRow].Value = mitglied.Vorname;
+            int dbIndex = GetDbIndexFromModelIndex(iModelRow);
+            Mitglied mitglied = Globals.DatabaseWrapper.m_mitglieder[dbIndex];
+            dgv[0, iDgvRow].Value = mitglied.Vorname;
+            dgv[1, iDgvRow].Value = mitglied.Nachname;
             dgv[2, iDgvRow].Value = mitglied.Id;
         }
     }

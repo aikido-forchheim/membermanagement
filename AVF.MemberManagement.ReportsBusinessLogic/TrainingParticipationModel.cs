@@ -12,7 +12,6 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 
         private class Row : IComparable<Row>
         {
-            public int idRow;
             public int iRowSum;
             public int[] aiValues;
 
@@ -32,8 +31,8 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             Func<TrainingsTeilnahme, bool> filter
         )
         {
-            m_iNrOfRows = yAxis.NrOfSrcElements;
-            m_iNrOfCols = xAxis.NrOfSrcElements;
+            m_iNrOfRows = yAxis.ModelRange();
+            m_iNrOfCols = xAxis.ModelRange();
 
             m_Rows = new Row[m_iNrOfRows];
 
@@ -42,7 +41,6 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
                 m_Rows[iRow] = new Row
                 {
                     aiValues = new int[m_iNrOfCols],
-                    idRow = iRow + 1,   // id 0 not used in database
                     iRowSum = 0
                 };
             }
@@ -50,12 +48,12 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             m_iColSum = new int[m_iNrOfCols];
             m_iSumSum = 0;
 
-            var tnList  = Globals.DatabaseWrapper.TrainingsTeilnahme(datStart, datEnd);
-            var tnList2 = Globals.DatabaseWrapper.Filter(tnList, filter);
-            foreach (var trainingsTeilnahme in tnList2)
+            var tpList         = Globals.DatabaseWrapper.TrainingsTeilnahme(datStart, datEnd);
+            var tpListFiltered = Globals.DatabaseWrapper.Filter(tpList, filter);
+            foreach (var trainingsParticipation in tpListFiltered)
             {
-                int iRow = yAxis.GetIndexFromTrainingsParticipation(trainingsTeilnahme);
-                int iCol = xAxis.GetIndexFromTrainingsParticipation(trainingsTeilnahme);
+                int iRow = yAxis.GetModelIndexFromTrainingsParticipation(trainingsParticipation);
+                int iCol = xAxis.GetModelIndexFromTrainingsParticipation(trainingsParticipation);
                 ++m_Rows[iRow].aiValues[iCol];
                 ++m_Rows[iRow].iRowSum;
                 ++m_iColSum[iCol];
@@ -83,9 +81,6 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 
         public int GetSumSum()
             => m_iSumSum;
-
-        public int GetRowId(int iRow)
-            => m_Rows[iRow].idRow;
 
         public void ForAllCols(Action<int> action, bool activeColsOnly  )
         {

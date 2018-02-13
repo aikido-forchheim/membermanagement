@@ -9,7 +9,8 @@ namespace AVF.MemberManagement.Reports
     {
         private DateTimeFormatInfo m_dfi;
         private Calendar m_cal;
-        private const int NR_OF_CALENDAR_WEEKS = 52;
+        private const int LAST_CALENDAR_WEEK = 52;
+        private const int FIRST_CALENDAR_WEEK = 1;
 
         public VerticalAxisWeeks()
         {
@@ -19,17 +20,24 @@ namespace AVF.MemberManagement.Reports
             m_cal = m_dfi.Calendar;
         }
 
-        public override int NrOfSrcElements => NR_OF_CALENDAR_WEEKS;
+        public override int MaxDatabaseId
+            => LAST_CALENDAR_WEEK;   // Not really in database, but kind of
 
-        public override int GetIndexFromTrainingsParticipation(TrainingsTeilnahme tn)
-            => m_cal.GetWeekOfYear(Globals.DatabaseWrapper.TrainingFromId(tn.TrainingID).Termin, m_dfi.CalendarWeekRule, m_dfi.FirstDayOfWeek) - 1;
+        public override int MinDatabaseId
+            => FIRST_CALENDAR_WEEK;  // Not really in database, but kind of
 
-        public override void FillHeaderCells(DataGridView dgv, TrainingParticipationModel tpModel, int iStartIndex)
-            => FillMainHeaderCells(dgv, tpModel, iStartIndex);
-
-        protected override void FillHeaderCell(TrainingParticipationModel tpModel, DataGridView dgv, int iDgvRow, int iRow)
+        public override int GetModelIndexFromTrainingsParticipation(TrainingsTeilnahme tn)
         {
-            dgv[0, iDgvRow++].Value = iRow + 1;
+            Training training = Globals.DatabaseWrapper.TrainingFromId(tn.TrainingID);
+            return m_cal.GetWeekOfYear(training.Termin, m_dfi.CalendarWeekRule, m_dfi.FirstDayOfWeek) - MinDatabaseId;
+        }
+
+        public override void FillHeaderCells(DataGridView dgv, TrainingParticipationModel tpModel, int iDgvStartIndex)
+            => FillMainHeaderCells(dgv, tpModel, iDgvStartIndex);
+
+        protected override void FillHeaderCell(TrainingParticipationModel tpModel, DataGridView dgv, int iDgvRow, int iModelRow)
+        {
+            dgv[0, iDgvRow++].Value = iModelRow + MinDatabaseId;
         }
     }
 }
