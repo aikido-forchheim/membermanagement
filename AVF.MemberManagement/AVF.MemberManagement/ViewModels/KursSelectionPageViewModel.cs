@@ -143,6 +143,14 @@ namespace AVF.MemberManagement.ViewModels
                 {
                     Trainings.Add(trainingsModel);
                 }
+
+                SelectedTraining = Trainings.OrderBy(model =>
+                {
+                    var trainingEndTime = model.Training.Zeit + new TimeSpan(0, model.Training.DauerMinuten, 0);
+                    var trainingEndDateTime = new DateTime(SelectedDate.Year, SelectedDate.Month, SelectedDate.Day, trainingEndTime.Hours, trainingEndTime.Minutes, trainingEndTime.Seconds);
+                    var differenceToNow = DateTime.Now - trainingEndDateTime;
+                    return differenceToNow;
+                }).First();
             }
             catch (Exception ex)
             {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms" xmlns:userControls="clr-namespace:AVF.MemberManagement.UserControls;assembly=AVF.MemberManagement" prism:ViewModelLocator.AutowireViewModel="True" x:Class="AVF.MemberManagement.Views.KursSelectionPage" Title="{Binding Title}">
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms" xmlns:userControls="clr-namespace:AVF.MemberManagement.UserControls;assembly=AVF.MemberManagement" prism:ViewModelLocator.AutowireViewModel="True" x:Class="AVF.MemberManagement.Views.KursSelectionPage" Title="{Binding Title}" Appearing="KursSelectionPage_OnAppearing">
     <ScrollView>
         <Grid>
             <Grid.RowDefinitions>
@@ -59,7 +59,7 @@
                 </ListView>
             </StackLayout>
             <StackLayout Grid.Row="1" VerticalOptions="Center" HorizontalOptions="Center">
-                <Button Text="Teilnehmer eintragen" WidthRequest="256" Command="{Binding EnterParticipantsCommand}">
+                <Button x:Name="ButtonEnterParticipants" Text="Teilnehmer eintragen" WidthRequest="256" Command="{Binding EnterParticipantsCommand}">
                 </Button>
             </StackLayout>
         </Grid>
