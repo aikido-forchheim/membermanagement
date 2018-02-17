@@ -7,7 +7,7 @@ namespace AVF.MemberManagement.Reports
 {
     class HorizontalAxisCourses : HorizontalAxis
     {
-        public HorizontalAxisCourses()
+        public HorizontalAxisCourses() 
             => ActiveElementsOnly = false;
 
         public override int GetNrOfDgvCols(TrainingParticipationModel tpModel)
@@ -44,32 +44,23 @@ namespace AVF.MemberManagement.Reports
                ? 0
                : Globals.DatabaseWrapper.m_kurs[GetDbIndexFromModelIndex(iModelCol)].Id;
 
-        public override void FillHeaderCells(DataGridView dgv, TrainingParticipationModel tpModel, int iDgvStartIndex)
+        public override void FillHeaderCells(DataGridView dgv, TrainingParticipationModel tpModel)
         {
             dgv.Columns[0].HeaderText = "Kalender\nwoche";
 
-            FillMainHeaderCells(dgv, tpModel, iDgvStartIndex);
+            FillMainHeaderCells(dgv, tpModel);
 
             dgv.Columns[dgv.ColumnCount - 1].HeaderText = "\nSumme";
         }
 
         protected override void FillHeaderCell(DataGridView dgv, int iDgvCol, int iModelCol)
         {
-            int    idKurs = GetCourseIdFromModelIndex(iModelCol);
-            string text;
+            int idKurs = GetCourseIdFromModelIndex(iModelCol);
 
-            if (idKurs == 0)
-            {
-                text = "Lehrg.\netc.";
-            }
-            else
-            {
-                Kurs   kurs   = Globals.DatabaseWrapper.KursFromId(idKurs);
-                string day    = Globals.DatabaseWrapper.WeekDay(kurs.WochentagID).Substring(0, 2);
-                text = $"{ day }\n{kurs.Zeit:hh}:{kurs.Zeit:mm}";
-            }
-            dgv.Columns[iDgvCol].HeaderText = text;
-            dgv.Columns[iDgvCol].SortMode = DataGridViewColumnSortMode.NotSortable;
+            m_DbIds[iDgvCol - StartIndex] = idKurs;
+
+            dgv.Columns[iDgvCol].HeaderText = Globals.GetCourseDescription(idKurs);
+            dgv.Columns[iDgvCol].SortMode   = DataGridViewColumnSortMode.NotSortable;
         }
     }
 }

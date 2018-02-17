@@ -4,11 +4,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 {
     public abstract class Axis
     {
-        public int NrOfLeadingElements  { get; protected set; }
-        public int NrOfTrailingElements { get; protected set; }
-
-        public int GetMrOfAdditionalElements( )
-            => NrOfLeadingElements + NrOfTrailingElements;
+        public int StartIndex { get; set; } // Axis starts at this position
 
         public abstract int MaxDatabaseId { get; }
 

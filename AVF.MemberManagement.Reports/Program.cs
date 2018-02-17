@@ -29,7 +29,7 @@ namespace AVF.MemberManagement.Reports
 
             int iJahr = 2017;
 
-            Application.Run(new ReportMemberVsCourse(new DateTime(iJahr, 1, 1), new DateTime(iJahr, 12, 31)));
+            Application.Run(new ReportMemberVsCourses(new DateTime(iJahr, 1, 1), new DateTime(iJahr, 12, 31)));
         }
     }
 }

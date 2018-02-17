@@ -68,13 +68,16 @@
     <Compile Include="ReportForm.Designer.cs">
       <DependentUpon>ReportForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ReportMemberVsCourse.cs">
+    <Compile Include="ReportMemberVsCourses.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ReportMemberVsTraining.cs">
+    <Compile Include="ReportMemberVsTrainings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ReportWeekVsCourse.cs">
+    <Compile Include="ReportTraining.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReportWeekVsCourses.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="VerticalAxisMembers.cs" />

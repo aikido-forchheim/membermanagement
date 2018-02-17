@@ -18,19 +18,22 @@ namespace AVF.MemberManagement.Reports
         public override int MinDatabaseId
             => Globals.DatabaseWrapper.MinMitgliedsNr();
 
+        public override int ModelRange()
+            => DatabaseIdRange();
+
         public override int GetModelIndexFromTrainingsParticipation(TrainingsTeilnahme tn)
             => Globals.DatabaseWrapper.m_mitglieder.FindIndex(t => tn.MitgliedID == t.Id);
 
         private int GetDbIndexFromModelIndex(int iModelIndex)
             => iModelIndex;
 
-        public override void FillHeaderCells( DataGridView dgv, TrainingParticipationModel tpModel, int iDgvStartIndex)
+        public override void FillHeaderCells( DataGridView dgv, TrainingParticipationModel tpModel)
         {
             dgv.Columns[0].HeaderText = "Vorname";
             dgv.Columns[1].HeaderText = "Nachname";
             dgv.Columns[2].HeaderText = "Nr";
 
-            FillMainHeaderCells(dgv, tpModel, iDgvStartIndex);
+            FillMainHeaderCells(dgv, tpModel);
         }
 
         protected override void FillHeaderCell( TrainingParticipationModel tpModel, DataGridView dgv, int iDgvRow, int iModelRow)

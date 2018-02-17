@@ -8,22 +8,8 @@ namespace AVF.MemberManagement.Reports
 {
     class HorizontalAxisTrainings : HorizontalAxis
     {
-        private DateTime m_datStart;
-        private DateTime m_datEnd;
-        private int      m_idKurs;
-
-        public HorizontalAxisTrainings
-        (
-            DateTime datStart, 
-            DateTime datEnd, 
-            int idKurs
-        )
-        {
-            m_datStart = datStart;
-            m_datEnd   = datEnd;
-            m_idKurs   = idKurs;
-            ActiveElementsOnly = true;
-        }
+        public HorizontalAxisTrainings() 
+            => ActiveElementsOnly = true;
 
         public override int GetNrOfDgvCols(TrainingParticipationModel tpModel)
             => tpModel.GetNrOfActiveCols();
@@ -58,19 +44,23 @@ namespace AVF.MemberManagement.Reports
             return Globals.DatabaseWrapper.m_trainings[dbIndex].Id;
         }
 
-        public override void FillHeaderCells(DataGridView dgv, TrainingParticipationModel m_tpModel, int iDgvStartIndex)
+        public override void FillHeaderCells(DataGridView dgv, TrainingParticipationModel m_tpModel)
         {
             dgv.Columns[0].HeaderText = "Monat\nTag";
-            FillMainHeaderCells(dgv, m_tpModel, iDgvStartIndex);
+            FillMainHeaderCells(dgv, m_tpModel);
             dgv.Columns[dgv.ColumnCount - 1].HeaderText = "\nSumme";
+            dgv.Columns[dgv.ColumnCount - 1].DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
         }
 
         protected override void FillHeaderCell(DataGridView dgv, int iDgvCol, int iModelCol)
         {
-            int dbIndex = GetDbIndexFromModelIndex(iModelCol);
-            Training training = Globals.DatabaseWrapper.m_trainings[dbIndex];  
-            dgv.Columns[iDgvCol].HeaderText = $"{training.Termin:dd}.\n{training.Termin:MM}.";
-            dgv.Columns[iDgvCol].SortMode = DataGridViewColumnSortMode.NotSortable;
+            int  idTraining = GetIdFromModelIndex(iModelCol);
+
+            m_DbIds[iDgvCol - StartIndex] = idTraining;
+
+            dgv.Columns[iDgvCol].HeaderText = Globals.GetTrainingDescription(idTraining);
+            dgv.Columns[iDgvCol].SortMode   = DataGridViewColumnSortMode.NotSortable;
+            dgv.Columns[iDgvCol].DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
         }
     }
 }

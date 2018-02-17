@@ -150,7 +150,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             => m_graduierung.Single(s => s.Id == id);
 
         public List<TrainingsTeilnahme> Filter(List<TrainingsTeilnahme> list, DateTime datStart, DateTime datEnd)
-            => list.Where(p => TrainingFromId(p.TrainingID).Termin > datStart && TrainingFromId(p.TrainingID).Termin < datEnd).ToList();
+            => list.Where(p => TrainingFromId(p.TrainingID).Termin >= datStart && TrainingFromId(p.TrainingID).Termin <= datEnd).ToList();
 
         public List<TrainingsTeilnahme> Filter(List<TrainingsTeilnahme> list, int idMember)
             => list.Where(p => p.MitgliedID == idMember).ToList();
