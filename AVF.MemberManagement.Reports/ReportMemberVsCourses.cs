@@ -7,10 +7,8 @@ namespace AVF.MemberManagement.Reports
 {
     class ReportMemberVsCourses : ReportForm
     {
-        private DateTime m_datStart { get; set; }
-        private DateTime m_datEnd   { get; set; }
-
         public ReportMemberVsCourses( DateTime datStart, DateTime datEnd )
+            : base(datStart, datEnd)
         {
             m_xAxis = new HorizontalAxisCourses( );
             m_yAxis = new VerticalAxisMembers( );
@@ -27,9 +25,6 @@ namespace AVF.MemberManagement.Reports
                 filter: tn => true
             );
 
-            m_datStart = datStart;
-            m_datEnd = datEnd;
-
             m_label1.Text = "Überblick Trainingsteilnahme";
             m_label2.Text = Globals.GetTimeRangeDescription(datStart, datEnd);
 
@@ -37,12 +32,6 @@ namespace AVF.MemberManagement.Reports
             m_dataGridView.CellMouseEnter += new DataGridViewCellEventHandler(CellMouseEnter);
             m_dataGridView.CellMouseLeave += new DataGridViewCellEventHandler(CellMouseLeave);
         }
-
-        private void CellMouseEnter(object sender, DataGridViewCellEventArgs e)
-            => ToolTip(e, true);
-
-        private void CellMouseLeave(object sender, DataGridViewCellEventArgs e)
-            => ToolTip(e, false);
 
         private void CellMouseClick(Object sender, DataGridViewCellMouseEventArgs e)
         {
@@ -52,7 +41,6 @@ namespace AVF.MemberManagement.Reports
             {
                 if (RowIsHeader(e.RowIndex) || RowIsFooter(e.RowIndex))
                 {
-
                 }
                 else
                 {
@@ -70,36 +58,35 @@ namespace AVF.MemberManagement.Reports
                 newForm.Show();
         }
 
-        private void ToolTip(DataGridViewCellEventArgs e, bool showTip)
+        protected override string ToolTipText(DataGridViewCellEventArgs e)
         {
-            DataGridViewCell cell =
-                RowIsHeader(e.RowIndex)
-                ? m_dataGridView.Columns[e.ColumnIndex].HeaderCell
-                : m_dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
-
-            if (!showTip)
-            {
-                cell.ToolTipText = String.Empty;
-                return;
-            }
-
             if (ColIsKeyArea(e.ColumnIndex) || ColIsSummary(e.ColumnIndex))
             {
                 if (RowIsHeader(e.RowIndex) || RowIsFooter(e.RowIndex))
                 {
 
                 }
-                else
+                else // Main area column
                 {
                     int      idMember = (int)m_dataGridView[2, e.RowIndex].Value;
                     Mitglied member   = Globals.DatabaseWrapper.MitgliedFromId(idMember);
-                    cell.ToolTipText  = $"Klicken für Details zu Mitglied\n {member.Vorname} {member.Nachname}";
+                    return $"Klicken für Details zu Mitglied\n {member.Vorname} {member.Nachname}";
                 }
             }
             else // Main area column
             {
-                cell.ToolTipText = $"Klicken für Details zu diesem Kurs";
+                if (RowIsHeader(e.RowIndex) || RowIsFooter(e.RowIndex))
+                {
+                    return $"Klicken für Details zu diesem Kurs";
+                }
+                else // Main area column
+                {
+                    int idMember = (int)m_dataGridView[2, e.RowIndex].Value;
+                    Mitglied member = Globals.DatabaseWrapper.MitgliedFromId(idMember);
+                    return $"Klicken für Details zur Teilnahme von\n {member.Vorname} {member.Nachname} an diesem Kurs";
+                }
             }
+            return String.Empty;
         }
     }
 }

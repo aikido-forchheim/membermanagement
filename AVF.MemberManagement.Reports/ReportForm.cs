@@ -1,20 +1,34 @@
 ﻿using System;
-using System.Drawing;
 using System.Windows.Forms;
 using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
-    public partial class ReportForm : Form
+    public abstract partial class ReportForm : Form
     {
         protected VerticalAxis               m_yAxis   { get; set; }
         protected HorizontalAxis             m_xAxis   { get; set; }
         protected TrainingParticipationModel m_tpModel { get; set; }
 
-        public ReportForm( )
+        protected DateTime m_datStart { get; set; }
+        protected DateTime m_datEnd { get; set; }
+
+        private void ReportFormConstructorCore()
         {
-            InitializeComponent( );
+            InitializeComponent();
             Load += new EventHandler(ReportFormLoad);
+        }
+
+        public ReportForm()
+        {
+            ReportFormConstructorCore();
+        }
+
+        public ReportForm(DateTime datStart, DateTime datEnd)
+        {
+            m_datStart = datStart;
+            m_datEnd = datEnd;
+            ReportFormConstructorCore();
         }
 
         private void ReportFormLoad(System.Object sender, EventArgs e)
@@ -57,6 +71,24 @@ namespace AVF.MemberManagement.Reports
             WindowState = FormWindowState.Maximized;
             // Size = new Size(1000, 500);
         }
+
+        protected abstract string ToolTipText(DataGridViewCellEventArgs e);
+
+        protected void ToolTip(DataGridViewCellEventArgs e, bool showTip)
+        {
+            DataGridViewCell cell =
+                RowIsHeader(e.RowIndex)
+                ? m_dataGridView.Columns[e.ColumnIndex].HeaderCell
+                : m_dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
+
+            cell.ToolTipText = showTip ? ToolTipText(e) : String.Empty;
+        }
+
+        protected void CellMouseEnter(object sender, DataGridViewCellEventArgs e)
+           => ToolTip(e, true);
+
+        protected void CellMouseLeave(object sender, DataGridViewCellEventArgs e)
+            => ToolTip(e, false);
 
         protected bool RowIsHeader(int iRow)
             => iRow < 0;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.ReportsBusinessLogic;
@@ -8,6 +9,7 @@ namespace AVF.MemberManagement.Reports
     class ReportMemberVsTrainings : ReportForm
     {
         public ReportMemberVsTrainings(DateTime datStart, DateTime datEnd, int idKurs)
+            : base(datStart, datEnd)
         {
             m_xAxis = new HorizontalAxisTrainings();
             m_yAxis = new VerticalAxisMembers();
@@ -33,13 +35,7 @@ namespace AVF.MemberManagement.Reports
         }
 
         protected override string FormatMatrixElement(int iValue) 
-            => (iValue > 0) ? $" X " : " ";
-
-        private void CellMouseEnter(object sender, DataGridViewCellEventArgs e)
-            => ToolTip(e, true);
-
-        private void CellMouseLeave(object sender, DataGridViewCellEventArgs e)
-            => ToolTip(e, false);
+            => (iValue > 0) ? $"X" : " ";
 
         private void CellMouseClick(Object sender, DataGridViewCellMouseEventArgs e)
         {
@@ -47,6 +43,14 @@ namespace AVF.MemberManagement.Reports
 
             if (ColIsKeyArea(e.ColumnIndex) || ColIsSummary(e.ColumnIndex))
             {
+                if (RowIsHeader(e.RowIndex) || RowIsFooter(e.RowIndex))
+                {
+                }
+                else
+                {
+                    int idMember = (int)m_dataGridView[2, e.RowIndex].Value;
+                    newForm = new ReportWeekVsCourses(m_datStart, m_datEnd, idMember);
+                }
             }
             else // Main area column
             {
@@ -61,19 +65,8 @@ namespace AVF.MemberManagement.Reports
                 newForm.Show();
         }
 
-        private void ToolTip(DataGridViewCellEventArgs e, bool showTip)
+        protected override string ToolTipText(DataGridViewCellEventArgs e)
         {
-            DataGridViewCell cell =
-                RowIsHeader(e.RowIndex)
-                ? m_dataGridView.Columns[e.ColumnIndex].HeaderCell
-                : m_dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
-
-            if (!showTip)
-            {
-                cell.ToolTipText = String.Empty;
-                return;
-            }
-
             if (ColIsKeyArea(e.ColumnIndex) || ColIsSummary(e.ColumnIndex))
             {
                 if (RowIsHeader(e.RowIndex) || RowIsFooter(e.RowIndex))
@@ -82,14 +75,22 @@ namespace AVF.MemberManagement.Reports
                 }
                 else
                 {
-                    int idTraining = m_xAxis.GetDbId(e.ColumnIndex - m_xAxis.StartIndex);
-                    Training trainng = Globals.DatabaseWrapper.TrainingFromId(idTraining);
-                    cell.ToolTipText = $"Klicken für Details zu diesem Training";
+                    int idMember = (int)m_dataGridView[2, e.RowIndex].Value;
+                    Mitglied member = Globals.DatabaseWrapper.MitgliedFromId(idMember);
+                    return $"Klicken für Details zu Mitglied\n {member.Vorname} {member.Nachname}";
                 }
             }
             else // Main area column
             {
+                if ( RowIsHeader(e.RowIndex) )
+                {
+                    Debug.Assert(e.ColumnIndex >= m_xAxis.StartIndex);
+                    int idTraining = m_xAxis.GetDbId(e.ColumnIndex - m_xAxis.StartIndex);
+                    Training training = Globals.DatabaseWrapper.TrainingFromId(idTraining);
+                    return $"Klicken für Details zu diesem Training";
+                }
             }
+            return String.Empty;
         }
     }
 }

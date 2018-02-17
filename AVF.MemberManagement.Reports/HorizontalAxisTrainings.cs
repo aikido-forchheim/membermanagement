@@ -49,7 +49,7 @@ namespace AVF.MemberManagement.Reports
             dgv.Columns[0].HeaderText = "Monat\nTag";
             FillMainHeaderCells(dgv, m_tpModel);
             dgv.Columns[dgv.ColumnCount - 1].HeaderText = "\nSumme";
-            dgv.Columns[dgv.ColumnCount - 1].DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dgv.ColumnHeadersDefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
         }
 
         protected override void FillHeaderCell(DataGridView dgv, int iDgvCol, int iModelCol)
@@ -59,8 +59,9 @@ namespace AVF.MemberManagement.Reports
             m_DbIds[iDgvCol - StartIndex] = idTraining;
 
             dgv.Columns[iDgvCol].HeaderText = Globals.GetTrainingDescription(idTraining);
-            dgv.Columns[iDgvCol].SortMode   = DataGridViewColumnSortMode.NotSortable;
-            dgv.Columns[iDgvCol].DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dgv.Columns[iDgvCol].SortMode = DataGridViewColumnSortMode.NotSortable;
+            dgv.Columns[iDgvCol].MinimumWidth = 10;
+            dgv.Columns[iDgvCol].DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
         }
     }
 }

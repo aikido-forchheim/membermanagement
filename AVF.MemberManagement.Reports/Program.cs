@@ -22,14 +22,15 @@ namespace AVF.MemberManagement.Reports
 
             m_container = bootstrapper.Container;
             System.Console.WriteLine("read database");
-            Globals.Initialize(m_container);
+            Globals.Initialize(m_container);            // read database ... may take a view seconds
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
             int iJahr = 2017;
 
-            Application.Run(new ReportMemberVsCourses(new DateTime(iJahr, 1, 1), new DateTime(iJahr, 12, 31)));
+            var form = new ReportMemberVsCourses(new DateTime(iJahr, 1, 1), new DateTime(iJahr, 12, 31));
+            Application.Run( form );
         }
     }
 }

@@ -31,7 +31,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         public static string GetTrainingDescription(int idTraining)
         {
             Training training = Globals.DatabaseWrapper.TrainingFromId(idTraining);
-            return $"{training.Termin:dd}.\n{training.Termin:MM}.";
+            return $"{training.Termin:dd}\n{training.Termin:MM}";
         }
 
         public static string GetTimeRangeDescription(DateTime datStart, DateTime datEnd)
@@ -42,7 +42,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         public static string GetMemberDescription( int idMember )
         {
             Mitglied mitglied = Globals.DatabaseWrapper.MitgliedFromId(idMember);
-            return $"Trainingsteilnahme {mitglied.Vorname} {mitglied.Nachname} MitgliedNr. {mitglied.Id}";
+            return $"{mitglied.Vorname} {mitglied.Nachname} MitgliedNr. {mitglied.Id}";
         }
 
     }
