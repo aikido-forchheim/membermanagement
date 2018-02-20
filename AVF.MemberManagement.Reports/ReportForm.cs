@@ -11,7 +11,7 @@ namespace AVF.MemberManagement.Reports
         protected TrainingParticipationModel m_tpModel { get; set; }
 
         protected DateTime m_datStart { get; set; }
-        protected DateTime m_datEnd { get; set; }
+        protected DateTime m_datEnd   { get; set; }
 
         private void ReportFormConstructorCore()
         {
@@ -31,19 +31,19 @@ namespace AVF.MemberManagement.Reports
             ReportFormConstructorCore();
         }
 
-        private void ReportFormLoad(System.Object sender, EventArgs e)
+        protected virtual void ReportFormPopulate()
         {
             // define dimensions of DataGridView
 
-            m_dataGridView.RowCount    = m_yAxis.GetNrOfDgvRows(m_tpModel) + m_xAxis.GetNrOfAdditionalElements();
+            m_dataGridView.RowCount = m_yAxis.GetNrOfDgvRows(m_tpModel) + m_xAxis.GetNrOfAdditionalElements();
             m_dataGridView.ColumnCount = m_xAxis.GetNrOfDgvCols(m_tpModel) + m_yAxis.GetNrOfAdditionalElements();
 
             // Fill cells of DataGridView
 
             m_xAxis.FillHeaderCells(m_dataGridView, m_tpModel);
-            m_xAxis.FillSumCells   (m_dataGridView, m_tpModel);
+            m_xAxis.FillSumCells(m_dataGridView, m_tpModel);
             m_yAxis.FillHeaderCells(m_dataGridView, m_tpModel);
-            m_yAxis.FillSumCells   (m_dataGridView, m_tpModel);
+            m_yAxis.FillSumCells(m_dataGridView, m_tpModel);
 
             // Fill main area of DataGridView
 
@@ -62,9 +62,14 @@ namespace AVF.MemberManagement.Reports
                 },
                 activeRowsOnly: m_yAxis.ActiveElementsOnly
             );
+        }
 
-            m_dataGridView.AutoSizeColumnsMode         = DataGridViewAutoSizeColumnsMode.AllCells;
-            m_dataGridView.AutoSizeRowsMode            = DataGridViewAutoSizeRowsMode.AllCells;
+        private void ReportFormLoad(System.Object sender, EventArgs e)
+        {
+            ReportFormPopulate();
+
+            m_dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            m_dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             m_dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 
             Controls.Add(m_dataGridView);
@@ -94,7 +99,10 @@ namespace AVF.MemberManagement.Reports
             => iRow < 0;
 
         protected bool RowIsFooter(int iRow)
-            => iRow >= m_dataGridView.RowCount;
+            => iRow >= m_dataGridView.RowCount - 1;
+
+        protected bool RowIsInMainArea(int iRow)
+            => ! (RowIsHeader(iRow) || RowIsFooter(iRow));
 
         protected bool ColIsKeyArea(int iCol)
             => iCol < VerticalAxis.NrOfLeadingElements;
@@ -102,23 +110,11 @@ namespace AVF.MemberManagement.Reports
         protected bool ColIsSummary(int iCol)
             => iCol == m_dataGridView.ColumnCount - 1;
 
+        protected bool ColIsInMainArea(int iCol)
+            => !(ColIsKeyArea(iCol) || ColIsSummary(iCol));
+
         protected virtual string FormatMatrixElement(int iValue)
             => (iValue > 0) ? $"{ iValue, -3 }" : "   ";
-
-        private void m_labelFormName_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void m_labelTimeRange_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void m_dataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
     }
 }
 

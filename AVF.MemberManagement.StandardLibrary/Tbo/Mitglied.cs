@@ -125,6 +125,30 @@ namespace AVF.MemberManagement.StandardLibrary.Tbo
             set;
         }
 
+        public int AikidoBeginn
+        {
+            get;
+            set;
+        }
+
+        public string Festnetz
+        {
+            get;
+            set;
+        }
+
+        public string Mobil
+        {
+            get;
+            set;
+        }
+
+        public string Rudname
+        {
+            get;
+            set;
+        }
+
         public override string ToString()
         {
             return $"[Mitglied: Id={Id}, Nachname={Nachname}, Vorname={Vorname}]";

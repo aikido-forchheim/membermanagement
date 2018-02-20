@@ -52,7 +52,6 @@ namespace AVF.MemberManagement.Reports
             this.m_dataGridView.RowTemplate.Height = 28;
             this.m_dataGridView.Size = new System.Drawing.Size(1345, 712);
             this.m_dataGridView.TabIndex = 0;
-            this.m_dataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.m_dataGridView_CellContentClick);
             // 
             // m_label1
             // 
@@ -63,7 +62,6 @@ namespace AVF.MemberManagement.Reports
             this.m_label1.Size = new System.Drawing.Size(111, 37);
             this.m_label1.TabIndex = 1;
             this.m_label1.Text = "Label1";
-            this.m_label1.Click += new System.EventHandler(this.m_labelFormName_Click);
             // 
             // m_label2
             // 
@@ -74,7 +72,6 @@ namespace AVF.MemberManagement.Reports
             this.m_label2.Size = new System.Drawing.Size(113, 37);
             this.m_label2.TabIndex = 2;
             this.m_label2.Text = "Label2";
-            this.m_label2.Click += new System.EventHandler(this.m_labelTimeRange_Click);
             // 
             // m_label3
             // 

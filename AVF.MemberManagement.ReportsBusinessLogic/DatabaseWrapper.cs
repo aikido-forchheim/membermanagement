@@ -10,6 +10,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 {
     public class DatabaseWrapper
     {
+        public List<Setting> m_settings { get; private set; }
         public List<Training> m_trainings { get; private set; }
         public List<Mitglied> m_mitglieder { get; private set; }
         public List<TrainerErnennung> m_trainerErnennungen { get; private set; }
@@ -43,14 +44,31 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             m_familienrabatt = await Container.Resolve<IRepository<Familienrabatt>>().GetAsync();
             m_trainingsTeilnahme = await Container.Resolve<IRepository<TrainingsTeilnahme>>().GetAsync();
             m_kurs = await Container.Resolve<IRepository<Kurs>>().GetAsync();
+            m_settings = await Container.Resolve<IRepositoryBase<Setting, string>>().GetAsync();
             m_mitglieder.RemoveAt(0);   // Mitglied 0 is a dummy
             m_trainings = m_trainings.OrderBy(t => t.Termin).ToList();
+        }
+
+        public DateTime GetStartValidData()
+        {
+            string strStartValidData = m_settings.Single(s => s.Id == "DateValidData").Value;
+            return DateTime.Parse(strStartValidData);
         }
 
         public string WeekDay(int id)
         {
             var wochentag = m_wochentag.Single(s => s.Id == id);
             return wochentag.Bezeichnung;
+        }
+
+        public Boolean IstNochMitglied(Mitglied member)
+        {
+             DateTime? austritt = member.Austritt;
+
+            if (!austritt.HasValue)
+                return true;
+
+            return (austritt.Value.Year == 0);
         }
 
         public Boolean IstNochMitglied(int? id)
@@ -61,13 +79,11 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             if (id < 0)
                 return false;
 
-            DateTime? austritt = MitgliedFromId(id.Value).Austritt;
-
-            if (!austritt.HasValue)
-                return true;
-
-            return (austritt.Value.Year == 0);
+            return IstNochMitglied(MitgliedFromId(id.Value));
         }
+
+        public List<Mitglied> CurrentMembers()
+            => m_mitglieder.Where(m => IstNochMitglied(m)).ToList();
 
         public int MaxMitgliedsNr()
             => m_mitglieder.Max(t => t.Id);
@@ -148,6 +164,9 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         
         public Graduierung GraduierungFromId(int id) 
             => m_graduierung.Single(s => s.Id == id);
+
+        public List<TrainingsTeilnahme> Filter(List<TrainingsTeilnahme> list, DateTime datStart)
+            => list.Where(p => TrainingFromId(p.TrainingID).Termin >= datStart).ToList();
 
         public List<TrainingsTeilnahme> Filter(List<TrainingsTeilnahme> list, DateTime datStart, DateTime datEnd)
             => list.Where(p => TrainingFromId(p.TrainingID).Termin >= datStart && TrainingFromId(p.TrainingID).Termin <= datEnd).ToList();

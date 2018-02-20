@@ -68,6 +68,9 @@
     <Compile Include="ReportForm.Designer.cs">
       <DependentUpon>ReportForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ReportGraduationList.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="ReportMemberVsCourses.cs">
       <SubType>Form</SubType>
     </Compile>
