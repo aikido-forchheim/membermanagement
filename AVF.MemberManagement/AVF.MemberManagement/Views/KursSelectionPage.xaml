@@ -5,6 +5,8 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="3*">
                 </RowDefinition>
+                <RowDefinition Height="64">
+                </RowDefinition>
                 <RowDefinition Height="1*">
                 </RowDefinition>
             </Grid.RowDefinitions>
@@ -58,7 +60,11 @@
                     </ListView.ItemTemplate>
                 </ListView>
             </StackLayout>
-            <StackLayout Grid.Row="1" VerticalOptions="Center" HorizontalOptions="Center">
+            <StackLayout Grid.Row="1">
+                <Label Text="Ausgewählter Kurs" HorizontalOptions="Center"></Label>
+                <Label Text="{Binding SelectedTraining.Class.Time}" FontAttributes="Bold" HorizontalOptions="Center"></Label>
+            </StackLayout>
+            <StackLayout Grid.Row="2" VerticalOptions="Center" HorizontalOptions="Center">
                 <Button x:Name="ButtonEnterParticipants" Text="Teilnehmer eintragen" WidthRequest="256" Command="{Binding EnterParticipantsCommand}">
                 </Button>
             </StackLayout>
