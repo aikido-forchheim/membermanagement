@@ -9,6 +9,7 @@ using AVF.MemberManagement.Views;
 using Prism.Navigation;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
+using Microsoft.Extensions.Logging;
 
 namespace AVF.MemberManagement.ViewModels
 {
@@ -40,7 +41,7 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _annotation, value);
         }
 
-        public EditTrainingPageViewModel(INavigationService navigationService, IRepository<Training> trainingsRepository) : base(navigationService)
+        public EditTrainingPageViewModel(INavigationService navigationService, IRepository<Training> trainingsRepository, ILogger logger) : base(navigationService, logger)
         {
             _trainingsRepository = trainingsRepository;
 

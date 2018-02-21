@@ -8,6 +8,7 @@ using System.Windows.Input;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Models;
 using AVF.MemberManagement.StandardLibrary.Tbo;
+using Microsoft.Extensions.Logging;
 
 namespace AVF.MemberManagement.ViewModels
 {
@@ -180,7 +181,7 @@ namespace AVF.MemberManagement.ViewModels
 
         #region Ctor
 
-        public MainPageViewModel(IAccountService accountService, INavigationService navigationService, IRepository<User> usersProxy, IPasswordService passwordService) : base(navigationService)
+        public MainPageViewModel(IAccountService accountService, INavigationService navigationService, IRepository<User> usersProxy, IPasswordService passwordService, ILogger logger) : base(navigationService, logger)
         {
             Title = "Anmeldung";
 

@@ -9,6 +9,7 @@ using AVF.MemberManagement.StandardLibrary.Services;
 using AVF.MemberManagement.StandardLibrary.Enums;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.Views;
+using Microsoft.Extensions.Logging;
 
 namespace AVF.MemberManagement.ViewModels
 {
@@ -30,7 +31,7 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _deletes, value);
         }
 
-        public SaveParticipantsPageViewModel(INavigationService navigationService) : base(navigationService)
+        public SaveParticipantsPageViewModel(INavigationService navigationService, ILogger logger) : base(navigationService, logger)
         {
         }
 

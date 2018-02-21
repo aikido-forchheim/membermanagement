@@ -11,6 +11,7 @@ using Prism.Navigation;
 using System.Windows.Input;
 using AVF.MemberManagement.Views;
 using Prism.Commands;
+using Microsoft.Extensions.Logging;
 
 namespace AVF.MemberManagement.ViewModels
 {
@@ -157,7 +158,7 @@ namespace AVF.MemberManagement.ViewModels
         public ICommand AddAndClearSearchTextCommand { get; set; }
 
 
-        public EnterParticipantsPageViewModel(IRepository<Mitglied> mitgliederRepository, IRepository<Training> trainingsRepository, IRepository<TrainingsTeilnahme> trainingsTeilnahmenRepository, INavigationService navigationService) : base(navigationService)
+        public EnterParticipantsPageViewModel(IRepository<Mitglied> mitgliederRepository, IRepository<Training> trainingsRepository, IRepository<TrainingsTeilnahme> trainingsTeilnahmenRepository, INavigationService navigationService, ILogger logger) : base(navigationService, logger)
         {
             _mitgliederRepository = mitgliederRepository;
             _trainingsRepository = trainingsRepository;

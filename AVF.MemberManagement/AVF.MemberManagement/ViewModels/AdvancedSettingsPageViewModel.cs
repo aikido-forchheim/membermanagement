@@ -6,6 +6,7 @@ using AVF.MemberManagement.StandardLibrary.Enums;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Services;
 using Prism.Navigation;
+using Microsoft.Extensions.Logging;
 
 namespace AVF.MemberManagement.ViewModels
 {
@@ -52,7 +53,7 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _cacheMessage, value);
         }
 
-        public AdvancedSettingsPageViewModel(IJsonFileFactory jsonFileFactory, IRepositoryBootstrapper repositoryBootstrapper, INavigationService navigationService) : base(navigationService)
+        public AdvancedSettingsPageViewModel(IJsonFileFactory jsonFileFactory, IRepositoryBootstrapper repositoryBootstrapper, INavigationService navigationService, ILogger logger) : base(navigationService, logger)
         {
             Title = "Erweiterte Einstellungen";
 

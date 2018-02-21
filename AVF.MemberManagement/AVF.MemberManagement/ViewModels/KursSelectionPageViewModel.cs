@@ -60,7 +60,7 @@ namespace AVF.MemberManagement.ViewModels
             }
         }
 
-        public KursSelectionPageViewModel(IRepository<Wochentag> wochentageRepository, IRepository<Kurs> kurseRepository, IKursModelService classModelService, IRepository<Training> trainings, IRepository<TrainingsTeilnahme> trainingsTeilnahmen, INavigationService navigationService) : base(navigationService)
+        public KursSelectionPageViewModel(IRepository<Wochentag> wochentageRepository, IRepository<Kurs> kurseRepository, IKursModelService classModelService, IRepository<Training> trainings, IRepository<TrainingsTeilnahme> trainingsTeilnahmen, INavigationService navigationService, ILogger logger) : base(navigationService, logger)
         {
             _wochentageRepository = wochentageRepository;
             _kurseRepository = kurseRepository;

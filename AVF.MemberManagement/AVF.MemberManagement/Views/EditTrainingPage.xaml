@@ -12,8 +12,8 @@
             </StackLayout>
         </StackLayout>
         <StackLayout WidthRequest="256" Margin="0,0,0,64">
-            <Button Text="🗈" FontSize="48" BackgroundColor="#FFFFFF" HeightRequest="128">
-            </Button>
+            <Entry Text="" FontSize="48" BackgroundColor="#FFFFFF" HeightRequest="128">
+            </Entry>
         </StackLayout>
         <Button Text="Weiter" WidthRequest="256" Command="{Binding EnterParticipantsCommand}" BackgroundColor="#EEEEEE">
         </Button>

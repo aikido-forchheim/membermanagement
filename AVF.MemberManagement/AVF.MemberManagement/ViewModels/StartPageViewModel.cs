@@ -8,6 +8,7 @@ using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.Views;
 using Prism.Commands;
 using Prism.Navigation;
+using Microsoft.Extensions.Logging;
 
 namespace AVF.MemberManagement.ViewModels
 {
@@ -24,7 +25,7 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _username, value);
         }
 
-        public StartPageViewModel(IAccountService accountService, INavigationService navigationService, IPasswordService passwordService) : base(navigationService)
+        public StartPageViewModel(IAccountService accountService, INavigationService navigationService, IPasswordService passwordService, ILogger logger) : base(navigationService, logger)
         {
             Title = "Startseite";
 

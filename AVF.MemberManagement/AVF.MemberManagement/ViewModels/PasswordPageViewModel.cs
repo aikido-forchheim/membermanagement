@@ -4,6 +4,7 @@ using System.Windows.Input;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Prism.Navigation;
+using Microsoft.Extensions.Logging;
 
 namespace AVF.MemberManagement.ViewModels
 {
@@ -140,7 +141,7 @@ namespace AVF.MemberManagement.ViewModels
 
         #endregion
 
-        public PasswordPageViewModel(INavigationService navigationService, IPasswordService passwordService, IProxy<User> usersProxy) : base(navigationService)
+        public PasswordPageViewModel(INavigationService navigationService, IPasswordService passwordService, IProxy<User> usersProxy, ILogger logger) : base(navigationService, logger)
         {
             Title = "Passwort";
 

@@ -9,6 +9,7 @@ using AVF.MemberManagement.StandardLibrary.Services;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.Views;
 using Prism.Navigation;
+using Microsoft.Extensions.Logging;
 
 namespace AVF.MemberManagement.ViewModels
 {
@@ -57,7 +58,7 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _buttonText, value);
         }
 
-        public DaySelectionPageViewModel(INavigationService navigationService, IRepository<Wochentag> wochentageRepository) : base(navigationService)
+        public DaySelectionPageViewModel(INavigationService navigationService, IRepository<Wochentag> wochentageRepository, ILogger logger) : base(navigationService, logger)
         {
             _wochentageRepository = wochentageRepository;
 
