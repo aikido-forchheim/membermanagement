@@ -8,7 +8,7 @@ namespace AVF.MemberManagement.Reports
     {
         public VerticalAxisMembers() 
         {
-            NrOfLeadingElements  = 3;   // 3 columns for Mitglieder
+            NrOfKeyColumns  = 3;   // 3 columns for Mitglieder
             ActiveElementsOnly = true;
         }
 
@@ -27,18 +27,18 @@ namespace AVF.MemberManagement.Reports
         private int GetDbIndexFromModelIndex(int iModelIndex)
             => iModelIndex;
 
-        public override void FillHeaderCells( DataGridView dgv, TrainingParticipationModel tpModel)
+        public override void FillKeyCells( DataGridView dgv, TrainingParticipationModel tpModel)
         {
             dgv.Columns[0].HeaderText = "Vorname";
             dgv.Columns[1].HeaderText = "Nachname";
             dgv.Columns[2].HeaderText = "Nr";
 
-            FillMainHeaderCells(dgv, tpModel);
+            FillMainKeyCells(dgv, tpModel);
         }
 
         protected override void FillHeaderCell( TrainingParticipationModel tpModel, DataGridView dgv, int iDgvRow, int iModelRow)
         {
-            int dbIndex = GetDbIndexFromModelIndex(iModelRow);
+            int      dbIndex  = GetDbIndexFromModelIndex(iModelRow);
             Mitglied mitglied = Globals.DatabaseWrapper.m_mitglieder[dbIndex];
             dgv[0, iDgvRow].Value = mitglied.Vorname;
             dgv[1, iDgvRow].Value = mitglied.Nachname;

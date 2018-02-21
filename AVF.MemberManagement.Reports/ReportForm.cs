@@ -1,58 +1,79 @@
 ﻿using System;
 using System.Windows.Forms;
+using System.Collections.Generic;
+using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
     public abstract partial class ReportForm : Form
     {
-        protected VerticalAxis               m_yAxis   { get; set; }
-        protected HorizontalAxis             m_xAxis   { get; set; }
-        protected TrainingParticipationModel m_tpModel { get; set; }
+        protected VerticalAxis               m_yAxis   { get; private set; }
+        protected HorizontalAxis             m_xAxis   { get; private set; }
+        protected TrainingParticipationModel m_tpModel { get; private set; }
 
-        protected DateTime m_datStart { get; set; }
-        protected DateTime m_datEnd   { get; set; }
-
-        private void ReportFormConstructorCore()
-        {
-            InitializeComponent();
-            Load += new EventHandler(ReportFormLoad);
-        }
+        protected DateTime m_datStart { get; private set; }
+        protected DateTime m_datEnd   { get; private set; }
 
         public ReportForm()
         {
-            ReportFormConstructorCore();
+            InitializeComponent();
+
+            m_dataGridView.CellMouseClick += new DataGridViewCellMouseEventHandler(CellMouseClick);
+            m_dataGridView.CellMouseEnter += new DataGridViewCellEventHandler(CellMouseEnter);
+            m_dataGridView.CellMouseLeave += new DataGridViewCellEventHandler(CellMouseLeave);
+
+            Load += new EventHandler(ReportFormLoad);
         }
 
-        public ReportForm(DateTime datStart, DateTime datEnd)
+        protected void CreateModel
+        (
+            DateTime datStart,
+            DateTime datEnd,
+            HorizontalAxis xAxis, 
+            VerticalAxis yAxis,
+            Func<TrainingsTeilnahme, bool> filter
+        )
         {
             m_datStart = datStart;
             m_datEnd = datEnd;
-            ReportFormConstructorCore();
+            m_xAxis = xAxis;
+            m_yAxis = yAxis;
+            m_xAxis.StartIndex = VerticalAxis.NrOfKeyColumns;
+            List<TrainingsTeilnahme> tpList         = Globals.DatabaseWrapper.TrainingsTeilnahme(datStart, datEnd);
+            List<TrainingsTeilnahme> tpListFiltered = Globals.DatabaseWrapper.Filter(tpList, filter);
+
+            m_tpModel = new TrainingParticipationModel( tpListFiltered, m_xAxis, m_yAxis );
+        }
+
+        protected abstract string MouseCellEvent(int row, int col, bool action);
+
+        protected void CellMouseClick(Object sender, DataGridViewCellMouseEventArgs e)
+        {
+            MouseCellEvent(e.RowIndex, e.ColumnIndex, action: true);
         }
 
         protected virtual void ReportFormPopulate()
         {
             // define dimensions of DataGridView
 
-            m_dataGridView.RowCount = m_yAxis.GetNrOfDgvRows(m_tpModel) + m_xAxis.GetNrOfAdditionalElements();
-            m_dataGridView.ColumnCount = m_xAxis.GetNrOfDgvCols(m_tpModel) + m_yAxis.GetNrOfAdditionalElements();
+            m_dataGridView.RowCount    = m_yAxis.GetNrOfDgvRows(m_tpModel);
+            m_dataGridView.ColumnCount = m_xAxis.GetNrOfDgvCols(m_tpModel) + VerticalAxis.NrOfKeyColumns + 1; // + 1 for summary column
 
             // Fill cells of DataGridView
 
             m_xAxis.FillHeaderCells(m_dataGridView, m_tpModel);
-            m_xAxis.FillSumCells(m_dataGridView, m_tpModel);
-            m_yAxis.FillHeaderCells(m_dataGridView, m_tpModel);
+            m_yAxis.FillKeyCells(m_dataGridView, m_tpModel);
             m_yAxis.FillSumCells(m_dataGridView, m_tpModel);
 
             // Fill main area of DataGridView
 
-            int iDgvRow = HorizontalAxis.NrOfLeadingElements;
+            int iDgvRow = 0;
             m_tpModel.ForAllRows
             (
                 action: iModelRow =>
                 {
-                    int iDgvCol = VerticalAxis.NrOfLeadingElements;
+                    int iDgvCol = VerticalAxis.NrOfKeyColumns;
                     m_tpModel.ForAllCols
                     (
                         action: iModelCol => m_dataGridView[iDgvCol++, iDgvRow].Value = FormatMatrixElement(m_tpModel.GetCell(iModelRow, iModelCol)),
@@ -77,7 +98,10 @@ namespace AVF.MemberManagement.Reports
             // Size = new Size(1000, 500);
         }
 
-        protected abstract string ToolTipText(DataGridViewCellEventArgs e);
+        protected string ToolTipText(DataGridViewCellEventArgs e)
+        {
+            return MouseCellEvent(e.RowIndex, e.ColumnIndex, action: false);
+        }
 
         protected void ToolTip(DataGridViewCellEventArgs e, bool showTip)
         {
@@ -98,14 +122,11 @@ namespace AVF.MemberManagement.Reports
         protected bool RowIsHeader(int iRow)
             => iRow < 0;
 
-        protected bool RowIsFooter(int iRow)
-            => iRow >= m_dataGridView.RowCount - 1;
-
         protected bool RowIsInMainArea(int iRow)
-            => ! (RowIsHeader(iRow) || RowIsFooter(iRow));
+            => ! RowIsHeader(iRow);
 
         protected bool ColIsKeyArea(int iCol)
-            => iCol < VerticalAxis.NrOfLeadingElements;
+            => iCol < VerticalAxis.NrOfKeyColumns;
 
         protected bool ColIsSummary(int iCol)
             => iCol == m_dataGridView.ColumnCount - 1;

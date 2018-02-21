@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Microsoft.Practices.Unity;
 
@@ -30,6 +31,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 
         public static string GetTrainingDescription(int idTraining)
         {
+            Debug.Assert(idTraining > 0);
             Training training = Globals.DatabaseWrapper.TrainingFromId(idTraining);
             return $"{training.Termin:dd}\n{training.Termin:MM}";
         }

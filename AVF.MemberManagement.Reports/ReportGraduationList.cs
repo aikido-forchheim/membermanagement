@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using AVF.MemberManagement.StandardLibrary.Tbo;
@@ -84,9 +83,11 @@ namespace AVF.MemberManagement.Reports
                         }
             */
         }
-        protected override string ToolTipText(DataGridViewCellEventArgs e)
+
+        protected override string MouseCellEvent(int row, int col, bool action)
         {
             return String.Empty;
         }
+
     }
 }

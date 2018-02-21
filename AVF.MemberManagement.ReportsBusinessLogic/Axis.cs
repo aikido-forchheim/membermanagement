@@ -4,8 +4,6 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 {
     public abstract class Axis
     {
-        public int StartIndex { get; set; } // Axis starts at this position
-
         public abstract int MaxDatabaseId { get; }
 
         public abstract int MinDatabaseId { get; }

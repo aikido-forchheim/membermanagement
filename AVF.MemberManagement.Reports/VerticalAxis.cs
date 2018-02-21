@@ -5,25 +5,18 @@ namespace AVF.MemberManagement.Reports
 {
     public abstract class VerticalAxis : Axis
     {
-        public static int NrOfLeadingElements { get; protected set; }
-        public static int NrOfTrailingElements { get; protected set; }
-
-        public int GetNrOfAdditionalElements()
-            => NrOfLeadingElements + NrOfTrailingElements;
-
-        protected VerticalAxis() 
-            => NrOfTrailingElements = 1;  // 1 column for row sum
+        public static int NrOfKeyColumns { get; protected set; }
 
         protected abstract void FillHeaderCell(TrainingParticipationModel tpModel, DataGridView dgv, int iDgvRow, int iModelRow);
 
         public int GetNrOfDgvRows(TrainingParticipationModel tpModel)
             => ActiveElementsOnly ? tpModel.GetNrOfActiveRows() : DatabaseIdRange();
 
-        public abstract void FillHeaderCells(DataGridView dgv, TrainingParticipationModel tpModel);
+        public abstract void FillKeyCells(DataGridView dgv, TrainingParticipationModel tpModel);
 
-        public void FillMainHeaderCells(DataGridView dgv, TrainingParticipationModel tpModel)
+        public void FillMainKeyCells(DataGridView dgv, TrainingParticipationModel tpModel)
         {
-            int iDgvRow = StartIndex;
+            int iDgvRow = 0;
             tpModel.ForAllRows
             (
                 action: iModelRow => FillHeaderCell(tpModel, dgv, iDgvRow++, iModelRow),
@@ -33,7 +26,7 @@ namespace AVF.MemberManagement.Reports
 
         public void FillSumCells(DataGridView dgv, TrainingParticipationModel tpModel)
         {
-            int iDgvRow = StartIndex;
+            int iDgvRow = 0;
             tpModel.ForAllRows
             (
                 iModelRow => dgv[dgv.ColumnCount - 1, iDgvRow++].Value = tpModel.GetRowSum(iModelRow),

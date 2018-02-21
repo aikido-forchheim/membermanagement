@@ -8,7 +8,7 @@ namespace AVF.MemberManagement.Reports
 {
     class HorizontalAxisTrainings : HorizontalAxis
     {
-        public HorizontalAxisTrainings() 
+        public HorizontalAxisTrainings( ) 
             => ActiveElementsOnly = true;
 
         public override int GetNrOfDgvCols(TrainingParticipationModel tpModel)

@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Diagnostics;
+using System.Windows.Forms;
 using System.Globalization;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.ReportsBusinessLogic;
@@ -14,7 +15,7 @@ namespace AVF.MemberManagement.Reports
 
         public VerticalAxisWeeks()
         {
-            NrOfLeadingElements = 1; 
+            NrOfKeyColumns = 1; 
             ActiveElementsOnly = false;
             m_dfi = DateTimeFormatInfo.CurrentInfo;
             m_cal = m_dfi.Calendar;
@@ -31,12 +32,13 @@ namespace AVF.MemberManagement.Reports
 
         public override int GetModelIndexFromTrainingsParticipation(TrainingsTeilnahme tn)
         {
+            Debug.Assert(tn.TrainingID > 0);
             Training training = Globals.DatabaseWrapper.TrainingFromId(tn.TrainingID);
             return m_cal.GetWeekOfYear(training.Termin, m_dfi.CalendarWeekRule, m_dfi.FirstDayOfWeek) - MinDatabaseId;
         }
 
-        public override void FillHeaderCells(DataGridView dgv, TrainingParticipationModel tpModel)
-            => FillMainHeaderCells(dgv, tpModel);
+        public override void FillKeyCells(DataGridView dgv, TrainingParticipationModel tpModel)
+            => FillMainKeyCells(dgv, tpModel);
 
         protected override void FillHeaderCell(TrainingParticipationModel tpModel, DataGridView dgv, int iDgvRow, int iModelRow) 
             => dgv[0, iDgvRow++].Value = iModelRow + MinDatabaseId;

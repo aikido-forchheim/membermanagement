@@ -7,83 +7,58 @@ namespace AVF.MemberManagement.Reports
     class ReportWeekVsCourses : ReportForm
     {
         public ReportWeekVsCourses(DateTime datStart, DateTime datEnd, int idMember)
-            : base( datStart, datEnd )
         {
-            m_xAxis = new HorizontalAxisCourses();
-            m_yAxis = new VerticalAxisWeeks();
-
-            m_xAxis.StartIndex = VerticalAxis.NrOfLeadingElements;
-            m_yAxis.StartIndex = HorizontalAxis.NrOfLeadingElements;
-
-            m_tpModel = new TrainingParticipationModel
+            CreateModel
             (
-                datStart,
-                datEnd,
-                m_xAxis,
-                m_yAxis,
+                datStart, datEnd,
+                new HorizontalAxisCourses(),
+                new VerticalAxisWeeks(),
                 (tn => idMember == tn.MitgliedID)
             );
 
-            m_label1.Text  = "Trainingsteilnahme " + Globals.GetMemberDescription( idMember );
+            m_label1.Text = "Trainingsteilnahme " + Globals.GetMemberDescription(idMember);
             m_label2.Text = Globals.GetTimeRangeDescription(datStart, datEnd);
-
-            m_dataGridView.CellMouseClick += new DataGridViewCellMouseEventHandler(CellMouseClick);
-            m_dataGridView.CellMouseEnter += new DataGridViewCellEventHandler(CellMouseEnter);
-            m_dataGridView.CellMouseLeave += new DataGridViewCellEventHandler(CellMouseLeave);
         }
 
-        private void CellMouseClick(Object sender, DataGridViewCellMouseEventArgs e)
+        protected override string MouseCellEvent(int row, int col, bool action)
         {
             ReportForm newForm = null;
+            string helpText = String.Empty;
 
-            if (ColIsKeyArea(e.ColumnIndex) || ColIsSummary(e.ColumnIndex))
+
+            if (RowIsHeader(row))
             {
-                if (RowIsHeader(e.RowIndex) || RowIsFooter(e.RowIndex))
+                if (ColIsInMainArea(col))
                 {
-
+                    if (action)
+                        newForm = new ReportMemberVsTrainings(m_datStart, m_datEnd, m_xAxis.GetDbId(col));
+                    else
+                        helpText = $"Klicken für Details zum Kurs\n" + Globals.GetCourseDescription(m_xAxis.GetDbId(col));
                 }
-                else 
+                else // column header, key or summary columns
                 {
-                    // Report "Week", MemeberVsCourses for one week 
+                    string columnName = m_dataGridView.Columns[col].HeaderText;
+                    helpText = $"Klicken um nach {columnName} zu sortieren";
                 }
             }
-            else // Main area column
+            else  // data row
             {
-                int idKurs = m_xAxis.GetDbId(e.ColumnIndex - m_xAxis.StartIndex);
-                newForm = new ReportMemberVsTrainings(m_datStart, m_datEnd, idKurs);
+                if (ColIsInMainArea(col))
+                {
+                }
+                else // key or summary 
+                {
+                    if (action)
+                        newForm = null;
+                    else
+                        helpText = $"Klicken für Details zu Trainings in dieser Woche (Noch nicht implementiert)";
+                }
             }
 
             if (newForm != null)
                 newForm.Show();
-        }
 
-        protected override string ToolTipText(DataGridViewCellEventArgs e)
-        {
-            if (ColIsKeyArea(e.ColumnIndex) || ColIsSummary(e.ColumnIndex))
-            {
-                if (RowIsHeader(e.RowIndex) || RowIsFooter(e.RowIndex))
-                {
-                }
-                else // Main area column
-                {
-                    return $"Klicken für Details zu Trainings in dieser Woche (Noch nicht implementiert)";
-                }
-            }
-            else // Main area column
-            {
-                if (RowIsHeader(e.RowIndex) )
-                {
-                    return $"Klicken für Details zu diesem Kurs";
-                }
-                else if ( RowIsFooter(e.RowIndex) )
-                {
-                }
-                else // Main area column
-                {
-                    return $"Training ...";
-                }
-            }
-            return String.Empty;
+            return helpText;
         }
     }
 }

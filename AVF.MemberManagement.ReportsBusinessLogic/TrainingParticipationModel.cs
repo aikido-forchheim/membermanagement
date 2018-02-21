@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Collections.Generic;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 
 namespace AVF.MemberManagement.ReportsBusinessLogic
@@ -19,15 +20,12 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 
         private Row[] m_Rows;
         private int[] m_iColSum;
-        private int   m_iSumSum;
 
         public TrainingParticipationModel
         (
-            DateTime datStart, 
-            DateTime datEnd,
+            List<TrainingsTeilnahme> tpList,
             Axis xAxis,
-            Axis yAxis,
-            Func<TrainingsTeilnahme, bool> filter
+            Axis yAxis
         )
         {
             m_iNrOfRows = yAxis.ModelRange();
@@ -45,18 +43,14 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             }
 
             m_iColSum = new int[m_iNrOfCols];
-            m_iSumSum = 0;
 
-            var tpList         = Globals.DatabaseWrapper.TrainingsTeilnahme(datStart, datEnd);
-            var tpListFiltered = Globals.DatabaseWrapper.Filter(tpList, filter);
-            foreach (var trainingsParticipation in tpListFiltered)
+            foreach (var trainingsParticipation in tpList)
             {
                 int iRow = yAxis.GetModelIndexFromTrainingsParticipation(trainingsParticipation);
                 int iCol = xAxis.GetModelIndexFromTrainingsParticipation(trainingsParticipation);
                 ++m_Rows[iRow].aiValues[iCol];
                 ++m_Rows[iRow].iRowSum;
                 ++m_iColSum[iCol];
-                ++m_iSumSum;
             }
         }
 
@@ -75,16 +69,10 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         public int GetRowSum(int iRow)
             => m_Rows[iRow].iRowSum;
 
-        public int GetColSum(int iCol)
-            => m_iColSum[iCol];
-
-        public int GetSumSum()
-            => m_iSumSum;
-
         public void ForAllCols(Action<int> action, bool activeColsOnly  )
         {
             for (int iCol = 0; iCol < m_iNrOfCols; ++iCol)
-                if ( !activeColsOnly || ( GetColSum(iCol) > 0 ) )
+                if ( !activeColsOnly || (m_iColSum[iCol] > 0 ) )
                     action(iCol);
         }
 

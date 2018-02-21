@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.ReportsBusinessLogic;
@@ -7,19 +8,16 @@ namespace AVF.MemberManagement.Reports
 {
     class ReportTraining : ReportForm
     {
-        public ReportTraining( int idTraining )
+        public ReportTraining(int idTraining)
         {
+            Debug.Assert(idTraining > 0);
             Training training = Globals.DatabaseWrapper.TrainingFromId(idTraining);
- 
-            m_xAxis = new HorizontalAxisTrainings();
-            m_yAxis = new VerticalAxisMembers();
 
-            m_tpModel = new TrainingParticipationModel
+            CreateModel
             (
-                training.Termin,
-                training.Termin,
-                m_xAxis,
-                m_yAxis,
+                training.Termin, training.Termin,
+                new HorizontalAxisTrainings(),
+                new VerticalAxisMembers(),
                 (tn => tn.TrainingID == idTraining)
             );
 
@@ -29,22 +27,8 @@ namespace AVF.MemberManagement.Reports
             m_label3.Text = $"Trainer: {Globals.GetMemberDescription(training.Trainer)}";
         }
 
-        protected override string ToolTipText(DataGridViewCellEventArgs e)
+        protected override string MouseCellEvent(int row, int col, bool action)
         {
-            if (ColIsKeyArea(e.ColumnIndex) || ColIsSummary(e.ColumnIndex))
-            {
-                if (RowIsHeader(e.RowIndex) || RowIsFooter(e.RowIndex))
-                {
-
-                }
-                else // Main area column
-                {
-                }
-            }
-            else // Main area column
-            {
-                return $"Klicken für Details zu diesem Kurs";
-            }
             return String.Empty;
         }
     }
