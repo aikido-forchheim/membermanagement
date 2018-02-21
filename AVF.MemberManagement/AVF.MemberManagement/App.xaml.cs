@@ -30,6 +30,11 @@ namespace AVF.MemberManagement
         {
         }
 
+        public App()
+        {
+            
+        }
+
         protected override async void OnInitialized()
         {
             InitializeComponent();

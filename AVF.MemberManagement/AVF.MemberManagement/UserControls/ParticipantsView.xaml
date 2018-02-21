@@ -28,7 +28,13 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <Grid Grid.Row="2" Margin="16,8,16,64">
+            <Grid Grid.Row="2">
+                <Grid.Margin>
+                    <OnIdiom x:TypeArguments="Thickness">
+                        <OnIdiom.Phone>16,8,16,16</OnIdiom.Phone>
+                        <OnIdiom.Tablet>16,8,16,64</OnIdiom.Tablet>
+                    </OnIdiom>
+                </Grid.Margin>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
