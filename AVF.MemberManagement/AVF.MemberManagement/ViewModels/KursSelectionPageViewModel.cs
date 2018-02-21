@@ -149,7 +149,11 @@ namespace AVF.MemberManagement.ViewModels
                     var trainingEndTime = model.Training.Zeit + new TimeSpan(0, model.Training.DauerMinuten, 0);
                     var trainingEndDateTime = new DateTime(SelectedDate.Year, SelectedDate.Month, SelectedDate.Day, trainingEndTime.Hours, trainingEndTime.Minutes, trainingEndTime.Seconds);
                     var differenceToNow = trainingEndDateTime - DateTime.Now;
-                    return differenceToNow;
+
+                    var secondsToNow = differenceToNow.TotalSeconds;
+                    var absSecondsToNow = Math.Abs(secondsToNow);
+
+                    return absSecondsToNow;
                 }).First();
             }
             catch (Exception ex)
