@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
-using AVF.MemberManagement.StandardLibrary.Enums;
+using Microsoft.Extensions.Logging;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Models;
 using AVF.MemberManagement.StandardLibrary.Services;
@@ -148,14 +148,13 @@ namespace AVF.MemberManagement.ViewModels
                 {
                     var trainingEndTime = model.Training.Zeit + new TimeSpan(0, model.Training.DauerMinuten, 0);
                     var trainingEndDateTime = new DateTime(SelectedDate.Year, SelectedDate.Month, SelectedDate.Day, trainingEndTime.Hours, trainingEndTime.Minutes, trainingEndTime.Seconds);
-                    var differenceToNow = DateTime.Now - trainingEndDateTime;
+                    var differenceToNow = trainingEndDateTime - DateTime.Now;
                     return differenceToNow;
                 }).First();
             }
             catch (Exception ex)
             {
-                //TODO: write to own logger
-                System.Diagnostics.Debug.WriteLine(ex);
+                Logger.LogError(ex.ToString());
             }
         }
 
