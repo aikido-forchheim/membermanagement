@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Forms;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.ReportsBusinessLogic;
 
@@ -21,50 +20,26 @@ namespace AVF.MemberManagement.Reports
             m_label2.Text = Globals.GetTimeRangeDescription(datStart, datEnd);
         }
 
-        protected override string MouseCellEvent( int row, int col, bool action )
+        protected override string MouseHeaderCellEvent(int col, bool action)
+            => MouseCourseHeaderCellEvent(col, action);
+
+        protected override string MouseKeyCellEvent(int row, bool action)
+            => MouseMemberKeyCellEvent(row, action);
+
+        protected override string MouseMainDataAreaCellEvent( int row, int col, bool action )
         {
-            ReportForm newForm  = null;
-            string     helpText = String.Empty;
+            int idMember = m_yAxis.GetRowKey(m_dataGridView, row);
 
-            if (RowIsHeader(row))
+            if (action)
             {
-                if (ColIsInMainArea(col))
-                {
-                    if (action)
-                        newForm = new ReportMemberVsTrainings(m_datStart, m_datEnd, m_xAxis.GetDbId(col));
-                    else
-                        helpText = $"Klicken für Details zum Kurs\n" + Globals.GetCourseDescription(m_xAxis.GetDbId(col));
-                }
-                else // column header, key or summary columns
-                {
-                    string columnName = m_dataGridView.Columns[col].HeaderText;
-                    helpText = $"Klicken um nach {columnName} zu sortieren";
-                }
-            }
-            else // data row
-            {
-                int      idMember = (int)m_dataGridView[2, row].Value;
-                Mitglied member   = Globals.DatabaseWrapper.MitgliedFromId(idMember);
-                if ( ColIsInMainArea( col ) )
-                {
-                    if (action)
-                        newForm = new ReportMemberVsTrainings(m_datStart, m_datEnd, m_xAxis.GetDbId(col));
-                    else
-                        helpText = $"Klicken für Details zur Teilnahme von\n {member.Vorname} {member.Nachname} am Kurs\n" + Globals.GetCourseDescription(m_xAxis.GetDbId(col));
-                }
-                else // key or summary 
-                {
-                    if (action)
-                        newForm = new ReportWeekVsCourses(m_datStart, m_datEnd, idMember);
-                    else
-                        helpText = $"Klicken für Details zu Mitglied\n{member.Vorname} {member.Nachname}";
-                }
-            }
-
-            if (newForm != null)
+                ReportForm newForm = new ReportMemberVsTrainings(m_datStart, m_datEnd, m_xAxis.GetDbId(col));
                 newForm.Show();
-
-            return helpText;
+                return String.Empty;
+            }
+            else
+            {
+                return $"Klicken für Details zur Teilnahme von\n" + Globals.GetMemberDescription( idMember ) + $" am Kurs\n" + Globals.GetCourseDescription(m_xAxis.GetDbId(col));
+            }
         }
     }
 }

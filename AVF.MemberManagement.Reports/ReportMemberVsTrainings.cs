@@ -15,7 +15,7 @@ namespace AVF.MemberManagement.Reports
                 datStart, datEnd,
                 new HorizontalAxisTrainings(),
                 new VerticalAxisMembers(),
-                (tn => Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID) == idKurs)
+                filter: tn => Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID) == idKurs
             );
 
             m_label1.Text = Globals.GetCourseDescription(idKurs);
@@ -25,47 +25,28 @@ namespace AVF.MemberManagement.Reports
         protected override string FormatMatrixElement(int iValue) 
             => (iValue > 0) ? $"X" : " ";
 
-        protected override string MouseCellEvent(int row, int col, bool action)
+        protected override string MouseHeaderCellEvent(int col, bool action)
         {
-            ReportForm newForm = null;
-            string helpText = String.Empty;
+            int idTraining = m_xAxis.GetDbId(col);
+            Debug.Assert(idTraining > 0);
+            Training training = Globals.DatabaseWrapper.TrainingFromId(idTraining);
 
-            if (RowIsHeader(row))
+            if (action)
             {
-                if (ColIsInMainArea(col))
-                {
-                    int idTraining = m_xAxis.GetDbId(col);
-                    Debug.Assert(idTraining > 0);
-                    Training training = Globals.DatabaseWrapper.TrainingFromId(idTraining);
-                    if (action)
-                        newForm = new ReportTraining(idTraining);
-                    else
-                        return $"Klicken für Details zu diesem Training";
-                }
-                else // column header, key or summary columns
-                {
-                }
-            }
-            else // data row
-            {
-                if (ColIsInMainArea(col))
-                {
-                }
-                else // key or summary 
-                {
-                    int idMember = (int)m_dataGridView[2, row].Value;
-                    Mitglied member = Globals.DatabaseWrapper.MitgliedFromId(idMember);
-                    if (action)
-                        newForm = new ReportWeekVsCourses(m_datStart, m_datEnd, idMember);
-                    else
-                        return $"Klicken für Details zu Mitglied\n {member.Vorname} {member.Nachname}";
-                }
-            }
-
-            if (newForm != null)
+                ReportForm newForm = new ReportTraining(idTraining);
                 newForm.Show();
-
-            return helpText;
+                return String.Empty;
+            }
+            else
+            {
+                return $"Klicken für Details zu diesem Training";
+            }
         }
+
+        protected override string MouseMainDataAreaCellEvent(int row, int col, bool action)
+            => String.Empty;
+
+        protected override string MouseKeyCellEvent(int row, bool action)
+            => MouseMemberKeyCellEvent(row, action);
     }
 }

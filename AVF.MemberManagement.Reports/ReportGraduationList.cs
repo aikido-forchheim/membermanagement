@@ -84,10 +84,13 @@ namespace AVF.MemberManagement.Reports
             */
         }
 
-        protected override string MouseCellEvent(int row, int col, bool action)
-        {
-            return String.Empty;
-        }
+        protected override string MouseHeaderCellEvent(int col, bool action)
+            => String.Empty;
 
+        protected override string MouseKeyCellEvent(int row, bool action)
+            => String.Empty;
+
+        protected override string MouseMainDataAreaCellEvent(int row, int col, bool action)
+            => String.Empty;
     }
 }

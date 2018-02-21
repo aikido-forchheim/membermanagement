@@ -13,52 +13,29 @@ namespace AVF.MemberManagement.Reports
                 datStart, datEnd,
                 new HorizontalAxisCourses(),
                 new VerticalAxisWeeks(),
-                (tn => idMember == tn.MitgliedID)
+                filter: tn => idMember == tn.MitgliedID
             );
 
             m_label1.Text = "Trainingsteilnahme " + Globals.GetMemberDescription(idMember);
             m_label2.Text = Globals.GetTimeRangeDescription(datStart, datEnd);
         }
 
-        protected override string MouseCellEvent(int row, int col, bool action)
+        protected override string MouseHeaderCellEvent(int col, bool action)
+            => MouseCourseHeaderCellEvent(col, action);
+
+        protected override string MouseMainDataAreaCellEvent(int row, int col, bool action)
+            => String.Empty;
+
+        protected override string MouseKeyCellEvent(int row, bool action)
         {
-            ReportForm newForm = null;
-            string helpText = String.Empty;
-
-
-            if (RowIsHeader(row))
+            if (action)
             {
-                if (ColIsInMainArea(col))
-                {
-                    if (action)
-                        newForm = new ReportMemberVsTrainings(m_datStart, m_datEnd, m_xAxis.GetDbId(col));
-                    else
-                        helpText = $"Klicken für Details zum Kurs\n" + Globals.GetCourseDescription(m_xAxis.GetDbId(col));
-                }
-                else // column header, key or summary columns
-                {
-                    string columnName = m_dataGridView.Columns[col].HeaderText;
-                    helpText = $"Klicken um nach {columnName} zu sortieren";
-                }
+                return String.Empty;
             }
-            else  // data row
+            else
             {
-                if (ColIsInMainArea(col))
-                {
-                }
-                else // key or summary 
-                {
-                    if (action)
-                        newForm = null;
-                    else
-                        helpText = $"Klicken für Details zu Trainings in dieser Woche (Noch nicht implementiert)";
-                }
+                return $"Klicken für Details zu Trainings in dieser Woche (Noch nicht implementiert)";
             }
-
-            if (newForm != null)
-                newForm.Show();
-
-            return helpText;
         }
     }
 }

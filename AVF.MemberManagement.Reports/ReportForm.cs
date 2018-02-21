@@ -46,13 +46,6 @@ namespace AVF.MemberManagement.Reports
             m_tpModel = new TrainingParticipationModel( tpListFiltered, m_xAxis, m_yAxis );
         }
 
-        protected abstract string MouseCellEvent(int row, int col, bool action);
-
-        protected void CellMouseClick(Object sender, DataGridViewCellMouseEventArgs e)
-        {
-            MouseCellEvent(e.RowIndex, e.ColumnIndex, action: true);
-        }
-
         protected virtual void ReportFormPopulate()
         {
             // define dimensions of DataGridView
@@ -98,9 +91,9 @@ namespace AVF.MemberManagement.Reports
             // Size = new Size(1000, 500);
         }
 
-        protected string ToolTipText(DataGridViewCellEventArgs e)
+        protected void CellMouseClick(Object sender, DataGridViewCellMouseEventArgs e)
         {
-            return MouseCellEvent(e.RowIndex, e.ColumnIndex, action: false);
+            MouseCellEvent(e.RowIndex, e.ColumnIndex, action: true);
         }
 
         protected void ToolTip(DataGridViewCellEventArgs e, bool showTip)
@@ -110,7 +103,69 @@ namespace AVF.MemberManagement.Reports
                 ? m_dataGridView.Columns[e.ColumnIndex].HeaderCell
                 : m_dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
 
-            cell.ToolTipText = showTip ? ToolTipText(e) : String.Empty;
+            cell.ToolTipText = showTip ? MouseCellEvent(e.RowIndex, e.ColumnIndex, action: false) : String.Empty;
+        }
+
+        protected string MouseCellEvent(int row, int col, bool action)
+        {
+            if (RowIsHeader(row))
+            {
+                if (ColIsInMainArea(col))
+                {
+                    return MouseHeaderCellEvent(col, action);
+                }
+                else // column header, key or summary columns
+                {
+                    return $"Klicken um nach {m_dataGridView.Columns[col].HeaderText} zu sortieren";
+                }
+            }
+            else // data row
+            {
+                if (ColIsInMainArea(col))
+                {
+                    return MouseMainDataAreaCellEvent(row, col, action);
+                }
+                else // key or summary 
+                {
+                    return MouseKeyCellEvent(row, action);
+                }
+            }
+        }
+
+        protected abstract string MouseHeaderCellEvent(int col, bool action);
+
+        protected abstract string MouseKeyCellEvent(int row, bool action);
+
+        protected abstract string MouseMainDataAreaCellEvent(int row, int col, bool action);
+
+        protected string MouseCourseHeaderCellEvent(int col, bool action)
+        {
+            if (action)
+            {
+                ReportForm newForm = new ReportMemberVsTrainings(m_datStart, m_datEnd, m_xAxis.GetDbId(col));
+                newForm.Show();
+                return String.Empty;
+            }
+            else
+            {
+                return $"Klicken für Details zum Kurs\n" + Globals.GetCourseDescription(m_xAxis.GetDbId(col));
+            }
+        }
+
+        protected string MouseMemberKeyCellEvent(int row, bool action)
+        {
+            int idMember = m_yAxis.GetRowKey(m_dataGridView, row);
+
+            if (action)
+            {
+                ReportForm newForm = new ReportWeekVsCourses(m_datStart, m_datEnd, idMember);
+                newForm.Show();
+                return String.Empty;
+            }
+            else
+            {
+                return $"Klicken für Details zu Mitglied\n" + Globals.GetMemberDescription(idMember);
+            }
         }
 
         protected void CellMouseEnter(object sender, DataGridViewCellEventArgs e)

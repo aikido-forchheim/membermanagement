@@ -42,5 +42,8 @@ namespace AVF.MemberManagement.Reports
 
         protected override void FillHeaderCell(TrainingParticipationModel tpModel, DataGridView dgv, int iDgvRow, int iModelRow) 
             => dgv[0, iDgvRow++].Value = iModelRow + MinDatabaseId;
+
+        public override int GetRowKey(DataGridView dgv, int row)
+            => row;
     }
 }

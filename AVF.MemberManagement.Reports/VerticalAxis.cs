@@ -14,6 +14,8 @@ namespace AVF.MemberManagement.Reports
 
         public abstract void FillKeyCells(DataGridView dgv, TrainingParticipationModel tpModel);
 
+        public abstract int GetRowKey(DataGridView dgv, int row);
+
         public void FillMainKeyCells(DataGridView dgv, TrainingParticipationModel tpModel)
         {
             int iDgvRow = 0;

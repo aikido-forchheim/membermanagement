@@ -44,5 +44,8 @@ namespace AVF.MemberManagement.Reports
             dgv[1, iDgvRow].Value = mitglied.Nachname;
             dgv[2, iDgvRow].Value = mitglied.Id;
         }
+
+        public override int GetRowKey( DataGridView dgv, int row)
+            => (int)dgv[2, row].Value;
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 using AVF.MemberManagement.ReportsBusinessLogic;
 using AVF.MemberManagement.StandardLibrary.Tbo;
@@ -7,7 +8,7 @@ namespace AVF.MemberManagement.Reports
 {
     class HorizontalAxisCourses : HorizontalAxis
     {
-        public HorizontalAxisCourses( ) 
+        public HorizontalAxisCourses()
             => ActiveElementsOnly = false;
 
         public override int GetNrOfDgvCols(TrainingParticipationModel tpModel)
@@ -25,21 +26,21 @@ namespace AVF.MemberManagement.Reports
         protected override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID);
 
-        private int GetModelIndexFromDbIndex( int iDbIndex )
+        private int GetModelIndexFromDbIndex(int iDbIndex)
             => iDbIndex + 1;  // + 1 for special case: training without course
 
-        private int GetDbIndexFromModelIndex( int iModelIndex )
+        private int GetDbIndexFromModelIndex(int iModelIndex)
         {
             Debug.Assert(iModelIndex > 0);
             return iModelIndex - 1;  // - 1 for special case: training without course
         }
 
-        protected override int GetModelIndexFromId( int idKurs )
+        protected override int GetModelIndexFromId(int idKurs)
             => (idKurs == 0)  // special case: training without course
                ? 0
-               : GetModelIndexFromDbIndex( Globals.DatabaseWrapper.m_kurs.FindIndex(kurs => idKurs == kurs.Id) );
+               : GetModelIndexFromDbIndex(Globals.DatabaseWrapper.m_kurs.FindIndex(kurs => idKurs == kurs.Id));
 
-        private int GetCourseIdFromModelIndex( int iModelCol )
+        private int GetCourseIdFromModelIndex(int iModelCol)
             => (iModelCol == 0)  // special case: training without course
                ? 0
                : Globals.DatabaseWrapper.m_kurs[GetDbIndexFromModelIndex(iModelCol)].Id;
@@ -60,7 +61,7 @@ namespace AVF.MemberManagement.Reports
             m_DbIds[iDgvCol - StartIndex] = idKurs;
 
             dgv.Columns[iDgvCol].HeaderText = Globals.GetCourseDescription(idKurs);
-            dgv.Columns[iDgvCol].SortMode   = DataGridViewColumnSortMode.NotSortable;
+            dgv.Columns[iDgvCol].SortMode = DataGridViewColumnSortMode.NotSortable;
         }
     }
 }

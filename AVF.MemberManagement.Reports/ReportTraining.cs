@@ -18,7 +18,7 @@ namespace AVF.MemberManagement.Reports
                 training.Termin, training.Termin,
                 new HorizontalAxisTrainings(),
                 new VerticalAxisMembers(),
-                (tn => tn.TrainingID == idTraining)
+                filter: tn => tn.TrainingID == idTraining
             );
 
             string day = Globals.DatabaseWrapper.WeekDay(training.WochentagID);
@@ -27,9 +27,13 @@ namespace AVF.MemberManagement.Reports
             m_label3.Text = $"Trainer: {Globals.GetMemberDescription(training.Trainer)}";
         }
 
-        protected override string MouseCellEvent(int row, int col, bool action)
-        {
-            return String.Empty;
-        }
+        protected override string MouseHeaderCellEvent(int col, bool action)
+            => String.Empty;
+
+        protected override string MouseKeyCellEvent(int row, bool action)
+            => String.Empty;
+
+        protected override string MouseMainDataAreaCellEvent(int row, int col, bool action)
+            => String.Empty;
     }
 }
