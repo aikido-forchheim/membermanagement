@@ -6,10 +6,12 @@ using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
-    class ReportGraduationList : ReportForm
+    class ReportGraduationList : ReportBase
     {
         public ReportGraduationList()
         {
+            m_dataGridView = new DataGridView();
+
             m_dataGridView.Columns.Add("graduation", "Grad");
             m_dataGridView.Columns.Add("surname", "Name");
             m_dataGridView.Columns.Add("firstName", "Vorname");
@@ -22,10 +24,14 @@ namespace AVF.MemberManagement.Reports
             m_dataGridView.Columns.Add("dateNext", "Mindestwarte-\nzeit für eine\nHöhergraduie\nrung erfüllt ab");
             m_dataGridView.Columns.Add("nrTrainingsParticipations", "Trainings\nseit der\nletzten\nGraduierung");
 
+            m_dataGridView.Size = new System.Drawing.Size(1345, 712);
+
             foreach ( DataGridViewColumn cols in m_dataGridView.Columns )
             {
                 cols.SortMode = DataGridViewColumnSortMode.NotSortable;
             }
+
+            this.PerformLayout();
         }
 
         protected override void ReportFormPopulate()
@@ -83,14 +89,5 @@ namespace AVF.MemberManagement.Reports
                         }
             */
         }
-
-        protected override string MouseHeaderCellEvent(int col, bool action)
-            => String.Empty;
-
-        protected override string MouseKeyCellEvent(int row, bool action)
-            => String.Empty;
-
-        protected override string MouseMainDataAreaCellEvent(int row, int col, bool action)
-            => String.Empty;
     }
 }

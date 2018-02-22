@@ -1,12 +1,11 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Windows.Forms;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
-    class ReportTraining : ReportForm
+    class ReportTraining : ReportTrainingsParticipation
     {
         public ReportTraining(int idTraining)
         {
@@ -16,7 +15,7 @@ namespace AVF.MemberManagement.Reports
             CreateModel
             (
                 training.Termin, training.Termin,
-                new HorizontalAxisTrainings(),
+                new HorizontalAxisEmpty(),
                 new VerticalAxisMembers(),
                 filter: tn => tn.TrainingID == idTraining
             );
@@ -26,14 +25,5 @@ namespace AVF.MemberManagement.Reports
             m_label2.Text = $"um {training.Zeit:hh}:{training.Zeit:mm} Uhr";
             m_label3.Text = $"Trainer: {Globals.GetMemberDescription(training.Trainer)}";
         }
-
-        protected override string MouseHeaderCellEvent(int col, bool action)
-            => String.Empty;
-
-        protected override string MouseKeyCellEvent(int row, bool action)
-            => String.Empty;
-
-        protected override string MouseMainDataAreaCellEvent(int row, int col, bool action)
-            => String.Empty;
     }
 }

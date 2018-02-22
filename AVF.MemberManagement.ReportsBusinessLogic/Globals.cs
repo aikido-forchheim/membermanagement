@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Microsoft.Practices.Unity;
 
@@ -7,13 +8,30 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 {
     public class Globals
     {
+        private static DateTimeFormatInfo m_dfi;
+        private static Calendar m_cal;
+
         public static DatabaseWrapper DatabaseWrapper;
 
         public static void Initialize(IUnityContainer Container)
         {
+            m_dfi = DateTimeFormatInfo.CurrentInfo;
+            m_cal = m_dfi.Calendar;
             DatabaseWrapper = new DatabaseWrapper();
             DatabaseWrapper.ReadTables(Container).Wait();
         }
+
+        public static int GetMonth(DateTime date)
+            => m_cal.GetMonth( date );
+
+        public static string GetMonthName(int iMonth)
+            => m_dfi.GetMonthName(iMonth).ToString();
+
+        public static int GetWeekOfYear(DateTime date)
+            => m_cal.GetWeekOfYear(date, m_dfi.CalendarWeekRule, m_dfi.FirstDayOfWeek);
+
+        public static string GetTimeRangeDescription(DateTime datStart, DateTime datEnd)
+            => $"{datStart:dd}.{datStart:MM}.{datStart:yyyy} {datEnd:dd}.{datEnd:MM}.{datEnd:yyyy}";
 
         public static string GetCourseDescription(int idKurs)
         {
@@ -34,11 +52,6 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             Debug.Assert(idTraining > 0);
             Training training = Globals.DatabaseWrapper.TrainingFromId(idTraining);
             return $"{training.Termin:dd}\n{training.Termin:MM}";
-        }
-
-        public static string GetTimeRangeDescription(DateTime datStart, DateTime datEnd)
-        {
-            return $"{datStart:dd}.{datStart:MM}.{datStart:yyyy} {datEnd:dd}.{datEnd:MM}.{datEnd:yyyy}";
         }
 
         public static string GetMemberDescription( int idMember )

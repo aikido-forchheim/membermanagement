@@ -2,7 +2,7 @@
 
 namespace AVF.MemberManagement.Reports
 {
-    partial class ReportForm
+    partial class ReportTrainingsParticipation
     {
         /// <summary>
         /// Required designer variable.
@@ -102,7 +102,6 @@ namespace AVF.MemberManagement.Reports
 
         #endregion
 
-        protected DataGridView m_dataGridView;
         protected Label m_label1;
         protected Label m_label2;
         protected Label m_label3;

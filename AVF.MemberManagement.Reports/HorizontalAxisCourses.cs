@@ -9,10 +9,10 @@ namespace AVF.MemberManagement.Reports
     class HorizontalAxisCourses : HorizontalAxis
     {
         public HorizontalAxisCourses()
-            => ActiveElementsOnly = false;
+            => AdditionalAxisElements = 1;  // 1 additional column for trainings without course
 
         public override int GetNrOfDgvCols(TrainingParticipationModel tpModel)
-            => DatabaseIdRange() + 1;  // 1 additional column for trainings without course
+            => ModelRange();  
 
         public override int MaxDatabaseId
             => Globals.DatabaseWrapper.MaxKursNr();
@@ -20,19 +20,16 @@ namespace AVF.MemberManagement.Reports
         public override int MinDatabaseId
             => Globals.DatabaseWrapper.MinKursNr();
 
-        public override int ModelRange()
-            => DatabaseIdRange() + 1;  // 1 additional column for trainings without course
-
         protected override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID);
 
         private int GetModelIndexFromDbIndex(int iDbIndex)
-            => iDbIndex + 1;  // + 1 for special case: training without course
+            => iDbIndex + AdditionalAxisElements;  // + 1 for special case: training without course
 
         private int GetDbIndexFromModelIndex(int iModelIndex)
         {
             Debug.Assert(iModelIndex > 0);
-            return iModelIndex - 1;  // - 1 for special case: training without course
+            return iModelIndex - AdditionalAxisElements;  // - 1 for special case: training without course
         }
 
         protected override int GetModelIndexFromId(int idKurs)
@@ -62,6 +59,13 @@ namespace AVF.MemberManagement.Reports
 
             dgv.Columns[iDgvCol].HeaderText = Globals.GetCourseDescription(idKurs);
             dgv.Columns[iDgvCol].SortMode = DataGridViewColumnSortMode.NotSortable;
+        }
+
+        public override string MouseHeaderCellEvent(DateTime datStart, DateTime datEnd, int idKurs, bool action)
+        {
+            return action
+                ? ReportTrainingsParticipation.Show(new ReportMemberVsTrainings(datStart, datEnd, idKurs))
+                : $"Klicken für Details zum Kurs\n" + Globals.GetCourseDescription(idKurs);
         }
     }
 }

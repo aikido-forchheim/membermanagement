@@ -1,27 +1,29 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
     public abstract class VerticalAxis : Axis
     {
-        public static int NrOfKeyColumns { get; protected set; }
+        public int NrOfKeyColumns { get; protected set; }
 
-        protected abstract void FillHeaderCell(TrainingParticipationModel tpModel, DataGridView dgv, int iDgvRow, int iModelRow);
+        public int KeyColumn { get; protected set; }
 
-        public int GetNrOfDgvRows(TrainingParticipationModel tpModel)
-            => ActiveElementsOnly ? tpModel.GetNrOfActiveRows() : DatabaseIdRange();
+        protected abstract void FillMainKeyCell(TrainingParticipationModel tpModel, DataGridView dgv, int iDgvRow, int iModelRow);
 
-        public abstract void FillKeyCells(DataGridView dgv, TrainingParticipationModel tpModel);
+        public abstract int GetNrOfDgvRows(TrainingParticipationModel tpModel);
 
-        public abstract int GetRowKey(DataGridView dgv, int row);
+        public abstract void FillKeyHeaderCells(DataGridView dgv);
+
+        public abstract string MouseKeyCellEvent(DateTime datStart, DateTime datEnd, int id, bool action);
 
         public void FillMainKeyCells(DataGridView dgv, TrainingParticipationModel tpModel)
         {
             int iDgvRow = 0;
             tpModel.ForAllRows
             (
-                action: iModelRow => FillHeaderCell(tpModel, dgv, iDgvRow++, iModelRow),
+                action: iModelRow => FillMainKeyCell(tpModel, dgv, iDgvRow++, iModelRow),
                 activeRowsOnly: ActiveElementsOnly
             );
         }

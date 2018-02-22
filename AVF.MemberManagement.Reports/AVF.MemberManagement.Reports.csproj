@@ -62,11 +62,19 @@
   <ItemGroup>
     <Compile Include="HorizontalAxis.cs" />
     <Compile Include="HorizontalAxisCourses.cs" />
-    <Compile Include="ReportForm.cs">
+    <Compile Include="HorizontalAxisEmpty.cs" />
+    <Compile Include="HorizontalAxisMonths.cs" />
+    <Compile Include="ReportBase.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ReportForm.Designer.cs">
-      <DependentUpon>ReportForm.cs</DependentUpon>
+    <Compile Include="ReportCoursesVsMonths.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReportTrainingsParticipation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReportTrainingsParticipation.Designer.cs">
+      <DependentUpon>ReportTrainingsParticipation.cs</DependentUpon>
     </Compile>
     <Compile Include="ReportGraduationList.cs">
       <SubType>Form</SubType>
@@ -83,14 +91,15 @@
     <Compile Include="ReportWeekVsCourses.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="VerticalAxisCourses.cs" />
     <Compile Include="VerticalAxisMembers.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="HorizontalAxisTrainings.cs" />
     <Compile Include="VerticalAxis.cs" />
     <Compile Include="VerticalAxisWeeks.cs" />
-    <EmbeddedResource Include="ReportForm.resx">
-      <DependentUpon>ReportForm.cs</DependentUpon>
+    <EmbeddedResource Include="ReportTrainingsParticipation.resx">
+      <DependentUpon>ReportTrainingsParticipation.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

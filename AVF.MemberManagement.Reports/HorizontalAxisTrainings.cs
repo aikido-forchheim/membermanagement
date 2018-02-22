@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows.Forms;
 using AVF.MemberManagement.ReportsBusinessLogic;
 using AVF.MemberManagement.StandardLibrary.Tbo;
@@ -19,9 +18,6 @@ namespace AVF.MemberManagement.Reports
 
         public override int MinDatabaseId
             => Globals.DatabaseWrapper.MinTrainingNr();
-
-        public override int ModelRange()
-            => DatabaseIdRange();
 
         protected override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => tn.TrainingID;
@@ -62,6 +58,13 @@ namespace AVF.MemberManagement.Reports
             dgv.Columns[iDgvCol].SortMode = DataGridViewColumnSortMode.NotSortable;
             dgv.Columns[iDgvCol].MinimumWidth = 10;
             dgv.Columns[iDgvCol].DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+        }
+
+        public override string MouseHeaderCellEvent(DateTime datStart, DateTime datEnd, int idTraining, bool action)
+        {
+            return action
+                ? ReportTrainingsParticipation.Show(new ReportTraining(idTraining))
+                : $"Klicken für Details zum Training " + Globals.GetTrainingDescription(idTraining);
         }
     }
 }

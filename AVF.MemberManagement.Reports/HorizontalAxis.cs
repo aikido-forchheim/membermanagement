@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using AVF.MemberManagement.ReportsBusinessLogic;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 
@@ -8,26 +9,31 @@ namespace AVF.MemberManagement.Reports
     {
         public int StartIndex { get; set; } // horizontal axis starts at this column
 
+        public bool Hide { get; protected set; } = false;
+
         protected int[] m_DbIds;
 
         protected HorizontalAxis( )
             =>  m_DbIds = new int[ModelRange()];
 
-        public int GetDbId(int iDgvCol)
+        public int GetColKey(int iDgvCol)
             => m_DbIds[iDgvCol - StartIndex];
 
-        protected abstract int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn);
-
-        protected abstract int GetModelIndexFromId(int id);
+        protected virtual int GetModelIndexFromId(int id)
+            => 0;
 
         public override int GetModelIndexFromTrainingsParticipation(TrainingsTeilnahme tn)
             => GetModelIndexFromId(GetIdFromTrainingsParticipation(tn));
 
-        public abstract int GetNrOfDgvCols(TrainingParticipationModel tpModel);
+        public virtual int GetNrOfDgvCols(TrainingParticipationModel tpModel)
+            => 1;
 
-        protected abstract void FillHeaderCell(DataGridView dgv, int iDgvCol, int iModelCol);
+        public virtual string MouseHeaderCellEvent(DateTime datStart, DateTime datEnd, int id, bool action)
+            => String.Empty;
 
-        public abstract void FillHeaderCells(DataGridView dgv, TrainingParticipationModel tpModel);
+        protected virtual void FillHeaderCell(DataGridView dgv, int iDgvCol, int iModelCol) { }
+
+        public virtual void FillHeaderCells(DataGridView dgv, TrainingParticipationModel tpModel) { }
 
         public void FillMainHeaderCells(DataGridView dgv, TrainingParticipationModel tpModel)
         {

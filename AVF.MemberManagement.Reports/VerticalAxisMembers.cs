@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.ReportsBusinessLogic;
 
@@ -9,6 +10,7 @@ namespace AVF.MemberManagement.Reports
         public VerticalAxisMembers() 
         {
             NrOfKeyColumns  = 3;   // 3 columns for Mitglieder
+            KeyColumn = 2;
             ActiveElementsOnly = true;
         }
 
@@ -18,25 +20,26 @@ namespace AVF.MemberManagement.Reports
         public override int MinDatabaseId
             => Globals.DatabaseWrapper.MinMitgliedsNr();
 
-        public override int ModelRange()
-            => DatabaseIdRange();
+        public override int GetNrOfDgvRows(TrainingParticipationModel tpModel)
+            => tpModel.GetNrOfActiveRows();
+
+        protected override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
+            => Globals.DatabaseWrapper.m_mitglieder.FindIndex(t => tn.MitgliedID == t.Id);
 
         public override int GetModelIndexFromTrainingsParticipation(TrainingsTeilnahme tn)
-            => Globals.DatabaseWrapper.m_mitglieder.FindIndex(t => tn.MitgliedID == t.Id);
+            => GetIdFromTrainingsParticipation( tn );
 
         private int GetDbIndexFromModelIndex(int iModelIndex)
             => iModelIndex;
 
-        public override void FillKeyCells( DataGridView dgv, TrainingParticipationModel tpModel)
+        public override void FillKeyHeaderCells(DataGridView dgv)
         {
             dgv.Columns[0].HeaderText = "Vorname";
             dgv.Columns[1].HeaderText = "Nachname";
             dgv.Columns[2].HeaderText = "Nr";
-
-            FillMainKeyCells(dgv, tpModel);
         }
 
-        protected override void FillHeaderCell( TrainingParticipationModel tpModel, DataGridView dgv, int iDgvRow, int iModelRow)
+        protected override void FillMainKeyCell( TrainingParticipationModel tpModel, DataGridView dgv, int iDgvRow, int iModelRow)
         {
             int      dbIndex  = GetDbIndexFromModelIndex(iModelRow);
             Mitglied mitglied = Globals.DatabaseWrapper.m_mitglieder[dbIndex];
@@ -45,7 +48,11 @@ namespace AVF.MemberManagement.Reports
             dgv[2, iDgvRow].Value = mitglied.Id;
         }
 
-        public override int GetRowKey( DataGridView dgv, int row)
-            => (int)dgv[2, row].Value;
+        public override string MouseKeyCellEvent(DateTime datStart, DateTime datEnd, int idMember, bool action)
+        {
+           return action
+               ? ReportTrainingsParticipation.Show(new ReportWeekVsCourses(datStart, datEnd, idMember))
+               : $"Klicken für Details zu Mitglied\n" + Globals.GetMemberDescription(idMember);
+        }
     }
 }
