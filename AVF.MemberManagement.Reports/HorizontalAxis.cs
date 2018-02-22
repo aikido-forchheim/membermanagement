@@ -13,7 +13,7 @@ namespace AVF.MemberManagement.Reports
 
         protected int[] m_DbIds;
 
-        protected HorizontalAxis( )
+        protected HorizontalAxis(int additionalElements = 0) : base( additionalElements )
             =>  m_DbIds = new int[ModelRange()];
 
         public int GetColKey(int iDgvCol)

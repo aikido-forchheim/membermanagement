@@ -59,7 +59,7 @@ namespace AVF.MemberManagement.Reports
             );
         }
 
-        protected virtual void ReportFormSize()      // define dimensions of DataGridView
+        private void ReportFormSize()      // define dimensions of DataGridView
         {
             m_dataGridView.RowCount = m_yAxis.GetNrOfDgvRows(m_tpModel);
             m_dataGridView.ColumnCount = m_yAxis.NrOfKeyColumns;
@@ -69,6 +69,8 @@ namespace AVF.MemberManagement.Reports
 
         protected override void ReportFormPopulate()    // Fill cells of DataGridView
         {
+            ReportFormSize();
+
             m_xAxis.FillHeaderCells(m_dataGridView, m_tpModel);
             m_yAxis.FillKeyHeaderCells(m_dataGridView);
             m_yAxis.FillMainKeyCells(m_dataGridView, m_tpModel);
@@ -77,19 +79,6 @@ namespace AVF.MemberManagement.Reports
                 m_yAxis.FillSumCells(m_dataGridView, m_tpModel);
                 FillMainArea();
             }
-        }
-
-        private void ReportFormLoad(System.Object sender, EventArgs e)
-        {
-            ReportFormSize();
-            ReportFormPopulate();
-
-            m_dataGridView.AutoSizeRowsMode            = DataGridViewAutoSizeRowsMode.AllCells;
-            m_dataGridView.AutoSizeColumnsMode         = DataGridViewAutoSizeColumnsMode.AllCells;
-            m_dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-
-            Controls.Add(m_dataGridView);
-            WindowState = FormWindowState.Maximized;
         }
 
         protected override string MouseCellEvent(int row, int col, bool action)

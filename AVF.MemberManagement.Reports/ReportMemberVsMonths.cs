@@ -3,19 +3,19 @@ using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
-    class ReportCoursesVsMonths : ReportTrainingsParticipation
+    class ReportMemberVsMonths : ReportTrainingsParticipation
     {
-        public ReportCoursesVsMonths(DateTime datStart, DateTime datEnd, int idMember)
+        public ReportMemberVsMonths(DateTime datStart, DateTime datEnd)
         {
             CreateModel
             (
                 datStart, datEnd,
                 new HorizontalAxisMonths(),
-                new VerticalAxisCourses(),
-                filter: tn => (idMember == -1) ? true : (idMember == tn.MitgliedID)
+                new VerticalAxisMembers(),
+                filter: tn => true
             );
 
-            m_label1.Text = "Überblick Kurse";
+            m_label1.Text = "Überblick Trainingsteilnahme";
             m_label2.Text = Globals.GetTimeRangeDescription(datStart, datEnd);
         }
     }

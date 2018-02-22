@@ -70,6 +70,9 @@
     <Compile Include="ReportCoursesVsMonths.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="ReportMemberVsMonths.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="ReportTrainingsParticipation.cs">
       <SubType>Form</SubType>
     </Compile>

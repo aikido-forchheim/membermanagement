@@ -8,12 +8,11 @@ namespace AVF.MemberManagement.Reports
 {
     class VerticalAxisCourses : VerticalAxis
     {
-        public VerticalAxisCourses()
+        public VerticalAxisCourses() : base( additionalElements: 1) // 1 additional column for trainings without course
         {
             NrOfKeyColumns = 2;
             KeyColumn = 0;
             ActiveElementsOnly = false;
-            AdditionalAxisElements = 1;  // 1 additional column for trainings without course
         }
 
         public override int MaxDatabaseId

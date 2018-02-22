@@ -10,6 +10,8 @@ namespace AVF.MemberManagement.Reports
 
         public int KeyColumn { get; protected set; }
 
+        protected VerticalAxis(int additionalElements = 0) : base(additionalElements) { }
+
         protected abstract void FillMainKeyCell(TrainingParticipationModel tpModel, DataGridView dgv, int iDgvRow, int iModelRow);
 
         public abstract int GetNrOfDgvRows(TrainingParticipationModel tpModel);

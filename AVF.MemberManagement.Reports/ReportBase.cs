@@ -8,11 +8,9 @@ namespace AVF.MemberManagement.Reports
         protected DataGridView m_dataGridView;
 
         public ReportBase()
-        {
-            Load += new EventHandler(ReportFormLoad);
-        }
+            => Load += new EventHandler(ReportFormLoad);
 
-        private void ReportFormLoad(System.Object sender, EventArgs e)
+        protected void ReportFormLoad(System.Object sender, EventArgs e)
         {
             ReportFormPopulate();
 
@@ -41,7 +39,7 @@ namespace AVF.MemberManagement.Reports
         protected virtual string MouseCellEvent(int row, int col, bool action)
             => String.Empty;
 
-        protected void CellMouseClick(Object sender, DataGridViewCellMouseEventArgs e)
+        private void CellMouseClick(Object sender, DataGridViewCellMouseEventArgs e)
             => MouseCellEvent(e.RowIndex, e.ColumnIndex, action: true);
 
         private void CellMouseEnter(object sender, DataGridViewCellEventArgs e)
@@ -54,6 +52,5 @@ namespace AVF.MemberManagement.Reports
            => iRow < 0;
 
         protected abstract void ReportFormPopulate();    // Fill cells of DataGridView
-
     }
 }

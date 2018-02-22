@@ -9,7 +9,8 @@ namespace AVF.MemberManagement.Reports
     class HorizontalAxisCourses : HorizontalAxis
     {
         public HorizontalAxisCourses()
-            => AdditionalAxisElements = 1;  // 1 additional column for trainings without course
+            : base(additionalElements : 1)     // 1 additional column for trainings without course
+        { }
 
         public override int GetNrOfDgvCols(TrainingParticipationModel tpModel)
             => ModelRange();  
@@ -24,12 +25,12 @@ namespace AVF.MemberManagement.Reports
             => Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID);
 
         private int GetModelIndexFromDbIndex(int iDbIndex)
-            => iDbIndex + AdditionalAxisElements;  // + 1 for special case: training without course
+            => iDbIndex + AdditionalAxisElements;
 
         private int GetDbIndexFromModelIndex(int iModelIndex)
         {
             Debug.Assert(iModelIndex > 0);
-            return iModelIndex - AdditionalAxisElements;  // - 1 for special case: training without course
+            return iModelIndex - AdditionalAxisElements;
         }
 
         protected override int GetModelIndexFromId(int idKurs)

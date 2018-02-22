@@ -7,7 +7,7 @@ namespace AVF.MemberManagement.Reports
 {
     class VerticalAxisMembers : VerticalAxis
     {
-        public VerticalAxisMembers() 
+        public VerticalAxisMembers()
         {
             NrOfKeyColumns  = 3;   // 3 columns for Mitglieder
             KeyColumn = 2;
