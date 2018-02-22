@@ -5,7 +5,7 @@
             <Label Text="Übungsleiter:">
             </Label>
             <StackLayout Orientation="Horizontal" Margin="0,0,0,0">
-                <Button Text="Rudi Schneider" BackgroundColor="#EEEEEE" HorizontalOptions="FillAndExpand">
+                <Button Text="Rudi Schneider" Command="{Binding ChangeTrainerCommand}" BackgroundColor="#EEEEEE" HorizontalOptions="FillAndExpand">
                 </Button>
                 <Button Text="+" BackgroundColor="#EEEEEE" WidthRequest="44" HorizontalOptions="End">
                 </Button>

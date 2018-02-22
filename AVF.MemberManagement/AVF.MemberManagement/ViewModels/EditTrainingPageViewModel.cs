@@ -41,11 +41,36 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _annotation, value);
         }
 
+        private int _trainerId;
+
+        public int TrainerId
+        {
+            get => _trainerId;
+            set => SetProperty(ref _trainerId, value);
+        }
+
+        private int _cotrainer1Id;
+
+        public int Cotrainer1Id
+        {
+            get => _cotrainer1Id;
+            set => SetProperty(ref _cotrainer1Id, value);
+        }
+
+        private int _cotrainer2Id;
+
+        public int Cotrainer2Id
+        {
+            get => _cotrainer2Id;
+            set => SetProperty(ref _cotrainer2Id, value);
+        }
+
         public EditTrainingPageViewModel(INavigationService navigationService, IRepository<Training> trainingsRepository, ILogger logger) : base(navigationService, logger)
         {
             _trainingsRepository = trainingsRepository;
 
             EnterParticipantsCommand = new DelegateCommand(EnterParticipants, CanEnterParticipants);
+            ChangeTrainerCommand = new DelegateCommand(ChangeTrainer, CanChangeTrainer);
         }
 
         public override void OnNavigatedTo(NavigationParameters parameters)
@@ -56,6 +81,10 @@ namespace AVF.MemberManagement.ViewModels
 
                 SelectedTraining = (TrainingsModel)parameters["SelectedTraining"];
                 SelectedDateString = (string)parameters["SelectedDateString"];
+
+                TrainerId = SelectedTraining.Class.Trainer.Id;
+                Cotrainer1Id = SelectedTraining.Class.Kotrainer1.Id;
+                Cotrainer2Id = SelectedTraining.Class.Kotrainer2.Id;
 
                 Title = $"{SelectedTraining.Class.Time} ({SelectedTraining.Class.Trainer.Vorname})";
 
@@ -90,8 +119,6 @@ namespace AVF.MemberManagement.ViewModels
                     //TODO: Update Traing on change of Bemerkung
                 }
 
-                //var enterParticipantsPageName = Globals.Idiom == Idiom.Phone ? nameof(EnterParticipantsPage) : nameof(EnterParticipantsTabletPage);
-                //await NavigationService.NavigateAsync(enterParticipantsPageName, new NavigationParameters { { "SelectedTraining", SelectedTraining }, { "SelectedDateString", SelectedDateString } });
                 await NavigationService.NavigateAsync(nameof(SaveParticipantsPage), new NavigationParameters { { "SelectedTraining", SelectedTraining }, { "SelectedDateString", SelectedDateString } });
             }
             catch (Exception ex)
@@ -101,6 +128,22 @@ namespace AVF.MemberManagement.ViewModels
         }
 
         private bool CanEnterParticipants()
+        {
+            return true;
+        }
+
+        #endregion
+
+        #region ChangeTrainerCommand
+
+        public ICommand ChangeTrainerCommand { get; }
+
+        private void ChangeTrainer()
+        {
+            
+        }
+
+        private bool CanChangeTrainer()
         {
             return true;
         }
