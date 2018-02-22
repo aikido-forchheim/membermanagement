@@ -32,9 +32,9 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="10*">
                                         </ColumnDefinition>
-                                        <ColumnDefinition Width="12*">
+                                        <ColumnDefinition Width="14*">
                                         </ColumnDefinition>
-                                        <ColumnDefinition Width="8*">
+                                        <ColumnDefinition Width="6*">
                                         </ColumnDefinition>
                                     </Grid.ColumnDefinitions>
                                     <StackLayout Orientation="Horizontal" VerticalOptions="Center" HorizontalOptions="Start">
