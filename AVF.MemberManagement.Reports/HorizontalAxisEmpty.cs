@@ -7,6 +7,6 @@ namespace AVF.MemberManagement.Reports
     class HorizontalAxisEmpty : HorizontalAxis
     {
         public HorizontalAxisEmpty()
-            => Hide = true;
+            => P_Hide = true;
     }
 }

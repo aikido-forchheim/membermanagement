@@ -60,10 +60,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AxisTypeCourse.cs" />
     <Compile Include="HorizontalAxis.cs" />
     <Compile Include="HorizontalAxisCourses.cs" />
     <Compile Include="HorizontalAxisEmpty.cs" />
     <Compile Include="HorizontalAxisMonths.cs" />
+    <Compile Include="AxisTypeMember.cs" />
+    <Compile Include="AxisTypeMonth.cs" />
     <Compile Include="ReportBase.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -94,6 +97,7 @@
     <Compile Include="ReportWeekVsCourses.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="AxisTypeTraining.cs" />
     <Compile Include="VerticalAxisCourses.cs" />
     <Compile Include="VerticalAxisMembers.cs" />
     <Compile Include="Program.cs" />
@@ -101,6 +105,7 @@
     <Compile Include="HorizontalAxisTrainings.cs" />
     <Compile Include="VerticalAxis.cs" />
     <Compile Include="VerticalAxisWeeks.cs" />
+    <Compile Include="AxisTypeWeek.cs" />
     <EmbeddedResource Include="ReportTrainingsParticipation.resx">
       <DependentUpon>ReportTrainingsParticipation.cs</DependentUpon>
     </EmbeddedResource>

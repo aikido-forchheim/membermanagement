@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Axis.cs" />
+    <Compile Include="AxisType.cs" />
     <Compile Include="DatabaseWrapper.cs" />
     <Compile Include="Examinations.cs" />
     <Compile Include="Globals.cs" />

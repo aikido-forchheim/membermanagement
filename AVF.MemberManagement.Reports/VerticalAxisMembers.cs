@@ -9,25 +9,17 @@ namespace AVF.MemberManagement.Reports
     {
         public VerticalAxisMembers()
         {
-            NrOfKeyColumns  = 3;   // 3 columns for Mitglieder
-            KeyColumn = 2;
-            ActiveElementsOnly = true;
+            P_NrOfKeyColumns  = 3;   // 3 columns for Mitglieder
+            P_KeyColumn = 2;
+            P_ActiveElementsOnly = true;
+            P_AxisType = new AxisTypeMember();
         }
-
-        public override int MaxDatabaseId
-            => Globals.DatabaseWrapper.MaxMitgliedsNr();
-
-        public override int MinDatabaseId
-            => Globals.DatabaseWrapper.MinMitgliedsNr();
 
         public override int GetNrOfDgvRows(TrainingParticipationModel tpModel)
             => tpModel.GetNrOfActiveRows();
 
-        protected override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
-            => Globals.DatabaseWrapper.m_mitglieder.FindIndex(t => tn.MitgliedID == t.Id);
-
         public override int GetModelIndexFromTrainingsParticipation(TrainingsTeilnahme tn)
-            => GetIdFromTrainingsParticipation( tn );
+            => P_AxisType.GetIdFromTrainingsParticipation( tn );
 
         private int GetDbIndexFromModelIndex(int iModelIndex)
             => iModelIndex;
@@ -46,13 +38,6 @@ namespace AVF.MemberManagement.Reports
             dgv[0, iDgvRow].Value = mitglied.Vorname;
             dgv[1, iDgvRow].Value = mitglied.Nachname;
             dgv[2, iDgvRow].Value = mitglied.Id;
-        }
-
-        public override string MouseKeyCellEvent(DateTime datStart, DateTime datEnd, int idMember, bool action)
-        {
-           return action
-               ? ReportTrainingsParticipation.Show(new ReportWeekVsCourses(datStart, datEnd, idMember))
-               : $"Klicken für Details zu Mitglied\n" + Globals.GetMemberDescription(idMember);
         }
     }
 }

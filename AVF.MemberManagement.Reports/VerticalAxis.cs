@@ -6,9 +6,9 @@ namespace AVF.MemberManagement.Reports
 {
     public abstract class VerticalAxis : Axis
     {
-        public int NrOfKeyColumns { get; protected set; }
+        public int P_NrOfKeyColumns { get; protected set; }
 
-        public int KeyColumn { get; protected set; }
+        public int P_KeyColumn { get; protected set; }
 
         protected VerticalAxis(int additionalElements = 0) : base(additionalElements) { }
 
@@ -18,15 +18,13 @@ namespace AVF.MemberManagement.Reports
 
         public abstract void FillKeyHeaderCells(DataGridView dgv);
 
-        public abstract string MouseKeyCellEvent(DateTime datStart, DateTime datEnd, int id, bool action);
-
         public void FillMainKeyCells(DataGridView dgv, TrainingParticipationModel tpModel)
         {
             int iDgvRow = 0;
             tpModel.ForAllRows
             (
                 action: iModelRow => FillMainKeyCell(tpModel, dgv, iDgvRow++, iModelRow),
-                activeRowsOnly: ActiveElementsOnly
+                activeRowsOnly: P_ActiveElementsOnly
             );
         }
 
@@ -36,7 +34,7 @@ namespace AVF.MemberManagement.Reports
             tpModel.ForAllRows
             (
                 iModelRow => dgv[dgv.ColumnCount - 1, iDgvRow++].Value = tpModel.GetRowSum(iModelRow),
-                ActiveElementsOnly
+                P_ActiveElementsOnly
             );
         }
     }
