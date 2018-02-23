@@ -5,9 +5,9 @@
             <Label Text="Übungsleiter:">
             </Label>
             <StackLayout Orientation="Horizontal" Margin="0,0,0,0">
-                <Button Text="Rudi Schneider" Command="{Binding ChangeTrainerCommand}" Style="{StaticResource Button}" HorizontalOptions="FillAndExpand">
+                <Button Text="{Binding Trainer.Name}" Command="{Binding ChangeTrainerCommand}" Style="{StaticResource Button}" HorizontalOptions="FillAndExpand">
                 </Button>
-                <Button Text="+" BackgroundColor="#EEEEEE" WidthRequest="44" HorizontalOptions="End">
+                <Button Text="+" Style="{StaticResource Button}" WidthRequest="44" HorizontalOptions="End">
                 </Button>
             </StackLayout>
         </StackLayout>

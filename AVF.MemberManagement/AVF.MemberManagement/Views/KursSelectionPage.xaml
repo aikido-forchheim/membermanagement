@@ -41,9 +41,7 @@
                                         <userControls:BigLabel Text="{Binding Class.Time}" />
                                     </StackLayout>
                                     <StackLayout Orientation="Horizontal" VerticalOptions="Center" HorizontalOptions="Start" Grid.Column="1">
-                                        <userControls:BigLabel Text="{Binding Class.Trainer.Vorname}">
-                                        </userControls:BigLabel>
-                                        <userControls:BigLabel Text="{Binding Class.Trainer.Nachname}">
+                                        <userControls:BigLabel Text="{Binding Class.Trainer.Name}">
                                         </userControls:BigLabel>
                                     </StackLayout>
                                     <StackLayout Orientation="Horizontal" VerticalOptions="Center" HorizontalOptions="End" Grid.Column="2">

@@ -31,6 +31,42 @@ namespace AVF.MemberManagement.StandardLibrary.Tbo
             set;
         }
 
+        public string Rufname
+        {
+            get;
+            set;
+        }
+
+        [JsonIgnore]
+        public string Name
+        {
+            get
+            {
+                var vorname = Vorname;
+                if (!string.IsNullOrEmpty(Rufname))
+                {
+                    vorname = Rufname;
+                }
+
+                return $"{vorname} {Nachname}";
+            }
+        }
+
+        [JsonIgnore]
+        public string FirstName
+        {
+            get
+            {
+                var vorname = Vorname;
+                if (!string.IsNullOrEmpty(Rufname))
+                {
+                    vorname = Rufname;
+                }
+
+                return $"{vorname}";
+            }
+        }
+
         public DateTime Geburtsdatum
         {
             get;

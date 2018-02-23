@@ -15,6 +15,7 @@ namespace AVF.MemberManagement.ViewModels
 {
     public class EditTrainingPageViewModel : ViewModelBase
     {
+        private readonly IRepository<Mitglied> _mitglieder;
         private readonly IRepository<Training> _trainingsRepository;
 
         private string _selectedDate;
@@ -41,39 +42,40 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _annotation, value);
         }
 
-        private int _trainerId;
+        private Mitglied _trainer;
 
-        public int TrainerId
+        public Mitglied Trainer
         {
-            get => _trainerId;
-            set => SetProperty(ref _trainerId, value);
+            get => _trainer;
+            set => SetProperty(ref _trainer, value);
         }
 
-        private int _cotrainer1Id;
+        private Mitglied _cotrainer1;
 
-        public int Cotrainer1Id
+        public Mitglied Cotrainer1
         {
-            get => _cotrainer1Id;
-            set => SetProperty(ref _cotrainer1Id, value);
+            get => _cotrainer1;
+            set => SetProperty(ref _cotrainer1, value);
         }
 
-        private int _cotrainer2Id;
+        private Mitglied _cotrainer2;
 
-        public int Cotrainer2Id
+        public Mitglied Cotrainer2
         {
-            get => _cotrainer2Id;
-            set => SetProperty(ref _cotrainer2Id, value);
+            get => _cotrainer2;
+            set => SetProperty(ref _cotrainer2, value);
         }
 
-        public EditTrainingPageViewModel(INavigationService navigationService, IRepository<Training> trainingsRepository, ILogger logger) : base(navigationService, logger)
+        public EditTrainingPageViewModel(INavigationService navigationService, IRepository<Mitglied> mitglieder, IRepository<Training> trainingsRepository, ILogger logger) : base(navigationService, logger)
         {
+            _mitglieder = mitglieder;
             _trainingsRepository = trainingsRepository;
 
             EnterParticipantsCommand = new DelegateCommand(EnterParticipants, CanEnterParticipants);
             ChangeTrainerCommand = new DelegateCommand(ChangeTrainer, CanChangeTrainer);
         }
 
-        public override void OnNavigatedTo(NavigationParameters parameters)
+        public override async void OnNavigatedTo(NavigationParameters parameters)
         {
             try
             {
@@ -82,13 +84,21 @@ namespace AVF.MemberManagement.ViewModels
                 SelectedTraining = (TrainingsModel)parameters["SelectedTraining"];
                 SelectedDateString = (string)parameters["SelectedDateString"];
 
-                TrainerId = SelectedTraining.Class.Trainer.Id;
-                Cotrainer1Id = SelectedTraining.Class.Kotrainer1.Id;
-                Cotrainer2Id = SelectedTraining.Class.Kotrainer2.Id;
-
-                Title = $"{SelectedTraining.Class.Time} ({SelectedTraining.Class.Trainer.Vorname})";
+                Title = $"{SelectedTraining.Class.Time} ({SelectedTraining.Class.Trainer.FirstName})";
 
                 Annotation = SelectedTraining.Training.Bemerkung; //erst beim weiter zurück an die Bemerkung binden
+
+                Trainer = await _mitglieder.GetAsync(SelectedTraining.Training.Trainer);
+
+                if (SelectedTraining.Training.Kotrainer1 != null && SelectedTraining.Training.Kotrainer1 != -1)
+                {
+                    Cotrainer1 = await _mitglieder.GetAsync((int)SelectedTraining.Training.Kotrainer1);
+                }
+
+                if (SelectedTraining.Training.Kotrainer2 != null && SelectedTraining.Training.Kotrainer2 != -1)
+                {
+                    Cotrainer2 = await _mitglieder.GetAsync((int)SelectedTraining.Training.Kotrainer2);
+                }
             }
             catch (Exception ex)
             {
@@ -140,7 +150,7 @@ namespace AVF.MemberManagement.ViewModels
 
         private void ChangeTrainer()
         {
-            
+
         }
 
         private bool CanChangeTrainer()
