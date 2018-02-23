@@ -5,17 +5,17 @@
             <Label Text="Übungsleiter:">
             </Label>
             <StackLayout Orientation="Horizontal" Margin="0,0,0,0">
-                <Button Text="Rudi Schneider" Command="{Binding ChangeTrainerCommand}" BackgroundColor="#EEEEEE" HorizontalOptions="FillAndExpand">
+                <Button Text="Rudi Schneider" Command="{Binding ChangeTrainerCommand}" Style="{StaticResource Button}" HorizontalOptions="FillAndExpand">
                 </Button>
                 <Button Text="+" BackgroundColor="#EEEEEE" WidthRequest="44" HorizontalOptions="End">
                 </Button>
             </StackLayout>
         </StackLayout>
-        <StackLayout WidthRequest="256" Margin="0,0,0,64">
-            <Entry Text="" FontSize="48" BackgroundColor="#FFFFFF" HeightRequest="128">
-            </Entry>
+        <StackLayout WidthRequest="384" Margin="0,64,0,64">
+            <Editor Text="{Binding Annotation}" HeightRequest="128">
+            </Editor>
         </StackLayout>
-        <Button Text="Weiter" WidthRequest="256" Command="{Binding EnterParticipantsCommand}">
+        <Button Text="Weiter" WidthRequest="256" Command="{Binding EnterParticipantsCommand}" Style="{StaticResource Button}">
         </Button>
     </StackLayout>
 </ContentPage>

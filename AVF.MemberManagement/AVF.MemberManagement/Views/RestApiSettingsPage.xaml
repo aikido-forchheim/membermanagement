@@ -29,15 +29,15 @@
             <Entry Grid.Row="2" Grid.Column="1" Text="{Binding AccountService.RestApiAccount.Password}" IsPassword="true" Keyboard="Text">
             </Entry>
         </Grid>
-        <Button Text="Test" Command="{Binding ValidateCommand}">
+        <Button Text="Test" Command="{Binding ValidateCommand}" Style="{StaticResource Button}">
         </Button>
-        <Button Text="Speichern" Command="{Binding SaveCommand}">
+        <Button Text="Speichern" Command="{Binding SaveCommand}" Style="{StaticResource Button}">
         </Button>
-        <Button Text="Zurück" Command="{Binding BackCommand}">
+        <Button Text="Zurück" Command="{Binding BackCommand}" Style="{StaticResource Button}">
         </Button>
         <Entry Text="{Binding PasswordForAdvancedSettings}" IsPassword="true" Keyboard="Text">
         </Entry>
-        <Button Text="AdvancedSettings" Command="{Binding AdvancedSettingsCommand}">
+        <Button Text="AdvancedSettings" Command="{Binding AdvancedSettingsCommand}" Style="{StaticResource Button}">
         </Button>
         <Label Text="{Binding Message}">
         </Label>

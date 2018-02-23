@@ -65,7 +65,7 @@
                 <Label Text="{Binding SelectedTraining.Class.Time}" FontAttributes="Bold" HorizontalOptions="Center"></Label>
             </StackLayout>
             <StackLayout Grid.Row="2" VerticalOptions="Center" HorizontalOptions="Center">
-                <Button x:Name="ButtonEnterParticipants" Text="Teilnehmer eintragen" WidthRequest="256" Command="{Binding EnterParticipantsCommand}">
+                <Button x:Name="ButtonEnterParticipants" Text="Teilnehmer eintragen" Style="{StaticResource Button}" Command="{Binding EnterParticipantsCommand}">
                 </Button>
             </StackLayout>
         </Grid>

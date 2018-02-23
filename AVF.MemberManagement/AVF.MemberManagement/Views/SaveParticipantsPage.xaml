@@ -65,8 +65,8 @@
                 <ColumnDefinition>
                 </ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Button Text="Nein" HeightRequest="32" VerticalOptions="Center"></Button>
-            <Button Grid.Column="1" Text="Ja" HeightRequest="32" VerticalOptions="Center"></Button>
+            <Button Text="Nein" VerticalOptions="Center" Style="{StaticResource Button}"></Button>
+            <Button Grid.Column="1" Text="Ja" VerticalOptions="Center" Style="{StaticResource Button}"></Button>
         </Grid>
     </Grid>
 </ContentPage>

@@ -35,11 +35,11 @@
                     <ColumnDefinition Width="32">
                     </ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Text="X" Command="{Binding ClearSearchTextCommand}">
+                <Button Grid.Column="0" Text="X" Command="{Binding ClearSearchTextCommand}" Style="{StaticResource Button}">
                 </Button>
                 <Entry Grid.Column="1" x:Name="EntrySearchText" Text="{Binding SearchText}" Keyboard="Email" HeightRequest="24" BackgroundColor="#EEEEEE" Completed="Handle_Completed">
                 </Entry>
-                <Button Grid.Column="2" Text="+" FontAttributes="Bold" Command="{Binding AddAndClearSearchTextCommand}">
+                <Button Grid.Column="2" Text="+" FontAttributes="Bold" Command="{Binding AddAndClearSearchTextCommand}" Style="{StaticResource Button}">
                 </Button>
             </Grid>
         </Grid>

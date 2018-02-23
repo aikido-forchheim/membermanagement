@@ -66,7 +66,7 @@
                 <StackLayout Grid.Row="2" HorizontalOptions="Center" VerticalOptions="Center">
                     <Label Text="Bitte erst Einstellungen setzen:" IsVisible="{Binding IsRestApiAccountSet, Converter={StaticResource BooleanNotConverter}}">
                     </Label>
-                    <Button Text="Einstellungen" Command="{Binding SettingsCommand}">
+                    <Button Text="Einstellungen" Command="{Binding SettingsCommand}" Style="{StaticResource Button}">
                     </Button>
                 </StackLayout>
             </Grid>
