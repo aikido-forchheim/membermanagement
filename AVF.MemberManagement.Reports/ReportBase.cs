@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace AVF.MemberManagement.Reports
@@ -8,7 +9,10 @@ namespace AVF.MemberManagement.Reports
         protected DataGridView m_dataGridView;
 
         public ReportBase()
-            => Load += new EventHandler(ReportFormLoad);
+        { 
+            Load += new EventHandler(ReportFormLoad);
+            Resize += new EventHandler(ReportResize);
+        }
 
         protected void ReportFormLoad(System.Object sender, EventArgs e)
         {
@@ -23,7 +27,19 @@ namespace AVF.MemberManagement.Reports
             m_dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 
             Controls.Add(m_dataGridView);
+           
             WindowState = FormWindowState.Maximized;
+
+        }
+
+        private void ReportResize(object sender, System.EventArgs e)
+        {
+            Control control = (Control)sender;
+
+            int newWidth = m_dataGridView.Columns.GetColumnsWidth(DataGridViewElementStates.None) + 20;
+            int maxHeight = m_dataGridView.Rows.GetRowsHeight(DataGridViewElementStates.None) + m_dataGridView.ColumnHeadersHeight + 2;
+            int newHeight = Math.Min( ClientSize.Height - m_dataGridView.Location.Y - 10, maxHeight);
+            m_dataGridView.Size = new System.Drawing.Size(newWidth, newHeight);
         }
 
         protected void ToolTip(DataGridViewCellEventArgs e, bool showTip)
@@ -36,8 +52,7 @@ namespace AVF.MemberManagement.Reports
             cell.ToolTipText = showTip ? MouseCellEvent(e.RowIndex, e.ColumnIndex, action: false) : String.Empty;
         }
 
-        protected virtual string MouseCellEvent(int row, int col, bool action)
-            => String.Empty;
+        protected abstract string MouseCellEvent(int row, int col, bool action);
 
         private void CellMouseClick(Object sender, DataGridViewCellMouseEventArgs e)
             => MouseCellEvent(e.RowIndex, e.ColumnIndex, action: true);

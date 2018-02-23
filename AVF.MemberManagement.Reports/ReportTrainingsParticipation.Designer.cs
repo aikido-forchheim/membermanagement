@@ -42,9 +42,8 @@ namespace AVF.MemberManagement.Reports
             this.m_dataGridView.AllowUserToAddRows = false;
             this.m_dataGridView.AllowUserToDeleteRows = false;
             this.m_dataGridView.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable;
-            this.m_dataGridView.Dock = System.Windows.Forms.DockStyle.Right;
             this.m_dataGridView.EnableHeadersVisualStyles = false;
-            this.m_dataGridView.Location = new System.Drawing.Point(-1, 0);
+            this.m_dataGridView.Location = new System.Drawing.Point(10, 100);
             this.m_dataGridView.MultiSelect = false;
             this.m_dataGridView.Name = "m_dataGridView";
             this.m_dataGridView.RowHeadersVisible = false;
@@ -57,7 +56,7 @@ namespace AVF.MemberManagement.Reports
             // 
             this.m_label1.AutoSize = true;
             this.m_label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.m_label1.Location = new System.Drawing.Point(66, 44);
+            this.m_label1.Location = new System.Drawing.Point(20, 40);
             this.m_label1.Name = "m_label1";
             this.m_label1.Size = new System.Drawing.Size(111, 37);
             this.m_label1.TabIndex = 1;
@@ -67,7 +66,7 @@ namespace AVF.MemberManagement.Reports
             // 
             this.m_label2.AutoSize = true;
             this.m_label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.m_label2.Location = new System.Drawing.Point(66, 131);
+            this.m_label2.Location = new System.Drawing.Point(230, 40);
             this.m_label2.Name = "m_label2";
             this.m_label2.Size = new System.Drawing.Size(113, 37);
             this.m_label2.TabIndex = 2;
@@ -77,7 +76,7 @@ namespace AVF.MemberManagement.Reports
             // 
             this.m_label3.AutoSize = true;
             this.m_label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.m_label3.Location = new System.Drawing.Point(66, 217);
+            this.m_label3.Location = new System.Drawing.Point(450, 40);
             this.m_label3.Name = "m_label3";
             this.m_label3.Size = new System.Drawing.Size(113, 37);
             this.m_label3.TabIndex = 3;

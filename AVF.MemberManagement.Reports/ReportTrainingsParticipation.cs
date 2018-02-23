@@ -5,7 +5,7 @@ using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
-    public abstract partial class ReportTrainingsParticipation : ReportBase
+    public partial class ReportTrainingsParticipation : ReportBase
     {
         protected VerticalAxis               m_yAxis   { get; private set; }
         protected HorizontalAxis             m_xAxis   { get; private set; }
@@ -15,9 +15,7 @@ namespace AVF.MemberManagement.Reports
         protected DateTime m_datEnd   { get; private set; }
 
         public ReportTrainingsParticipation()
-        {
-            InitializeComponent();
-        }
+            =>InitializeComponent();
 
         protected void CreateModel
         (

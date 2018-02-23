@@ -160,9 +160,9 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         }
 
         public Kurs KursFromId(int id)
-            => m_kurs.Single(s => s.Id == id);     
-        
-        public Graduierung GraduierungFromId(int id) 
+            => m_kurs.Single(s => s.Id == id);
+
+        public Graduierung GraduierungFromId(int id)
             => m_graduierung.Single(s => s.Id == id);
 
         public List<TrainingsTeilnahme> Filter(List<TrainingsTeilnahme> list, DateTime datStart)
