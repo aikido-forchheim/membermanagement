@@ -79,25 +79,36 @@ namespace AVF.MemberManagement.ViewModels
         {
             try
             {
-                if (!parameters.ContainsKey("SelectedTraining")) return;
-
-                SelectedTraining = (TrainingsModel)parameters["SelectedTraining"];
-                SelectedDateString = (string)parameters["SelectedDateString"];
-
-                Title = $"{SelectedTraining.Class.Time} ({SelectedTraining.Class.Trainer.FirstName})";
-
-                Annotation = SelectedTraining.Training.Bemerkung; //erst beim weiter zurück an die Bemerkung binden
-
-                Trainer = await _mitglieder.GetAsync(SelectedTraining.Training.Trainer);
-
-                if (SelectedTraining.Training.Kotrainer1 != null && SelectedTraining.Training.Kotrainer1 != -1)
+                if (parameters.ContainsKey("SelectedTraining"))
                 {
-                    Cotrainer1 = await _mitglieder.GetAsync((int)SelectedTraining.Training.Kotrainer1);
+                    SelectedTraining = (TrainingsModel)parameters["SelectedTraining"];
+                    SelectedDateString = (string)parameters["SelectedDateString"];
+
+                    Title = $"{SelectedTraining.Class.Time} ({SelectedTraining.Class.Trainer.FirstName})";
+
+                    Annotation = SelectedTraining.Training.Bemerkung; //erst beim weiter zurück an die Bemerkung binden
+
+                    Trainer = await _mitglieder.GetAsync(SelectedTraining.Training.Trainer);
+
+                    if (SelectedTraining.Training.Kotrainer1 != null && SelectedTraining.Training.Kotrainer1 != -1)
+                    {
+                        Cotrainer1 = await _mitglieder.GetAsync((int)SelectedTraining.Training.Kotrainer1);
+                    }
+
+                    if (SelectedTraining.Training.Kotrainer2 != null && SelectedTraining.Training.Kotrainer2 != -1)
+                    {
+                        Cotrainer2 = await _mitglieder.GetAsync((int)SelectedTraining.Training.Kotrainer2);
+                    }
                 }
-
-                if (SelectedTraining.Training.Kotrainer2 != null && SelectedTraining.Training.Kotrainer2 != -1)
+                else if (parameters.ContainsKey("Trainer"))
                 {
-                    Cotrainer2 = await _mitglieder.GetAsync((int)SelectedTraining.Training.Kotrainer2);
+                    var trainer = (Mitglied)parameters["Trainer"];
+                    var cotrainer1 = (Mitglied)parameters["Cotrainer1"];
+                    var cotrainer2 = (Mitglied)parameters["Cotrainer2"];
+
+                    SelectedTraining.Training.Trainer = trainer.Id;
+                    SelectedTraining.Training.Kotrainer1 = cotrainer1?.Id;
+                    SelectedTraining.Training.Kotrainer2 = cotrainer2?.Id;
                 }
             }
             catch (Exception ex)
@@ -150,7 +161,9 @@ namespace AVF.MemberManagement.ViewModels
 
         private void ChangeTrainer()
         {
+            NavigationParameters navigationParameters = new NavigationParameters { { "SelectedDateString", SelectedDateString }, { "SelectedTraining", SelectedTraining }, { "Trainer", Trainer }, { "Cotrainer1", Cotrainer1 }, { "Cotrainer2", Cotrainer2 } };
 
+            NavigationService.NavigateAsync(nameof(SelectTrainerPage), navigationParameters);
         }
 
         private bool CanChangeTrainer()
