@@ -11,6 +11,6 @@ namespace AVF.MemberManagement.StandardLibrary.Models
 
         public Training Training { get; set; }
 
-        public List<TrainingsTeilnahme> Participations { get; set; }
+        public IEnumerable<TrainingsTeilnahme> Participations { get; set; }
     }
 }

@@ -178,9 +178,9 @@ namespace AVF.MemberManagement.ViewModels
 
         #endregion
 
-        private static List<TrainingsTeilnahme> GetParticipantListForTraining(List<TrainingsTeilnahme> appearances, Training training)
+        private static IEnumerable<TrainingsTeilnahme> GetParticipantListForTraining(IEnumerable<TrainingsTeilnahme> appearances, Training training)
         {
-            List<TrainingsTeilnahme> participations;
+            IEnumerable<TrainingsTeilnahme> participations;
 
             if (training != null && training.Id != new Training().Id) //new Training().Id == 0
             {

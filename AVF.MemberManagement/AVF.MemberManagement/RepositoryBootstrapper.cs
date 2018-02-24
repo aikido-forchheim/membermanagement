@@ -48,8 +48,8 @@ namespace AVF.MemberManagement
             _container.RegisterType<IRepository<TrainerErnennung>, Repository<TrainerErnennung>>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IRepository<TrainerStufe>, Repository<TrainerStufe>>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IRepository<Training>, CachedRepository<Training>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IRepository<TrainingsTeilnahme>, CachedRepository<TrainingsTeilnahme>>();
-            _container.RegisterType<IRepository<User>, CachedRepository<User>>();
+            _container.RegisterType<IRepository<TrainingsTeilnahme>, CachedRepository<TrainingsTeilnahme>>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<IRepository<User>, CachedRepository<User>>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IRepository<Wochentag>, CachedRepository<Wochentag>>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IRepository<Wohnung>, Repository<Wohnung>>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IRepository<Wohnungsbezug>, Repository<Wohnungsbezug>>(new ContainerControlledLifetimeManager());
@@ -70,7 +70,7 @@ namespace AVF.MemberManagement
             _container.RegisterType<IProxy<TrainerErnennung>, Proxy<TblTrainerErnennungen, TrainerErnennung>>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IProxy<TrainerStufe>, Proxy<TblTrainerStufen, TrainerStufe>>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IProxy<Training>, Proxy<TblTrainings, Training>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<TrainingsTeilnahme>, Proxy<TblTrainingsTeilnahmen, TrainingsTeilnahme>>();
+            _container.RegisterType<IProxy<TrainingsTeilnahme>, Proxy<TblTrainingsTeilnahmen, TrainingsTeilnahme>>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IProxy<User>, Proxy<TblUsers, User>>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IProxy<Wochentag>, Proxy<TblWochentage, Wochentag>>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IProxy<Wohnung>, Proxy<TblWohnungen, Wohnung>>(new ContainerControlledLifetimeManager());
@@ -92,7 +92,7 @@ namespace AVF.MemberManagement
             _container.RegisterType<IProxy<TrainerErnennung>, FileProxy<TblTrainerErnennungen, TrainerErnennung>>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IProxy<TrainerStufe>, FileProxy<TblTrainerStufen, TrainerStufe>>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IProxy<Training>, FileProxy<TblTrainings, Training>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<TrainingsTeilnahme>, FileProxy<TblTrainingsTeilnahmen, TrainingsTeilnahme>>();
+            _container.RegisterType<IProxy<TrainingsTeilnahme>, FileProxy<TblTrainingsTeilnahmen, TrainingsTeilnahme>>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IProxy<User>, FileProxy<TblUsers, User>>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IProxy<Wochentag>, FileProxy<TblWochentage, Wochentag>>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IProxy<Wohnung>, FileProxy<TblWohnungen, Wohnung>>(new ContainerControlledLifetimeManager());
