@@ -1,10 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             xmlns:userControls="clr-namespace:AVF.MemberManagement.UserControls;assembly=AVF.MemberManagement"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="AVF.MemberManagement.Views.SelectTrainerPage"
              Title="{Binding Title}"
              >
-  
-</ContentPage>
+    <ContentPage Title="Übungsleiter">
+        <userControls:ParticipantsView></userControls:ParticipantsView>
+    </ContentPage>
+    <ContentPage Title="Regelmäßige Übungsleiter">
+        <userControls:PreviousParticipantsView></userControls:PreviousParticipantsView>
+    </ContentPage>
+    <ContentPage Title="Mitglieder suchen">
+        <userControls:FindMembersView></userControls:FindMembersView>
+    </ContentPage>
+</TabbedPage>

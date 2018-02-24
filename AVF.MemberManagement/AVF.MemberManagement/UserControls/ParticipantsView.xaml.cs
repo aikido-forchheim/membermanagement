@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,7 +20,14 @@ namespace AVF.MemberManagement.UserControls
 
         private void Parent_OnItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            ((EnterParticipantsPageViewModel) BindingContext).RemoveParticipantCommand.Execute(null);
+            try
+            {
+                ((EnterParticipantsPageViewModel)BindingContext).RemoveParticipantCommand.Execute(null);
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception);
+            }
         }
     }
 }

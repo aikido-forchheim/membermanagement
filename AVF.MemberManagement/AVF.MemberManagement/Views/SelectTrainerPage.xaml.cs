@@ -2,7 +2,7 @@
 
 namespace AVF.MemberManagement.Views
 {
-    public partial class SelectTrainerPage : ContentPage
+    public partial class SelectTrainerPage
     {
         public SelectTrainerPage()
         {

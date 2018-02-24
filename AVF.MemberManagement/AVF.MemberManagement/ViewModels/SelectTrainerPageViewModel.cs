@@ -53,6 +53,14 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _cotrainer2, value);
         }
 
+        private List<Mitglied> _trainers = new List<Mitglied>();
+
+        public List<Mitglied> Participants //TODO: Rename back to Trainer, and allow override of Binding in ParticipantsView, or rename to something more gerenic like MemberSelection
+        {
+            get => _trainers;
+            set => SetProperty(ref _trainers, value);
+        }
+
         public SelectTrainerPageViewModel(INavigationService navigationService, ILogger logger) : base(navigationService, logger)
         {
 
@@ -68,6 +76,19 @@ namespace AVF.MemberManagement.ViewModels
                 Trainer = (Mitglied)parameters["Trainer"];
                 Cotrainer1 = (Mitglied)parameters["Cotrainer1"];
                 Cotrainer2 = (Mitglied)parameters["Cotrainer2"];
+
+                Participants.Clear();
+                Participants.Add(Trainer);
+
+                if (Cotrainer1 != null)
+                {
+                    Participants.Add(Cotrainer1);
+                }
+
+                if (Cotrainer2 != null)
+                {
+                    Participants.Add(Cotrainer2);
+                }
 
                 Title = $"{SelectedTraining.Class.Time} ({SelectedTraining.Class.Trainer.FirstName})";
             }
