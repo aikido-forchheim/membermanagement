@@ -1,4 +1,5 @@
-﻿using AVF.MemberManagement.ViewModels;
+﻿using System;
+using AVF.MemberManagement.ViewModels;
 using Xamarin.Forms;
 
 namespace AVF.MemberManagement.Views
@@ -61,6 +62,11 @@ namespace AVF.MemberManagement.Views
                     innerGrid.Children.Add(controlsGrid, 0, 1);
                 }
             }
+        }
+
+        private void EntryUsername_OnCompleted(object sender, EventArgs e)
+        {
+            EntryPassword.Focus();
         }
     }
 }
