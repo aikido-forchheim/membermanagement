@@ -8,7 +8,13 @@
       <Style x:Key="Button" TargetType="Button">
         <Setter Property="BackgroundColor" Value="#DDDDDD"></Setter>
         <Setter Property="WidthRequest" Value="256" />
-        <Setter Property="HeightRequest" Value="32" />
+        <Setter Property="HeightRequest">
+          <OnPlatform x:TypeArguments="x:Double">
+            <On Platform="iOS" Value="32"></On>
+            <On Platform="Android" Value="36"></On>
+            <On Platform="UWP" Value="32"></On>
+          </OnPlatform>
+        </Setter>
       </Style>
     </ResourceDictionary>
   </prism:PrismApplication.Resources>
