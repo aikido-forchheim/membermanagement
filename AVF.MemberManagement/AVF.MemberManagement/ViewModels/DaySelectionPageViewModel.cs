@@ -16,6 +16,9 @@ namespace AVF.MemberManagement.ViewModels
     public class DaySelectionPageViewModel : ViewModelBase
     {
         private readonly IRepository<Wochentag> _wochentageRepository;
+        private readonly IRepository<TrainingsTeilnahme> _trainingsTeilnahmenRepository;
+        private readonly IRepository<Training> _trainingRepository;
+        private readonly IRepository<Mitglied> _mitgliederRepository;
         private DateTime _selectedDate = DateTime.Now;
 
         public DateTime SelectedDate
@@ -58,9 +61,12 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _buttonText, value);
         }
 
-        public DaySelectionPageViewModel(INavigationService navigationService, IRepository<Wochentag> wochentageRepository, ILogger logger) : base(navigationService, logger)
+        public DaySelectionPageViewModel(INavigationService navigationService, IRepository<Wochentag> wochentageRepository, ILogger logger, IRepository<TrainingsTeilnahme> trainingsTeilnahmenRepository, IRepository<Training> trainingRepository, IRepository<Mitglied> mitgliederRepository) : base(navigationService, logger)
         {
             _wochentageRepository = wochentageRepository;
+            _trainingsTeilnahmenRepository = trainingsTeilnahmenRepository;
+            _trainingRepository = trainingRepository;
+            _mitgliederRepository = mitgliederRepository;
 
             Title = "Trainingsteilnahme";
 
@@ -92,5 +98,13 @@ namespace AVF.MemberManagement.ViewModels
         }
 
         #endregion
+
+        public override async void OnNavigatedTo(NavigationParameters parameters)
+        {
+            //Start caching
+            //await _mitgliederRepository.GetAsync();
+            //await _trainingRepository.GetAsync();
+            await _trainingsTeilnahmenRepository.GetAsync();
+        }
     }
 }

@@ -70,7 +70,7 @@ namespace AVF.MemberManagement.ViewModels
                 //Start caching
                 //await _mitgliederRepository.GetAsync();
                 await _trainingRepository.GetAsync();
-                await _trainingsTeilnahmenRepository.GetAsync();
+                //await _trainingsTeilnahmenRepository.GetAsync();
             }
             catch (Exception e)
             {
