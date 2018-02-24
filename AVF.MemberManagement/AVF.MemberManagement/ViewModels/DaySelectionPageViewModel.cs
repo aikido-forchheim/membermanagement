@@ -67,6 +67,12 @@ namespace AVF.MemberManagement.ViewModels
             MinDate = DateTime.Now - new TimeSpan(64, 0, 0, 0);
             MaxDate = DateTime.Now;
 
+            //Samstag ist kein Training, Workaround um am Samstag beim Debuggen nicht ständig Datum wechseln zu müssen
+            if (SelectedDate.DayOfWeek == DayOfWeek.Saturday)
+            {
+                SelectedDate = SelectedDate - TimeSpan.FromDays(1);
+            }
+
             NavigateToKursSelectionPageCommand = new DelegateCommand(NavigateToKursSelectionPage, CanNavigateToKursSelectionPage);
         }
 

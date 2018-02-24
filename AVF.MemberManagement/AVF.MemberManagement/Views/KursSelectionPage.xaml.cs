@@ -14,5 +14,10 @@ namespace AVF.MemberManagement.Views
         {
             ButtonEnterParticipants.Focus();
         }
+
+        private void ListView_OnItemAppearing(object sender, ItemVisibilityEventArgs e)
+        {
+            ButtonEnterParticipants.Focus();
+        }
     }
 }

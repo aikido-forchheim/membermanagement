@@ -24,7 +24,7 @@
                     <userControls:BigLabel Grid.Column="1" FontAttributes="Bold" HorizontalOptions="Start" Text="Übungsleiter" />
                     <userControls:BigLabel Grid.Column="2" FontAttributes="Bold" HorizontalOptions="End" Text="Teilnehmer" />
                 </Grid>
-                <ListView ItemsSource="{Binding Trainings}" HeightRequest="196" SelectedItem="{Binding SelectedTraining}">
+                <ListView ItemsSource="{Binding Trainings}" HeightRequest="196" SelectedItem="{Binding SelectedTraining}" ItemAppearing="ListView_OnItemAppearing">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
