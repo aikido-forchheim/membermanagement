@@ -21,5 +21,10 @@ namespace AVF.MemberManagement.UserControls
         {
             ((EnterParticipantsPageViewModel)BindingContext).AddPreviousParticipantCommand.Execute(null);
         }
+
+        private void Parent_OnItemAppearing(object sender, ItemVisibilityEventArgs e)
+        {
+            //parent.Focus();
+        }
     }
 }
