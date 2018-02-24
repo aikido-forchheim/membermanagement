@@ -1,17 +1,11 @@
 ﻿using System.Diagnostics;
-using System.Net;
 using System.Threading.Tasks;
 using AVF.MemberManagement.Factories;
 using AVF.MemberManagement.PortableLibrary.Services;
 using AVF.MemberManagement.Services;
-using AVF.MemberManagement.StandardLibrary.Archive;
 using AVF.MemberManagement.StandardLibrary.Enums;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
-using AVF.MemberManagement.StandardLibrary.Proxies;
-using AVF.MemberManagement.StandardLibrary.Repositories;
 using AVF.MemberManagement.StandardLibrary.Services;
-using AVF.MemberManagement.StandardLibrary.Tables;
-using AVF.MemberManagement.StandardLibrary.Tbo;
 using Prism.Unity;
 using AVF.MemberManagement.Views;
 using Microsoft.Extensions.Logging;
@@ -20,7 +14,7 @@ using Xamarin.Forms;
 
 namespace AVF.MemberManagement
 {
-    public partial class App : PrismApplication
+    public partial class App
     {
         private RepositoryBootstrapper _repositoryBootstrapper;
 
@@ -101,8 +95,10 @@ namespace AVF.MemberManagement
             Container.RegisterTypeForNavigation<EnterParticipantsPage>();
             Container.RegisterTypeForNavigation<EnterParticipantsTabletPage>();
             Container.RegisterTypeForNavigation<SaveParticipantsPage>();
+            Container.RegisterTypeForNavigation<SelectTrainerPage>();
         }
 
+        // ReSharper disable once UnusedMember.Local
         private async Task RefreshCache()
         {
             var factory = Container.Resolve<IJsonFileFactory>();
