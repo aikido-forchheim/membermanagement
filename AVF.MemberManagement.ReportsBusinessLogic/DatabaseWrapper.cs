@@ -165,11 +165,20 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         public Graduierung GraduierungFromId(int id)
             => m_graduierung.Single(s => s.Id == id);
 
+        public DateTime DateFromTrainingParticipation(TrainingsTeilnahme tn)
+            => TrainingFromId(tn.TrainingID).Termin;
+
+        public bool DateIsInRange(DateTime date, DateTime datRangeStart, DateTime datRangeEnd)
+            => (datRangeStart <= date) && (date <= datRangeEnd);
+
+        public int NrOfTrainingsSince(int idMember, DateTime datStart)
+            => m_trainingsTeilnahme.Count( p => (p.MitgliedID == idMember) && (DateFromTrainingParticipation(p) >= datStart) );
+
         public List<TrainingsTeilnahme> Filter(List<TrainingsTeilnahme> list, DateTime datStart)
-            => list.Where(p => TrainingFromId(p.TrainingID).Termin >= datStart).ToList();
+            => list.Where(p => DateFromTrainingParticipation(p) >= datStart).ToList();
 
         public List<TrainingsTeilnahme> Filter(List<TrainingsTeilnahme> list, DateTime datStart, DateTime datEnd)
-            => list.Where(p => TrainingFromId(p.TrainingID).Termin >= datStart && TrainingFromId(p.TrainingID).Termin <= datEnd).ToList();
+            => list.Where(p => DateIsInRange(DateFromTrainingParticipation(p), datStart, datEnd)).ToList();
 
         public List<TrainingsTeilnahme> Filter(List<TrainingsTeilnahme> list, int idMember)
             => list.Where(p => p.MitgliedID == idMember).ToList();

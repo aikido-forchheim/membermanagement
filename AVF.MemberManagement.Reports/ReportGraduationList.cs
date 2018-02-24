@@ -45,20 +45,19 @@ namespace AVF.MemberManagement.Reports
             DateTime           datValidData = Globals.DatabaseWrapper.GetStartValidData();
             BestGraduationList gradList     = new BestGraduationList();
 
-            List<TrainingsTeilnahme> tnList = Globals.DatabaseWrapper.TrainingsTeilnahme(datValidData, DateTime.Now);
-
             int iGradIdLast = 0;
             foreach (BestGraduation bestGrad in gradList.m_listBestGraduation)
             {
                 Graduierung gradActual = Globals.DatabaseWrapper.GraduierungFromId(bestGrad.m_graduierung);
-                Mitglied member = Globals.DatabaseWrapper.MitgliedFromId(bestGrad.m_memberId);
+                Mitglied    member     = Globals.DatabaseWrapper.MitgliedFromId(bestGrad.m_memberId);
+
                 DateTime dateGrad = bestGrad.m_datumGraduierung;
                 DateTime dateNext = bestGrad.m_datumMinNextGrad;
 
-                // determine number of training participations since last graduation 
+                bool     fAllRelevantTrainingsInDb = (datValidData <= dateGrad);
+                DateTime dateStart = fAllRelevantTrainingsInDb ? dateGrad : datValidData;
 
-                List<TrainingsTeilnahme> tnListMember = Globals.DatabaseWrapper.Filter(tnList, member.Id);        // training participations of member
-                List<TrainingsTeilnahme> tnListRelevant = Globals.DatabaseWrapper.Filter(tnListMember, dateGrad);   // training participations since last graduation
+                int nrOfTrainingsSinceLastGraduation = Globals.DatabaseWrapper.NrOfTrainingsSince(member.Id, dateStart);
 
                 string sGrad = "";
                 if (gradActual.Id != iGradIdLast)
@@ -81,7 +80,7 @@ namespace AVF.MemberManagement.Reports
                 else
                 {
                     strTrainingsNeeded = $" ({bestGrad.m_trainingsNeeded})";
-                    strTrainingsDone   = ((dateGrad < datValidData) ? "> " : "  ") + $"{ tnListRelevant.Count }";
+                    strTrainingsDone   = (fAllRelevantTrainingsInDb ? "  " : "> ") + $"{ nrOfTrainingsSinceLastGraduation }";
                     strDateNext = $"{ dateNext:dd.MM.yyyy}";
                 }
 
@@ -110,7 +109,7 @@ namespace AVF.MemberManagement.Reports
                 if (dateNext < DateTime.Now)
                     row.Cells["dateNext"].Style.ForeColor = Color.Green;
 
-                if (tnListRelevant.Count >= bestGrad.m_trainingsNeeded)
+                if (nrOfTrainingsSinceLastGraduation >= bestGrad.m_trainingsNeeded)
                     row.Cells["nrTrainingsParticipations"].Style.ForeColor = Color.Green;
             }
         }
