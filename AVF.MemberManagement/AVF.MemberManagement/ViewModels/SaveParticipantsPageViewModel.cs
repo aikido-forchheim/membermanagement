@@ -31,12 +31,22 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _deletes, value);
         }
 
+        private bool _passThroughMode = true;
+
+        public bool PassThroughMode
+        {
+            get => _passThroughMode;
+            set => SetProperty(ref _passThroughMode, value);
+        }
+
         public SaveParticipantsPageViewModel(INavigationService navigationService, ILogger logger) : base(navigationService, logger)
         {
         }
 
         public override async void OnNavigatedTo(NavigationParameters parameters)
         {
+            PassThroughMode = parameters["__NavigationMode"].ToString() != "Back";
+
             Inserts.Clear();
             Deletes.Clear();
 
