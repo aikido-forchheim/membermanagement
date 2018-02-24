@@ -21,6 +21,9 @@ namespace AVF.MemberManagement.ViewModels
         private readonly IAccountService _accountService;
         private readonly IRepository<User> _usersProxy;
         private readonly IPasswordService _passwordService;
+        private readonly IRepository<TrainingsTeilnahme> _trainingsTeilnahmenRepository;
+        private readonly IRepository<Training> _trainingRepository;
+        private readonly IRepository<Mitglied> _mitgliederRepository;
 
         private DateTime _latestRequestTime;
 
@@ -181,13 +184,16 @@ namespace AVF.MemberManagement.ViewModels
 
         #region Ctor
 
-        public MainPageViewModel(IAccountService accountService, INavigationService navigationService, IRepository<User> usersProxy, IPasswordService passwordService, ILogger logger) : base(navigationService, logger)
+        public MainPageViewModel(IAccountService accountService, INavigationService navigationService, IRepository<User> usersProxy, IPasswordService passwordService, ILogger logger, IRepository<TrainingsTeilnahme> trainingsTeilnahmenRepository, IRepository<Training> trainingRepository, IRepository<Mitglied> mitgliederRepository) : base(navigationService, logger)
         {
             Title = "Anmeldung";
 
             _accountService = accountService;
             _usersProxy = usersProxy;
             _passwordService = passwordService;
+            _trainingsTeilnahmenRepository = trainingsTeilnahmenRepository;
+            _trainingRepository = trainingRepository;
+            _mitgliederRepository = mitgliederRepository;
 
             SettingsCommand = new DelegateCommand(OnSettings, CanSettings);
             StartCommand = new DelegateCommand(OnStart, CanStart);
@@ -277,12 +283,17 @@ namespace AVF.MemberManagement.ViewModels
 
         #endregion
 
-        public override void OnNavigatedTo(NavigationParameters parameters)
+        public override async void OnNavigatedTo(NavigationParameters parameters)
         {
             if (parameters.ContainsKey("__NavigationMode") && parameters["__NavigationMode"].ToString() == "Back")
             {
                 Password = string.Empty;
             }
+
+            //Start caching
+            await _mitgliederRepository.GetAsync();
+            //await _trainingRepository.GetAsync();
+            //await _trainingsTeilnahmenRepository.GetAsync();
         }
     }
 }
