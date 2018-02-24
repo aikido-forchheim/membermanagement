@@ -21,6 +21,9 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             DatabaseWrapper.ReadTables(Container).Wait();
         }
 
+        public static string Format(DateTime date)
+            => $"{ date:dd.MM.yyyy}";
+
         public static int GetMonth(DateTime date)
             => m_cal.GetMonth( date );
 
@@ -31,7 +34,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             => m_cal.GetWeekOfYear(date, m_dfi.CalendarWeekRule, m_dfi.FirstDayOfWeek);
 
         public static string GetTimeRangeDescription(DateTime datStart, DateTime datEnd)
-            => $"{datStart:dd}.{datStart:MM}.{datStart:yyyy} {datEnd:dd}.{datEnd:MM}.{datEnd:yyyy}";
+            => Format(datStart) + " " + Format(datEnd);
 
         public static string GetCourseDescription(int idKurs)
         {

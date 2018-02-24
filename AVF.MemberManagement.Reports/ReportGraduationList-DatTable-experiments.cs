@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Data;
 using System.Collections.Generic;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.ReportsBusinessLogic;
@@ -9,10 +10,30 @@ namespace AVF.MemberManagement.Reports
 {
     class ReportGraduationList : ReportBase
     {
+        DataTable m_dataTable;
+        BindingSource m_bindingSource;
+
         public ReportGraduationList()
         {
             m_dataGridView = new DataGridView();
 
+            m_dataTable = new DataTable();
+            m_bindingSource = new BindingSource();
+
+
+            m_dataTable.Columns.Add("graduation", typeof(String) );
+            m_dataTable.Columns.Add("surname", typeof(String));
+            m_dataTable.Columns.Add("firstName", typeof(String));
+            m_dataTable.Columns.Add("memberId", typeof(int));
+            m_dataTable.Columns.Add("birthDate", typeof(String));
+            m_dataTable.Columns.Add("birthplace", typeof(String));
+            m_dataTable.Columns.Add("memberClass", typeof(String));
+            m_dataTable.Columns.Add("yearOfAikidoBegin", typeof(int));
+            m_dataTable.Columns.Add("AVF-entry", typeof(String));
+            m_dataTable.Columns.Add("dateGrad", typeof(String));
+            m_dataTable.Columns.Add("dateNext", typeof(String));
+            m_dataTable.Columns.Add("nrTrainingsParticipations", typeof(String));
+/*
             m_dataGridView.Columns.Add("graduation", "Grad");
             m_dataGridView.Columns.Add("surname", "Name");
             m_dataGridView.Columns.Add("firstName", "Vorname");
@@ -25,7 +46,7 @@ namespace AVF.MemberManagement.Reports
             m_dataGridView.Columns.Add("dateGrad", "Datum der\nletzten\nGraduierung");
             m_dataGridView.Columns.Add("dateNext", "Mindestwarte-\nzeit für eine\nHöhergraduie\nrung erfüllt ab");
             m_dataGridView.Columns.Add("nrTrainingsParticipations", "Trainings\nseit der\nletzten\nGraduierung");
-
+*/
             m_dataGridView.RowHeadersVisible = false;
             m_dataGridView.AllowUserToAddRows = false;
             m_dataGridView.EnableHeadersVisualStyles = false;
@@ -37,7 +58,15 @@ namespace AVF.MemberManagement.Reports
                 cols.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             }
 
-            m_dataGridView.Columns[5].HeaderCell.Style.BackColor = Color.FromArgb(255, 204, 153); ;
+            m_bindingSource.DataSource = m_dataTable;
+            m_dataGridView.DataSource = m_bindingSource;
+
+            m_dataGridView.DataBindingComplete += new DataGridViewBindingCompleteEventHandler(DataBindingComplete);
+        }
+
+        private void DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            m_dataGridView.Columns["birthDate"].HeaderCell.Style.BackColor = Color.FromArgb(255, 204, 153); ;
         }
 
         protected override void ReportFormPopulate()
@@ -51,7 +80,15 @@ namespace AVF.MemberManagement.Reports
                 Graduierung gradActual = Globals.DatabaseWrapper.GraduierungFromId(bestGrad.m_graduierung);
                 Mitglied    member     = Globals.DatabaseWrapper.MitgliedFromId(bestGrad.m_memberId);
 
-                string sGrad = "";                     // Display graduation only in first row of occurence
+                DateTime dateGrad = bestGrad.m_datumGraduierung;
+                DateTime dateNext = bestGrad.m_datumMinNextGrad;
+
+                bool     fAllRelevantTrainingsInDb = (datValidData <= dateGrad);
+                DateTime dateStart = fAllRelevantTrainingsInDb ? dateGrad : datValidData;
+
+                int nrOfTrainingsSinceLastGraduation = Globals.DatabaseWrapper.NrOfTrainingsSince(member.Id, dateStart);
+
+                string sGrad = "";
                 if (gradActual.Id != iGradIdLast)
                 {
                     sGrad = $"{gradActual.Bezeichnung} ";
@@ -60,52 +97,61 @@ namespace AVF.MemberManagement.Reports
                     iGradIdLast = gradActual.Id;
                 }
 
-                string strTrainingsNeeded = String.Empty;
-                string strTrainingsDone   = String.Empty;
-                string strDateNext        = String.Empty;
-                if (bestGrad.m_graduierung >= 7) // index of 6. Kyu is 7
+                string strTrainingsNeeded;
+                string strTrainingsDone;
+                string strDateNext;
+                if (bestGrad.m_graduierung <= 6) // index of 7. Kyu is 6
+                {
+                    strTrainingsNeeded = String.Empty;
+                    strTrainingsDone = String.Empty;
+                    strDateNext = String.Empty;
+                }
+                else
                 {
                     strTrainingsNeeded = $" ({bestGrad.m_trainingsNeeded})";
-                    strTrainingsDone   = (bestGrad.m_fAllTrainingsInDb ? "  " : "> ") + $"{ bestGrad.m_TrainngsDone }";
-                    strDateNext        = Globals.Format(bestGrad.m_datumMinNextGrad);
+                    strTrainingsDone   = (fAllRelevantTrainingsInDb ? "  " : "> ") + $"{ nrOfTrainingsSinceLastGraduation }";
+                    strDateNext = $"{ dateNext:dd.MM.yyyy}";
                 }
 
-                m_dataGridView.Rows.Add
+                m_dataTable.Rows.Add
                 (
                     sGrad,
                     member.Nachname,
                     member.Vorname,
                     member.Id,
-                    Globals.Format( member.Geburtsdatum ),
+                    $"{ member.Geburtsdatum:dd.MM.yyyy}",
                     member.Geburtsort,
                     Globals.DatabaseWrapper.BK_Text(member),
                     member.AikidoBeginn,
-                    Globals.Format(member.Eintritt.Value),
-                    Globals.Format(member.Geburtsdatum),
+                    $"{ member.Eintritt:dd.MM.yyyy}",
+                    $"{ dateGrad:dd.MM.yyyy}",
                     strDateNext,
                     strTrainingsDone + strTrainingsNeeded
                 );
-
+                /*
+               
                 DataGridViewRow row = m_dataGridView.Rows[m_dataGridView.Rows.Count - 1];
 
-                if ( (bestGrad.m_yearsOfMembership % 10 == 0) || (bestGrad.m_yearsOfMembership % 25 == 0) )
+                int yearsOfMembership = DateTime.Now.Year - member.Eintritt.Value.Year;
+                if ( (yearsOfMembership == 10) || (yearsOfMembership == 20) || (yearsOfMembership == 25) || (yearsOfMembership == 30) )
                     row.Cells["AVF-entry"].Style.ForeColor = Color.Red;
 
-                if (bestGrad.m_datumMinNextGrad < DateTime.Now)
+                if (dateNext < DateTime.Now)
                     row.Cells["dateNext"].Style.ForeColor = Color.Green;
 
-                if (bestGrad.m_TrainngsDone >= bestGrad.m_trainingsNeeded)
+                if (nrOfTrainingsSinceLastGraduation >= bestGrad.m_trainingsNeeded)
                     row.Cells["nrTrainingsParticipations"].Style.ForeColor = Color.Green;
+               */
             }
-        }
 
+        }
 
         protected override string MouseCellEvent(int row, int col, bool action)
         {
             if (row >= 0)
             {
-                int idMember = (int)m_dataGridView.Rows[row].Cells["memberId"].Value;
-                string strDateGrad = m_dataGridView.Rows[row].Cells["dateGrad"].Value.ToString();
+                int idMember = (int)m_dataTable.Rows[row]["memberId"];
+                string strDateGrad = m_dataTable.Rows[row]["dateGrad"].ToString();
                 DateTime dateGrad = DateTime.Parse(strDateGrad);
                 return action
                     ? ReportTrainingsParticipation.Show(new ReportWeekVsCourses(dateGrad, DateTime.Now, idMember))
@@ -115,6 +161,7 @@ namespace AVF.MemberManagement.Reports
             {
                 return String.Empty;
             }
+
         }
     }
 }

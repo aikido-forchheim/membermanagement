@@ -6,27 +6,36 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 {
     public class BestGraduation : IComparable<BestGraduation>
     {
-        public int      m_memberId         { get; private set; }
-        public int      m_graduierung      { get; private set; }
-        public DateTime m_datumGraduierung { get; private set; }
-        public DateTime m_datumMinNextGrad { get; private set; }
-        public int      m_trainingsNeeded  { get; private set; }
+        public int      m_memberId          { get; private set; }
+        public int      m_graduierung       { get; private set; }
+        public DateTime m_dateStart         { get; private set; }
+        public DateTime m_datumGraduierung  { get; private set; }
+        public DateTime m_datumMinNextGrad  { get; private set; }
+        public int      m_trainingsNeeded   { get; private set; }
+        public bool     m_fAllTrainingsInDb { get; private set; }
+        public int      m_TrainngsDone      { get; private set; }
+        public int      m_yearsOfMembership { get; private set; }
 
-        public BestGraduation(int memberId, int grad, DateTime date)
+        private DateTime dateZero = new DateTime(1, 1, 1);
+
+        public BestGraduation(Mitglied member)
         {
-            m_memberId = memberId;
-            m_graduierung = grad;
-            m_datumGraduierung = date;
-            Graduierung gradNext = Globals.DatabaseWrapper.GraduierungFromId(m_graduierung + 1);
-            m_datumMinNextGrad = m_datumGraduierung.AddYears(gradNext.WartezeitJahre).AddMonths(gradNext.WartezeitMonate);
-            m_trainingsNeeded = ((m_datumMinNextGrad - m_datumGraduierung).Days / 7) * 2;  // 2 trainings per week needed
+            m_graduierung      = (member.BeitragsklasseID == 4) ? 1 : 7; // Erwachsene und Jugendliche beginnen mit dem 6. Kyu
+            m_datumGraduierung = (member.Eintritt.HasValue) ? member.Eintritt.Value : dateZero;
         }
 
-        public void Complete( )
+        public void Complete(Mitglied member)
         {
-            Graduierung gradNext = Globals.DatabaseWrapper.GraduierungFromId(m_graduierung + 1);
-            m_datumMinNextGrad = m_datumGraduierung.AddYears(gradNext.WartezeitJahre).AddMonths(gradNext.WartezeitMonate);
-            m_trainingsNeeded = ((m_datumMinNextGrad - m_datumGraduierung).Days / 7) * 2;  // 2 trainings per week needed
+            DateTime    datValidData = Globals.DatabaseWrapper.GetStartValidData();
+            Graduierung gradNext     = Globals.DatabaseWrapper.GraduierungFromId(m_graduierung + 1);
+
+            m_memberId          = member.Id;
+            m_datumMinNextGrad  = m_datumGraduierung.AddYears(gradNext.WartezeitJahre).AddMonths(gradNext.WartezeitMonate);
+            m_trainingsNeeded   = ((m_datumMinNextGrad - m_datumGraduierung).Days / 7) * 2;  // 2 trainings per week needed
+            m_fAllTrainingsInDb = (datValidData <= m_datumGraduierung);
+            m_dateStart         = m_fAllTrainingsInDb ? m_datumGraduierung : datValidData;
+            m_TrainngsDone      = Globals.DatabaseWrapper.NrOfTrainingsSince(m_memberId, m_dateStart);
+            m_yearsOfMembership = DateTime.Now.Year - member.Eintritt.Value.Year;
         }
 
         public int CompareTo(BestGraduation other)
@@ -49,7 +58,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         {
             if (grad > m_graduierung)
             {
-                m_graduierung = grad;
+                m_graduierung      = grad;
                 m_datumGraduierung = date;
             }
         }
@@ -63,23 +72,19 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         {
             m_listBestGraduation = new List<BestGraduation>();
 
-            DateTime dateZero = new DateTime(1, 1, 1);
-
-            foreach (Mitglied mitglied in Globals.DatabaseWrapper.CurrentMembers())
+            foreach (Mitglied member in Globals.DatabaseWrapper.CurrentMembers())
             {
-                int      iStartGrad = (mitglied.BeitragsklasseID == 4) ? 1 : 7; // Erwachsene und Jugendliche beginnen mit dem 6. Kyu
-                DateTime iStartDate = (mitglied.Eintritt.HasValue) ? mitglied.Eintritt.Value : dateZero;
-                BestGraduation best = new BestGraduation(mitglied.Id, iStartGrad, iStartDate);
+                BestGraduation best = new BestGraduation(member);
 
                 foreach (Pruefung pruefung in Globals.DatabaseWrapper.m_pruefung)
                 {
-                    if (pruefung.Pruefling == mitglied.Id)
+                    if (pruefung.Pruefling == member.Id)
                     {
                         best.ReplaceIfBetter(pruefung.GraduierungID, pruefung.Datum);
                     }
                 }
 
-                best.Complete();
+                best.Complete(member);
                 m_listBestGraduation.Add(best);
             }
 
