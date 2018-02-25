@@ -9,6 +9,8 @@ using AVF.MemberManagement.StandardLibrary.Tbo;
 using Microsoft.Extensions.Logging;
 using Prism.Navigation;
 using System.Collections.ObjectModel;
+using AVF.MemberManagement.StandardLibrary.Interfaces;
+using System.Threading.Tasks;
 
 namespace AVF.MemberManagement.ViewModels
 {
@@ -78,12 +80,24 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _participantsCountText, value);
         }
 
-        public SelectTrainerPageViewModel(INavigationService navigationService, ILogger logger) : base(navigationService, logger)
-        {
+        private ObservableCollection<Mitglied> _previousTrainers = new ObservableCollection<Mitglied>();
 
+        private readonly IRepository<Training> _trainingsRepository;
+        private readonly IRepository<Mitglied> _mitgliederRepository;
+
+        public ObservableCollection<Mitglied> PreviousParticipants //TODO: Rename back to Trainer, and allow override of Binding in ParticipantsView, or rename to something more gerenic like MemberSelection
+        {
+            get => _previousTrainers;
+            set => SetProperty(ref _previousTrainers, value);
         }
 
-        public override void OnNavigatedTo(NavigationParameters parameters)
+        public SelectTrainerPageViewModel(INavigationService navigationService, ILogger logger, IRepository<Training> trainingsRepository, IRepository<Mitglied> mitgliederRepository) : base(navigationService, logger)
+        {
+            _trainingsRepository = trainingsRepository;
+            _mitgliederRepository = mitgliederRepository;
+        }
+
+        public override async void OnNavigatedTo(NavigationParameters parameters)
         {
             try
             {
@@ -110,10 +124,42 @@ namespace AVF.MemberManagement.ViewModels
                 Title = $"{SelectedTraining.Class.Time} ({SelectedTraining.Class.Trainer.FirstName})";
 
                 ParticipantsCountText = $"Trainer ({Participants.Count}):";
+
+                await GetPreviousTrainers();
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
+            }
+        }
+
+        private async Task GetPreviousTrainers()
+        {
+            //Bei beiden ausgetretene Mitglieder nicht mehr berücksichtigen: HasResigned()-Methode
+            //Bei beiden egal ob Trainer, Cotrainer1 oder 2
+            //Find alle Mitglieder, die jemals bei diesem Kurs Übungsleitung gemacht haben, sortiere diese nach Häufigkeit
+            //Mit Schalter "optional": Finde alle Trainer über alle Kurse, die noch nicht in der ersten Liste sind, und füge diese auch geordnet nach Häufigkeit ein.
+
+            //Wenn Partipants leer springe in der Mobile-View automatisch auf den Tab PreviousParticipants.
+
+
+            //Es muss noch der Kurs berücksichtigt werden:
+            PreviousParticipants.Clear();
+
+            var trainings = await _trainingsRepository.GetAsync();
+
+            var previousTrainersOfThisClass = trainings
+                .GroupBy(l => l.Trainer)
+                  .Select(g => new
+                  {
+                      Trainer = g.Key,
+                      Count = g.Select(l => l.Trainer).Distinct().Count()
+            }).OrderByDescending(t => trainings.Count()).Select(t => t.Trainer);
+
+            foreach (var previousTrainerId in previousTrainersOfThisClass)
+            {
+                var previousTrainer = await _mitgliederRepository.GetAsync(previousTrainerId);
+                PreviousParticipants.Add(previousTrainer);
             }
         }
     }
