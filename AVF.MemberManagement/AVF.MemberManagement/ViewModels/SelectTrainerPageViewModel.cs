@@ -8,6 +8,7 @@ using AVF.MemberManagement.StandardLibrary.Models;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Microsoft.Extensions.Logging;
 using Prism.Navigation;
+using System.Collections.ObjectModel;
 
 namespace AVF.MemberManagement.ViewModels
 {
@@ -53,12 +54,28 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _cotrainer2, value);
         }
 
-        private List<Mitglied> _trainers = new List<Mitglied>();
+        private ObservableCollection<Mitglied> _trainers = new ObservableCollection<Mitglied>();
 
-        public List<Mitglied> Participants //TODO: Rename back to Trainer, and allow override of Binding in ParticipantsView, or rename to something more gerenic like MemberSelection
+        public ObservableCollection<Mitglied> Participants //TODO: Rename back to Trainer, and allow override of Binding in ParticipantsView, or rename to something more gerenic like MemberSelection
         {
             get => _trainers;
             set => SetProperty(ref _trainers, value);
+        }
+
+        private Mitglied _selectedParticipant;
+
+        public Mitglied SelectedParticipant
+        {
+            get => _selectedParticipant;
+            set => SetProperty(ref _selectedParticipant, value);
+        }
+
+        private string _participantsCountText;
+
+        public string ParticipantsCountText
+        {
+            get => _participantsCountText;
+            set => SetProperty(ref _participantsCountText, value);
         }
 
         public SelectTrainerPageViewModel(INavigationService navigationService, ILogger logger) : base(navigationService, logger)
@@ -91,6 +108,8 @@ namespace AVF.MemberManagement.ViewModels
                 }
 
                 Title = $"{SelectedTraining.Class.Time} ({SelectedTraining.Class.Trainer.FirstName})";
+
+                ParticipantsCountText = $"Trainer ({Participants.Count}):";
             }
             catch (Exception ex)
             {
