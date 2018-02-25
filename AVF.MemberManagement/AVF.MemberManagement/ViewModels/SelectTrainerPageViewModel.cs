@@ -142,13 +142,11 @@ namespace AVF.MemberManagement.ViewModels
 
             //Wenn Partipants leer springe in der Mobile-View automatisch auf den Tab PreviousParticipants.
 
-
-            //Es muss noch der Kurs berücksichtigt werden:
             PreviousParticipants.Clear();
 
             var trainings = await _trainingsRepository.GetAsync();
 
-            var previousTrainersOfThisClass = trainings
+            var previousTrainersOfThisClass = trainings.Where(t => t.KursID == SelectedTraining.Training.KursID)
                 .GroupBy(l => l.Trainer)
                   .Select(g => new
                   {
