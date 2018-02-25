@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Collections.Generic;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.ReportsBusinessLogic;
 
@@ -18,7 +17,7 @@ namespace AVF.MemberManagement.Reports
             m_dataGridView.Columns.Add("firstName", "Vorname");
             m_dataGridView.Columns.Add("memberId", "lfd.\nNr.");
             m_dataGridView.Columns.Add("birthDate", "Geburts-\ndatum");
-            m_dataGridView.Columns.Add("birthplace", "Geburtsort");
+            //m_dataGridView.Columns.Add("birthplace", "Geburtsort");
             m_dataGridView.Columns.Add("memberClass", "Bei-\ntrags-\nklasse");
             m_dataGridView.Columns.Add("yearOfAikidoBegin", "Jahr des\nAikido-\nBeginns");
             m_dataGridView.Columns.Add("AVF-entry", "Eintrittsdatum");
@@ -36,8 +35,52 @@ namespace AVF.MemberManagement.Reports
                 cols.SortMode = DataGridViewColumnSortMode.NotSortable;
                 cols.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             }
+/*
+            Color orange = Color.FromArgb(255, 204, 153);
+            Color green  = Color.FromArgb(204, 255, 204);
+            m_dataGridView.Columns["graduation"].HeaderCell.Style.BackColor = orange;
+            m_dataGridView.Columns["surname"].HeaderCell.Style.BackColor = green;
+            m_dataGridView.Columns["firstName"                ].HeaderCell.Style.BackColor = green;
+            m_dataGridView.Columns["memberId"].HeaderCell.Style.BackColor = orange;
+            m_dataGridView.Columns["birthDate"                ].HeaderCell.Style.BackColor = green;
+            //m_dataGridView.Columns["birthplace"               ].HeaderCell.Style.BackColor = green;
+            m_dataGridView.Columns["memberClass"              ].HeaderCell.Style.BackColor = orange;
+            m_dataGridView.Columns["yearOfAikidoBegin"        ].HeaderCell.Style.BackColor = green;
+            m_dataGridView.Columns["AVF-entry"                ].HeaderCell.Style.BackColor = orange;
+            m_dataGridView.Columns["dateGrad"                 ].HeaderCell.Style.BackColor = green;
+            m_dataGridView.Columns["dateNext"                 ].HeaderCell.Style.BackColor = orange;
+            m_dataGridView.Columns["nrTrainingsParticipations"].HeaderCell.Style.BackColor = green;
+*/
+            //            m_dataGridView.Columns["graduation"].HeaderCell.Style.Font = new System.Drawing.Font("Comic Sans MS", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 
-            m_dataGridView.Columns[5].HeaderCell.Style.BackColor = Color.FromArgb(255, 204, 153); ;
+            m_dataGridView.DefaultCellStyle.Font = new Font("Comic Sans MS", 11);
+        }
+
+        private void ColorizeImportantDates( DataGridViewRow row, BestGraduation bestGrad )
+        {
+
+            if ((bestGrad.m_yearsOfMembership % 10 == 0) || (bestGrad.m_yearsOfMembership % 25 == 0))
+                row.Cells["AVF-entry"].Style.ForeColor = Color.Red;
+
+            if (bestGrad.m_datumMinNextGrad < DateTime.Now)
+                row.Cells["dateNext"].Style.ForeColor = Color.Green;
+
+            if (bestGrad.m_TrainngsDone >= bestGrad.m_trainingsNeeded)
+                row.Cells["nrTrainingsParticipations"].Style.ForeColor = Color.Green;
+        }
+
+        private string DisplayStringGraduation( ref int gradIdLast, Graduierung gradActual )  // Display graduation only in first row of occurence
+        {
+            string sGrad = "";                    
+            if (gradActual.Id != gradIdLast)
+            {
+                sGrad = $"{gradActual.Bezeichnung} ";
+                if (gradActual.Id > 1)
+                    sGrad += $"({gradActual.Japanisch}) ";
+                gradIdLast = gradActual.Id;
+            }
+
+            return sGrad;
         }
 
         protected override void ReportFormPopulate()
@@ -45,20 +88,11 @@ namespace AVF.MemberManagement.Reports
             DateTime           datValidData = Globals.DatabaseWrapper.GetStartValidData();
             BestGraduationList gradList     = new BestGraduationList();
 
-            int iGradIdLast = 0;
+            int gradIdLast = 0;
             foreach (BestGraduation bestGrad in gradList.m_listBestGraduation)
             {
-                Graduierung gradActual = Globals.DatabaseWrapper.GraduierungFromId(bestGrad.m_graduierung);
-                Mitglied    member     = Globals.DatabaseWrapper.MitgliedFromId(bestGrad.m_memberId);
-
-                string sGrad = "";                     // Display graduation only in first row of occurence
-                if (gradActual.Id != iGradIdLast)
-                {
-                    sGrad = $"{gradActual.Bezeichnung} ";
-                    if (gradActual.Id > 1)
-                        sGrad += $"({gradActual.Japanisch}) ";
-                    iGradIdLast = gradActual.Id;
-                }
+                Mitglied member = Globals.DatabaseWrapper.MitgliedFromId(bestGrad.m_memberId);
+                string   sGrad  = DisplayStringGraduation( ref gradIdLast, Globals.DatabaseWrapper.GraduierungFromId(bestGrad.m_graduierung));
 
                 string strTrainingsNeeded = String.Empty;
                 string strTrainingsDone   = String.Empty;
@@ -77,7 +111,7 @@ namespace AVF.MemberManagement.Reports
                     member.Vorname,
                     member.Id,
                     Globals.Format( member.Geburtsdatum ),
-                    member.Geburtsort,
+//                    member.Geburtsort,
                     Globals.DatabaseWrapper.BK_Text(member),
                     member.AikidoBeginn,
                     Globals.Format(member.Eintritt.Value),
@@ -86,17 +120,10 @@ namespace AVF.MemberManagement.Reports
                     strTrainingsDone + strTrainingsNeeded
                 );
 
-                DataGridViewRow row = m_dataGridView.Rows[m_dataGridView.Rows.Count - 1];
-
-                if ( (bestGrad.m_yearsOfMembership % 10 == 0) || (bestGrad.m_yearsOfMembership % 25 == 0) )
-                    row.Cells["AVF-entry"].Style.ForeColor = Color.Red;
-
-                if (bestGrad.m_datumMinNextGrad < DateTime.Now)
-                    row.Cells["dateNext"].Style.ForeColor = Color.Green;
-
-                if (bestGrad.m_TrainngsDone >= bestGrad.m_trainingsNeeded)
-                    row.Cells["nrTrainingsParticipations"].Style.ForeColor = Color.Green;
+                ColorizeImportantDates(m_dataGridView.Rows[m_dataGridView.Rows.Count - 1], bestGrad); 
             }
+            ExcelExport e = new ExcelExport();
+            e.Export2Excel(m_dataGridView, 2, 1, "Graduierungsliste" );
         }
 
 
