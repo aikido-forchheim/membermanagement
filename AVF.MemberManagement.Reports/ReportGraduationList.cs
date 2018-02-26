@@ -122,8 +122,8 @@ namespace AVF.MemberManagement.Reports
 
                 ColorizeImportantDates(m_dataGridView.Rows[m_dataGridView.Rows.Count - 1], bestGrad); 
             }
-            ExcelExport e = new ExcelExport();
-            e.Export2Excel(m_dataGridView, 2, 1, "Graduierungsliste" );
+//            ExcelExport e = new ExcelExport();
+//            e.Export2Excel(m_dataGridView, 2, 1, "Graduierungsliste" );
         }
 
 

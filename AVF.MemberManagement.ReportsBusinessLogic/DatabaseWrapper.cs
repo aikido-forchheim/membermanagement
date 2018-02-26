@@ -27,24 +27,41 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         public List<TrainingsTeilnahme> m_trainingsTeilnahme { get; private set; }
         public List<Kurs> m_kurs { get; private set; }
 
-        public async Task ReadTables( IUnityContainer Container )
+        public async Task ReadTables( IUnityContainer Container, Action<string> tick )
         {
+            tick("Trainings");
             m_trainings = await Container.Resolve<IRepository<Training>>().GetAsync();
+            tick("Mitglieder");
             m_mitglieder = await Container.Resolve<IRepository<Mitglied>>().GetAsync();
+            tick("TrainerErnennung");
             m_trainerErnennungen = await Container.Resolve<IRepository<TrainerErnennung>>().GetAsync();
+            tick("Stundensatz");
             m_stundensaetze = await Container.Resolve<IRepository<Stundensatz>>().GetAsync();
+            tick("ZuschlagKindertraining");
             m_zuschlagKinderTraining = await Container.Resolve<IRepository<ZuschlagKindertraining>>().GetAsync();
+            tick("TrainerStufe");
             m_trainerStufe = await Container.Resolve<IRepository<TrainerStufe>>().GetAsync();
+            tick("Wohnung");
             m_wohnung = await Container.Resolve<IRepository<Wohnung>>().GetAsync();
+            tick("Wohnungsbezug");
             m_wohnungsbezug = await Container.Resolve<IRepository<Wohnungsbezug>>().GetAsync();
+            tick("Wochentag");
             m_wochentag = await Container.Resolve<IRepository<Wochentag>>().GetAsync();
+            tick("Pruefung");
             m_pruefung = await Container.Resolve<IRepository<Pruefung>>().GetAsync();
+            tick("Graduierung");
             m_graduierung = await Container.Resolve<IRepository<Graduierung>>().GetAsync();
+            tick("Beitragsklasse");
             m_beitragsklasse = await Container.Resolve<IRepository<Beitragsklasse>>().GetAsync();
+            tick("Familienrabatt");
             m_familienrabatt = await Container.Resolve<IRepository<Familienrabatt>>().GetAsync();
+            tick("TrainingsTeilnahme");
             m_trainingsTeilnahme = await Container.Resolve<IRepository<TrainingsTeilnahme>>().GetAsync();
+            tick("Kurs");
             m_kurs = await Container.Resolve<IRepository<Kurs>>().GetAsync();
+            tick("Setting");
             m_settings = await Container.Resolve<IRepositoryBase<Setting, string>>().GetAsync();
+            tick("");
             m_mitglieder.RemoveAt(0);   // Mitglied 0 is a dummy
             m_trainings = m_trainings.OrderBy(t => t.Termin).ToList();
         }

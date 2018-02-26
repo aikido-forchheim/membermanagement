@@ -79,6 +79,12 @@
     <Compile Include="ReportCoursesVsMonths.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="ReportMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReportMain.Designer.cs">
+      <DependentUpon>ReportMain.cs</DependentUpon>
+    </Compile>
     <Compile Include="ReportMemberVsMonths.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -112,6 +118,9 @@
     <Compile Include="VerticalAxis.cs" />
     <Compile Include="VerticalAxisWeeks.cs" />
     <Compile Include="AxisTypeWeek.cs" />
+    <EmbeddedResource Include="ReportMain.resx">
+      <DependentUpon>ReportMain.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ReportTrainingsParticipation.resx">
       <DependentUpon>ReportTrainingsParticipation.cs</DependentUpon>
     </EmbeddedResource>

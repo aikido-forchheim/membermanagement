@@ -15,7 +15,7 @@ namespace AVF.MemberManagement.Reports
         protected DateTime m_datEnd   { get; private set; }
 
         public ReportTrainingsParticipation()
-            =>InitializeComponent();
+            =>InitializeComponent(); // creates DataGridView ...
 
         protected void CreateModel
         (

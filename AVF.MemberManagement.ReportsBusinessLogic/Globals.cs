@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Globalization;
-using AVF.MemberManagement.StandardLibrary.Tbo;
+using System.Threading.Tasks;
 using Microsoft.Practices.Unity;
+using AVF.MemberManagement.StandardLibrary.Tbo;
 
 namespace AVF.MemberManagement.ReportsBusinessLogic
 {
@@ -13,12 +14,12 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 
         public static DatabaseWrapper DatabaseWrapper;
 
-        public static void Initialize(IUnityContainer Container)
+        public async static Task Initialize(IUnityContainer Container, Action<String> tick)
         {
             m_dfi = DateTimeFormatInfo.CurrentInfo;
             m_cal = m_dfi.Calendar;
             DatabaseWrapper = new DatabaseWrapper();
-            DatabaseWrapper.ReadTables(Container).Wait();
+            await DatabaseWrapper.ReadTables(Container, tick);
         }
 
         public static string Format(DateTime date)
