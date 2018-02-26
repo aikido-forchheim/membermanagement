@@ -11,7 +11,7 @@
         <Setter Property="HeightRequest">
           <OnPlatform x:TypeArguments="x:Double">
             <On Platform="iOS" Value="32"></On>
-            <On Platform="Android" Value="40"></On>
+            <On Platform="Android" Value="44"></On>
             <On Platform="UWP" Value="32"></On>
           </OnPlatform>
         </Setter>
