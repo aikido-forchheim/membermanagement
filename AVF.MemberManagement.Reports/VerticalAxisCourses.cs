@@ -7,7 +7,6 @@ namespace AVF.MemberManagement.Reports
     class VerticalAxisCourses : VerticalAxis
     {
         public VerticalAxisCourses() 
-            : base( additionalElements : 1) // 1 additional column for trainings without course
         {
             P_NrOfKeyColumns = 2;
             P_KeyColumn = 0;
@@ -16,13 +15,10 @@ namespace AVF.MemberManagement.Reports
         }
 
         public override int GetNrOfDgvRows(TrainingParticipationModel tpModel)
-            => ModelRange(); 
+            => DatabaseIdRange(); 
 
          public override int GetModelIndexFromTrainingsParticipation(TrainingsTeilnahme tn)
-        {
-            int idKurs = Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID);
-            return (idKurs == 0) ? 0 : (idKurs - P_MinDatabaseId() + 1);
-        }
+            => Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID) - P_MinDatabaseId() + 1;
 
         public override void FillKeyHeaderCells(DataGridView dgv)
         {

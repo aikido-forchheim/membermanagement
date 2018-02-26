@@ -14,7 +14,7 @@ namespace AVF.MemberManagement.Reports
         }
 
         public override int GetNrOfDgvCols(TrainingParticipationModel tpModel)
-            => ModelRange();
+            => DatabaseIdRange();
 
         protected override int GetModelIndexFromId(int idTraining)
         {

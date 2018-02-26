@@ -64,6 +64,20 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             tick("");
             m_mitglieder.RemoveAt(0);   // Mitglied 0 is a dummy
             m_trainings = m_trainings.OrderBy(t => t.Termin).ToList();
+
+            // Add pseude course 0 for trainings without course
+
+            Kurs kurs0 = new Kurs();
+            kurs0.Id = 0;
+            kurs0.Zeit = TimeSpan.Zero;
+
+            m_kurs.Add(kurs0);
+
+            foreach (Training t in m_trainings)
+            {
+                if (!t.KursID.HasValue)
+                    t.KursID = 0;
+            }
         }
 
         public DateTime GetStartValidData()

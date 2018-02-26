@@ -28,8 +28,8 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             Axis yAxis
         )
         {
-            m_iNrOfRows = yAxis.ModelRange();
-            m_iNrOfCols = xAxis.ModelRange();
+            m_iNrOfRows = yAxis.DatabaseIdRange();
+            m_iNrOfCols = xAxis.DatabaseIdRange();
 
             m_Rows = new Row[m_iNrOfRows];
 

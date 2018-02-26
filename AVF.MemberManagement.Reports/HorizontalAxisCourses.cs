@@ -7,33 +7,19 @@ namespace AVF.MemberManagement.Reports
     class HorizontalAxisCourses : HorizontalAxis
     {
         public HorizontalAxisCourses()
-            : base(additionalElements: 1)     // 1 additional column for trainings without course
         {
             P_ActiveElementsOnly = false;
             P_AxisType = new AxisTypeCourse();
         }
 
         public override int GetNrOfDgvCols(TrainingParticipationModel tpModel)
-            => ModelRange();  
-
-        private int GetModelIndexFromDbIndex(int iDbIndex)
-            => iDbIndex + AdditionalAxisElements;
-
-        private int GetDbIndexFromModelIndex(int iModelIndex)
-        {
-            Debug.Assert(iModelIndex > 0);
-            return iModelIndex - AdditionalAxisElements;
-        }
+            => DatabaseIdRange();  
 
         protected override int GetModelIndexFromId(int idKurs)
-            => (idKurs == 0)  // special case: training without course
-               ? 0
-               : GetModelIndexFromDbIndex(Globals.DatabaseWrapper.m_kurs.FindIndex(kurs => idKurs == kurs.Id));
+            => Globals.DatabaseWrapper.m_kurs.FindIndex(kurs => idKurs == kurs.Id);
 
         private int GetCourseIdFromModelIndex(int iModelCol)
-            => (iModelCol == 0)  // special case: training without course
-               ? 0
-               : Globals.DatabaseWrapper.m_kurs[GetDbIndexFromModelIndex(iModelCol)].Id;
+            => Globals.DatabaseWrapper.m_kurs[iModelCol].Id;
 
         protected override void FillHeaderCell(DataGridView dgv, int iDgvCol, int iModelCol)
         {

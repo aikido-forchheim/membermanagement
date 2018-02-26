@@ -12,10 +12,8 @@ namespace AVF.MemberManagement.Reports
 
         protected int[] m_DbIds;
 
-        protected HorizontalAxis(int additionalElements = 0) : base(additionalElements) { }
-
         public void Initialize( )
-            => m_DbIds = new int[ModelRange()];
+            => m_DbIds = new int[DatabaseIdRange()];
 
         public int GetColKey(int iDgvCol)
             => m_DbIds[iDgvCol - P_startIndex];

@@ -16,23 +16,11 @@ namespace AVF.MemberManagement.Reports
         public override int GetNrOfDgvCols(TrainingParticipationModel tpModel)
             => tpModel.GetNrOfActiveCols();
 
-        private int GetModelIndexFromDbIndex(int iDbIndex)
-            => iDbIndex;
-
-        private int GetDbIndexFromModelIndex(int iModelIndex)
-            => iModelIndex;
-
         protected override int GetModelIndexFromId(int idTraining)
-        {
-            int dbIndex = Globals.DatabaseWrapper.m_trainings.FindIndex(training => idTraining == training.Id);
-            return GetModelIndexFromDbIndex(dbIndex);
-        }
+            => Globals.DatabaseWrapper.m_trainings.FindIndex(training => idTraining == training.Id);
 
         private int GetIdFromModelIndex(int iModelCol)
-        {
-            int dbIndex = GetDbIndexFromModelIndex(iModelCol);
-            return Globals.DatabaseWrapper.m_trainings[dbIndex].Id;
-        }
+            => Globals.DatabaseWrapper.m_trainings[iModelCol].Id;
 
         protected override void FillHeaderCell(DataGridView dgv, int iDgvCol, int iModelCol)
         {

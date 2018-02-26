@@ -15,18 +15,13 @@ namespace AVF.MemberManagement.Reports
         }
 
         public override int GetNrOfDgvRows(TrainingParticipationModel tpModel)
-            => ModelRange();
+            => DatabaseIdRange();
 
         public override int GetModelIndexFromTrainingsParticipation(TrainingsTeilnahme tn)
-        {
-            int idWeek = P_AxisType.GetIdFromTrainingsParticipation(tn);
-            return idWeek - P_MinDatabaseId();
-        }
+            => P_AxisType.GetIdFromTrainingsParticipation(tn) - P_MinDatabaseId();
 
         public override void FillKeyHeaderCells(DataGridView dgv)
-        {
-            dgv.Columns[0].HeaderText = "KW";
-        }
+            => dgv.Columns[0].HeaderText = "KW";
 
         protected override void FillMainKeyCell(TrainingParticipationModel tpModel, DataGridView dgv, int iDgvRow, int iModelRow) 
             => dgv[0, iDgvRow++].Value = iModelRow + P_MinDatabaseId();

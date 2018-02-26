@@ -39,13 +39,14 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 
         public static string GetCourseDescription(int idKurs)
         {
-            if (idKurs == 0)
+            Kurs kurs = Globals.DatabaseWrapper.KursFromId(idKurs);
+
+            if (kurs.Zeit == TimeSpan.Zero)
             {
                 return "Lehrg.\netc.";
             }
             else
             {
-                Kurs kurs = Globals.DatabaseWrapper.KursFromId(idKurs);
                 string day = Globals.DatabaseWrapper.WeekDay(kurs.WochentagID).Substring(0, 2);
                 return $"{ day }\n{kurs.Zeit:hh}:{kurs.Zeit:mm}";
             }

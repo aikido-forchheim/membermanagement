@@ -35,23 +35,6 @@ namespace AVF.MemberManagement.Reports
                 cols.SortMode = DataGridViewColumnSortMode.NotSortable;
                 cols.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             }
-/*
-            Color orange = Color.FromArgb(255, 204, 153);
-            Color green  = Color.FromArgb(204, 255, 204);
-            m_dataGridView.Columns["graduation"].HeaderCell.Style.BackColor = orange;
-            m_dataGridView.Columns["surname"].HeaderCell.Style.BackColor = green;
-            m_dataGridView.Columns["firstName"                ].HeaderCell.Style.BackColor = green;
-            m_dataGridView.Columns["memberId"].HeaderCell.Style.BackColor = orange;
-            m_dataGridView.Columns["birthDate"                ].HeaderCell.Style.BackColor = green;
-            //m_dataGridView.Columns["birthplace"               ].HeaderCell.Style.BackColor = green;
-            m_dataGridView.Columns["memberClass"              ].HeaderCell.Style.BackColor = orange;
-            m_dataGridView.Columns["yearOfAikidoBegin"        ].HeaderCell.Style.BackColor = green;
-            m_dataGridView.Columns["AVF-entry"                ].HeaderCell.Style.BackColor = orange;
-            m_dataGridView.Columns["dateGrad"                 ].HeaderCell.Style.BackColor = green;
-            m_dataGridView.Columns["dateNext"                 ].HeaderCell.Style.BackColor = orange;
-            m_dataGridView.Columns["nrTrainingsParticipations"].HeaderCell.Style.BackColor = green;
-*/
-            //            m_dataGridView.Columns["graduation"].HeaderCell.Style.Font = new System.Drawing.Font("Comic Sans MS", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 
             m_dataGridView.DefaultCellStyle.Font = new Font("Comic Sans MS", 11);
         }

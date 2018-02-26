@@ -19,24 +19,7 @@ namespace AVF.MemberManagement.Reports
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            /*
-                        var bootstrapper = new Bootstrapper(false);
-
-                        bootstrapper.Run();
-
-                        m_container = bootstrapper.Container;
-                        System.Console.WriteLine("read database");
-                        Globals.Initialize(m_container);            // read database ... may take a view seconds
-
-                        int iJahr = 2017;
-            */
-            //var form = new ReportCoursesVsMonths(new DateTime(iJahr, 1, 1), new DateTime(iJahr, 12, 31), -1);
-            //var form = new ReportMemberVsCourses(new DateTime(iJahr, 1, 1), new DateTime(iJahr, 12, 31));
-            //var form = new ReportMemberVsMonths(new DateTime(iJahr, 1, 1), new DateTime(iJahr, 12, 31));
-            //var form = new ReportGraduationList();
-
-            var form = new ReportMain();
-            Application.Run( form );
+            Application.Run(new ReportMain());
         }
     }
 }

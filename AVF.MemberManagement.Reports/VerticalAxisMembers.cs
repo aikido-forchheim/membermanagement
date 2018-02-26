@@ -21,9 +21,6 @@ namespace AVF.MemberManagement.Reports
         public override int GetModelIndexFromTrainingsParticipation(TrainingsTeilnahme tn)
             => P_AxisType.GetIdFromTrainingsParticipation( tn );
 
-        private int GetDbIndexFromModelIndex(int iModelIndex)
-            => iModelIndex;
-
         public override void FillKeyHeaderCells(DataGridView dgv)
         {
             dgv.Columns[0].HeaderText = "Vorname";
@@ -33,8 +30,7 @@ namespace AVF.MemberManagement.Reports
 
         protected override void FillMainKeyCell( TrainingParticipationModel tpModel, DataGridView dgv, int iDgvRow, int iModelRow)
         {
-            int      dbIndex  = GetDbIndexFromModelIndex(iModelRow);
-            Mitglied mitglied = Globals.DatabaseWrapper.m_mitglieder[dbIndex];
+            Mitglied mitglied = Globals.DatabaseWrapper.m_mitglieder[iModelRow];
             dgv[0, iDgvRow].Value = mitglied.Vorname;
             dgv[1, iDgvRow].Value = mitglied.Nachname;
             dgv[2, iDgvRow].Value = mitglied.Id;
