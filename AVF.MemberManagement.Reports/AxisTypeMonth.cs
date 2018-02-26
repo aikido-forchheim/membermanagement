@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.ReportsBusinessLogic;
 
@@ -19,6 +20,6 @@ namespace AVF.MemberManagement.Reports
         public override int P_MinDbId { get; } = FRST_MONTH;
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
-            => tn.TrainingID;
+            => Globals.GetMonth(Globals.DatabaseWrapper.TerminFromTrainingId(tn.TrainingID));
     }
 }

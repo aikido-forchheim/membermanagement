@@ -155,9 +155,12 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         public Training TrainingFromId(int id)
             => m_trainings.Single(s => s.Id == id);
 
+        public DateTime TerminFromTrainingId(int id)
+            => TrainingFromId( id ).Termin;
+
         public int KursIdFromTrainingId(int id)
         {
-            int? idKurs = TrainingFromId(id).KursID;    // Kurs NULL => 0
+            int? idKurs = TrainingFromId(id).KursID;  
             return idKurs.HasValue ? idKurs.Value : 0;
         }
 

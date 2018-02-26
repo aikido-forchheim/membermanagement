@@ -18,7 +18,7 @@ namespace AVF.MemberManagement.Reports
             => DatabaseIdRange(); 
 
          public override int GetModelIndexFromTrainingsParticipation(TrainingsTeilnahme tn)
-            => Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID) - P_MinDatabaseId() + 1;
+            => Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID) - P_MinDatabaseId();
 
         public override void FillKeyHeaderCells(DataGridView dgv)
         {

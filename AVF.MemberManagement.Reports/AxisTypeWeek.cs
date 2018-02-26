@@ -20,10 +20,6 @@ namespace AVF.MemberManagement.Reports
         public override int P_MinDbId { get; } = FRST_CALENDAR_WEEK;
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
-        {
-            Debug.Assert(tn.TrainingID > 0);
-            Training training = Globals.DatabaseWrapper.TrainingFromId(tn.TrainingID);
-            return Globals.GetWeekOfYear(training.Termin);
-        }
+            => Globals.GetWeekOfYear(Globals.DatabaseWrapper.TerminFromTrainingId(tn.TrainingID));
     }
 }

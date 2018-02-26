@@ -1,7 +1,5 @@
-﻿using System.Diagnostics;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using AVF.MemberManagement.ReportsBusinessLogic;
-using AVF.MemberManagement.StandardLibrary.Tbo;
 
 namespace AVF.MemberManagement.Reports
 {
@@ -16,14 +14,8 @@ namespace AVF.MemberManagement.Reports
         public override int GetNrOfDgvCols(TrainingParticipationModel tpModel)
             => DatabaseIdRange();
 
-        protected override int GetModelIndexFromId(int idTraining)
-        {
-            Debug.Assert(idTraining > 0);
-            Training training  = Globals.DatabaseWrapper.TrainingFromId(idTraining);
-            int      iMonth    = Globals.GetMonth(training.Termin);
-            int      iModelCol = iMonth - P_MinDatabaseId();
-            return iModelCol;
-        }
+        protected override int GetModelIndexFromId(int idMonth)
+            => idMonth - P_MinDatabaseId();
 
         private int GetMonthIdFromModelIndex(int iModelCol)
            => iModelCol + P_MinDatabaseId();
