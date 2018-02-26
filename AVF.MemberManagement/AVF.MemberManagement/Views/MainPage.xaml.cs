@@ -21,14 +21,7 @@ namespace AVF.MemberManagement.Views
 
         void Handle_Completed(object sender, System.EventArgs e)
         {
-            if (( (MainPageViewModel) BindingContext). IsInitialPassword)
-            {
-                ButtonNewPassword.Command.Execute(null);
-            }
-            else
-            {
-                ButtonStart.Command.Execute(null);
-            }
+            ButtonStart.Command.Execute(null);
         }
 
         protected override void OnSizeAllocated(double width, double height)
@@ -36,7 +29,7 @@ namespace AVF.MemberManagement.Views
             base.OnSizeAllocated(width, height);
 
             if (Device.Idiom != TargetIdiom.Phone) return;
-                
+
             if (width != this.width || height != this.height)
             {
                 this.width = width;

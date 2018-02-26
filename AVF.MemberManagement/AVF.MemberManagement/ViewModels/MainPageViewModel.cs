@@ -216,9 +216,18 @@ namespace AVF.MemberManagement.ViewModels
 
         private void OnStart()
         {
-            var navigationParametersForPasswordPage = new NavigationParameters { { "User", ServerUser } };
+            if (!IsInitialPassword)
+            {
+                var navigationParametersForPasswordPage = new NavigationParameters {{"User", ServerUser}};
 
-            NavigationService.NavigateAsync("StartPage", navigationParametersForPasswordPage);
+                NavigationService.NavigateAsync("StartPage", navigationParametersForPasswordPage);
+            }
+            else
+            {
+                var navigationParametersForPasswordPage = new NavigationParameters { { "User", ServerUser } };
+
+                NavigationService.NavigateAsync("PasswordPage", navigationParametersForPasswordPage);
+            }
         }
 
         private bool CanStart()
@@ -228,9 +237,7 @@ namespace AVF.MemberManagement.ViewModels
 
         private void OnNewPassword()
         {
-            var navigationParametersForPasswordPage = new NavigationParameters { { "User", ServerUser } };
-
-            NavigationService.NavigateAsync("PasswordPage", navigationParametersForPasswordPage);
+            
         }
 
         private bool CanNewPassword()
