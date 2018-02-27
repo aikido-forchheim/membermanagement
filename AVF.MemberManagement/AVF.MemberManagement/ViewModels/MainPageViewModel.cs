@@ -292,15 +292,22 @@ namespace AVF.MemberManagement.ViewModels
 
         public override async void OnNavigatedTo(NavigationParameters parameters)
         {
-            if (parameters.ContainsKey("__NavigationMode") && parameters["__NavigationMode"].ToString() == "Back")
+            try
             {
-                Password = string.Empty;
-            }
+                if (parameters.ContainsKey("__NavigationMode") && parameters["__NavigationMode"].ToString() == "Back")
+                {
+                    Password = string.Empty;
+                }
 
-            //Start caching
-            await _mitgliederRepository.GetAsync();
-            //await _trainingRepository.GetAsync();
-            //await _trainingsTeilnahmenRepository.GetAsync();
+                //Start caching
+                await _mitgliederRepository.GetAsync();
+                //await _trainingRepository.GetAsync();
+                //await _trainingsTeilnahmenRepository.GetAsync();
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.ToString());
+            }
         }
     }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms" xmlns:converters="clr-namespace:DryLib.Xamarin.Converters;assembly=DryLib.Xamarin.Converters" prism:ViewModelLocator.AutowireViewModel="True" x:Class="AVF.MemberManagement.Views.MainPage"  Appearing="Handle_Appearing" Title="{Binding Title}">
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms" xmlns:converters="clr-namespace:DryLib.Xamarin.Converters;assembly=DryLib.Xamarin.Converters" prism:ViewModelLocator.AutowireViewModel="True" x:Class="AVF.MemberManagement.Views.MainPage" Appearing="Handle_Appearing" Title="{Binding Title}">
     <ContentPage.Resources>
         <ResourceDictionary>
             <converters:BooleanNotConverter x:Key="BooleanNotConverter">
@@ -7,16 +7,16 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Content>
-        <Grid x:Name="innerGrid">
+        <Grid x:Name="controlsGrid">
             <Grid.RowDefinitions>
-                <RowDefinition Height="9*">
-                    <!-- change also code behind: OnSizeAllocated-->
+                <RowDefinition Height="4*">
                 </RowDefinition>
-                <RowDefinition Height="16*">
-                    <!-- change also code behind: OnSizeAllocated-->
+                <RowDefinition Height="Auto">
+                </RowDefinition>
+                <RowDefinition Height="2*">
                 </RowDefinition>
             </Grid.RowDefinitions>
-            <Image HorizontalOptions="Center" VerticalOptions="Center">
+            <Image Grid.Row="0" HorizontalOptions="Center" VerticalOptions="Center">
                 <Image.Source>
                     <UriImageSource CacheValidity="1" CachingEnabled="True" Uri="https://raw.githubusercontent.com/aikido-forchheim/assets/master/logo1024.jpg">
                     </UriImageSource>
@@ -36,38 +36,26 @@
                     </OnIdiom>
                 </Image.WidthRequest>
             </Image>
-            <Grid Grid.Row="1" x:Name="controlsGrid" HorizontalOptions="Center" VerticalOptions="Center">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="2*">
-                    </RowDefinition>
-                    <RowDefinition Height="3*">
-                    </RowDefinition>
-                    <RowDefinition Height="2*">
-                    </RowDefinition>
-                </Grid.RowDefinitions>
-                <StackLayout Grid.Row="0" x:Name="UserNameArea" HorizontalOptions="Center" VerticalOptions="Start">
-                    <Label Text="Benutzername:">
-                    </Label>
-                    <Entry x:Name="EntryUsername" Text="{Binding Username}" Completed="EntryUsername_OnCompleted" Keyboard="Email" WidthRequest="256" IsEnabled="{Binding IsRestApiAccountSet}" BackgroundColor="#EEEEEE">
-                    </Entry>
-                </StackLayout>
-                <StackLayout Grid.Row="1" x:Name="PasswordArea" HorizontalOptions="Center" VerticalOptions="Start">
-                    <Label Text="Passwort:">
-                    </Label>
-                    <Entry x:Name="EntryPassword" Text="{Binding Password}" Completed="Handle_Completed" WidthRequest="256" IsPassword="True" BackgroundColor="#EEEEEE">
-                    </Entry>
-                    <StackLayout HeightRequest="48">
-                        <Button  x:Name="ButtonStart" Text="Weiter" Command="{Binding StartCommand}">
-                        </Button>
-                    </StackLayout>
-                </StackLayout>
-                <StackLayout Grid.Row="2" HorizontalOptions="Center" VerticalOptions="Center">
-                    <Label Text="Bitte erst Einstellungen setzen:" IsVisible="{Binding IsRestApiAccountSet, Converter={StaticResource BooleanNotConverter}}">
-                    </Label>
-                    <Button Text="Einstellungen" Command="{Binding SettingsCommand}" Style="{StaticResource Button}">
+            <StackLayout Grid.Row="1" x:Name="UserNameArea" HorizontalOptions="Center" VerticalOptions="Center">
+                <Label Text="Benutzername:">
+                </Label>
+                <Entry x:Name="EntryUsername" Text="{Binding Username}" Completed="EntryUsername_OnCompleted" Keyboard="Email" WidthRequest="256" IsEnabled="{Binding IsRestApiAccountSet}" BackgroundColor="#EEEEEE">
+                </Entry>
+                <Label Text="Passwort:">
+                </Label>
+                <Entry x:Name="EntryPassword" Text="{Binding Password}" Completed="Handle_Completed" WidthRequest="256" IsPassword="True" BackgroundColor="#EEEEEE">
+                </Entry>
+                <StackLayout HeightRequest="48">
+                    <Button x:Name="ButtonStart" Text="Weiter" Command="{Binding StartCommand}">
                     </Button>
                 </StackLayout>
-            </Grid>
+            </StackLayout>
+            <StackLayout Grid.Row="2" HorizontalOptions="Center" VerticalOptions="Center">
+                <Label Text="Bitte erst Einstellungen setzen:" IsVisible="{Binding IsRestApiAccountSet, Converter={StaticResource BooleanNotConverter}}">
+                </Label>
+                <Button Text="Einstellungen" Command="{Binding SettingsCommand}" Style="{StaticResource Button}">
+                </Button>
+            </StackLayout>
         </Grid>
     </ContentPage.Content>
 </ContentPage>
