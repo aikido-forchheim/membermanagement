@@ -118,7 +118,7 @@ namespace AVF.MemberManagement.Reports
                 string strDateGrad = m_dataGridView.Rows[row].Cells["dateGrad"].Value.ToString();
                 DateTime dateGrad = DateTime.Parse(strDateGrad);
                 return action
-                    ? ReportTrainingsParticipation.Show(new ReportWeekVsCourses(dateGrad, DateTime.Now, idMember))
+                    ? ReportTrainingsParticipation.Show(new ReportMonthsVsCourses(dateGrad, DateTime.Now, idMember))
                     : $"Klicken für Details zu Mitglied\n" + (new AxisTypeMember()).GetDescription(idMember, ' ');
             }
             else

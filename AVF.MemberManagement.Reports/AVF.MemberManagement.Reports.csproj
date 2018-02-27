@@ -110,9 +110,6 @@
     <Compile Include="ReportTraining.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ReportWeekVsCourses.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="AxisTypeTraining.cs" />
     <Compile Include="VerticalAxisCourses.cs" />
     <Compile Include="VerticalAxisMembers.cs" />
@@ -121,8 +118,6 @@
     <Compile Include="HorizontalAxisTrainings.cs" />
     <Compile Include="VerticalAxis.cs" />
     <Compile Include="VerticalAxisMonths.cs" />
-    <Compile Include="VerticalAxisWeeks.cs" />
-    <Compile Include="AxisTypeWeek.cs" />
     <EmbeddedResource Include="ReportMain.resx">
       <DependentUpon>ReportMain.cs</DependentUpon>
     </EmbeddedResource>
