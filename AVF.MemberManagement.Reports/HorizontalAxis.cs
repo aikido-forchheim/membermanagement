@@ -27,6 +27,14 @@ namespace AVF.MemberManagement.Reports
 
         public abstract int GetNrOfDgvCols(TrainingParticipationModel tpModel);
 
-        public abstract void FillHeaderCell(DataGridView dgv, int iDgvCol, int iModelCol);
+        public void FillHeaderCell(DataGridView dgv, int iDgvCol, int iModelCol)
+        {
+            int id = GetIdFromModelIndex(iModelCol);
+
+            m_DbIds[iDgvCol - P_startIndex] = id;
+
+            dgv.Columns[iDgvCol].HeaderText = P_AxisType.GetDescription(id);
+            dgv.Columns[iDgvCol].SortMode = DataGridViewColumnSortMode.NotSortable;
+        }
     }
 }

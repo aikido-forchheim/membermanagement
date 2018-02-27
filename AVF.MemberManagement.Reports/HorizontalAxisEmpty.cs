@@ -18,8 +18,5 @@ namespace AVF.MemberManagement.Reports
         protected override int GetModelIndexFromId(int id) => 0;
 
         protected override int GetIdFromModelIndex(int iModelCol) => 0;
-
-        public override void FillHeaderCell(DataGridView dgv, int iDgvCol, int iModelCol)
-        { }
     }
 }

@@ -15,7 +15,7 @@ namespace AVF.MemberManagement.Reports
         public override string MouseCellEvent(DateTime datStart, DateTime datEnd, int idMonth, bool action)
             => action
                ? String.Empty
-               : $"Klicken für Details zum Monat " + Globals.GetMonthName(idMonth) + "\n noch nicht implementiert";
+               : $"Klicken für Details zum Monat " + GetDescription(idMonth) + "\n noch nicht implementiert";
 
         public override int P_MaxDbId { get; } = LAST_MONTH;
 
@@ -24,7 +24,7 @@ namespace AVF.MemberManagement.Reports
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => Globals.GetMonth(Globals.DatabaseWrapper.TerminFromTrainingId(tn.TrainingID));
 
-        public override string GetDescription(int idWeek)
-            => String.Empty;
+        public override string GetDescription(int idMonth)
+            => Globals.GetMonthName(idMonth);
     }
 }

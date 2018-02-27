@@ -69,26 +69,26 @@ namespace AVF.MemberManagement.Reports
             m_xAxis.Initialize();
             ReportFormSize();
 
-            int iDgvRow;
-            int iDgvCol = m_xAxis.P_startIndex;
-            m_tpModel.ForAllCols
-            (
-                action: iModelCol => m_xAxis.FillHeaderCell(m_dataGridView, iDgvCol++, iModelCol),
-                activeColsOnly: m_xAxis.P_AxisType.P_ActiveElementsOnly
-            );
-
-            m_dataGridView.Columns[m_dataGridView.ColumnCount - 1].HeaderText = "\nSumme";
             m_yAxis.FillKeyHeaderCells(m_dataGridView);
 
-            iDgvRow = 0;
+            int iDgvRow = 0;
             m_tpModel.ForAllRows
             (
                 action: iModelRow => m_yAxis.FillMainKeyCell(m_tpModel, m_dataGridView, iDgvRow++, iModelRow),
                 activeRowsOnly: m_yAxis.P_AxisType.P_ActiveElementsOnly
             );
 
-            if ( ! m_xAxis.P_Hide )
+            if (!m_xAxis.P_Hide)
             {
+                int iDgvCol = m_xAxis.P_startIndex;
+                m_tpModel.ForAllCols
+                (
+                    action: iModelCol => m_xAxis.FillHeaderCell(m_dataGridView, iDgvCol++, iModelCol),
+                    activeColsOnly: m_xAxis.P_AxisType.P_ActiveElementsOnly
+                );
+
+                m_dataGridView.Columns[m_dataGridView.ColumnCount - 1].HeaderText = "\nSumme";
+
                 iDgvRow = 0;
                 m_tpModel.ForAllRows
                 (
