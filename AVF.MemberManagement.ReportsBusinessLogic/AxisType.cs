@@ -15,6 +15,6 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 
         public abstract int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn);
 
-        public abstract string GetDescription(int id);
+        public abstract string GetDescription(int id, char separator);
     }
 }

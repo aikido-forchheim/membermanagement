@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Windows.Forms;
-using Microsoft.Practices.Unity;
-using AVF.MemberManagement.xUnitIntegrationTests;
-using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
     static class Program
     {
-//        private static IUnityContainer m_container;
-
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -18,7 +13,6 @@ namespace AVF.MemberManagement.Reports
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
             Application.Run(new ReportMain());
         }
     }

@@ -24,9 +24,9 @@ namespace AVF.MemberManagement.Reports
             return action
                 ? Show( new ReportMemberVsTrainings(m_datStart, m_datEnd, idKurs) )
                 : $"Klicken für Details zur Teilnahme von\n" 
-                     + m_yAxis.P_AxisType.GetDescription( idMember ) 
+                     + m_yAxis.P_AxisType.GetDescription( idMember, ' ') 
                      + $" am Kurs\n" 
-                     + m_xAxis.P_AxisType.GetDescription( idKurs );
+                     + m_xAxis.P_AxisType.GetDescription( idKurs, ' ');
         }
     }
 }

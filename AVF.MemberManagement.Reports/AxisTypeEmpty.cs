@@ -19,7 +19,7 @@ namespace AVF.MemberManagement.Reports
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
         => 0;
 
-        public override string GetDescription(int idWeek)
+        public override string GetDescription(int idWeek, char separator)
             => String.Empty;
     }
 }

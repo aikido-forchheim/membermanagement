@@ -25,7 +25,7 @@ namespace AVF.MemberManagement.Reports
         public override void FillMainKeyCell(TrainingParticipationModel tpModel, DataGridView dgv, int iDgvRow, int idKurs)
         {
             dgv[0, iDgvRow].Value = idKurs;
-            dgv[1, iDgvRow].Value = P_AxisType.GetDescription(idKurs);
+            dgv[1, iDgvRow].Value = P_AxisType.GetDescription(idKurs, ' ');
         }
     }
 }

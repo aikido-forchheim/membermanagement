@@ -6,25 +6,36 @@ namespace AVF.MemberManagement.Reports
 {
     public class AxisTypeMonth : AxisType
     {
+        DateTime m_datStart;
+        DateTime m_datEnd;
+
+        private int NrOfMonths(DateTime datStart, DateTime datEnd)
+            => (datEnd.Year - datStart.Year) * 12 + (datEnd.Month - datStart.Month);
+
         public AxisTypeMonth(DateTime datStart, DateTime datEnd)
         {
             P_ActiveElementsOnly = false;
-            P_MaxDbId = LAST_MONTH;
-            P_MinDbId = FRST_MONTH;
+            m_datStart = datStart;
+            m_datEnd = datEnd;
+            P_MinDbId = 0;
+            P_MaxDbId = NrOfMonths(m_datStart, m_datEnd);
         }
-
-        private const int LAST_MONTH = 12;
-        private const int FRST_MONTH = 1;
 
         public override string MouseCellEvent(DateTime datStart, DateTime datEnd, int idMonth, bool action)
             => action
                ? String.Empty
-               : $"Klicken für Details zum Monat " + GetDescription(idMonth) + "\n noch nicht implementiert";
+               : $"Klicken für Details zum Monat " + GetDescription(idMonth, ' ') + "\nnoch nicht implementiert";
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
-            => Globals.GetMonth(Globals.DatabaseWrapper.TerminFromTrainingId(tn.TrainingID));
+            => NrOfMonths(m_datStart, Globals.DatabaseWrapper.TerminFromTrainingId(tn.TrainingID));
 
-        public override string GetDescription(int idMonth)
-            => Globals.GetMonthName(idMonth);
+        public override string GetDescription(int id, char separator)
+        {
+            int x = (m_datStart.Month - 1) + id;
+            int year = m_datStart.Year + x / 12;
+            int month = x % 12;
+            string strMonth = Globals.GetMonthNameShort(month + 1);
+            return $"{strMonth}{separator}{year}";
+        }
     }
 }

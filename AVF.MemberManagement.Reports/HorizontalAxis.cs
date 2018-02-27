@@ -33,7 +33,7 @@ namespace AVF.MemberManagement.Reports
 
             m_DbIds[iDgvCol - P_startIndex] = id;
 
-            dgv.Columns[iDgvCol].HeaderText = P_AxisType.GetDescription(id);
+            dgv.Columns[iDgvCol].HeaderText = P_AxisType.GetDescription(id, '\n');
             dgv.Columns[iDgvCol].SortMode = DataGridViewColumnSortMode.NotSortable;
         }
     }

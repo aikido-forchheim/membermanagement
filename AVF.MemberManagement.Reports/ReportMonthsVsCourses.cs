@@ -3,15 +3,15 @@ using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
-    class ReportWeekVsCourses : ReportTrainingsParticipation
+    class ReportMonthsVsCourses : ReportTrainingsParticipation
     {
-        public ReportWeekVsCourses(DateTime datStart, DateTime datEnd, int idMember)
+        public ReportMonthsVsCourses(DateTime datStart, DateTime datEnd, int idMember)
         {
             CreateModel
             (
                 datStart, datEnd,
                 new HorizontalAxisCourses(),
-                new VerticalAxisWeeks(datStart, datEnd),
+                new VerticalAxisMonths(datStart, datEnd),
                 filter: tn => idMember == tn.MitgliedID
             );
 

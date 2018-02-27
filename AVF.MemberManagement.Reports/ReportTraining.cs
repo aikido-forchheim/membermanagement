@@ -22,7 +22,7 @@ namespace AVF.MemberManagement.Reports
             string day = Globals.DatabaseWrapper.WeekDay(training.WochentagID);
             m_label1.Text = $"Training am {day} den {training.Termin:dd}.{training.Termin:MM}.{training.Termin:yyyy}";
             m_label2.Text = $"um {training.Zeit:hh}:{training.Zeit:mm} Uhr";
-            m_label3.Text = $"Trainer: {m_yAxis.P_AxisType.GetDescription(training.Trainer)}";
+            m_label3.Text = $"Trainer: {m_yAxis.P_AxisType.GetDescription(training.Trainer, ' ')}";
         }
     }
 }

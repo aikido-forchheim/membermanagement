@@ -21,6 +21,6 @@ namespace AVF.MemberManagement.Reports
             => dgv.Columns[0].HeaderText = "KW";
 
         public override void FillMainKeyCell(TrainingParticipationModel tpModel, DataGridView dgv, int iDgvRow, int iModelRow) 
-            => dgv[0, iDgvRow].Value = iModelRow + P_AxisType.P_MinDbId;
+            => dgv[0, iDgvRow].Value = P_AxisType.GetDescription(iModelRow, '/');
     }
 }

@@ -17,16 +17,16 @@ namespace AVF.MemberManagement.Reports
     public override string MouseCellEvent(DateTime datStart, DateTime datEnd, int idTraining, bool action)
             => action
                ? ReportTrainingsParticipation.Show(new ReportTraining(idTraining))
-               : $"Klicken für Details zum Training " + GetDescription(idTraining);
+               : $"Klicken für Details zum Training " + GetDescription(idTraining, ' ');
         
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => tn.TrainingID;
 
-        public override string GetDescription(int idTraining)
+        public override string GetDescription(int idTraining, char separator)
         {
             Debug.Assert(idTraining > 0);
             Training training = Globals.DatabaseWrapper.TrainingFromId(idTraining);
-            return $"{training.Termin:dd}\n{training.Termin:MM}\n{training.Termin:yy}";
+            return $"{training.Termin:dd}{separator}{training.Termin:MM}{separator}{training.Termin:yy}";
         }
     }
 }
