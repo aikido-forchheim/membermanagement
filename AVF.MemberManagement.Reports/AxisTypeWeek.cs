@@ -6,10 +6,13 @@ namespace AVF.MemberManagement.Reports
 {
     public class AxisTypeWeek : AxisType
     {
-        public AxisTypeWeek()
-        {
+        public AxisTypeWeek(DateTime datStart, DateTime datEnd)
+        { 
             P_ActiveElementsOnly = false;
+            P_MaxDbId = LAST_CALENDAR_WEEK;
+            P_MinDbId = FRST_CALENDAR_WEEK;
         }
+        
         private const int LAST_CALENDAR_WEEK = 52;
         private const int FRST_CALENDAR_WEEK = 1;
 
@@ -17,10 +20,6 @@ namespace AVF.MemberManagement.Reports
             => action
                ? String.Empty
                : $"Klicken für Details zu Trainings in dieser Woche (Noch nicht implementiert)";
-
-        public override int P_MaxDbId { get; } = LAST_CALENDAR_WEEK;
-
-        public override int P_MinDbId { get; } = FRST_CALENDAR_WEEK;
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => Globals.GetWeekOfYear(Globals.DatabaseWrapper.TerminFromTrainingId(tn.TrainingID));

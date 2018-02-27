@@ -9,8 +9,10 @@ namespace AVF.MemberManagement.Reports
     public class AxisTypeCourse : AxisType
     {
         public AxisTypeCourse()
-        {
+        { 
             P_ActiveElementsOnly = false;
+            P_MaxDbId = Globals.DatabaseWrapper.MaxKursNr();
+            P_MinDbId = Globals.DatabaseWrapper.MinKursNr();
         }
 
         public override string MouseCellEvent(DateTime datStart, DateTime datEnd, int idKurs, bool action)
@@ -18,9 +20,6 @@ namespace AVF.MemberManagement.Reports
                ? ReportTrainingsParticipation.Show(new ReportMemberVsTrainings(datStart, datEnd, idKurs))
                : $"Klicken für Details zum Kurs\n" + GetDescription(idKurs);
 
-        public override int P_MaxDbId { get; } = Globals.DatabaseWrapper.MaxKursNr();
-
-        public override int P_MinDbId { get; } = Globals.DatabaseWrapper.MinKursNr();
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID);

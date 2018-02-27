@@ -11,7 +11,7 @@ namespace AVF.MemberManagement.Reports
             (
                 datStart, datEnd,
                 new HorizontalAxisCourses(),
-                new VerticalAxisWeeks(),
+                new VerticalAxisWeeks(datStart, datEnd),
                 filter: tn => idMember == tn.MitgliedID
             );
 

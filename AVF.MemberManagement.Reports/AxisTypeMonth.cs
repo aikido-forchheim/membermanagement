@@ -6,8 +6,12 @@ namespace AVF.MemberManagement.Reports
 {
     public class AxisTypeMonth : AxisType
     {
-        public AxisTypeMonth()
-            => P_ActiveElementsOnly = false;
+        public AxisTypeMonth(DateTime datStart, DateTime datEnd)
+        {
+            P_ActiveElementsOnly = false;
+            P_MaxDbId = LAST_MONTH;
+            P_MinDbId = FRST_MONTH;
+        }
 
         private const int LAST_MONTH = 12;
         private const int FRST_MONTH = 1;
@@ -16,10 +20,6 @@ namespace AVF.MemberManagement.Reports
             => action
                ? String.Empty
                : $"Klicken für Details zum Monat " + GetDescription(idMonth) + "\n noch nicht implementiert";
-
-        public override int P_MaxDbId { get; } = LAST_MONTH;
-
-        public override int P_MinDbId { get; } = FRST_MONTH;
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => Globals.GetMonth(Globals.DatabaseWrapper.TerminFromTrainingId(tn.TrainingID));

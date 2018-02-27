@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.Practices.Unity;
-using AVF.MemberManagement.StandardLibrary.Tbo;
 
 namespace AVF.MemberManagement.ReportsBusinessLogic
 {

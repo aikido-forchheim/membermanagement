@@ -1,12 +1,12 @@
-﻿using System.Windows.Forms;
+﻿using System;
 using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
     class HorizontalAxisTrainings : HorizontalAxis
     {
-        public HorizontalAxisTrainings()
-            => P_AxisType = new AxisTypeTraining();
+        public HorizontalAxisTrainings(DateTime datStart, DateTime datEnd)
+            => P_AxisType = new AxisTypeTraining(datStart, datEnd);
 
         public override int GetNrOfDgvCols(TrainingParticipationModel tpModel)
             => tpModel.GetNrOfActiveCols();

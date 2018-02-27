@@ -7,9 +7,9 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
     {
         public abstract string MouseCellEvent(DateTime datStart, DateTime datEnd, int id, bool action);
 
-        public abstract int P_MaxDbId { get; }
+        public int P_MaxDbId { get; protected set; }
 
-        public abstract int P_MinDbId { get; }
+        public int P_MinDbId { get; protected set; }
 
         public bool P_ActiveElementsOnly { get; protected set; } = false;
 

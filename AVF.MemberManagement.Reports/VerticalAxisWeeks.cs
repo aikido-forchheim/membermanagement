@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.ReportsBusinessLogic;
 
@@ -6,11 +7,11 @@ namespace AVF.MemberManagement.Reports
 {
     class VerticalAxisWeeks : VerticalAxis
     {
-        public VerticalAxisWeeks()
+        public VerticalAxisWeeks(DateTime datStart, DateTime datEnd)
         {
             P_NrOfKeyColumns = 1;
             P_KeyColumn = 0;
-            P_AxisType = new AxisTypeWeek();
+            P_AxisType = new AxisTypeWeek(datStart, datEnd);
         }
 
         public override int GetModelIndexFromTrainingsParticipation(TrainingsTeilnahme tn)

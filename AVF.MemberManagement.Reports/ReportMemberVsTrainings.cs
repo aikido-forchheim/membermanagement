@@ -10,7 +10,7 @@ namespace AVF.MemberManagement.Reports
             CreateModel
             (
                 datStart, datEnd,
-                new HorizontalAxisTrainings(),
+                new HorizontalAxisTrainings(datStart, datEnd),
                 new VerticalAxisMembers(),
                 filter: tn => Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID) == idKurs
             );

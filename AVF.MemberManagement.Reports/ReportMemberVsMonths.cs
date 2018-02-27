@@ -10,7 +10,7 @@ namespace AVF.MemberManagement.Reports
             CreateModel
             (
                 datStart, datEnd,
-                new HorizontalAxisMonths(),
+                new HorizontalAxisMonths(datStart, datEnd),
                 new VerticalAxisMembers(),
                 filter: tn => true
             );

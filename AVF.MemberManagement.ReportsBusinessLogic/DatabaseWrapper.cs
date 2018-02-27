@@ -59,7 +59,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             m_trainingsTeilnahme = await Container.Resolve<IRepository<TrainingsTeilnahme>>().GetAsync();
             tick("Kurs");
             m_kurs = await Container.Resolve<IRepository<Kurs>>().GetAsync();
-            tick("Setting");
+            tick("Settings");
             m_settings = await Container.Resolve<IRepositoryBase<Setting, string>>().GetAsync();
             tick("");
             m_mitglieder.RemoveAt(0);   // Mitglied 0 is a dummy
@@ -78,6 +78,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
                 if (!t.KursID.HasValue)
                     t.KursID = 0;
             }
+            tick("");
         }
 
         public DateTime GetStartValidData()
