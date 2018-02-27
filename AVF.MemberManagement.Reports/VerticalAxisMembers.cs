@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.ReportsBusinessLogic;
 
@@ -11,12 +10,8 @@ namespace AVF.MemberManagement.Reports
         {
             P_NrOfKeyColumns  = 3;   // 3 columns for Mitglieder
             P_KeyColumn = 2;
-            P_ActiveElementsOnly = true;
             P_AxisType = new AxisTypeMember();
         }
-
-        public override int GetNrOfDgvRows(TrainingParticipationModel tpModel)
-            => tpModel.GetNrOfActiveRows();
 
         public override int GetModelIndexFromTrainingsParticipation(TrainingsTeilnahme tn)
             => P_AxisType.GetIdFromTrainingsParticipation( tn );
@@ -28,7 +23,7 @@ namespace AVF.MemberManagement.Reports
             dgv.Columns[2].HeaderText = "Nr";
         }
 
-        protected override void FillMainKeyCell( TrainingParticipationModel tpModel, DataGridView dgv, int iDgvRow, int iModelRow)
+        public override void FillMainKeyCell( TrainingParticipationModel tpModel, DataGridView dgv, int iDgvRow, int iModelRow)
         {
             Mitglied mitglied = Globals.DatabaseWrapper.m_mitglieder[iModelRow];
             dgv[0, iDgvRow].Value = mitglied.Vorname;

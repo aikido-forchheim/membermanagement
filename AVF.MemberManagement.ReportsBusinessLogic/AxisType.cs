@@ -11,6 +11,10 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 
         public abstract int P_MinDbId { get; }
 
+        public bool P_ActiveElementsOnly { get; protected set; } = false;
+
         public abstract int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn);
+
+        public abstract string GetDescription(int id);
     }
 }

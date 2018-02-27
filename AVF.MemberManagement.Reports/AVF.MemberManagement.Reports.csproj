@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AxisTypeCourse.cs" />
+    <Compile Include="AxisTypeEmpty.cs" />
     <Compile Include="Excel.cs" />
     <Compile Include="HorizontalAxis.cs" />
     <Compile Include="HorizontalAxisCourses.cs" />

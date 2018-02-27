@@ -36,34 +36,5 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 
         public static string GetTimeRangeDescription(DateTime datStart, DateTime datEnd)
             => Format(datStart) + " " + Format(datEnd);
-
-        public static string GetCourseDescription(int idKurs)
-        {
-            Kurs kurs = Globals.DatabaseWrapper.KursFromId(idKurs);
-
-            if (kurs.Zeit == TimeSpan.Zero)
-            {
-                return "Lehrg.\netc.";
-            }
-            else
-            {
-                string day = Globals.DatabaseWrapper.WeekDay(kurs.WochentagID).Substring(0, 2);
-                return $"{ day }\n{kurs.Zeit:hh}:{kurs.Zeit:mm}";
-            }
-        }
-
-        public static string GetTrainingDescription(int idTraining)
-        {
-            Debug.Assert(idTraining > 0);
-            Training training = Globals.DatabaseWrapper.TrainingFromId(idTraining);
-            return $"{training.Termin:dd}\n{training.Termin:MM}";
-        }
-
-        public static string GetMemberDescription( int idMember )
-        {
-            Mitglied mitglied = Globals.DatabaseWrapper.MitgliedFromId(idMember);
-            return $"{mitglied.Vorname} {mitglied.Nachname} MitgliedNr. {mitglied.Id}";
-        }
-
     }
 }

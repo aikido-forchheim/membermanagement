@@ -119,7 +119,7 @@ namespace AVF.MemberManagement.Reports
                 DateTime dateGrad = DateTime.Parse(strDateGrad);
                 return action
                     ? ReportTrainingsParticipation.Show(new ReportWeekVsCourses(dateGrad, DateTime.Now, idMember))
-                    : $"Klicken für Details zu Mitglied\n" + Globals.GetMemberDescription(idMember);
+                    : $"Klicken für Details zu Mitglied\n" + (new AxisTypeMember()).GetDescription(idMember);
             }
             else
             {

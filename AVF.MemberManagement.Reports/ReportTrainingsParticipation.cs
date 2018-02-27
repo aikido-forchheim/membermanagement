@@ -48,17 +48,17 @@ namespace AVF.MemberManagement.Reports
                     m_tpModel.ForAllCols
                     (
                         action: iModelCol => m_dataGridView[iDgvCol++, iDgvRow].Value = FormatMatrixElement(m_tpModel.GetCell(iModelRow, iModelCol)),
-                        activeColsOnly: m_xAxis.P_ActiveElementsOnly
+                        activeColsOnly: m_xAxis.P_AxisType.P_ActiveElementsOnly
                     );
                     ++iDgvRow;
                 },
-                activeRowsOnly: m_yAxis.P_ActiveElementsOnly
+                activeRowsOnly: m_yAxis.P_AxisType.P_ActiveElementsOnly
             );
         }
 
         private void ReportFormSize()      // define dimensions of DataGridView
         {
-            m_dataGridView.RowCount = m_yAxis.GetNrOfDgvRows(m_tpModel);
+            m_dataGridView.RowCount    = m_yAxis.P_AxisType.P_ActiveElementsOnly ? m_tpModel.GetNrOfActiveRows() : m_yAxis.DatabaseIdRange();
             m_dataGridView.ColumnCount = m_yAxis.P_NrOfKeyColumns;
             if (!m_xAxis.P_Hide)
                 m_dataGridView.ColumnCount += m_xAxis.GetNrOfDgvCols(m_tpModel) + 1; // + 1 for summary column
@@ -68,13 +68,33 @@ namespace AVF.MemberManagement.Reports
         {
             m_xAxis.Initialize();
             ReportFormSize();
-            m_xAxis.FillMainHeaderCells(m_dataGridView, m_tpModel);
+
+            int iDgvRow;
+            int iDgvCol = m_xAxis.P_startIndex;
+            m_tpModel.ForAllCols
+            (
+                action: iModelCol => m_xAxis.FillHeaderCell(m_dataGridView, iDgvCol++, iModelCol),
+                activeColsOnly: m_xAxis.P_AxisType.P_ActiveElementsOnly
+            );
+
             m_dataGridView.Columns[m_dataGridView.ColumnCount - 1].HeaderText = "\nSumme";
             m_yAxis.FillKeyHeaderCells(m_dataGridView);
-            m_yAxis.FillMainKeyCells(m_dataGridView, m_tpModel);
+
+            iDgvRow = 0;
+            m_tpModel.ForAllRows
+            (
+                action: iModelRow => m_yAxis.FillMainKeyCell(m_tpModel, m_dataGridView, iDgvRow++, iModelRow),
+                activeRowsOnly: m_yAxis.P_AxisType.P_ActiveElementsOnly
+            );
+
             if ( ! m_xAxis.P_Hide )
             {
-                m_yAxis.FillSumCells(m_dataGridView, m_tpModel);
+                iDgvRow = 0;
+                m_tpModel.ForAllRows
+                (
+                    iModelRow => m_dataGridView[m_dataGridView.ColumnCount - 1, iDgvRow++].Value = m_tpModel.GetRowSum(iModelRow),
+                    m_yAxis.P_AxisType.P_ActiveElementsOnly
+                );
                 FillMainArea();
             }
         }

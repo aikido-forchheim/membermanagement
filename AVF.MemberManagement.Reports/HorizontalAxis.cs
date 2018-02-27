@@ -18,25 +18,15 @@ namespace AVF.MemberManagement.Reports
         public int GetColKey(int iDgvCol)
             => m_DbIds[iDgvCol - P_startIndex];
 
-        protected virtual int GetModelIndexFromId(int id)
-            => 0;
+        protected abstract int GetModelIndexFromId(int id);
+
+        protected abstract int GetIdFromModelIndex(int id);
 
         public override int GetModelIndexFromTrainingsParticipation(TrainingsTeilnahme tn)
             => GetModelIndexFromId(P_AxisType.GetIdFromTrainingsParticipation(tn));
 
-        public virtual int GetNrOfDgvCols(TrainingParticipationModel tpModel)
-            => 1;
+        public abstract int GetNrOfDgvCols(TrainingParticipationModel tpModel);
 
-        protected virtual void FillHeaderCell(DataGridView dgv, int iDgvCol, int iModelCol) { }
-
-        public void FillMainHeaderCells(DataGridView dgv, TrainingParticipationModel tpModel)
-        {
-            int iDgvCol = P_startIndex;
-            tpModel.ForAllCols
-            (
-                action: iModelCol => FillHeaderCell(dgv, iDgvCol++, iModelCol),
-                activeColsOnly: P_ActiveElementsOnly
-            );
-        }
+        public abstract void FillHeaderCell(DataGridView dgv, int iDgvCol, int iModelCol);
     }
 }

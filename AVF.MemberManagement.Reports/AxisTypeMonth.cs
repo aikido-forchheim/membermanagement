@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.ReportsBusinessLogic;
 
@@ -7,6 +6,9 @@ namespace AVF.MemberManagement.Reports
 {
     public class AxisTypeMonth : AxisType
     {
+        public AxisTypeMonth()
+            => P_ActiveElementsOnly = false;
+
         private const int LAST_MONTH = 12;
         private const int FRST_MONTH = 1;
 
@@ -21,5 +23,8 @@ namespace AVF.MemberManagement.Reports
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => Globals.GetMonth(Globals.DatabaseWrapper.TerminFromTrainingId(tn.TrainingID));
+
+        public override string GetDescription(int idWeek)
+            => String.Empty;
     }
 }
