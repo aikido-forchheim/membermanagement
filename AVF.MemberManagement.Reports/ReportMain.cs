@@ -27,20 +27,32 @@ namespace AVF.MemberManagement.Reports
                 m_container, 
                 tick: s => { progressBar1.PerformStep(); label2.Text = s;  }
             );
-            Trainingsteilnahme.Enabled = true;
+            Kurse.Enabled = true;
             Graduierungsliste.Enabled = true;
+            TrainingsteilnahmeKurse.Enabled = true;
+            TrainingsteilnahmeMonate.Enabled = true;
             progressBar1.Hide();
             label1.Hide();
         }
 
-        private void Trainingsteilnahme_Click(object sender, EventArgs e)
+        private void Trainingsteilnahme_Kurse_Click(object sender, EventArgs e)
+        {
+            int iJahr = 2017;
+            var form = new ReportMemberVsCourses(new DateTime(iJahr, 1, 1), new DateTime(iJahr, 12, 31));
+            form.ShowDialog();
+        }
+
+        private void Kurse_Click(object sender, EventArgs e)
         {
             int iJahr = 2017;
             var form = new ReportCoursesVsMonths(new DateTime(iJahr, 1, 1), new DateTime(iJahr, 12, 31), -1);
-            //var form = new ReportMemberVsMonths(new DateTime(iJahr, 1, 1), new DateTime(iJahr, 12, 31));
-            //var form = new ReportGraduationList();
+            form.ShowDialog();
+        }
 
-            //var form = new ReportMemberVsCourses(new DateTime(iJahr, 1, 1), new DateTime(iJahr, 12, 31));
+        private void Trainingsteilnahme_Monate_Click(object sender, EventArgs e)
+        {
+            int iJahr = 2017;
+            var form = new ReportMemberVsMonths(new DateTime(iJahr, 1, 1), new DateTime(iJahr, 12, 31));
             form.ShowDialog();
         }
 
@@ -50,5 +62,9 @@ namespace AVF.MemberManagement.Reports
             form.ShowDialog();
         }
 
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

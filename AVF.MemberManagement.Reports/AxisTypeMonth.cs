@@ -19,11 +19,11 @@ namespace AVF.MemberManagement.Reports
         private int NrOfMonths(DateTime datStart, DateTime datEnd)
             => (datEnd.Year - datStart.Year) * 12 + (datEnd.Month - datStart.Month);
 
-        public override int GetModelIndexFromId(int idMonth)
-            => Globals.DatabaseWrapper.m_monat.FindIndex(monat => idMonth == monat.Id);
+        public override int GetModelIndexFromId(int id)
+            => Globals.DatabaseWrapper.m_monat.FindIndex(x => id == x.Id);
 
         public override int GetIdFromModelIndex(int iModelIndex)
-            => Globals.DatabaseWrapper.m_monat[iModelIndex].Id;
+            => iModelIndex; // Globals.DatabaseWrapper.m_monat[iModelIndex % 12].Id;
 
          public override string MouseCellEvent(DateTime datStart, DateTime datEnd, int idMonth, bool action)
             => action
@@ -38,11 +38,11 @@ namespace AVF.MemberManagement.Reports
 
         public static string GetDesc(int id, char separator, DateTime datStart)
         {
-            int x = (datStart.Month - 1) + id;
-            int year = datStart.Year + x / 12;
-            int month = x % 12;
-            string strMonth = Globals.GetMonthNameShort(month + 1);
-            return $"{strMonth}{separator}{year}";
+            int   x     = (datStart.Month - 1) + id;
+            int   year  = datStart.Year + x / 12;
+            Monat monat = Globals.DatabaseWrapper.MonatFromId(x % 12);
+            string strMonthShort = monat.Bezeichnung.Substring(0, 3);
+            return $"{strMonthShort}{separator}{year}";
         }
     }
 }

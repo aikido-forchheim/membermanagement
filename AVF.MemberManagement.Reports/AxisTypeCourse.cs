@@ -13,8 +13,8 @@ namespace AVF.MemberManagement.Reports
             P_MinDbId = Globals.DatabaseWrapper.MinKursNr();
         }
 
-        public override int GetModelIndexFromId(int idKurs)
-            => Globals.DatabaseWrapper.m_kurs.FindIndex(kurs => idKurs == kurs.Id);
+        public override int GetModelIndexFromId(int id)
+            => Globals.DatabaseWrapper.m_kurs.FindIndex(x => id == x.Id);
 
         public override int GetIdFromModelIndex(int iModelIndex)
             => Globals.DatabaseWrapper.m_kurs[iModelIndex].Id;
@@ -36,7 +36,7 @@ namespace AVF.MemberManagement.Reports
 
             if (kurs.Zeit == TimeSpan.Zero)
             {
-                return $"Lehrg.{separator}etc.";
+                return $"_Lehrg.{separator}etc.";
             }
             else
             {

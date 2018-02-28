@@ -1,5 +1,4 @@
 ﻿using System.Windows.Forms;
-using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports

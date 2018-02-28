@@ -161,8 +161,11 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         public int MaxTrainerstufe 
             => m_trainerStufe.Max(t => t.Id);
 
-        public Mitglied MitgliedFromId(int id) 
+        public Mitglied MitgliedFromId(int id)
             => m_mitglieder.Single(s => s.Id == id);
+
+        public Monat MonatFromId(int id)
+            => m_monat.Single(s => s.Id == id);
 
         public Training TrainingFromId(int id)
             => m_trainings.Single(s => s.Id == id);

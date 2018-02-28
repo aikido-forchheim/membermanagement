@@ -29,10 +29,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         public static string GetMonthName(int iMonth)
             => m_dfi.GetMonthName(iMonth).ToString();
 
-        public static string GetMonthNameShort(int iMonth)
-            => GetMonthName(iMonth).Substring( 0, 3 );
-
-        public static int GetWeekOfYear(DateTime date)
+         public static int GetWeekOfYear(DateTime date)
             => m_cal.GetWeekOfYear(date, m_dfi.CalendarWeekRule, m_dfi.FirstDayOfWeek);
 
         public static string GetTimeRangeDescription(DateTime datStart, DateTime datEnd)

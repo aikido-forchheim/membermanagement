@@ -14,8 +14,8 @@ namespace AVF.MemberManagement.Reports
             P_MinDbId = Globals.DatabaseWrapper.MinTrainingNr();
     }
 
-        public override int GetModelIndexFromId(int idTraining)
-            => Globals.DatabaseWrapper.m_trainings.FindIndex(training => idTraining == training.Id);
+        public override int GetModelIndexFromId(int id)
+            => Globals.DatabaseWrapper.m_trainings.FindIndex(x => id == x.Id);
 
         public override int GetIdFromModelIndex(int iModelIndex)
             => Globals.DatabaseWrapper.m_trainings[iModelIndex].Id;
