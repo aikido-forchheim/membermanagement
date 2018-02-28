@@ -12,7 +12,6 @@ namespace AVF.MemberManagement.Reports
         {
             P_NrOfKeyColumns = 1;
             m_datStart = datStart;
-            new AxisTypeMonth(datStart, datEnd);
         }
 
         public override void FillKeyHeaderCells(DataGridView dgv)

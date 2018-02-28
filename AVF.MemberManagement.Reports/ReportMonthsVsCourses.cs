@@ -1,5 +1,4 @@
 ﻿using System;
-using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {

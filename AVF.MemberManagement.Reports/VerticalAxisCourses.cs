@@ -5,11 +5,8 @@ namespace AVF.MemberManagement.Reports
 {
     class VerticalAxisCourses : VerticalAxis
     {
-        public VerticalAxisCourses() 
-        {
-            P_NrOfKeyColumns = 1;
-            new AxisTypeCourse();
-        }
+        public VerticalAxisCourses()
+            => P_NrOfKeyColumns = 1;
 
         public override void FillKeyHeaderCells(DataGridView dgv)
             => dgv.Columns[0].HeaderText = "Termin";

@@ -7,25 +7,23 @@ namespace AVF.MemberManagement.Reports
     public class AxisTypeMonth : AxisType
     {
         DateTime m_datStart;
-        DateTime m_datEnd;
 
         public AxisTypeMonth(DateTime datStart, DateTime datEnd)
         {
             P_ActiveElementsOnly = false;
             m_datStart = datStart;
-            m_datEnd = datEnd;
             P_MinDbId = 0;
-            P_MaxDbId = NrOfMonths(m_datStart, m_datEnd);
+            P_MaxDbId = NrOfMonths(datStart, datEnd);
         }
 
         private int NrOfMonths(DateTime datStart, DateTime datEnd)
             => (datEnd.Year - datStart.Year) * 12 + (datEnd.Month - datStart.Month);
 
         public override int GetModelIndexFromId(int idMonth)
-            => idMonth - P_MinDbId;
+            => Globals.DatabaseWrapper.m_monat.FindIndex(monat => idMonth == monat.Id);
 
         public override int GetIdFromModelIndex(int iModelIndex)
-           => iModelIndex + P_MinDbId;
+            => Globals.DatabaseWrapper.m_monat[iModelIndex].Id;
 
          public override string MouseCellEvent(DateTime datStart, DateTime datEnd, int idMonth, bool action)
             => action

@@ -26,6 +26,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         public List<Familienrabatt> m_familienrabatt { get; private set; }
         public List<TrainingsTeilnahme> m_trainingsTeilnahme { get; private set; }
         public List<Kurs> m_kurs { get; private set; }
+        public List<Monat> m_monat { get; private set; }
 
         public async Task ReadTables( IUnityContainer Container, Action<string> tick )
         {
@@ -78,6 +79,16 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
                 if (!t.KursID.HasValue)
                     t.KursID = 0;
             }
+
+            m_monat = new List<Monat>();
+            for ( int i = 0; i< 12; i++ )
+            {
+                Monat monat = new Monat();
+                monat.Id = i;
+                monat.Bezeichnung = Globals.GetMonthName(i+1);
+                m_monat.Add( monat );
+            }
+
             tick("");
         }
 

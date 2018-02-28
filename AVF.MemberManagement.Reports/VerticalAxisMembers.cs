@@ -9,7 +9,6 @@ namespace AVF.MemberManagement.Reports
         public VerticalAxisMembers()
         {
             P_NrOfKeyColumns = 3;   // 3 columns for Mitglieder
-            new AxisTypeMember();
         }
 
         public override void FillKeyHeaderCells(DataGridView dgv)
