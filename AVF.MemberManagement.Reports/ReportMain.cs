@@ -36,11 +36,11 @@ namespace AVF.MemberManagement.Reports
         private void Trainingsteilnahme_Click(object sender, EventArgs e)
         {
             int iJahr = 2017;
-            //var form = new ReportCoursesVsMonths(new DateTime(iJahr, 1, 1), new DateTime(iJahr, 12, 31), -1);
+            var form = new ReportCoursesVsMonths(new DateTime(iJahr, 1, 1), new DateTime(iJahr, 12, 31), -1);
             //var form = new ReportMemberVsMonths(new DateTime(iJahr, 1, 1), new DateTime(iJahr, 12, 31));
             //var form = new ReportGraduationList();
 
-            var form = new ReportMemberVsCourses(new DateTime(iJahr, 1, 1), new DateTime(iJahr, 12, 31));
+            //var form = new ReportMemberVsCourses(new DateTime(iJahr, 1, 1), new DateTime(iJahr, 12, 31));
             form.ShowDialog();
         }
 

@@ -10,6 +10,8 @@ namespace AVF.MemberManagement.Reports
             CreateModel
             (
                 datStart, datEnd,
+                new AxisTypeCourse(),
+                new AxisTypeMonth(datStart, datEnd),
                 new HorizontalAxisCourses(),
                 new VerticalAxisMonths(datStart, datEnd),
                 filter: tn => idMember == tn.MitgliedID

@@ -12,9 +12,6 @@ namespace AVF.MemberManagement.Reports
             P_AxisType = new AxisTypeMember();
         }
 
-        public override int GetModelIndexFromTrainingsParticipation(TrainingsTeilnahme tn)
-            => P_AxisType.GetIdFromTrainingsParticipation( tn );
-
         public override void FillKeyHeaderCells(DataGridView dgv)
         {
             dgv.Columns[0].HeaderText = "Vorname";

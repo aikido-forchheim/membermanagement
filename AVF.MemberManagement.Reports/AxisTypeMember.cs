@@ -25,7 +25,7 @@ namespace AVF.MemberManagement.Reports
                : $"Klicken für Details zu Mitglied\n" + GetDescription(idMember, ' ');
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
-            => GetModelIndexFromId(tn.MitgliedID); 
+            => tn.MitgliedID;
 
         public override string GetDescription(int idMember, char separator)
             => GetDesc(idMember, separator);

@@ -24,9 +24,9 @@ namespace AVF.MemberManagement.Reports
             => action
                ? ReportTrainingsParticipation.Show(new ReportTraining(idTraining))
                : $"Klicken für Details zum Training " + GetDescription(idTraining, ' ');
-        
+
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
-            => GetModelIndexFromId(tn.TrainingID); 
+            => tn.TrainingID;
 
         public override string GetDescription(int idTraining, char separator)
             => GetDesc(idTraining, separator);

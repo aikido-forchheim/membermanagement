@@ -8,9 +8,11 @@ namespace AVF.MemberManagement.Reports
 {
     public partial class ReportTrainingsParticipation : ReportBase
     {
-        protected VerticalAxis               m_yAxis   { get; private set; }
-        protected HorizontalAxis             m_xAxis   { get; private set; }
-        protected TrainingParticipationModel m_tpModel { get; private set; }
+        protected VerticalAxis               m_yAxis     { get; private set; }
+        protected HorizontalAxis             m_xAxis     { get; private set; }
+        protected AxisType                   m_xAxisType { get; private set; }
+        protected AxisType                   m_yAxisType { get; private set; }
+        protected TrainingParticipationModel m_tpModel   { get; private set; }
 
         protected DateTime m_datStart { get; private set; }
         protected DateTime m_datEnd   { get; private set; }
@@ -22,7 +24,9 @@ namespace AVF.MemberManagement.Reports
         (
             DateTime datStart,
             DateTime datEnd,
-            HorizontalAxis xAxis, 
+            AxisType xAxisType,
+            AxisType yAxisType,
+            HorizontalAxis xAxis,
             VerticalAxis yAxis,
             Func<TrainingsTeilnahme, bool> filter
         )
@@ -33,13 +37,16 @@ namespace AVF.MemberManagement.Reports
             m_xAxis = xAxis;
             m_yAxis = yAxis;
 
+            m_xAxisType = xAxisType;
+            m_yAxisType = yAxisType;
+
             m_xAxis.P_startIndex = m_yAxis.P_NrOfKeyColumns;
             m_yAxis.P_startIndex = m_xAxis.P_NrOfKeyColumns;
 
             List<TrainingsTeilnahme> tpList         = Globals.DatabaseWrapper.TrainingsTeilnahme(datStart, datEnd);
             List<TrainingsTeilnahme> tpListFiltered = Globals.DatabaseWrapper.Filter(tpList, filter);
 
-            m_tpModel = new TrainingParticipationModel( tpListFiltered, m_xAxis, m_yAxis );
+            m_tpModel = new TrainingParticipationModel( tpListFiltered, m_xAxisType, m_yAxisType );
             m_labelZeitraum.Text = Globals.GetTimeRangeDescription(datStart, datEnd);
         }
 
@@ -54,26 +61,26 @@ namespace AVF.MemberManagement.Reports
                     m_tpModel.ForAllCols
                     (
                         action: iModelCol => m_dataGridView[iDgvCol++, iDgvRow].Value = FormatMatrixElement(m_tpModel.GetCell(iModelRow, iModelCol)),
-                        activeColsOnly: m_xAxis.P_AxisType.P_ActiveElementsOnly
+                        activeColsOnly: m_xAxisType.P_ActiveElementsOnly
                     );
                     ++iDgvRow;
                 },
-                activeRowsOnly: m_yAxis.P_AxisType.P_ActiveElementsOnly
+                activeRowsOnly: m_yAxisType.P_ActiveElementsOnly
             );
         }
 
         private void ReportFormSize()      // define dimensions of DataGridView
         {
-            m_dataGridView.RowCount    = m_yAxis.P_AxisType.P_ActiveElementsOnly ? m_tpModel.GetNrOfActiveRows() : m_yAxis.DatabaseIdRange();
+            m_dataGridView.RowCount    = m_yAxisType.P_ActiveElementsOnly ? m_tpModel.GetNrOfActiveRows() : m_yAxisType.DatabaseIdRange();
             m_dataGridView.ColumnCount = m_yAxis.P_NrOfKeyColumns;
             if (!m_xAxis.P_Hide)
-                m_dataGridView.ColumnCount += m_xAxis.GetNrOfDgvCols(m_tpModel) + 1; // + 1 for summary column
+                m_dataGridView.ColumnCount += m_xAxisType.P_ActiveElementsOnly ? m_tpModel.GetNrOfActiveCols() : m_xAxisType.DatabaseIdRange() + 1; // + 1 for summary column
         }           
 
         protected override void ReportFormPopulate()    // Fill cells of DataGridView
         {
-            m_xAxis.Initialize();
-            m_yAxis.Initialize();
+            m_xAxis.Initialize( m_xAxisType.DatabaseIdRange() );
+            m_yAxis.Initialize( m_yAxisType.DatabaseIdRange() );
             ReportFormSize();
 
             m_yAxis.FillKeyHeaderCells(m_dataGridView);
@@ -82,7 +89,7 @@ namespace AVF.MemberManagement.Reports
             m_tpModel.ForAllRows
             (
                 action: iModelRow => m_yAxis.FillMainKeyCell(m_dataGridView, iDgvRow++, iModelRow),
-                activeRowsOnly: m_yAxis.P_AxisType.P_ActiveElementsOnly
+                activeRowsOnly: m_yAxisType.P_ActiveElementsOnly
             );
 
             if (!m_xAxis.P_Hide)
@@ -91,7 +98,7 @@ namespace AVF.MemberManagement.Reports
                 m_tpModel.ForAllCols
                 (
                     action: iModelCol => m_xAxis.FillMainKeyCell(m_dataGridView, iDgvCol++, iModelCol),
-                    activeColsOnly: m_xAxis.P_AxisType.P_ActiveElementsOnly
+                    activeColsOnly: m_xAxisType.P_ActiveElementsOnly
                 );
 
                 m_dataGridView.Columns[m_dataGridView.ColumnCount - 1].HeaderText = "\nSumme";
@@ -100,7 +107,7 @@ namespace AVF.MemberManagement.Reports
                 m_tpModel.ForAllRows
                 (
                     iModelRow => m_dataGridView[m_dataGridView.ColumnCount - 1, iDgvRow++].Value = m_tpModel.GetRowSum(iModelRow),
-                    m_yAxis.P_AxisType.P_ActiveElementsOnly
+                    m_yAxisType.P_ActiveElementsOnly
                 );
                 FillMainArea();
             }
@@ -112,7 +119,7 @@ namespace AVF.MemberManagement.Reports
             {
                 if (ColIsInMainArea(col))
                 {
-                    return m_xAxis.P_AxisType.MouseCellEvent(m_datStart, m_datEnd, m_xAxis.GetColKey(col), action);
+                    return m_xAxisType.MouseCellEvent(m_datStart, m_datEnd, m_xAxis.GetDbIdFromDgvIndex(col), action);
                 }
                 else // column header, key or summary columns
                 {
@@ -123,11 +130,11 @@ namespace AVF.MemberManagement.Reports
             {
                 if (ColIsInMainArea(col))
                 {
-                    return MouseMainDataAreaCellEvent(m_datStart, m_datEnd, m_yAxis.GetRowKey(row), m_xAxis.GetColKey(col), action);
+                    return MouseMainDataAreaCellEvent(m_datStart, m_datEnd, m_yAxis.GetDbIdFromDgvIndex(row), m_xAxis.GetDbIdFromDgvIndex(col), action);
                 }
                 else // key or summary 
                 {
-                    return m_yAxis.P_AxisType.MouseCellEvent(m_datStart, m_datEnd, m_yAxis.GetRowKey(row), action);
+                    return m_yAxisType.MouseCellEvent(m_datStart, m_datEnd, m_yAxis.GetDbIdFromDgvIndex(row), action);
                 }
             }
         }

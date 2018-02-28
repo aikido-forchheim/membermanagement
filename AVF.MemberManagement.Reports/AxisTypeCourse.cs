@@ -27,7 +27,7 @@ namespace AVF.MemberManagement.Reports
                : $"Klicken für Details zum Kurs\n" + GetDescription(idKurs, ' ');
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
-            => GetModelIndexFromId( Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID) );
+            => Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID);
 
         public override string GetDescription(int idKurs, char separator)
             => GetDesc(idKurs, separator);

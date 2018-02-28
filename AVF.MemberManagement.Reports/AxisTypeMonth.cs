@@ -35,10 +35,13 @@ namespace AVF.MemberManagement.Reports
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => NrOfMonths(m_datStart, Globals.DatabaseWrapper.TerminFromTrainingId(tn.TrainingID));
 
-        public override string GetDescription(int id, char separator)
+        public override string GetDescription(int idMonth, char separator)
+            => GetDesc(idMonth, separator, m_datStart);
+
+        public static string GetDesc(int id, char separator, DateTime datStart)
         {
-            int x = (m_datStart.Month - 1) + id;
-            int year = m_datStart.Year + x / 12;
+            int x = (datStart.Month - 1) + id;
+            int year = datStart.Year + x / 12;
             int month = x % 12;
             string strMonth = Globals.GetMonthNameShort(month + 1);
             return $"{strMonth}{separator}{year}";

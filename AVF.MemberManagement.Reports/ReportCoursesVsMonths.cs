@@ -9,13 +9,16 @@ namespace AVF.MemberManagement.Reports
             CreateModel
             (
                 datStart, datEnd,
+                new AxisTypeMonth(datStart, datEnd),
+                new AxisTypeCourse(),
                 new HorizontalAxisMonths(datStart, datEnd),
                 new VerticalAxisCourses(),
                 filter: tn => (idMember == -1) ? true : (idMember == tn.MitgliedID)
             );
 
             m_labelReportName.Text = "Überblick Kursteilnahme";
-            m_Info0.Text = AxisTypeMember.GetDesc(idMember, ' ');
+            if (idMember != -1)
+                m_Info0.Text = AxisTypeMember.GetDesc(idMember, ' ');
         }
     }
 }

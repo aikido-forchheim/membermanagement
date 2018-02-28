@@ -10,6 +10,8 @@ namespace AVF.MemberManagement.Reports
             CreateModel
             (
                 datStart, datEnd,
+                new AxisTypeCourse(),
+                new AxisTypeMember(),
                 new HorizontalAxisCourses(), 
                 new VerticalAxisMembers(),
                 filter: tn => true
@@ -23,9 +25,9 @@ namespace AVF.MemberManagement.Reports
             return action
                 ? Show( new ReportMemberVsTrainings(m_datStart, m_datEnd, idKurs) )
                 : $"Klicken für Details zur Teilnahme von\n" 
-                     + m_yAxis.P_AxisType.GetDescription( idMember, ' ') 
+                     + AxisTypeMember.GetDesc( idMember, ' ') 
                      + $" am Kurs\n" 
-                     + m_xAxis.P_AxisType.GetDescription( idKurs, ' ');
+                     + AxisTypeCourse.GetDesc( idKurs, ' ');
         }
     }
 }

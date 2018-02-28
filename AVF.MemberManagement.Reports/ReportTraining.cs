@@ -14,6 +14,8 @@ namespace AVF.MemberManagement.Reports
             CreateModel
             (
                 training.Termin, training.Termin,
+                new AxisTypeEmpty(),
+                new AxisTypeMember(),
                 new HorizontalAxisEmpty(),
                 new VerticalAxisMembers(),
                 filter: tn => tn.TrainingID == idTraining
@@ -23,7 +25,7 @@ namespace AVF.MemberManagement.Reports
             m_labelReportName.Text = $"Training am {day} den ";
             m_labelZeitraum.Text   = AxisTypeTraining.GetDesc(idTraining, ' ');
             m_Info0.Text           = $"um {training.Zeit:hh}:{training.Zeit:mm} Uhr";
-            m_Info1.Text           = $"Trainer: {m_yAxis.P_AxisType.GetDescription(training.Trainer, ' ')}";
+            m_Info1.Text           = $"Trainer: {AxisTypeMember.GetDesc(training.Trainer, ' ')}";
         }
     }
 }

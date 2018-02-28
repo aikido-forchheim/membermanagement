@@ -24,12 +24,12 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         public TrainingParticipationModel
         (
             List<TrainingsTeilnahme> tpList,
-            IAxis xAxis,
-            IAxis yAxis
+            AxisType xAxisType,
+            AxisType yAxisType
         )
         {
-            m_iNrOfRows = yAxis.DatabaseIdRange();
-            m_iNrOfCols = xAxis.DatabaseIdRange();
+            m_iNrOfRows = yAxisType.DatabaseIdRange();
+            m_iNrOfCols = xAxisType.DatabaseIdRange();
 
             m_Rows = new Row[m_iNrOfRows];
 
@@ -46,8 +46,8 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 
             foreach (var trainingsParticipation in tpList)
             {
-                int iRow = yAxis.GetModelIndexFromTrainingsParticipation(trainingsParticipation);
-                int iCol = xAxis.GetModelIndexFromTrainingsParticipation(trainingsParticipation);
+                int iRow = yAxisType.GetModelIndexFromTrainingsParticipation(trainingsParticipation);
+                int iCol = xAxisType.GetModelIndexFromTrainingsParticipation(trainingsParticipation);
                 ++m_Rows[iRow].aiValues[iCol];
                 ++m_Rows[iRow].iRowSum;
                 ++m_iColSum[iCol];
