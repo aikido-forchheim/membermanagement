@@ -15,8 +15,8 @@ namespace AVF.MemberManagement.Reports
                 filter: tn => idMember == tn.MitgliedID
             );
 
-            m_label1.Text = "Trainingsteilnahme " + (new AxisTypeMember()).GetDescription(idMember, ' ');
-            m_label2.Text = Globals.GetTimeRangeDescription(datStart, datEnd);
+            m_labelReportName.Text = "Trainingsteilnahme ";
+            m_Info0.Text  = AxisTypeMember.GetDesc(idMember, ' ');
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
@@ -15,8 +14,7 @@ namespace AVF.MemberManagement.Reports
                 filter: tn => true
             );
 
-            m_label1.Text = "Überblick Trainingsteilnahme";
-            m_label2.Text = Globals.GetTimeRangeDescription(datStart, datEnd);
+            m_labelReportName.Text = "Überblick Trainingsteilnahme";
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.ReportsBusinessLogic;
@@ -28,13 +29,18 @@ namespace AVF.MemberManagement.Reports
         {
             m_datStart = datStart;
             m_datEnd = datEnd;
+
             m_xAxis = xAxis;
             m_yAxis = yAxis;
+
             m_xAxis.P_startIndex = m_yAxis.P_NrOfKeyColumns;
+            m_yAxis.P_startIndex = m_xAxis.P_NrOfKeyColumns;
+
             List<TrainingsTeilnahme> tpList         = Globals.DatabaseWrapper.TrainingsTeilnahme(datStart, datEnd);
             List<TrainingsTeilnahme> tpListFiltered = Globals.DatabaseWrapper.Filter(tpList, filter);
 
             m_tpModel = new TrainingParticipationModel( tpListFiltered, m_xAxis, m_yAxis );
+            m_labelZeitraum.Text = Globals.GetTimeRangeDescription(datStart, datEnd);
         }
 
         private void FillMainArea()
@@ -67,6 +73,7 @@ namespace AVF.MemberManagement.Reports
         protected override void ReportFormPopulate()    // Fill cells of DataGridView
         {
             m_xAxis.Initialize();
+            m_yAxis.Initialize();
             ReportFormSize();
 
             m_yAxis.FillKeyHeaderCells(m_dataGridView);
@@ -74,7 +81,7 @@ namespace AVF.MemberManagement.Reports
             int iDgvRow = 0;
             m_tpModel.ForAllRows
             (
-                action: iModelRow => m_yAxis.FillMainKeyCell(m_tpModel, m_dataGridView, iDgvRow++, iModelRow),
+                action: iModelRow => m_yAxis.FillMainKeyCell(m_dataGridView, iDgvRow++, iModelRow),
                 activeRowsOnly: m_yAxis.P_AxisType.P_ActiveElementsOnly
             );
 
@@ -83,7 +90,7 @@ namespace AVF.MemberManagement.Reports
                 int iDgvCol = m_xAxis.P_startIndex;
                 m_tpModel.ForAllCols
                 (
-                    action: iModelCol => m_xAxis.FillHeaderCell(m_dataGridView, iDgvCol++, iModelCol),
+                    action: iModelCol => m_xAxis.FillMainKeyCell(m_dataGridView, iDgvCol++, iModelCol),
                     activeColsOnly: m_xAxis.P_AxisType.P_ActiveElementsOnly
                 );
 
@@ -114,15 +121,13 @@ namespace AVF.MemberManagement.Reports
             }
             else // data row
             {
-                int idRowKey = (int)m_dataGridView[m_yAxis.P_KeyColumn, row].Value;
-
                 if (ColIsInMainArea(col))
                 {
-                    return MouseMainDataAreaCellEvent(m_datStart, m_datEnd, idRowKey, m_xAxis.GetColKey(col), action);
+                    return MouseMainDataAreaCellEvent(m_datStart, m_datEnd, m_yAxis.GetRowKey(row), m_xAxis.GetColKey(col), action);
                 }
                 else // key or summary 
                 {
-                    return m_yAxis.P_AxisType.MouseCellEvent(m_datStart, m_datEnd, idRowKey, action);
+                    return m_yAxis.P_AxisType.MouseCellEvent(m_datStart, m_datEnd, m_yAxis.GetRowKey(row), action);
                 }
             }
         }

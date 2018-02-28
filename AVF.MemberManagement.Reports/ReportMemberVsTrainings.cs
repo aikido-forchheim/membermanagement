@@ -15,8 +15,8 @@ namespace AVF.MemberManagement.Reports
                 filter: tn => Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID) == idKurs
             );
 
-            m_label1.Text = (new AxisTypeCourse()).GetDescription(idKurs, ' ');
-            m_label2.Text = Globals.GetTimeRangeDescription(datStart, datEnd);
+            m_labelReportName.Text = "Kursteilnahme";
+            m_Info0.Text = AxisTypeCourse.GetDesc(idKurs, ' ');
         }
 
         protected override string FormatMatrixElement(int iValue) 

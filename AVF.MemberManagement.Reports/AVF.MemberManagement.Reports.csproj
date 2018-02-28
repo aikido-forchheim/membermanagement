@@ -65,6 +65,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Axis.cs" />
     <Compile Include="AxisTypeCourse.cs" />
     <Compile Include="AxisTypeEmpty.cs" />
     <Compile Include="Excel.cs" />

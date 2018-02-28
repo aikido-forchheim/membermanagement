@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
 using AVF.MemberManagement.StandardLibrary.Tbo;
-using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
@@ -9,8 +8,7 @@ namespace AVF.MemberManagement.Reports
     {
         public VerticalAxisMonths(DateTime datStart, DateTime datEnd)
         {
-            P_NrOfKeyColumns = 2;
-            P_KeyColumn = 0;
+            P_NrOfKeyColumns = 1;
             P_AxisType = new AxisTypeMonth(datStart, datEnd);
         }
 
@@ -20,10 +18,11 @@ namespace AVF.MemberManagement.Reports
         public override void FillKeyHeaderCells(DataGridView dgv)
             => dgv.Columns[0].HeaderText = "Monat";
 
-        public override void FillMainKeyCell(TrainingParticipationModel tpModel, DataGridView dgv, int iDgvRow, int iModelRow)
+        public override int FillMainKeyCell(DataGridView dgv, int iDgvRow, int iModelRow)
         {
-            dgv[0, iDgvRow].Value = iModelRow;
-            dgv[1, iDgvRow].Value = P_AxisType.GetDescription(iModelRow, ' ');
+            int id = base.FillMainKeyCell(dgv, iDgvRow, iModelRow);
+            dgv[0, iDgvRow].Value = P_AxisType.GetDescription(id, ' ');
+            return id;
         }
     }
 }

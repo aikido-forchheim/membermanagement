@@ -7,22 +7,31 @@ namespace AVF.MemberManagement.Reports
 {
     public class AxisTypeTraining : AxisType
     {
-        public AxisTypeTraining(DateTime datStart, DateTime datEnd)
+        public AxisTypeTraining()
         { 
             P_ActiveElementsOnly = true;
             P_MaxDbId = Globals.DatabaseWrapper.MaxTrainingNr();
             P_MinDbId = Globals.DatabaseWrapper.MinTrainingNr();
     }
 
-    public override string MouseCellEvent(DateTime datStart, DateTime datEnd, int idTraining, bool action)
+        public override int GetModelIndexFromId(int idTraining)
+            => Globals.DatabaseWrapper.m_trainings.FindIndex(training => idTraining == training.Id);
+
+        public override int GetIdFromModelIndex(int iModelIndex)
+            => Globals.DatabaseWrapper.m_trainings[iModelIndex].Id;
+
+        public override string MouseCellEvent(DateTime datStart, DateTime datEnd, int idTraining, bool action)
             => action
                ? ReportTrainingsParticipation.Show(new ReportTraining(idTraining))
                : $"Klicken für Details zum Training " + GetDescription(idTraining, ' ');
         
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
-            => tn.TrainingID;
+            => GetModelIndexFromId(tn.TrainingID); 
 
         public override string GetDescription(int idTraining, char separator)
+            => GetDesc(idTraining, separator);
+
+        public static string GetDesc(int idTraining, char separator)
         {
             Debug.Assert(idTraining > 0);
             Training training = Globals.DatabaseWrapper.TrainingFromId(idTraining);

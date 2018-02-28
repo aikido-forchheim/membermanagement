@@ -15,8 +15,7 @@ namespace AVF.MemberManagement.Reports
                 filter: tn => true
             );
 
-            m_label1.Text = "Überblick Trainingsteilnahme";
-            m_label2.Text = Globals.GetTimeRangeDescription(datStart, datEnd);
+            m_labelReportName.Text = "Überblick Trainingsteilnahme";
         }
 
         protected override string MouseMainDataAreaCellEvent(DateTime datStart, DateTime datEnd, int idMember, int idKurs, bool action )

@@ -157,13 +157,10 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             => m_trainings.Single(s => s.Id == id);
 
         public DateTime TerminFromTrainingId(int id)
-            => TrainingFromId( id ).Termin;
+            => TrainingFromId(id).Termin;
 
         public int KursIdFromTrainingId(int id)
-        {
-            int? idKurs = TrainingFromId(id).KursID;  
-            return idKurs.Value;
-        }
+            => TrainingFromId(id).KursID.Value;
 
         public Boolean HatTeilgenommen(int member, Training training) 
             => m_trainingsTeilnahme.Exists(x => (x.MitgliedID == member) && (x.TrainingID == training.Id));

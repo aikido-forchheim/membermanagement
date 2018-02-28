@@ -22,87 +22,55 @@ namespace AVF.MemberManagement.Reports
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
-        private void InitializeComponent()
+        protected override void InitializeComponent()
         {
-            this.m_dataGridView = new System.Windows.Forms.DataGridView();
-            this.m_label1 = new System.Windows.Forms.Label();
-            this.m_label2 = new System.Windows.Forms.Label();
-            this.m_label3 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.m_dataGridView)).BeginInit();
-            this.SuspendLayout();
+            SuspendLayout();
+            base.InitializeComponent();
+
             // 
-            // m_dataGridView
+            // m_labelZeitraum
             // 
-            this.m_dataGridView.AllowUserToAddRows = false;
-            this.m_dataGridView.AllowUserToDeleteRows = false;
-            this.m_dataGridView.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable;
-            this.m_dataGridView.EnableHeadersVisualStyles = false;
-            this.m_dataGridView.Location = new System.Drawing.Point(10, 100);
-            this.m_dataGridView.MultiSelect = false;
-            this.m_dataGridView.Name = "m_dataGridView";
-            this.m_dataGridView.RowHeadersVisible = false;
-            this.m_dataGridView.RowHeadersWidth = 20;
-            this.m_dataGridView.RowTemplate.Height = 28;
-            this.m_dataGridView.Size = new System.Drawing.Size(1345, 712);
-            this.m_dataGridView.TabIndex = 0;
+            this.m_labelZeitraum = new System.Windows.Forms.Label();
+            this.m_labelZeitraum.AutoSize = true;
+            this.m_labelZeitraum.Font = m_font;
+            this.m_labelZeitraum.Location = new System.Drawing.Point(500, 20);
+            this.m_labelZeitraum.Name = "m_labelZeitraum";
+            this.m_labelZeitraum.TabIndex = 2;
             // 
-            // m_label1
+            // m_Info0
             // 
-            this.m_label1.AutoSize = true;
-            this.m_label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.m_label1.Location = new System.Drawing.Point(20, 40);
-            this.m_label1.Name = "m_label1";
-            this.m_label1.Size = new System.Drawing.Size(111, 37);
-            this.m_label1.TabIndex = 1;
-            this.m_label1.Text = "Label1";
+            this.m_Info0 = new System.Windows.Forms.Label();
+            this.m_Info0.AutoSize = true;
+            this.m_Info0.Font = m_font;
+            this.m_Info0.Location = new System.Drawing.Point(20, 70);
+            this.m_Info0.Name = "m_Info0";
+            this.m_Info0.TabIndex = 3;
             // 
-            // m_label2
+            // m_Info1
             // 
-            this.m_label2.AutoSize = true;
-            this.m_label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.m_label2.Location = new System.Drawing.Point(230, 40);
-            this.m_label2.Name = "m_label2";
-            this.m_label2.Size = new System.Drawing.Size(113, 37);
-            this.m_label2.TabIndex = 2;
-            this.m_label2.Text = "Label2";
-            // 
-            // m_label3
-            // 
-            this.m_label3.AutoSize = true;
-            this.m_label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.m_label3.Location = new System.Drawing.Point(450, 40);
-            this.m_label3.Name = "m_label3";
-            this.m_label3.Size = new System.Drawing.Size(113, 37);
-            this.m_label3.TabIndex = 3;
-            this.m_label3.Text = "Label3";
+            this.m_Info1 = new System.Windows.Forms.Label();
+            this.m_Info1.AutoSize = true;
+            this.m_Info1.Font = m_font;
+            this.m_Info1.Location = new System.Drawing.Point(500, 70);
+            this.m_Info1.Name = "m_Info1";
+            this.m_Info1.TabIndex = 4;
             // 
             // ReportForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1344, 712);
-            this.Controls.Add(this.m_label3);
-            this.Controls.Add(this.m_label2);
-            this.Controls.Add(this.m_label1);
-            this.Controls.Add(this.m_dataGridView);
+            this.Controls.Add(this.m_Info1);
+            this.Controls.Add(this.m_labelZeitraum);
+            this.Controls.Add(this.m_Info0);
             this.Name = "ReportForm";
             this.Text = "AVF Mitgliederdatenbank";
-            ((System.ComponentModel.ISupportInitialize)(this.m_dataGridView)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
 
+            ResumeLayout();
         }
 
-        #endregion
-
-        protected Label m_label1;
-        protected Label m_label2;
-        protected Label m_label3;
+        protected Label m_labelZeitraum;
+        protected Label m_Info0;
+        protected Label m_Info1;
     }
 }

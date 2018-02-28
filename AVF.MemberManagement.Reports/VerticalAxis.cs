@@ -5,11 +5,8 @@ namespace AVF.MemberManagement.Reports
 {
     public abstract class VerticalAxis : Axis
     {
-        public int P_NrOfKeyColumns { get; protected set; }
-
-        public int P_KeyColumn { get; protected set; }
-
-        public abstract void FillMainKeyCell(TrainingParticipationModel tpModel, DataGridView dgv, int iDgvRow, int iModelRow);
+        public int GetRowKey(int iDgvRow)
+            => m_DbIds[iDgvRow - P_startIndex];
 
         public abstract void FillKeyHeaderCells(DataGridView dgv);
     }

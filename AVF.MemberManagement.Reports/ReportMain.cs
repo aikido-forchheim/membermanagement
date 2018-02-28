@@ -26,28 +26,29 @@ namespace AVF.MemberManagement.Reports
             (
                 m_container, 
                 tick: s => { progressBar1.PerformStep(); label2.Text = s;  }
-            );   
-            button1.Enabled = true;
+            );
+            Trainingsteilnahme.Enabled = true;
+            Graduierungsliste.Enabled = true;
             progressBar1.Hide();
-            label2.Hide();
             label1.Hide();
         }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void button1_Click(object sender, EventArgs e)
+        private void Trainingsteilnahme_Click(object sender, EventArgs e)
         {
             int iJahr = 2017;
             //var form = new ReportCoursesVsMonths(new DateTime(iJahr, 1, 1), new DateTime(iJahr, 12, 31), -1);
-            //var form = new ReportMemberVsCourses(new DateTime(iJahr, 1, 1), new DateTime(iJahr, 12, 31));
             //var form = new ReportMemberVsMonths(new DateTime(iJahr, 1, 1), new DateTime(iJahr, 12, 31));
             //var form = new ReportGraduationList();
 
+            var form = new ReportMemberVsCourses(new DateTime(iJahr, 1, 1), new DateTime(iJahr, 12, 31));
+            form.ShowDialog();
+        }
+
+        private void Gradierungsliste_Click(object sender, EventArgs e)
+        {
             var form = new ReportGraduationList();
             form.ShowDialog();
         }
 
-     }
+    }
 }

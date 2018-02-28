@@ -1,5 +1,4 @@
 ﻿using System;
-using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
@@ -15,8 +14,8 @@ namespace AVF.MemberManagement.Reports
                 filter: tn => (idMember == -1) ? true : (idMember == tn.MitgliedID)
             );
 
-            m_label1.Text = "Überblick Kurse";
-            m_label2.Text = Globals.GetTimeRangeDescription(datStart, datEnd);
+            m_labelReportName.Text = "Überblick Kursteilnahme";
+            m_Info0.Text = AxisTypeMember.GetDesc(idMember, ' ');
         }
     }
 }

@@ -13,6 +13,10 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 
         public bool P_ActiveElementsOnly { get; protected set; } = false;
 
+        public abstract int GetModelIndexFromId(int id);
+
+        public abstract int GetIdFromModelIndex(int id);
+
         public abstract int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn);
 
         public abstract string GetDescription(int id, char separator);

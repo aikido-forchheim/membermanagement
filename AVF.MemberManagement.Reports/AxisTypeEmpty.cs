@@ -13,6 +13,10 @@ namespace AVF.MemberManagement.Reports
             P_MinDbId = 0;
         }
 
+        public override int GetModelIndexFromId(int id) => 0;
+
+        public override int GetIdFromModelIndex(int iModelCol) => 0;
+
         public override string MouseCellEvent(DateTime datStart, DateTime datEnd, int idMonth, bool action)
             => String.Empty;
 

@@ -10,7 +10,7 @@ namespace AVF.MemberManagement.Reports
     {
         public ReportGraduationList()
         {
-            m_dataGridView = new DataGridView();
+            InitializeComponent(); // creates DataGridView ...
 
             m_dataGridView.Columns.Add("graduation", "Grad");
             m_dataGridView.Columns.Add("surname", "Name");
@@ -28,7 +28,6 @@ namespace AVF.MemberManagement.Reports
             m_dataGridView.RowHeadersVisible = false;
             m_dataGridView.AllowUserToAddRows = false;
             m_dataGridView.EnableHeadersVisualStyles = false;
-            m_dataGridView.Location = new System.Drawing.Point(10, 100);
 
             foreach (DataGridViewColumn cols in m_dataGridView.Columns)
             {
@@ -113,14 +112,14 @@ namespace AVF.MemberManagement.Reports
         {
             if (row >= 0)
             {
-                int idMember = (int)m_dataGridView.Rows[row].Cells["memberId"].Value;
-                string strDateGrad    = m_dataGridView.Rows[row].Cells["dateGrad"].Value.ToString();
+                int      idMember     = (int)m_dataGridView.Rows[row].Cells["memberId"].Value;
+                string   strDateGrad  = m_dataGridView.Rows[row].Cells["dateGrad"].Value.ToString();
                 DateTime dateGrad     = DateTime.Parse(strDateGrad);
                 DateTime datValidData = Globals.DatabaseWrapper.GetStartValidData();
                 DateTime dateStart    = (datValidData <= dateGrad) ? dateGrad : datValidData;
                 return action
                     ? ReportTrainingsParticipation.Show(new ReportMonthsVsCourses(dateStart, DateTime.Now, idMember))
-                    : $"Klicken für Details zu Mitglied\n" + (new AxisTypeMember()).GetDescription(idMember, ' ');
+                    : $"Klicken für Details zu Mitglied\n" + AxisTypeMember.GetDesc(idMember, ' ');
             }
             else
             {

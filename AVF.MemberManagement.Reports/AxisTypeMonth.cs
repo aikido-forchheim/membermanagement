@@ -9,9 +9,6 @@ namespace AVF.MemberManagement.Reports
         DateTime m_datStart;
         DateTime m_datEnd;
 
-        private int NrOfMonths(DateTime datStart, DateTime datEnd)
-            => (datEnd.Year - datStart.Year) * 12 + (datEnd.Month - datStart.Month);
-
         public AxisTypeMonth(DateTime datStart, DateTime datEnd)
         {
             P_ActiveElementsOnly = false;
@@ -21,7 +18,16 @@ namespace AVF.MemberManagement.Reports
             P_MaxDbId = NrOfMonths(m_datStart, m_datEnd);
         }
 
-        public override string MouseCellEvent(DateTime datStart, DateTime datEnd, int idMonth, bool action)
+        private int NrOfMonths(DateTime datStart, DateTime datEnd)
+            => (datEnd.Year - datStart.Year) * 12 + (datEnd.Month - datStart.Month);
+
+        public override int GetModelIndexFromId(int idMonth)
+            => idMonth - P_MinDbId;
+
+        public override int GetIdFromModelIndex(int iModelIndex)
+           => iModelIndex + P_MinDbId;
+
+         public override string MouseCellEvent(DateTime datStart, DateTime datEnd, int idMonth, bool action)
             => action
                ? String.Empty
                : $"Klicken für Details zum Monat " + GetDescription(idMonth, ' ') + "\nnoch nicht implementiert";

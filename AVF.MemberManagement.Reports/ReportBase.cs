@@ -7,11 +7,50 @@ namespace AVF.MemberManagement.Reports
     public abstract class ReportBase : Form
     {
         protected DataGridView m_dataGridView;
+        protected Label        m_labelReportName;
+        protected Font         m_font;
 
         public ReportBase()
         { 
-            Load += new EventHandler(ReportFormLoad);
+            Load   += new EventHandler(ReportFormLoad);
             Resize += new EventHandler(ReportResize);
+        }
+
+        protected virtual void InitializeComponent()
+        {
+            m_font            = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            m_labelReportName = new Label();
+            m_dataGridView    = new DataGridView();
+
+            // 
+            // m_labelReportName
+            // 
+            m_labelReportName.AutoSize = true;
+            m_labelReportName.Font = m_font;
+            m_labelReportName.Location = new System.Drawing.Point(20, 20);
+            m_labelReportName.Name = "m_labelReportName";
+            m_labelReportName.TabIndex = 1;
+
+            // 
+            // m_dataGridView
+            // 
+            ((System.ComponentModel.ISupportInitialize)(m_dataGridView)).BeginInit();
+            m_dataGridView.AllowUserToAddRows = false;
+            m_dataGridView.AllowUserToDeleteRows = false;
+            m_dataGridView.ClipboardCopyMode = DataGridViewClipboardCopyMode.Disable;
+            m_dataGridView.EnableHeadersVisualStyles = false;
+            m_dataGridView.Location = new Point(10, 200);
+            m_dataGridView.MultiSelect = false;
+            m_dataGridView.Name = "m_dataGridView";
+            m_dataGridView.RowHeadersVisible = false;
+            m_dataGridView.RowHeadersWidth = 20;
+            m_dataGridView.RowTemplate.Height = 28;
+            m_dataGridView.Size = new Size(1345, 712);
+            m_dataGridView.TabIndex = 0;
+            ((System.ComponentModel.ISupportInitialize)(m_dataGridView)).EndInit();
+
+            Controls.Add(m_dataGridView);
+            Controls.Add(m_labelReportName);
         }
 
         protected void ReportFormLoad(System.Object sender, EventArgs e)
@@ -29,7 +68,6 @@ namespace AVF.MemberManagement.Reports
             Controls.Add(m_dataGridView);
            
             WindowState = FormWindowState.Maximized;
-
         }
 
         private void ReportResize(object sender, System.EventArgs e)

@@ -6,35 +6,26 @@ namespace AVF.MemberManagement.Reports
 {
     public abstract class HorizontalAxis : Axis
     {
-        public int P_startIndex { get; set; } // horizontal axis starts at this column
+        public HorizontalAxis()
+            => P_NrOfKeyColumns = 0;
 
         public bool P_Hide { get; protected set; } = false;
-
-        protected int[] m_DbIds;
-
-        public void Initialize( )
-            => m_DbIds = new int[DatabaseIdRange()];
 
         public int GetColKey(int iDgvCol)
             => m_DbIds[iDgvCol - P_startIndex];
 
-        protected abstract int GetModelIndexFromId(int id);
-
-        protected abstract int GetIdFromModelIndex(int id);
+        public int GetNrOfDgvCols(TrainingParticipationModel tpModel)
+            => P_AxisType.P_ActiveElementsOnly ? tpModel.GetNrOfActiveCols() : DatabaseIdRange();
 
         public override int GetModelIndexFromTrainingsParticipation(TrainingsTeilnahme tn)
-            => GetModelIndexFromId(P_AxisType.GetIdFromTrainingsParticipation(tn));
+            => P_AxisType.GetModelIndexFromId(P_AxisType.GetIdFromTrainingsParticipation(tn));
 
-        public abstract int GetNrOfDgvCols(TrainingParticipationModel tpModel);
-
-        public void FillHeaderCell(DataGridView dgv, int iDgvCol, int iModelCol)
+        public override int FillMainKeyCell(DataGridView dgv, int iDgvCol, int iModelCol)
         {
-            int id = GetIdFromModelIndex(iModelCol);
-
-            m_DbIds[iDgvCol - P_startIndex] = id;
-
+            int id = base.FillMainKeyCell(dgv, iDgvCol, iModelCol);
             dgv.Columns[iDgvCol].HeaderText = P_AxisType.GetDescription(id, '\n');
             dgv.Columns[iDgvCol].SortMode = DataGridViewColumnSortMode.NotSortable;
+            return id;
         }
     }
 }
