@@ -9,7 +9,7 @@ namespace AVF.MemberManagement.Reports
         public VerticalAxisMembers()
         {
             P_NrOfKeyColumns = 3;   // 3 columns for Mitglieder
-            P_AxisType = new AxisTypeMember();
+            new AxisTypeMember();
         }
 
         public override void FillKeyHeaderCells(DataGridView dgv)
@@ -19,13 +19,13 @@ namespace AVF.MemberManagement.Reports
             dgv.Columns[2].HeaderText = "Nr";
         }
 
-        public override int FillMainKeyCell(DataGridView dgv, int iDgvRow, int iModelRow)
+        public override int FillMainKeyCell(DataGridView dgv, int iDgvRow, int iModelRow, AxisType axisType)
         {
             Mitglied mitglied = Globals.DatabaseWrapper.m_mitglieder[iModelRow];
             dgv[0, iDgvRow].Value = mitglied.Vorname;
             dgv[1, iDgvRow].Value = mitglied.Nachname;
             dgv[2, iDgvRow].Value = mitglied.Id;
-            return base.FillMainKeyCell(dgv, iDgvRow, iModelRow);
+            return base.FillMainKeyCell(dgv, iDgvRow, iModelRow, axisType);
         }
     }
 }

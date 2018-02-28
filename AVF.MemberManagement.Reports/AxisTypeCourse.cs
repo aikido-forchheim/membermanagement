@@ -2,8 +2,6 @@
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.ReportsBusinessLogic;
 
-// CourseAxis bundles everything VerticalAxisCourses and HorizontalAxisCourses have in common
-
 namespace AVF.MemberManagement.Reports
 {
     public class AxisTypeCourse : AxisType

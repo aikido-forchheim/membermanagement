@@ -9,10 +9,10 @@ namespace AVF.MemberManagement.Reports
         {
             CreateModel
             (
+                bHide: false,
                 datStart, datEnd,
                 new AxisTypeCourse(),
                 new AxisTypeMember(),
-                new HorizontalAxisCourses(), 
                 new VerticalAxisMembers(),
                 filter: tn => true
             );

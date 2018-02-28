@@ -13,10 +13,10 @@ namespace AVF.MemberManagement.Reports
 
             CreateModel
             (
+                bHide: true,
                 training.Termin, training.Termin,
                 new AxisTypeEmpty(),
                 new AxisTypeMember(),
-                new HorizontalAxisEmpty(),
                 new VerticalAxisMembers(),
                 filter: tn => tn.TrainingID == idTraining
             );

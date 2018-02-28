@@ -17,24 +17,28 @@ namespace AVF.MemberManagement.Reports
         protected DateTime m_datStart { get; private set; }
         protected DateTime m_datEnd   { get; private set; }
 
+        private bool P_Hide { get; set; } = false;
+
         public ReportTrainingsParticipation()
             =>InitializeComponent(); // creates DataGridView ...
 
         protected void CreateModel
         (
+            bool bHide,
             DateTime datStart,
             DateTime datEnd,
             AxisType xAxisType,
             AxisType yAxisType,
-            HorizontalAxis xAxis,
             VerticalAxis yAxis,
             Func<TrainingsTeilnahme, bool> filter
         )
         {
+            P_Hide = bHide;
+
             m_datStart = datStart;
             m_datEnd = datEnd;
 
-            m_xAxis = xAxis;
+            m_xAxis = new HorizontalAxis();
             m_yAxis = yAxis;
 
             m_xAxisType = xAxisType;
@@ -73,7 +77,7 @@ namespace AVF.MemberManagement.Reports
         {
             m_dataGridView.RowCount    = m_yAxisType.P_ActiveElementsOnly ? m_tpModel.GetNrOfActiveRows() : m_yAxisType.DatabaseIdRange();
             m_dataGridView.ColumnCount = m_yAxis.P_NrOfKeyColumns;
-            if (!m_xAxis.P_Hide)
+            if (!P_Hide)
                 m_dataGridView.ColumnCount += m_xAxisType.P_ActiveElementsOnly ? m_tpModel.GetNrOfActiveCols() : m_xAxisType.DatabaseIdRange() + 1; // + 1 for summary column
         }           
 
@@ -88,16 +92,16 @@ namespace AVF.MemberManagement.Reports
             int iDgvRow = 0;
             m_tpModel.ForAllRows
             (
-                action: iModelRow => m_yAxis.FillMainKeyCell(m_dataGridView, iDgvRow++, iModelRow),
+                action: iModelRow => m_yAxis.FillMainKeyCell(m_dataGridView, iDgvRow++, iModelRow, m_yAxisType),
                 activeRowsOnly: m_yAxisType.P_ActiveElementsOnly
             );
 
-            if (!m_xAxis.P_Hide)
+            if (!P_Hide)
             {
                 int iDgvCol = m_xAxis.P_startIndex;
                 m_tpModel.ForAllCols
                 (
-                    action: iModelCol => m_xAxis.FillMainKeyCell(m_dataGridView, iDgvCol++, iModelCol),
+                    action: iModelCol => m_xAxis.FillMainKeyCell(m_dataGridView, iDgvCol++, iModelCol, m_xAxisType),
                     activeColsOnly: m_xAxisType.P_ActiveElementsOnly
                 );
 
