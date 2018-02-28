@@ -17,7 +17,7 @@ namespace AVF.MemberManagement.Reports
             m_dataGridView.Columns.Add("firstName", "Vorname");
             m_dataGridView.Columns.Add("memberId", "lfd.\nNr.");
             m_dataGridView.Columns.Add("birthDate", "Geburts-\ndatum");
-            //m_dataGridView.Columns.Add("birthplace", "Geburtsort");
+            m_dataGridView.Columns.Add("birthplace", "Geburtsort");
             m_dataGridView.Columns.Add("memberClass", "Bei-\ntrags-\nklasse");
             m_dataGridView.Columns.Add("yearOfAikidoBegin", "Jahr des\nAikido-\nBeginns");
             m_dataGridView.Columns.Add("AVF-entry", "Eintrittsdatum");
@@ -94,11 +94,11 @@ namespace AVF.MemberManagement.Reports
                     member.Vorname,
                     member.Id,
                     Globals.Format( member.Geburtsdatum ),
-//                    member.Geburtsort,
+                    member.Geburtsort,
                     Globals.DatabaseWrapper.BK_Text(member),
                     member.AikidoBeginn,
                     Globals.Format(member.Eintritt.Value),
-                    Globals.Format(member.Geburtsdatum),
+                    Globals.Format(bestGrad.m_datumGraduierung),
                     strDateNext,
                     strTrainingsDone + strTrainingsNeeded
                 );
@@ -109,16 +109,17 @@ namespace AVF.MemberManagement.Reports
 //            e.Export2Excel(m_dataGridView, 2, 1, "Graduierungsliste" );
         }
 
-
         protected override string MouseCellEvent(int row, int col, bool action)
         {
             if (row >= 0)
             {
                 int idMember = (int)m_dataGridView.Rows[row].Cells["memberId"].Value;
-                string strDateGrad = m_dataGridView.Rows[row].Cells["dateGrad"].Value.ToString();
-                DateTime dateGrad = DateTime.Parse(strDateGrad);
+                string strDateGrad    = m_dataGridView.Rows[row].Cells["dateGrad"].Value.ToString();
+                DateTime dateGrad     = DateTime.Parse(strDateGrad);
+                DateTime datValidData = Globals.DatabaseWrapper.GetStartValidData();
+                DateTime dateStart    = (datValidData <= dateGrad) ? dateGrad : datValidData;
                 return action
-                    ? ReportTrainingsParticipation.Show(new ReportMonthsVsCourses(dateGrad, DateTime.Now, idMember))
+                    ? ReportTrainingsParticipation.Show(new ReportMonthsVsCourses(dateStart, DateTime.Now, idMember))
                     : $"Klicken für Details zu Mitglied\n" + (new AxisTypeMember()).GetDescription(idMember, ' ');
             }
             else

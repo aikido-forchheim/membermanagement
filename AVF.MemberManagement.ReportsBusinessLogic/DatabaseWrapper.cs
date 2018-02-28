@@ -162,7 +162,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         public int KursIdFromTrainingId(int id)
         {
             int? idKurs = TrainingFromId(id).KursID;  
-            return idKurs.HasValue ? idKurs.Value : 0;
+            return idKurs.Value;
         }
 
         public Boolean HatTeilgenommen(int member, Training training) 

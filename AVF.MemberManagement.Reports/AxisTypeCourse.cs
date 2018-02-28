@@ -20,7 +20,6 @@ namespace AVF.MemberManagement.Reports
                ? ReportTrainingsParticipation.Show(new ReportMemberVsTrainings(datStart, datEnd, idKurs))
                : $"Klicken für Details zum Kurs\n" + GetDescription(idKurs, ' ');
 
-
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID);
 

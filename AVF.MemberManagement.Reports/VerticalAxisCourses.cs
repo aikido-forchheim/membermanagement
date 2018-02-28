@@ -22,10 +22,10 @@ namespace AVF.MemberManagement.Reports
             dgv.Columns[1].HeaderText = "Termin";
         }
 
-        public override void FillMainKeyCell(TrainingParticipationModel tpModel, DataGridView dgv, int iDgvRow, int idKurs)
+        public override void FillMainKeyCell(TrainingParticipationModel tpModel, DataGridView dgv, int iDgvRow, int iModelRow)
         {
-            dgv[0, iDgvRow].Value = idKurs;
-            dgv[1, iDgvRow].Value = P_AxisType.GetDescription(idKurs, ' ');
+            dgv[0, iDgvRow].Value = iModelRow;
+            dgv[1, iDgvRow].Value = P_AxisType.GetDescription(iModelRow, ' ');
         }
     }
 }
