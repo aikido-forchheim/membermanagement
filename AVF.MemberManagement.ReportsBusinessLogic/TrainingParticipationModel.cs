@@ -24,8 +24,8 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         public TrainingParticipationModel
         (
             List<TrainingsTeilnahme> tpList,
-            AxisType xAxisType,
-            AxisType yAxisType
+            IAxis xAxisType,
+            IAxis yAxisType
         )
         {
             m_iNrOfRows = yAxisType.DatabaseIdRange();

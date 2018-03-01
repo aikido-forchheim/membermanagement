@@ -29,7 +29,6 @@ namespace AVF.MemberManagement.Reports
             DateTime datEnd,
             AxisType xAxisType,
             AxisType yAxisType,
-            VerticalAxis yAxis,
             Func<TrainingsTeilnahme, bool> filter
         )
         {
@@ -38,8 +37,8 @@ namespace AVF.MemberManagement.Reports
             m_datStart = datStart;
             m_datEnd = datEnd;
 
-            m_xAxis = new HorizontalAxis();
-            m_yAxis = yAxis;
+            m_xAxis = yAxisType.GetHorizontalAxis();
+            m_yAxis = yAxisType.GetVerticalAxis();
 
             m_xAxisType = xAxisType;
             m_yAxisType = yAxisType;

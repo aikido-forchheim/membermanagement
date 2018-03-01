@@ -72,12 +72,12 @@ namespace AVF.MemberManagement.Reports
 
         private void ReportResize(object sender, System.EventArgs e)
         {
-            Control control = (Control)sender;
-
-            int newWidth = m_dataGridView.Columns.GetColumnsWidth(DataGridViewElementStates.None) + 20;
-            int maxHeight = m_dataGridView.Rows.GetRowsHeight(DataGridViewElementStates.None) + m_dataGridView.ColumnHeadersHeight + 2;
-            int newHeight = Math.Min( ClientSize.Height - m_dataGridView.Location.Y - 10, maxHeight);
-            m_dataGridView.Size = new System.Drawing.Size(newWidth, newHeight);
+            int extraHeight = 2;  // values found by trial and error, to prevend scroll bars
+            int extraWidth = 20;  // TODO: find clean solution
+            int topBorder  = 10;
+            int maxHeight         = m_dataGridView.Rows.   GetRowsHeight  (DataGridViewElementStates.None) + m_dataGridView.ColumnHeadersHeight + extraHeight;
+            m_dataGridView.Width  = m_dataGridView.Columns.GetColumnsWidth(DataGridViewElementStates.None) + extraWidth;
+            m_dataGridView.Height = Math.Min(ClientSize.Height - m_dataGridView.Location.Y - topBorder, maxHeight);
         }
 
         protected void ToolTip(DataGridViewCellEventArgs e, bool showTip)

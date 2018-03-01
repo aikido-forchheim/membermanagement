@@ -13,7 +13,6 @@ namespace AVF.MemberManagement.Reports
                 datStart, datEnd,
                 new AxisTypeCourse(),
                 new AxisTypeMember(),
-                new VerticalAxisMembers(),
                 filter: tn => true
             );
 

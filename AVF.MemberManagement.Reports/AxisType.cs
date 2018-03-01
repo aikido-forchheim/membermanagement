@@ -1,9 +1,10 @@
 ﻿using System;
 using AVF.MemberManagement.StandardLibrary.Tbo;
+using AVF.MemberManagement.ReportsBusinessLogic;
 
-namespace AVF.MemberManagement.ReportsBusinessLogic
+namespace AVF.MemberManagement.Reports
 {
-    public abstract class AxisType
+    public abstract class AxisType : IAxis
     {
         public abstract string MouseCellEvent(DateTime datStart, DateTime datEnd, int id, bool action);
 
@@ -20,6 +21,11 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         public abstract int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn);
 
         public abstract string GetDescription(int id, char separator);
+
+        public abstract VerticalAxis GetVerticalAxis();
+
+        public HorizontalAxis GetHorizontalAxis()
+            => new HorizontalAxis();
 
         public int DatabaseIdRange()
             => P_MaxDbId - P_MinDbId + 1;

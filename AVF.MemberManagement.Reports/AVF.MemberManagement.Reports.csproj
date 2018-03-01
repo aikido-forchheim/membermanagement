@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Axis.cs" />
+    <Compile Include="AxisType.cs" />
     <Compile Include="AxisTypeCourse.cs" />
     <Compile Include="AxisTypeEmpty.cs" />
     <Compile Include="Excel.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VerticalAxis.cs" />
     <Compile Include="VerticalAxisMonths.cs" />
+    <Compile Include="VerticalAxisTrainings.cs" />
     <EmbeddedResource Include="ReportMain.resx">
       <DependentUpon>ReportMain.cs</DependentUpon>
     </EmbeddedResource>

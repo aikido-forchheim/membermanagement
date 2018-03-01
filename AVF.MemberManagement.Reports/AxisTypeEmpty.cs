@@ -13,6 +13,9 @@ namespace AVF.MemberManagement.Reports
             P_MinDbId = 0;
         }
 
+        public override VerticalAxis GetVerticalAxis()
+            => null;
+
         public override int GetModelIndexFromId(int id) 
             => 0;
 

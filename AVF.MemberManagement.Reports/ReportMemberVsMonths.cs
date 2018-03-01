@@ -12,7 +12,6 @@ namespace AVF.MemberManagement.Reports
                 datStart, datEnd,
                 new AxisTypeMonth(datStart, datEnd),
                 new AxisTypeMember(),
-                new VerticalAxisMembers(),
                 filter: tn => true
             );
 

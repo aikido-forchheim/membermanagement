@@ -7,14 +7,19 @@ namespace AVF.MemberManagement.Reports
     public class AxisTypeMonth : AxisType
     {
         DateTime m_datStart;
+        DateTime m_datEnd;
 
         public AxisTypeMonth(DateTime datStart, DateTime datEnd)
         {
             P_ActiveElementsOnly = false;
             m_datStart = datStart;
+            m_datEnd = datEnd;
             P_MinDbId = 0;
             P_MaxDbId = NrOfMonths(datStart, datEnd);
         }
+
+        public override VerticalAxis GetVerticalAxis()
+            => new VerticalAxisMonths( m_datStart, m_datEnd );
 
         private int NrOfMonths(DateTime datStart, DateTime datEnd)
             => (datEnd.Year - datStart.Year) * 12 + (datEnd.Month - datStart.Month);

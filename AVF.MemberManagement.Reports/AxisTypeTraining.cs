@@ -12,7 +12,10 @@ namespace AVF.MemberManagement.Reports
             P_ActiveElementsOnly = true;
             P_MaxDbId = Globals.DatabaseWrapper.MaxTrainingNr();
             P_MinDbId = Globals.DatabaseWrapper.MinTrainingNr();
-    }
+        }
+
+        public override VerticalAxis GetVerticalAxis()
+            => new VerticalAxisTrainings();
 
         public override int GetModelIndexFromId(int id)
             => Globals.DatabaseWrapper.m_trainings.FindIndex(x => id == x.Id);

@@ -13,6 +13,9 @@ namespace AVF.MemberManagement.Reports
             P_MinDbId = Globals.DatabaseWrapper.MinKursNr();
         }
 
+        public override VerticalAxis GetVerticalAxis()
+            => new VerticalAxisCourses();
+
         public override int GetModelIndexFromId(int id)
             => Globals.DatabaseWrapper.m_kurs.FindIndex(x => id == x.Id);
 

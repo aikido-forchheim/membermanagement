@@ -17,7 +17,6 @@ namespace AVF.MemberManagement.Reports
                 training.Termin, training.Termin,
                 new AxisTypeEmpty(),
                 new AxisTypeMember(),
-                new VerticalAxisMembers(),
                 filter: tn => tn.TrainingID == idTraining
             );
 

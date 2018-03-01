@@ -13,7 +13,6 @@ namespace AVF.MemberManagement.Reports
                 datStart, datEnd,
                 new AxisTypeTraining(),
                 new AxisTypeMember(),
-                new VerticalAxisMembers(),
                 filter: tn => Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID) == idKurs
             );
 

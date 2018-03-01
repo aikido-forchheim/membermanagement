@@ -32,7 +32,7 @@ namespace AVF.MemberManagement.Reports
             TrainingsteilnahmeKurse.Enabled = true;
             TrainingsteilnahmeMonate.Enabled = true;
             progressBar1.Hide();
-            label1.Hide();
+            labelLadeDatenbank.Hide();
         }
 
         private void Trainingsteilnahme_Kurse_Click(object sender, EventArgs e)
@@ -62,7 +62,12 @@ namespace AVF.MemberManagement.Reports
             form.ShowDialog();
         }
 
-        private void label1_Click(object sender, EventArgs e)
+        private void ApplicationExit_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void toolTip1_Popup(object sender, PopupEventArgs e)
         {
 
         }

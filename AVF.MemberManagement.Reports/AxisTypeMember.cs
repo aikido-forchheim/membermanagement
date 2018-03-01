@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using AVF.MemberManagement.StandardLibrary.Tbo;
-using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
@@ -14,6 +12,9 @@ namespace AVF.MemberManagement.Reports
             P_MaxDbId = Globals.DatabaseWrapper.MaxMitgliedsNr();
             P_MinDbId = Globals.DatabaseWrapper.MinMitgliedsNr();
          }
+
+        public override VerticalAxis GetVerticalAxis()
+            => new VerticalAxisMembers();
 
         public override int GetModelIndexFromId(int id)
             => Globals.DatabaseWrapper.m_mitglieder.FindIndex(x => id == x.Id);
