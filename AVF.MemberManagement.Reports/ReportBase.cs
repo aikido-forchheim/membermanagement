@@ -10,6 +10,10 @@ namespace AVF.MemberManagement.Reports
         protected Label        m_labelReportName;
         protected Font         m_font;
 
+        int BORDER_LEFT   =  10;
+        int BORDER_TOP    = 200;
+        int BORDER_BOTTOM =  10;
+
         public ReportBase()
         { 
             Load   += new EventHandler(ReportFormLoad);
@@ -39,7 +43,7 @@ namespace AVF.MemberManagement.Reports
             m_dataGridView.AllowUserToDeleteRows = false;
             m_dataGridView.ClipboardCopyMode = DataGridViewClipboardCopyMode.Disable;
             m_dataGridView.EnableHeadersVisualStyles = false;
-            m_dataGridView.Location = new Point(10, 200);
+            m_dataGridView.Location = new Point(BORDER_LEFT, BORDER_TOP);
             m_dataGridView.MultiSelect = false;
             m_dataGridView.Name = "m_dataGridView";
             m_dataGridView.RowHeadersVisible = false;
@@ -73,11 +77,11 @@ namespace AVF.MemberManagement.Reports
         private void ReportResize(object sender, System.EventArgs e)
         {
             int extraHeight = 2;  // values found by trial and error, to prevend scroll bars
-            int extraWidth = 20;  // TODO: find clean solution
-            int topBorder  = 10;
-            int maxHeight         = m_dataGridView.Rows.   GetRowsHeight  (DataGridViewElementStates.None) + m_dataGridView.ColumnHeadersHeight + extraHeight;
-            m_dataGridView.Width  = m_dataGridView.Columns.GetColumnsWidth(DataGridViewElementStates.None) + extraWidth;
-            m_dataGridView.Height = Math.Min(ClientSize.Height - m_dataGridView.Location.Y - topBorder, maxHeight);
+            int extraWidth  = 20;  // TODO: find clean solution
+            int maxWidth    = m_dataGridView.Columns.GetColumnsWidth(DataGridViewElementStates.None) + extraWidth;
+            int maxHeight   = m_dataGridView.Rows.   GetRowsHeight  (DataGridViewElementStates.None) + extraHeight + m_dataGridView.ColumnHeadersHeight;
+            m_dataGridView.Width  = Math.Min(ClientSize.Width  - m_dataGridView.Location.X - BORDER_LEFT,   maxWidth);
+            m_dataGridView.Height = Math.Min(ClientSize.Height - m_dataGridView.Location.Y - BORDER_BOTTOM, maxHeight);
         }
 
         protected void ToolTip(DataGridViewCellEventArgs e, bool showTip)

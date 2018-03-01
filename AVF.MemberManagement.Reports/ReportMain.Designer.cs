@@ -35,7 +35,7 @@
             this.TrainingsteilnahmeKurse = new System.Windows.Forms.Button();
             this.TrainingsteilnahmeMonate = new System.Windows.Forms.Button();
             this.labelLadeDatenbank = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.labelAnimateLoadDb = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.dateiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -43,10 +43,12 @@
             this.schließenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.berichteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.trainingsteilnahmeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.kurseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.graduierungslisteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.monateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.kurseToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.kurseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.graduierungslisteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.MemberFees = new System.Windows.Forms.Button();
+            this.mitgliederbeiträgeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -112,14 +114,14 @@
             this.labelLadeDatenbank.TabIndex = 2;
             this.labelLadeDatenbank.Text = "Lade Datenbank";
             // 
-            // label2
+            // labelAnimateLoadDb
             // 
-            this.label2.Font = new System.Drawing.Font("Arial Narrow", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(187, 390);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(224, 32);
-            this.label2.TabIndex = 7;
-            this.label2.Text = "................";
+            this.labelAnimateLoadDb.Font = new System.Drawing.Font("Arial Narrow", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelAnimateLoadDb.Location = new System.Drawing.Point(187, 390);
+            this.labelAnimateLoadDb.Name = "labelAnimateLoadDb";
+            this.labelAnimateLoadDb.Size = new System.Drawing.Size(224, 32);
+            this.labelAnimateLoadDb.TabIndex = 7;
+            this.labelAnimateLoadDb.Text = "................";
             // 
             // toolTip1
             // 
@@ -164,10 +166,12 @@
             this.berichteToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.trainingsteilnahmeToolStripMenuItem,
             this.kurseToolStripMenuItem,
-            this.graduierungslisteToolStripMenuItem});
+            this.graduierungslisteToolStripMenuItem,
+            this.mitgliederbeiträgeToolStripMenuItem});
             this.berichteToolStripMenuItem.Name = "berichteToolStripMenuItem";
             this.berichteToolStripMenuItem.Size = new System.Drawing.Size(86, 29);
             this.berichteToolStripMenuItem.Text = "Berichte";
+            this.berichteToolStripMenuItem.Click += new System.EventHandler(this.MemberFees_Click);
             // 
             // trainingsteilnahmeToolStripMenuItem
             // 
@@ -177,6 +181,20 @@
             this.trainingsteilnahmeToolStripMenuItem.Name = "trainingsteilnahmeToolStripMenuItem";
             this.trainingsteilnahmeToolStripMenuItem.Size = new System.Drawing.Size(242, 30);
             this.trainingsteilnahmeToolStripMenuItem.Text = "Trainingsteilnahme";
+            // 
+            // monateToolStripMenuItem
+            // 
+            this.monateToolStripMenuItem.Name = "monateToolStripMenuItem";
+            this.monateToolStripMenuItem.Size = new System.Drawing.Size(157, 30);
+            this.monateToolStripMenuItem.Text = "Monate";
+            this.monateToolStripMenuItem.Click += new System.EventHandler(this.Trainingsteilnahme_Monate_Click);
+            // 
+            // kurseToolStripMenuItem1
+            // 
+            this.kurseToolStripMenuItem1.Name = "kurseToolStripMenuItem1";
+            this.kurseToolStripMenuItem1.Size = new System.Drawing.Size(157, 30);
+            this.kurseToolStripMenuItem1.Text = "Kurse";
+            this.kurseToolStripMenuItem1.Click += new System.EventHandler(this.Trainingsteilnahme_Kurse_Click);
             // 
             // kurseToolStripMenuItem
             // 
@@ -192,26 +210,30 @@
             this.graduierungslisteToolStripMenuItem.Text = "Graduierungsliste";
             this.graduierungslisteToolStripMenuItem.Click += new System.EventHandler(this.Gradierungsliste_Click);
             // 
-            // monateToolStripMenuItem
+            // MemberFees
             // 
-            this.monateToolStripMenuItem.Name = "monateToolStripMenuItem";
-            this.monateToolStripMenuItem.Size = new System.Drawing.Size(210, 30);
-            this.monateToolStripMenuItem.Text = "Monate";
-            this.monateToolStripMenuItem.Click += new System.EventHandler(this.Trainingsteilnahme_Monate_Click);
+            this.MemberFees.Enabled = false;
+            this.MemberFees.Location = new System.Drawing.Point(601, 168);
+            this.MemberFees.Name = "MemberFees";
+            this.MemberFees.Size = new System.Drawing.Size(171, 52);
+            this.MemberFees.TabIndex = 9;
+            this.MemberFees.Text = "Mitgliederbeiträge";
+            this.MemberFees.UseVisualStyleBackColor = true;
+            this.MemberFees.Click += new System.EventHandler(this.MemberFees_Click);
             // 
-            // kurseToolStripMenuItem1
+            // mitgliederbeiträgeToolStripMenuItem
             // 
-            this.kurseToolStripMenuItem1.Name = "kurseToolStripMenuItem1";
-            this.kurseToolStripMenuItem1.Size = new System.Drawing.Size(210, 30);
-            this.kurseToolStripMenuItem1.Text = "Kurse";
-            this.kurseToolStripMenuItem1.Click += new System.EventHandler(this.Trainingsteilnahme_Kurse_Click);
+            this.mitgliederbeiträgeToolStripMenuItem.Name = "mitgliederbeiträgeToolStripMenuItem";
+            this.mitgliederbeiträgeToolStripMenuItem.Size = new System.Drawing.Size(242, 30);
+            this.mitgliederbeiträgeToolStripMenuItem.Text = "Mitgliederbeiträge";
             // 
             // ReportMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(839, 756);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.MemberFees);
+            this.Controls.Add(this.labelAnimateLoadDb);
             this.Controls.Add(this.TrainingsteilnahmeMonate);
             this.Controls.Add(this.TrainingsteilnahmeKurse);
             this.Controls.Add(this.Graduierungsliste);
@@ -221,7 +243,7 @@
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "ReportMain";
-            this.Text = "ReportMain";
+            this.Text = " AVF Mitgliederverwaltung";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -237,7 +259,7 @@
         private System.Windows.Forms.Button TrainingsteilnahmeKurse;
         private System.Windows.Forms.Button TrainingsteilnahmeMonate;
         private System.Windows.Forms.Label labelLadeDatenbank;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label labelAnimateLoadDb;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem dateiToolStripMenuItem;
@@ -249,5 +271,7 @@
         private System.Windows.Forms.ToolStripMenuItem kurseToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem kurseToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem graduierungslisteToolStripMenuItem;
+        private System.Windows.Forms.Button MemberFees;
+        private System.Windows.Forms.ToolStripMenuItem mitgliederbeiträgeToolStripMenuItem;
     }
 }

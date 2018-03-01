@@ -25,9 +25,10 @@ namespace AVF.MemberManagement.Reports
             await Globals.Initialize
             (
                 m_container, 
-                tick: s => { progressBar1.PerformStep(); label2.Text = s;  }
+                tick: s => { progressBar1.PerformStep(); labelAnimateLoadDb.Text = s;  }
             );
             Kurse.Enabled = true;
+            MemberFees.Enabled = true;
             Graduierungsliste.Enabled = true;
             TrainingsteilnahmeKurse.Enabled = true;
             TrainingsteilnahmeMonate.Enabled = true;
@@ -59,6 +60,12 @@ namespace AVF.MemberManagement.Reports
         private void Gradierungsliste_Click(object sender, EventArgs e)
         {
             var form = new ReportGraduationList();
+            form.ShowDialog();
+        }
+
+        private void MemberFees_Click(object sender, EventArgs e)
+        {
+            var form = new ReportMemberFees();
             form.ShowDialog();
         }
 
