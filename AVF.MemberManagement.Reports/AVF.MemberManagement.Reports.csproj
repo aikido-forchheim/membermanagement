@@ -117,6 +117,7 @@
     <Compile Include="ReportTrainingsVsCourses.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ReportWeek.cs" />
     <Compile Include="VerticalAxisCourses.cs" />
     <Compile Include="VerticalAxisMembers.cs" />
     <Compile Include="Program.cs" />

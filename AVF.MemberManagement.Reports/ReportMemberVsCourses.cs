@@ -20,13 +20,11 @@ namespace AVF.MemberManagement.Reports
         }
 
         protected override string MouseMainDataAreaCellEvent(DateTime datStart, DateTime datEnd, int idMember, int idKurs, bool action )
-        {
-            return action
+            => action
                 ? ReportMain.SwitchToPanel( new ReportMemberVsTrainings(m_datStart, m_datEnd, idKurs) )
                 : $"Klicken für Details zur Teilnahme von\n" 
                      + AxisTypeMember.GetDesc( idMember, ' ') 
                      + $" am Kurs\n" 
                      + AxisTypeCourse.GetDesc( idKurs, ' ');
-        }
     }
 }
