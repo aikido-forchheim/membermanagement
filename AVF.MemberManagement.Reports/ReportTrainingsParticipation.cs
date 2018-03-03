@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Collections.Generic;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.ReportsBusinessLogic;
@@ -19,23 +18,23 @@ namespace AVF.MemberManagement.Reports
 
         private bool P_Hide { get; set; } = false;
 
-        public ReportTrainingsParticipation()
-            =>InitializeComponent(); // creates DataGridView ...
+        public ReportTrainingsParticipation(DateTime datStart, DateTime datEnd)
+        {
+            m_datStart = datStart;
+            m_datEnd = datEnd;
+
+            InitializeReportTrainingsParticipation(); // creates DataGridView ...
+        }
 
         protected void CreateModel
         (
             bool bHide,
-            DateTime datStart,
-            DateTime datEnd,
             AxisType xAxisType,
             AxisType yAxisType,
             Func<TrainingsTeilnahme, bool> filter
         )
         {
             P_Hide = bHide;
-
-            m_datStart = datStart;
-            m_datEnd = datEnd;
 
             m_xAxis = yAxisType.GetHorizontalAxis();
             m_yAxis = yAxisType.GetVerticalAxis();
@@ -46,11 +45,11 @@ namespace AVF.MemberManagement.Reports
             m_xAxis.P_startIndex = m_yAxis.P_NrOfKeyColumns;
             m_yAxis.P_startIndex = m_xAxis.P_NrOfKeyColumns;
 
-            List<TrainingsTeilnahme> tpList         = Globals.DatabaseWrapper.TrainingsTeilnahme(datStart, datEnd);
+            List<TrainingsTeilnahme> tpList         = Globals.DatabaseWrapper.TrainingsTeilnahme(m_datStart, m_datEnd);
             List<TrainingsTeilnahme> tpListFiltered = Globals.DatabaseWrapper.Filter(tpList, filter);
 
             m_tpModel = new TrainingParticipationModel( tpListFiltered, m_xAxisType, m_yAxisType );
-            m_labelZeitraum.Text = Globals.GetTimeRangeDescription(datStart, datEnd);
+            m_labelZeitraum.Text = Globals.GetTimeRangeDescription(m_datStart, m_datEnd);
         }
 
         private void FillMainArea()
@@ -122,7 +121,7 @@ namespace AVF.MemberManagement.Reports
             {
                 if (ColIsInMainArea(col))
                 {
-                    return m_xAxisType.MouseCellEvent(m_datStart, m_datEnd, m_xAxis.GetDbIdFromDgvIndex(col), action);
+                    return m_xAxisType.MouseAxisEvent(m_datStart, m_datEnd, m_xAxis.GetDbIdFromDgvIndex(col), action);
                 }
                 else // column header, key or summary columns
                 {
@@ -137,15 +136,9 @@ namespace AVF.MemberManagement.Reports
                 }
                 else // key or summary 
                 {
-                    return m_yAxisType.MouseCellEvent(m_datStart, m_datEnd, m_yAxis.GetDbIdFromDgvIndex(row), action);
+                    return m_yAxisType.MouseAxisEvent(m_datStart, m_datEnd, m_yAxis.GetDbIdFromDgvIndex(row), action);
                 }
             }
-        }
-
-        public static string Show( ReportTrainingsParticipation report )
-        {
-            report.Show();
-            return String.Empty;
         }
 
         protected virtual string MouseMainDataAreaCellEvent(DateTime datStart, DateTime datEnd, int row, int col, bool action)

@@ -13,6 +13,8 @@ namespace AVF.MemberManagement.Reports
             P_MinDbId = 0;
         }
 
+        public static string Title = String.Empty;
+
         public override VerticalAxis GetVerticalAxis()
             => null;
 
@@ -22,7 +24,7 @@ namespace AVF.MemberManagement.Reports
         public override int GetIdFromModelIndex(int iModelCol) 
             => 0;
 
-        public override string MouseCellEvent(DateTime datStart, DateTime datEnd, int idMonth, bool action)
+        public override string MouseAxisEvent(DateTime datStart, DateTime datEnd, int idMonth, bool action)
             => String.Empty;
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)

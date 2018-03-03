@@ -13,6 +13,8 @@ namespace AVF.MemberManagement.Reports
             P_MinDbId = Globals.DatabaseWrapper.MinMitgliedsNr();
          }
 
+        public static string Title = "Trainingsteilnahme ";
+
         public override VerticalAxis GetVerticalAxis()
             => new VerticalAxisMembers();
 
@@ -22,9 +24,9 @@ namespace AVF.MemberManagement.Reports
         public override int GetIdFromModelIndex(int iModelIndex)
             => Globals.DatabaseWrapper.m_mitglieder[iModelIndex].Id;
 
-        public override string MouseCellEvent(DateTime datStart, DateTime datEnd, int idMember, bool action)
+        public override string MouseAxisEvent(DateTime datStart, DateTime datEnd, int idMember, bool action)
             => action
-               ? ReportTrainingsParticipation.Show(new ReportMonthsVsCourses(datStart, datEnd, idMember))
+               ? ReportMain.SwitchToPanel(new ReportMonthsVsCourses(datStart, datEnd, idMember))
                : $"Klicken für Details zu Mitglied\n" + GetDescription(idMember, ' ');
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)

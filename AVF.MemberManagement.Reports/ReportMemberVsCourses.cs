@@ -1,28 +1,28 @@
 ﻿using System;
-using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
     class ReportMemberVsCourses : ReportTrainingsParticipation
     {
         public ReportMemberVsCourses( DateTime datStart, DateTime datEnd )
+            : base( datStart, datEnd )
         {
             CreateModel
             (
                 bHide: false,
-                datStart, datEnd,
                 new AxisTypeCourse(),
                 new AxisTypeMember(),
                 filter: tn => true
             );
 
-            m_labelReportName.Text = "Überblick Trainingsteilnahme";
+            m_labelReportName.Text = AxisTypeTraining.Title;
+            ReportFormPopulate();
         }
 
         protected override string MouseMainDataAreaCellEvent(DateTime datStart, DateTime datEnd, int idMember, int idKurs, bool action )
         {
             return action
-                ? Show( new ReportMemberVsTrainings(m_datStart, m_datEnd, idKurs) )
+                ? ReportMain.SwitchToPanel( new ReportMemberVsTrainings(m_datStart, m_datEnd, idKurs) )
                 : $"Klicken für Details zur Teilnahme von\n" 
                      + AxisTypeMember.GetDesc( idMember, ' ') 
                      + $" am Kurs\n" 

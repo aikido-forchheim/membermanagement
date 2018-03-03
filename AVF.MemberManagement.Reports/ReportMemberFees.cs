@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Windows.Forms;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.ReportsBusinessLogic;
@@ -12,7 +11,7 @@ namespace AVF.MemberManagement.Reports
 
         public ReportMemberFees()
         {
-            InitializeComponent(); // creates DataGridView ...
+            InitializeReportBase(); // creates DataGridView ...
 
             m_dataGridView.Columns.Add("surname",      "Name");
             m_dataGridView.Columns.Add("firstName",    "Vorname");
@@ -29,6 +28,8 @@ namespace AVF.MemberManagement.Reports
 
             foreach (DataGridViewColumn cols in m_dataGridView.Columns)
                 cols.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+
+            ReportFormPopulate();
         }
 
         protected override void ReportFormPopulate()

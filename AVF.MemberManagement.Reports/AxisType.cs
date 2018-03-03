@@ -6,7 +6,7 @@ namespace AVF.MemberManagement.Reports
 {
     public abstract class AxisType : IAxis
     {
-        public abstract string MouseCellEvent(DateTime datStart, DateTime datEnd, int id, bool action);
+        public abstract string MouseAxisEvent(DateTime datStart, DateTime datEnd, int id, bool action);
 
         protected int P_MaxDbId { get; set; }
 

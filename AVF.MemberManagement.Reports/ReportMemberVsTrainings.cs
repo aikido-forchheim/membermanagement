@@ -6,18 +6,19 @@ namespace AVF.MemberManagement.Reports
     class ReportMemberVsTrainings : ReportTrainingsParticipation
     {
         public ReportMemberVsTrainings(DateTime datStart, DateTime datEnd, int idKurs)
+            : base(datStart, datEnd)
         {
             CreateModel
             (
                 bHide: false,
-                datStart, datEnd,
                 new AxisTypeTraining(),
                 new AxisTypeMember(),
-                filter: tn => Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID) == idKurs
+                filter: tn => idKurs == Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID)
             );
 
-            m_labelReportName.Text = "Kursteilnahme";
+            m_labelReportName.Text = AxisTypeCourse.Title;
             m_Info0.Text = AxisTypeCourse.GetDesc(idKurs, ' ');
+            ReportFormPopulate();
         }
 
         protected override string FormatMatrixElement(int iValue) 

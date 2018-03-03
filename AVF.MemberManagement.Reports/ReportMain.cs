@@ -11,8 +11,14 @@ namespace AVF.MemberManagement.Reports
     {
         private static IUnityContainer m_container;
 
+        private static Panel m_panelActual;
+        private static Form m_formMain;
+
+        private int m_iJahr = 2017;
+
         public ReportMain()
         {
+            m_formMain = this;
             InitializeComponent();
             InitDatabase();
         }
@@ -22,52 +28,40 @@ namespace AVF.MemberManagement.Reports
             var bootstrapper = new Bootstrapper(false);
             bootstrapper.Run();
             m_container = bootstrapper.Container;
+            panelButtons.BringToFront();
             await Globals.Initialize
             (
                 m_container, 
                 tick: s => { progressBar1.PerformStep(); labelAnimateLoadDb.Text = s;  }
             );
-            Kurse.Enabled = true;
-            MemberFees.Enabled = true;
-            Graduierungsliste.Enabled = true;
-            TrainingsteilnahmeKurse.Enabled = true;
-            TrainingsteilnahmeMonate.Enabled = true;
-            progressBar1.Hide();
-            labelLadeDatenbank.Hide();
+            foreach (Control control in panelButtons.Controls)
+                control.Enabled = true;
+            panelLoadDb.Dispose();
+            m_panelActual = panelButtons;
+        }
+
+        public static string SwitchToPanel( Panel panelNew )
+        {
+            m_panelActual.Dispose();
+            m_panelActual = panelNew;
+            m_formMain.Controls.Add(m_panelActual);
+            return String.Empty;
         }
 
         private void Trainingsteilnahme_Kurse_Click(object sender, EventArgs e)
-        {
-            int iJahr = 2017;
-            var form = new ReportMemberVsCourses(new DateTime(iJahr, 1, 1), new DateTime(iJahr, 12, 31));
-            form.ShowDialog();
-        }
+            => SwitchToPanel(new ReportMemberVsCourses(new DateTime(m_iJahr, 1, 1), new DateTime(m_iJahr, 12, 31)));
 
         private void Kurse_Click(object sender, EventArgs e)
-        {
-            int iJahr = 2017;
-            var form = new ReportCoursesVsMonths(new DateTime(iJahr, 1, 1), new DateTime(iJahr, 12, 31), -1);
-            form.ShowDialog();
-        }
+             => SwitchToPanel(new ReportCoursesVsMonths(new DateTime(m_iJahr, 1, 1), new DateTime(m_iJahr, 12, 31), -1));
 
         private void Trainingsteilnahme_Monate_Click(object sender, EventArgs e)
-        {
-            int iJahr = 2017;
-            var form = new ReportMemberVsMonths(new DateTime(iJahr, 1, 1), new DateTime(iJahr, 12, 31));
-            form.ShowDialog();
-        }
+             => SwitchToPanel(new ReportMemberVsMonths(new DateTime(m_iJahr, 1, 1), new DateTime(m_iJahr, 12, 31)));
 
         private void Gradierungsliste_Click(object sender, EventArgs e)
-        {
-            var form = new ReportGraduationList();
-            form.ShowDialog();
-        }
+             => SwitchToPanel(new ReportGraduationList());
 
         private void MemberFees_Click(object sender, EventArgs e)
-        {
-            var form = new ReportMemberFees();
-            form.ShowDialog();
-        }
+             => SwitchToPanel(new ReportMemberFees());
 
         private void ApplicationExit_Click(object sender, EventArgs e)
         {
@@ -75,6 +69,11 @@ namespace AVF.MemberManagement.Reports
         }
 
         private void toolTip1_Popup(object sender, PopupEventArgs e)
+        {
+
+        }
+
+        private void labelAnimateLoadDb_Click(object sender, EventArgs e)
         {
 
         }

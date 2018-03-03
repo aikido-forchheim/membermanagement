@@ -10,7 +10,7 @@ namespace AVF.MemberManagement.Reports
     {
         public ReportGraduationList()
         {
-            InitializeComponent(); // creates DataGridView ...
+            InitializeReportBase(); // creates DataGridView ...
 
             m_dataGridView.Columns.Add("graduation", "Grad");
             m_dataGridView.Columns.Add("surname", "Name");
@@ -36,6 +36,8 @@ namespace AVF.MemberManagement.Reports
             }
 
             m_dataGridView.DefaultCellStyle.Font = new Font("Comic Sans MS", 11);
+
+            ReportFormPopulate();
         }
 
         private void ColorizeImportantDates( DataGridViewRow row, BestGraduation bestGrad )
@@ -118,7 +120,7 @@ namespace AVF.MemberManagement.Reports
                 DateTime datValidData = Globals.DatabaseWrapper.GetStartValidData();
                 DateTime dateStart    = (datValidData <= dateGrad) ? dateGrad : datValidData;
                 return action
-                    ? ReportTrainingsParticipation.Show(new ReportMonthsVsCourses(dateStart, DateTime.Now, idMember))
+                    ? ReportMain.SwitchToPanel(new ReportMonthsVsCourses(dateStart, DateTime.Now, idMember))
                     : $"Klicken für Details zu Mitglied\n" + AxisTypeMember.GetDesc(idMember, ' ');
             }
             else

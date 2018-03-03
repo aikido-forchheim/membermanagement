@@ -89,7 +89,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
                 m_monat.Add( monat );
             }
 
-            tick("");
+            tick("Finished ....");
         }
 
         public DateTime GetStartValidData()
@@ -213,6 +213,9 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 
         public DateTime DateFromTrainingParticipation(TrainingsTeilnahme tn)
             => TrainingFromId(tn.TrainingID).Termin;
+
+        public bool DateIsInRange(TrainingsTeilnahme tn, DateTime datRangeStart, DateTime datRangeEnd)
+            => DateIsInRange(DateFromTrainingParticipation(tn), datRangeStart, datRangeEnd);
 
         public bool DateIsInRange(DateTime date, DateTime datRangeStart, DateTime datRangeEnd)
             => (datRangeStart <= date) && (date <= datRangeEnd);

@@ -28,12 +28,18 @@ namespace AVF.MemberManagement.Reports
             => Globals.DatabaseWrapper.m_monat.FindIndex(x => id == x.Id);
 
         public override int GetIdFromModelIndex(int iModelIndex)
-            => iModelIndex; // Globals.DatabaseWrapper.m_monat[iModelIndex % 12].Id;
+            => iModelIndex;
 
-         public override string MouseCellEvent(DateTime datStart, DateTime datEnd, int idMonth, bool action)
+        private DateTime FirstDayOfMonth(int idMonth)
+            => new DateTime(m_datStart.Year, m_datStart.Month + idMonth, 1);
+
+        private DateTime LastDayOfMonth(int idMonth)
+            => FirstDayOfMonth( idMonth ).AddDays(DateTime.DaysInMonth(m_datStart.Year, m_datStart.Month) - 1);
+
+        public override string MouseAxisEvent(DateTime datStart, DateTime datEnd, int idMonth, bool action)
             => action
-               ? String.Empty
-               : $"Klicken für Details zum Monat " + GetDescription(idMonth, ' ') + "\nnoch nicht implementiert";
+               ? ReportMain.SwitchToPanel(new ReportWeeksVsCourses(FirstDayOfMonth(idMonth), LastDayOfMonth(idMonth), idMonth))
+               : $"Klicken für Details zum Monat " + GetDescription(idMonth, ' ');
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => NrOfMonths(m_datStart, Globals.DatabaseWrapper.TerminFromTrainingId(tn.TrainingID));
@@ -43,9 +49,9 @@ namespace AVF.MemberManagement.Reports
 
         public static string GetDesc(int id, char separator, DateTime datStart)
         {
-            int   x     = (datStart.Month - 1) + id;
-            int   year  = datStart.Year + x / 12;
-            Monat monat = Globals.DatabaseWrapper.MonatFromId(x % 12);
+            int    nrOfMonths    = (datStart.Month - 1) + id;
+            int    year          = datStart.Year + nrOfMonths / 12;
+            Monat  monat         = Globals.DatabaseWrapper.MonatFromId(nrOfMonths % 12);
             string strMonthShort = monat.Bezeichnung.Substring(0, 3);
             return $"{strMonthShort}{separator}{year}";
         }

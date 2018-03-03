@@ -47,14 +47,18 @@
             this.kurseToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.kurseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.graduierungslisteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.MemberFees = new System.Windows.Forms.Button();
             this.mitgliederbeiträgeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.MemberFees = new System.Windows.Forms.Button();
+            this.panelButtons = new System.Windows.Forms.Panel();
+            this.panelLoadDb = new System.Windows.Forms.Panel();
             this.menuStrip1.SuspendLayout();
+            this.panelButtons.SuspendLayout();
+            this.panelLoadDb.SuspendLayout();
             this.SuspendLayout();
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(181, 441);
+            this.progressBar1.Location = new System.Drawing.Point(116, 408);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(417, 51);
             this.progressBar1.Step = 6;
@@ -63,7 +67,9 @@
             // Kurse
             // 
             this.Kurse.Enabled = false;
-            this.Kurse.Location = new System.Drawing.Point(380, 168);
+            this.Kurse.FlatAppearance.BorderSize = 0;
+            this.Kurse.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.ControlLight;
+            this.Kurse.Location = new System.Drawing.Point(277, 113);
             this.Kurse.Name = "Kurse";
             this.Kurse.Size = new System.Drawing.Size(171, 52);
             this.Kurse.TabIndex = 3;
@@ -74,7 +80,9 @@
             // Graduierungsliste
             // 
             this.Graduierungsliste.Enabled = false;
-            this.Graduierungsliste.Location = new System.Drawing.Point(156, 168);
+            this.Graduierungsliste.FlatAppearance.BorderSize = 0;
+            this.Graduierungsliste.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.ControlLight;
+            this.Graduierungsliste.Location = new System.Drawing.Point(53, 113);
             this.Graduierungsliste.Name = "Graduierungsliste";
             this.Graduierungsliste.Size = new System.Drawing.Size(171, 52);
             this.Graduierungsliste.TabIndex = 4;
@@ -85,7 +93,9 @@
             // TrainingsteilnahmeKurse
             // 
             this.TrainingsteilnahmeKurse.Enabled = false;
-            this.TrainingsteilnahmeKurse.Location = new System.Drawing.Point(156, 71);
+            this.TrainingsteilnahmeKurse.FlatAppearance.BorderSize = 0;
+            this.TrainingsteilnahmeKurse.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.ControlLight;
+            this.TrainingsteilnahmeKurse.Location = new System.Drawing.Point(53, 33);
             this.TrainingsteilnahmeKurse.Name = "TrainingsteilnahmeKurse";
             this.TrainingsteilnahmeKurse.Size = new System.Drawing.Size(171, 52);
             this.TrainingsteilnahmeKurse.TabIndex = 5;
@@ -96,7 +106,9 @@
             // TrainingsteilnahmeMonate
             // 
             this.TrainingsteilnahmeMonate.Enabled = false;
-            this.TrainingsteilnahmeMonate.Location = new System.Drawing.Point(380, 71);
+            this.TrainingsteilnahmeMonate.FlatAppearance.BorderSize = 0;
+            this.TrainingsteilnahmeMonate.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.ControlLight;
+            this.TrainingsteilnahmeMonate.Location = new System.Drawing.Point(277, 33);
             this.TrainingsteilnahmeMonate.Name = "TrainingsteilnahmeMonate";
             this.TrainingsteilnahmeMonate.Size = new System.Drawing.Size(171, 52);
             this.TrainingsteilnahmeMonate.TabIndex = 6;
@@ -108,7 +120,7 @@
             // 
             this.labelLadeDatenbank.AutoSize = true;
             this.labelLadeDatenbank.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelLadeDatenbank.Location = new System.Drawing.Point(187, 338);
+            this.labelLadeDatenbank.Location = new System.Drawing.Point(112, 309);
             this.labelLadeDatenbank.Name = "labelLadeDatenbank";
             this.labelLadeDatenbank.Size = new System.Drawing.Size(224, 32);
             this.labelLadeDatenbank.TabIndex = 2;
@@ -117,11 +129,12 @@
             // labelAnimateLoadDb
             // 
             this.labelAnimateLoadDb.Font = new System.Drawing.Font("Arial Narrow", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelAnimateLoadDb.Location = new System.Drawing.Point(187, 390);
+            this.labelAnimateLoadDb.Location = new System.Drawing.Point(112, 359);
             this.labelAnimateLoadDb.Name = "labelAnimateLoadDb";
             this.labelAnimateLoadDb.Size = new System.Drawing.Size(224, 32);
             this.labelAnimateLoadDb.TabIndex = 7;
             this.labelAnimateLoadDb.Text = "................";
+            this.labelAnimateLoadDb.Click += new System.EventHandler(this.labelAnimateLoadDb_Click);
             // 
             // toolTip1
             // 
@@ -133,9 +146,9 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.dateiToolStripMenuItem,
             this.berichteToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Location = new System.Drawing.Point(10, 10);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(839, 33);
+            this.menuStrip1.Size = new System.Drawing.Size(819, 33);
             this.menuStrip1.TabIndex = 8;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -151,13 +164,13 @@
             // exportierenToolStripMenuItem
             // 
             this.exportierenToolStripMenuItem.Name = "exportierenToolStripMenuItem";
-            this.exportierenToolStripMenuItem.Size = new System.Drawing.Size(210, 30);
+            this.exportierenToolStripMenuItem.Size = new System.Drawing.Size(185, 30);
             this.exportierenToolStripMenuItem.Text = "Exportieren";
             // 
             // schließenToolStripMenuItem
             // 
             this.schließenToolStripMenuItem.Name = "schließenToolStripMenuItem";
-            this.schließenToolStripMenuItem.Size = new System.Drawing.Size(210, 30);
+            this.schließenToolStripMenuItem.Size = new System.Drawing.Size(185, 30);
             this.schließenToolStripMenuItem.Text = "Schließen";
             this.schließenToolStripMenuItem.Click += new System.EventHandler(this.ApplicationExit_Click);
             // 
@@ -171,7 +184,6 @@
             this.berichteToolStripMenuItem.Name = "berichteToolStripMenuItem";
             this.berichteToolStripMenuItem.Size = new System.Drawing.Size(86, 29);
             this.berichteToolStripMenuItem.Text = "Berichte";
-            this.berichteToolStripMenuItem.Click += new System.EventHandler(this.MemberFees_Click);
             // 
             // trainingsteilnahmeToolStripMenuItem
             // 
@@ -210,10 +222,19 @@
             this.graduierungslisteToolStripMenuItem.Text = "Graduierungsliste";
             this.graduierungslisteToolStripMenuItem.Click += new System.EventHandler(this.Gradierungsliste_Click);
             // 
+            // mitgliederbeiträgeToolStripMenuItem
+            // 
+            this.mitgliederbeiträgeToolStripMenuItem.Name = "mitgliederbeiträgeToolStripMenuItem";
+            this.mitgliederbeiträgeToolStripMenuItem.Size = new System.Drawing.Size(242, 30);
+            this.mitgliederbeiträgeToolStripMenuItem.Text = "Mitgliederbeiträge";
+            this.mitgliederbeiträgeToolStripMenuItem.Click += new System.EventHandler(this.MemberFees_Click);
+            // 
             // MemberFees
             // 
             this.MemberFees.Enabled = false;
-            this.MemberFees.Location = new System.Drawing.Point(601, 168);
+            this.MemberFees.FlatAppearance.BorderSize = 0;
+            this.MemberFees.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.ControlLight;
+            this.MemberFees.Location = new System.Drawing.Point(503, 33);
             this.MemberFees.Name = "MemberFees";
             this.MemberFees.Size = new System.Drawing.Size(171, 52);
             this.MemberFees.TabIndex = 9;
@@ -221,31 +242,47 @@
             this.MemberFees.UseVisualStyleBackColor = true;
             this.MemberFees.Click += new System.EventHandler(this.MemberFees_Click);
             // 
-            // mitgliederbeiträgeToolStripMenuItem
+            // panelButtons
             // 
-            this.mitgliederbeiträgeToolStripMenuItem.Name = "mitgliederbeiträgeToolStripMenuItem";
-            this.mitgliederbeiträgeToolStripMenuItem.Size = new System.Drawing.Size(242, 30);
-            this.mitgliederbeiträgeToolStripMenuItem.Text = "Mitgliederbeiträge";
+            this.panelButtons.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.panelButtons.Controls.Add(this.TrainingsteilnahmeKurse);
+            this.panelButtons.Controls.Add(this.MemberFees);
+            this.panelButtons.Controls.Add(this.TrainingsteilnahmeMonate);
+            this.panelButtons.Controls.Add(this.Graduierungsliste);
+            this.panelButtons.Controls.Add(this.Kurse);
+            this.panelButtons.Location = new System.Drawing.Point(26, 49);
+            this.panelButtons.Name = "panelButtons";
+            this.panelButtons.Size = new System.Drawing.Size(801, 206);
+            this.panelButtons.TabIndex = 10;
+            // 
+            // panelLoadDb
+            // 
+            this.panelLoadDb.Controls.Add(this.progressBar1);
+            this.panelLoadDb.Controls.Add(this.labelAnimateLoadDb);
+            this.panelLoadDb.Controls.Add(this.labelLadeDatenbank);
+            this.panelLoadDb.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelLoadDb.Location = new System.Drawing.Point(10, 43);
+            this.panelLoadDb.Name = "panelLoadDb";
+            this.panelLoadDb.Size = new System.Drawing.Size(819, 703);
+            this.panelLoadDb.TabIndex = 11;
             // 
             // ReportMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(839, 756);
-            this.Controls.Add(this.MemberFees);
-            this.Controls.Add(this.labelAnimateLoadDb);
-            this.Controls.Add(this.TrainingsteilnahmeMonate);
-            this.Controls.Add(this.TrainingsteilnahmeKurse);
-            this.Controls.Add(this.Graduierungsliste);
-            this.Controls.Add(this.Kurse);
-            this.Controls.Add(this.labelLadeDatenbank);
-            this.Controls.Add(this.progressBar1);
+            this.Controls.Add(this.panelLoadDb);
+            this.Controls.Add(this.panelButtons);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "ReportMain";
+            this.Padding = new System.Windows.Forms.Padding(10);
             this.Text = " AVF Mitgliederverwaltung";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.panelButtons.ResumeLayout(false);
+            this.panelLoadDb.ResumeLayout(false);
+            this.panelLoadDb.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -273,5 +310,7 @@
         private System.Windows.Forms.ToolStripMenuItem graduierungslisteToolStripMenuItem;
         private System.Windows.Forms.Button MemberFees;
         private System.Windows.Forms.ToolStripMenuItem mitgliederbeiträgeToolStripMenuItem;
+        private System.Windows.Forms.Panel panelButtons;
+        private System.Windows.Forms.Panel panelLoadDb;
     }
 }
