@@ -13,17 +13,10 @@ namespace AVF.MemberManagement.Reports
             m_datStart = datStart;
         }
 
-        public override void FillKeyHeaderCells(DataGridView dgv)
-        {
-            base.FillKeyHeaderCells(dgv);
-            dgv.Columns[1].HeaderText = "KW";
-        }
+        protected override void FillAdditionalKeyHeaderCells(DataGridView dgv)
+            => dgv.Columns[1].HeaderText = "KW";
 
-        public override int FillMainKeyCell(DataGridView dgv, int iDgvRow, int iModelRow, AxisType axisType)
-        {
-            int id = base.FillMainKeyCell(dgv, iDgvRow, iModelRow, axisType);
-            dgv[1, iDgvRow].Value = AxisTypeWeek.GetDesc(id, '/', m_datStart);
-            return id;
-        }
+        protected override void FillAdditionalKeyCells(DataGridView dgv, int iDgvRow, int id)
+            => dgv[1, iDgvRow].Value = AxisTypeWeek.GetDesc(id, '/', m_datStart);
     }
 }
