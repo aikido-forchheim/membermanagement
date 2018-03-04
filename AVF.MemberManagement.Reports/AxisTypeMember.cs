@@ -13,8 +13,6 @@ namespace AVF.MemberManagement.Reports
             P_MinDbId = Globals.DatabaseWrapper.MinMitgliedsNr();
          }
 
-        public static string Title = "Trainingsteilnahme ";
-
         public override VerticalAxis GetVerticalAxis()
             => new VerticalAxisMembers();
 

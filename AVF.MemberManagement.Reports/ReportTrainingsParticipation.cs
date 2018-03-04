@@ -18,12 +18,15 @@ namespace AVF.MemberManagement.Reports
 
         private bool P_Hide { get; set; } = false;
 
+        public static string Title = "Trainingsteilnahme ";
+
         public ReportTrainingsParticipation(DateTime datStart, DateTime datEnd)
         {
             m_datStart = datStart;
             m_datEnd = datEnd;
 
             InitializeReportTrainingsParticipation(); // creates DataGridView ...
+            m_labelReportName.Text = Title;
         }
 
         protected void CreateModel
@@ -132,11 +135,11 @@ namespace AVF.MemberManagement.Reports
             {
                 if (ColIsInMainArea(col))
                 {
-                    return MouseMainDataAreaCellEvent(m_datStart, m_datEnd, m_yAxis.GetDbIdFromDgvIndex(row), m_xAxis.GetDbIdFromDgvIndex(col), action);
+                    return MouseMainDataAreaCellEvent(m_datStart, m_datEnd, m_yAxis.GetDbIdFromDgvIndex(m_dataGridView, row), m_xAxis.GetDbIdFromDgvIndex(col), action);
                 }
                 else // key or summary 
                 {
-                    return m_yAxisType.MouseAxisEvent(m_datStart, m_datEnd, m_yAxis.GetDbIdFromDgvIndex(row), action);
+                    return m_yAxisType.MouseAxisEvent(m_datStart, m_datEnd, m_yAxis.GetDbIdFromDgvIndex(m_dataGridView, row), action);
                 }
             }
         }

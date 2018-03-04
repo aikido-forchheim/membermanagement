@@ -16,7 +16,6 @@ namespace AVF.MemberManagement.Reports
                 filter: tn => idKurs == Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID)
             );
 
-            m_labelReportName.Text = AxisTypeCourse.Title;
             m_Info0.Text = AxisTypeCourse.GetDesc(idKurs, ' ');
             ReportFormPopulate();
         }

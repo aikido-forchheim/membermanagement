@@ -13,8 +13,6 @@ namespace AVF.MemberManagement.Reports
             P_MinDbId = 0;
         }
 
-        public static string Title = String.Empty;
-
         public override VerticalAxis GetVerticalAxis()
             => null;
 

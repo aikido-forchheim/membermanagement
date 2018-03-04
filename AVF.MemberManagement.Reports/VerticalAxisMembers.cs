@@ -11,17 +11,16 @@ namespace AVF.MemberManagement.Reports
 
         public override void FillKeyHeaderCells(DataGridView dgv)
         {
-            dgv.Columns[0].HeaderText = "Vorname";
-            dgv.Columns[1].HeaderText = "Nachname";
-            dgv.Columns[2].HeaderText = "Nr";
+            dgv.Columns[0].HeaderText = "Nr";
+            dgv.Columns[1].HeaderText = "Vorname";
+            dgv.Columns[2].HeaderText = "Nachname";
         }
 
         public override int FillMainKeyCell(DataGridView dgv, int iDgvRow, int iModelRow, AxisType axisType)
         {
             Mitglied mitglied = Globals.DatabaseWrapper.m_mitglieder[iModelRow];
-            dgv[0, iDgvRow].Value = mitglied.Vorname;
-            dgv[1, iDgvRow].Value = mitglied.Nachname;
-            dgv[2, iDgvRow].Value = mitglied.Id;
+            dgv[1, iDgvRow].Value = mitglied.Vorname;
+            dgv[2, iDgvRow].Value = mitglied.Nachname;
             return base.FillMainKeyCell(dgv, iDgvRow, iModelRow, axisType);
         }
     }

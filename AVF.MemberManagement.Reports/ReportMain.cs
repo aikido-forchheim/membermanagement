@@ -112,5 +112,10 @@ namespace AVF.MemberManagement.Reports
         {
 
         }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -13,8 +13,6 @@ namespace AVF.MemberManagement.Reports
             P_MinDbId = Globals.DatabaseWrapper.MinKursNr();
         }
 
-        public static string Title = "Kursteilnahme";
-
         public override VerticalAxis GetVerticalAxis()
             => new VerticalAxisCourses();
 

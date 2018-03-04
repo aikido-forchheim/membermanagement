@@ -15,7 +15,6 @@ namespace AVF.MemberManagement.Reports
                 filter: tn => true
             );
 
-            m_labelReportName.Text = AxisTypeTraining.Title;
             ReportFormPopulate();
         }
 

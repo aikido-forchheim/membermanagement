@@ -15,8 +15,15 @@ namespace AVF.MemberManagement.Reports
                 filter: tn => true
             );
 
-            m_labelReportName.Text = AxisTypeCourse.Title;
             ReportFormPopulate();
         }
+
+        protected override string MouseMainDataAreaCellEvent(DateTime datStart, DateTime datEnd, int idMember, int idMonth, bool action)
+            => action
+                ? ReportMain.SwitchToPanel(new ReportTrainingsVsCourses(m_datStart, m_datEnd, idMonth))
+                : $"Klicken für Details zur Teilnahme von\n"
+                     + AxisTypeMember.GetDesc(idMember, ' ')
+                     + $" im Monat\n"
+                     + AxisTypeMonth.GetDesc(idMonth, ' ', m_datStart);
     }
 }

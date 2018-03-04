@@ -16,7 +16,6 @@ namespace AVF.MemberManagement.Reports
                 filter: tn => true
             );
 
-            m_labelReportName.Text = AxisTypeMember.Title;
             m_Info0.Text = AxisTypeMonth.GetDesc(0, ' ', datStart);
             ReportFormPopulate();
         }

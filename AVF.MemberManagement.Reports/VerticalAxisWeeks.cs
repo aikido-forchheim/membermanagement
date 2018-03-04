@@ -9,17 +9,20 @@ namespace AVF.MemberManagement.Reports
 
         public VerticalAxisWeeks(DateTime datStart, DateTime datEnd)
         {
-            P_NrOfKeyColumns = 1;
+            P_NrOfKeyColumns = 2;
             m_datStart = datStart;
         }
 
         public override void FillKeyHeaderCells(DataGridView dgv)
-            => dgv.Columns[0].HeaderText = "KW";
+        {
+            dgv.Columns[0].HeaderText = "Nr";
+            dgv.Columns[1].HeaderText = "KW";
+        }
 
         public override int FillMainKeyCell(DataGridView dgv, int iDgvRow, int iModelRow, AxisType axisType)
         {
             int id = base.FillMainKeyCell(dgv, iDgvRow, iModelRow, axisType);
-            dgv[0, iDgvRow].Value = AxisTypeWeek.GetDesc(id, '/', m_datStart);
+            dgv[1, iDgvRow].Value = AxisTypeWeek.GetDesc(id, '/', m_datStart);
             return id;
         }
     }
