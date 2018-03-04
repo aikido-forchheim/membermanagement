@@ -6,8 +6,8 @@ namespace AVF.MemberManagement.Reports
 {
     class AxisTypeWeek : AxisType
     {
-        DateTime m_datStart;
-        DateTime m_datEnd;
+        protected DateTime m_datStart;
+        protected DateTime m_datEnd;
 
         public AxisTypeWeek(DateTime datStart, DateTime datEnd)
         {

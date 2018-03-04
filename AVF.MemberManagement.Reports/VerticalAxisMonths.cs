@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Windows.Forms;
-using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
     class VerticalAxisMonths : VerticalAxis
     {
-        DateTime m_datStart;
+        private DateTime m_datStart;
 
         public VerticalAxisMonths(DateTime datStart, DateTime datEnd)
         {
@@ -16,7 +15,7 @@ namespace AVF.MemberManagement.Reports
 
         public override void FillKeyHeaderCells(DataGridView dgv)
         {
-            dgv.Columns[0].HeaderText = "Nr";
+            base.FillKeyHeaderCells(dgv);
             dgv.Columns[1].HeaderText = "Monat";
         }
 

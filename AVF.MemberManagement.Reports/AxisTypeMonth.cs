@@ -6,8 +6,8 @@ namespace AVF.MemberManagement.Reports
 {
     public class AxisTypeMonth : AxisType
     {
-        DateTime m_datStart;
-        DateTime m_datEnd;
+        private DateTime m_datStart;
+        private DateTime m_datEnd;
 
         public AxisTypeMonth(DateTime datStart, DateTime datEnd)
         {

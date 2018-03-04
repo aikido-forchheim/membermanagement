@@ -5,7 +5,7 @@ namespace AVF.MemberManagement.Reports
 {
     class VerticalAxisWeeks : VerticalAxis
     {
-        DateTime m_datStart;
+        private DateTime m_datStart;
 
         public VerticalAxisWeeks(DateTime datStart, DateTime datEnd)
         {
@@ -15,7 +15,7 @@ namespace AVF.MemberManagement.Reports
 
         public override void FillKeyHeaderCells(DataGridView dgv)
         {
-            dgv.Columns[0].HeaderText = "Nr";
+            base.FillKeyHeaderCells(dgv);
             dgv.Columns[1].HeaderText = "KW";
         }
 

@@ -1,13 +1,13 @@
 ﻿using System.Windows.Forms;
-using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
     public abstract class VerticalAxis : Axis
     {
-         public abstract void FillKeyHeaderCells(DataGridView dgv);
+         public virtual void FillKeyHeaderCells(DataGridView dgv)
+            => dgv.Columns[0].HeaderText = "Nr";
 
-         public void Initialize(int axisLength) { }
+        public void Initialize(int axisLength) { }
 
          public int GetDbIdFromDgvIndex(DataGridView dgv, int iDgvRow)
              => (int)dgv.Rows[iDgvRow - P_startIndex].Cells[0].Value;

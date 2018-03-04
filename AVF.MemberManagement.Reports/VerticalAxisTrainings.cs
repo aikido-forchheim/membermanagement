@@ -9,7 +9,7 @@ namespace AVF.MemberManagement.Reports
 
         public override void FillKeyHeaderCells(DataGridView dgv)
         {
-            dgv.Columns[0].HeaderText = "Nr";
+            base.FillKeyHeaderCells(dgv);
             dgv.Columns[1].HeaderText = "Training";
         }
 
