@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using Microsoft.Practices.Unity;
 using AVF.MemberManagement.xUnitIntegrationTests;
 using AVF.MemberManagement.ReportsBusinessLogic;
+using AVF.MemberManagement.Reports.Properties;
 
 namespace AVF.MemberManagement.Reports
 {
@@ -46,6 +47,40 @@ namespace AVF.MemberManagement.Reports
             m_panelActual = panelNew;
             m_formMain.Controls.Add(m_panelActual);
             return String.Empty;
+        }
+
+        private void FormMain_Load(object sender, EventArgs e)
+        {
+            // Set window location
+            if (Settings.Default.WindowLocation != null)
+            {
+                Location = Settings.Default.WindowLocation;
+            }
+
+            // Set window size
+            if (Settings.Default.WindowSize != null)
+            {
+                Size = Settings.Default.WindowSize;
+            }
+        }
+
+        private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // Copy window location to app settings
+            Settings.Default.WindowLocation = this.Location;
+
+            // Copy window size to app settings
+            if (this.WindowState == FormWindowState.Normal)
+            {
+                Settings.Default.WindowSize = this.Size;
+            }
+            else
+            {
+                Settings.Default.WindowSize = this.RestoreBounds.Size;
+            }
+
+            // Save settings
+            Settings.Default.Save();
         }
 
         private void Trainingsteilnahme_Kurse_Click(object sender, EventArgs e)

@@ -274,10 +274,14 @@
             this.Controls.Add(this.panelLoadDb);
             this.Controls.Add(this.panelButtons);
             this.Controls.Add(this.menuStrip1);
+            this.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::AVF.MemberManagement.Reports.Properties.Settings.Default, "WindowLocation", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.Location = global::AVF.MemberManagement.Reports.Properties.Settings.Default.WindowLocation;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "ReportMain";
             this.Padding = new System.Windows.Forms.Padding(10);
             this.Text = " AVF Mitgliederverwaltung";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
+            this.Load += new System.EventHandler(this.FormMain_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.panelButtons.ResumeLayout(false);
