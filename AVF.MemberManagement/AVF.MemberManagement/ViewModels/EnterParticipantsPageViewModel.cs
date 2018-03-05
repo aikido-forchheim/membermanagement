@@ -23,7 +23,6 @@ namespace AVF.MemberManagement.ViewModels
 
         public string ParticipantsCountText => $"Bereits eingetragene Teilnehmer ({Participants.Count}):";
         public string PreviousParticipantsCountText => $"Zuletzt anwesend ({PreviousParticipants.Count}):";
-        public string FoundMembersCountText => $"Gefundene Mitglieder ({FoundMembers.Count}):";
 
 
         #region Mitglieder, aktuelles Datum und Training
@@ -49,13 +48,6 @@ namespace AVF.MemberManagement.ViewModels
         #region Participants
 
         private ObservableCollection<Mitglied> _originalParticipantsList = new ObservableCollection<Mitglied>();
-
-        private ObservableCollection<Mitglied> _participants = new ObservableCollection<Mitglied>();
-        public ObservableCollection<Mitglied> Participants
-        {
-            get => _participants;
-            set => SetProperty(ref _participants, value);
-        }
 
         private Mitglied _selectedParticipant;
         public Mitglied SelectedParticipant
@@ -96,8 +88,6 @@ namespace AVF.MemberManagement.ViewModels
 
         #region FindMembers
 
-        private string _searchText = string.Empty;
-
         public string SearchText
         {
             get => _searchText;
@@ -108,19 +98,6 @@ namespace AVF.MemberManagement.ViewModels
                 RaisePropertyChanged(nameof(FoundMembersCountText));
                 ((DelegateCommand)ClearSearchTextCommand).RaiseCanExecuteChanged();
                 ((DelegateCommand)AddAndClearSearchTextCommand).RaiseCanExecuteChanged();
-            }
-        }
-
-        private bool _childrenOnly;
-
-        public bool ChildrenOnly
-        {
-            get => _childrenOnly;
-            set
-            {
-                SetProperty(ref _childrenOnly, value);
-                FindMembers(_searchText);
-                RaisePropertyChanged(nameof(FoundMembersCountText));
             }
         }
 
@@ -363,46 +340,6 @@ namespace AVF.MemberManagement.ViewModels
             }
         }
 
-        private void FindMembers(string searchText)
-        {
-            FoundMembers.Clear();
-
-            searchText = searchText ?? "";
-
-            var searchStrings = searchText.Split(' ');
-
-            var foundMembers = _mitglieder.Where(m =>
-            {
-                var argVorname = m.Vorname ?? string.Empty;
-                var argNachname = m.Nachname ?? string.Empty;
-
-                if (m.Vorname == null && m.Nachname == null) return false;
-
-                var allSearchStringsMatch = true;
-                foreach (var searchString in searchStrings)
-                {
-                    var containsNamePart = DoesNamePartsContain(searchString, argVorname, argNachname);
-                    if (!containsNamePart) allSearchStringsMatch = false;
-                }
-
-                return allSearchStringsMatch
-                &&     !Participants.Contains(m) 
-                &&     !HasResigned(m) 
-                &&     (
-                           !ChildrenOnly && m.Geburtsdatum <= DateTime.Now - TimeSpan.FromDays(365 * 18)
-                           ||
-                           ChildrenOnly && m.Geburtsdatum > DateTime.Now - TimeSpan.FromDays(365 * 18)
-                       )
-                ;
-            });
-
-            foreach (var foundMember in foundMembers)
-            {
-                FoundMembers.Add(foundMember);
-            }
-        }
-        
-
         #region Helper
 
         private static int CompareMemberNames(Mitglied x, Mitglied y)
@@ -421,27 +358,11 @@ namespace AVF.MemberManagement.ViewModels
             return compareResult;
         }
 
-        private static bool DoesNamePartsContain(string searchText, string argVorname, string argNachname)
-        {
-            return argVorname.ToLower().Contains(searchText.ToLower()) ||
-                                   argNachname.ToLower().Contains(searchText.ToLower());
-        }
-
         private void RaiseCounterPropertiesChanged()
         {
             RaisePropertyChanged(nameof(ParticipantsCountText));
             RaisePropertyChanged(nameof(PreviousParticipantsCountText));
             RaisePropertyChanged(nameof(FoundMembersCountText));
-        }
-
-        private static bool HasResigned(Mitglied mitglied)
-        {
-            if (mitglied.Austritt == null)
-                return false;
-
-            var resignDate = (DateTime)mitglied.Austritt;
-
-            return resignDate < DateTime.Now;
         }
 
         public bool IsDirty()
