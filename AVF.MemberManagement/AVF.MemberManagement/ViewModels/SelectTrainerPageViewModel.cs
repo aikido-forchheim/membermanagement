@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace AVF.MemberManagement.ViewModels
 {
-    public class SelectTrainerPageViewModel : ViewModelBase
+    public class SelectTrainerPageViewModel : FindMembersViewModelBase
     {
         private string _selectedDate;
 
