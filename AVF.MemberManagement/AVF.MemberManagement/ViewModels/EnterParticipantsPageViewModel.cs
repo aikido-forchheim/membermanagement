@@ -15,7 +15,7 @@ using Microsoft.Extensions.Logging;
 
 namespace AVF.MemberManagement.ViewModels
 {
-    public class EnterParticipantsPageViewModel : ViewModelBase
+    public class EnterParticipantsPageViewModel : FindMembersViewModelBase
     {
         private readonly IRepository<Mitglied> _mitgliederRepository;
         private readonly IRepository<Training> _trainingsRepository;
@@ -27,8 +27,6 @@ namespace AVF.MemberManagement.ViewModels
 
 
         #region Mitglieder, aktuelles Datum und Training
-
-        private List<Mitglied> _mitglieder = new List<Mitglied>();
 
         private string _selectedDate;
 
@@ -124,14 +122,6 @@ namespace AVF.MemberManagement.ViewModels
                 FindMembers(_searchText);
                 RaisePropertyChanged(nameof(FoundMembersCountText));
             }
-        }
-
-        private ObservableCollection<Mitglied> _foundMembers = new ObservableCollection<Mitglied>();
-
-        public ObservableCollection<Mitglied> FoundMembers
-        {
-            get => _foundMembers;
-            set => SetProperty(ref _foundMembers, value);
         }
 
         private Mitglied _selectedMember;

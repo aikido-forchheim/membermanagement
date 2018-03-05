@@ -104,6 +104,7 @@
     <Compile Include="IRepositoryBootstrapper.cs" />
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="NavigationParameter.cs" />
+    <Compile Include="ViewModels\FindMembersViewModelBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App.xaml">
