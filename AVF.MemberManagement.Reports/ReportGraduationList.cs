@@ -121,7 +121,7 @@ namespace AVF.MemberManagement.Reports
                 DateTime dateStart    = (datValidData <= dateGrad) ? dateGrad : datValidData;
                 return action
                     ? ReportMain.SwitchToPanel(new ReportMonthsVsCourses(dateStart, DateTime.Now, idMember))
-                    : $"Klicken für Details zu Mitglied\n" + AxisTypeMember.GetFullDesc(idMember);
+                    : $"Klicken für Details zu Mitglied\n" + m_axisTypeMember.GetFullDesc(idMember);
             }
             else
             {

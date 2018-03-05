@@ -20,7 +20,7 @@ namespace AVF.MemberManagement.Reports
         {
             int id = axisType.GetIdFromModelIndex(iModelRow);
 
-            dgv[0, iDgvRow].Value = axisType.GetIdFromModelIndex(iModelRow);
+            dgv[0, iDgvRow].Value = id;  // column 0 is always reserved for key value
 
             for ( int iCol = 1; iCol <= axisType.HeaderStrings.Count; iCol++)
                 dgv[iCol, iDgvRow].Value = axisType.GetDescription(id, iCol);

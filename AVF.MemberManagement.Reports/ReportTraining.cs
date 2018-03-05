@@ -17,9 +17,9 @@ namespace AVF.MemberManagement.Reports
             );
 
             m_labelReportName.Text = $"Training am {Globals.DatabaseWrapper.WeekDay(training.WochentagID)} den ";
-            m_labelZeitraum.Text   = AxisTypeTraining.GetDesc(training.Id);
+            m_labelZeitraum.Text   = new AxisTypeTraining().GetDescription(training.Id);
             m_Info0.Text           = $"um {training.Zeit:hh}:{training.Zeit:mm} Uhr";
-            m_Info1.Text           = $"Trainer: {AxisTypeMember.GetFullDesc(training.Trainer)}";
+            m_Info1.Text           = $"Trainer: {m_axisTypeMember.GetFullDesc(training.Trainer)}";
             ReportFormPopulate();
         }
     }

@@ -1,5 +1,4 @@
 ﻿using System;
-using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
@@ -16,7 +15,7 @@ namespace AVF.MemberManagement.Reports
                 filter: tn => true
             );
 
-            m_Info0.Text = AxisTypeMonth.GetDesc(0, datStart);
+            m_Info0.Text = new AxisTypeMonth(datStart, datEnd).GetDescription(0);
             ReportFormPopulate();
         }
     }

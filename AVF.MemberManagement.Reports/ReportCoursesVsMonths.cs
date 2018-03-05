@@ -16,7 +16,7 @@ namespace AVF.MemberManagement.Reports
             );
 
             if (idMember != -1)
-                m_Info0.Text = AxisTypeMember.GetFullDesc(idMember);
+                m_Info0.Text = m_axisTypeMember.GetFullDesc(idMember);
             ReportFormPopulate();
         }
     }

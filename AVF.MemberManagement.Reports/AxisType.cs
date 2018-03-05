@@ -23,7 +23,7 @@ namespace AVF.MemberManagement.Reports
 
         public abstract int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn);
 
-        public abstract string GetDescription(int id, int iNr);
+        public abstract string GetDescription(int id, int iNr = 1);
 
         public int DatabaseIdRange()
             => P_MaxDbId - P_MinDbId + 1;

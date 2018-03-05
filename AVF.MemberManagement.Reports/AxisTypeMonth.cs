@@ -44,12 +44,9 @@ namespace AVF.MemberManagement.Reports
             => NrOfMonths(m_datStart, Globals.DatabaseWrapper.TerminFromTrainingId(tn.TrainingID));
 
         public override string GetDescription(int idMonth, int iNr = 1)
-            => GetDesc(idMonth, m_datStart, iNr);
-
-        public static string GetDesc(int id, DateTime datStart, int iNr = 1)
         {
-            int    nrOfMonths    = (datStart.Month - 1) + id;
-            int    year          = datStart.Year + nrOfMonths / 12;
+            int    nrOfMonths    = (m_datStart.Month - 1) + idMonth;
+            int    year          = m_datStart.Year + nrOfMonths / 12;
             Monat  monat         = Globals.DatabaseWrapper.MonatFromId(nrOfMonths % 12);
             string strMonthShort = monat.Bezeichnung.Substring(0, 3);
             return $"{strMonthShort} {year}";

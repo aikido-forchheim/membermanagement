@@ -22,8 +22,8 @@ namespace AVF.MemberManagement.Reports
             => action
                 ? ReportMain.SwitchToPanel( new ReportMemberVsTrainings(m_datStart, m_datEnd, idKurs) )
                 : $"Klicken für Details zur Teilnahme von\n"
-                     + AxisTypeMember.GetFullDesc(idMember)
+                     + m_axisTypeMember.GetFullDesc(idMember)
                      + $" am Kurs\n" 
-                     + AxisTypeCourse.GetDesc(idKurs);
+                     + m_xAxisType.GetDescription(idKurs);
     }
 }

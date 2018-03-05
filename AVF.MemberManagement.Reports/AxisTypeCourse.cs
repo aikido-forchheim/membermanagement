@@ -30,9 +30,6 @@ namespace AVF.MemberManagement.Reports
             => Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID);
 
         public override string GetDescription(int idKurs, int iNr = 1)
-            => GetDesc(idKurs, iNr);
-
-        public static string GetDesc(int idKurs, int iNr = 1)
         {
             Kurs kurs = Globals.DatabaseWrapper.KursFromId(idKurs);
 

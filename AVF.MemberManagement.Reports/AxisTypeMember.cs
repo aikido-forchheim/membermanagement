@@ -30,13 +30,10 @@ namespace AVF.MemberManagement.Reports
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => tn.MitgliedID;
 
+        public string GetFullDesc(int idMember)
+            => GetDescription(idMember, 1) + " " + GetDescription(idMember, 2);
+
         public override string GetDescription(int idMember, int iNr)
-            => GetDesc(idMember, iNr);
-
-        public static string GetFullDesc(int idMember)
-            => GetDesc(idMember, 1) + " " + GetDesc(idMember, 2);
-
-        public static string GetDesc(int idMember, int iNr)
         {
             Mitglied mitglied = Globals.DatabaseWrapper.MitgliedFromId(idMember);
 

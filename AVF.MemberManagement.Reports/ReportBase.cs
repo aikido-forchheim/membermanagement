@@ -6,9 +6,10 @@ namespace AVF.MemberManagement.Reports
 {
     public abstract class ReportBase : Panel
     {
-        protected DataGridView m_dataGridView;
-        protected Label        m_labelReportName;
-        protected Font         m_font;
+        protected DataGridView   m_dataGridView;
+        protected Label          m_labelReportName;
+        protected Font           m_font;
+        protected AxisTypeMember m_axisTypeMember { get; private set; }
 
         private Color m_ColorCell;
 
@@ -22,6 +23,7 @@ namespace AVF.MemberManagement.Reports
             m_font            = new Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             m_labelReportName = new Label();
             m_dataGridView    = new DataGridView();
+            m_axisTypeMember  = new AxisTypeMember();
 
             // 
             // m_labelReportName

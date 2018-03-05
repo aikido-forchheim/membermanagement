@@ -45,10 +45,7 @@ namespace AVF.MemberManagement.Reports
             => NrOfWeeks(m_datStart, Globals.DatabaseWrapper.TerminFromTrainingId(tn.TrainingID));
 
         public override string GetDescription(int idWeek, int iNr = 1)
-            => GetDesc(idWeek, m_datStart, iNr);
-
-        public static string GetDesc(int id, DateTime datStart, int iNr = 1)
-            => $"{Globals.GetWeekOfYear(datStart) + id} {datStart.Year}";
+            => $"{Globals.GetWeekOfYear(m_datStart) + idWeek} {m_datStart.Year}";
     }
 }
 

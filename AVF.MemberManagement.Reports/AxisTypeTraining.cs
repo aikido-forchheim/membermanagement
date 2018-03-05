@@ -35,9 +35,6 @@ namespace AVF.MemberManagement.Reports
             => tn.TrainingID;
 
         public override string GetDescription(int idTraining, int iNr = 1)
-            => GetDesc(idTraining, iNr);
-
-        public static string GetDesc(int idTraining, int iNr = 1)
         {
             Debug.Assert(idTraining > 0);
             Training training = Globals.DatabaseWrapper.TrainingFromId(idTraining);
