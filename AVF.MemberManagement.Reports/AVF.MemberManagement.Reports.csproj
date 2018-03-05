@@ -118,17 +118,12 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="ReportWeek.cs" />
-    <Compile Include="VerticalAxisCourses.cs" />
-    <Compile Include="VerticalAxisMembers.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VerticalAxis.cs" />
-    <Compile Include="VerticalAxisMonths.cs" />
-    <Compile Include="VerticalAxisTrainings.cs" />
     <Compile Include="ReportWeeksVsCourses.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="VerticalAxisWeeks.cs" />
     <EmbeddedResource Include="ReportMain.resx">
       <DependentUpon>ReportMain.cs</DependentUpon>
     </EmbeddedResource>

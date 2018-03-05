@@ -13,9 +13,6 @@ namespace AVF.MemberManagement.Reports
             P_MinDbId = 0;
         }
 
-        public override VerticalAxis GetVerticalAxis()
-            => null;
-
         public override int GetModelIndexFromId(int id) 
             => 0;
 
@@ -28,7 +25,7 @@ namespace AVF.MemberManagement.Reports
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => 0;
 
-        public override string GetDescription(int idWeek, char separator)
+        public override string GetDescription(int id, int iNr = 1)
             => String.Empty;
     }
 }

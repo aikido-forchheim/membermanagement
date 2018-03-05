@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Collections.Generic;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.ReportsBusinessLogic;
 
@@ -12,10 +13,8 @@ namespace AVF.MemberManagement.Reports
             P_ActiveElementsOnly = true;
             P_MaxDbId = Globals.DatabaseWrapper.MaxTrainingNr();
             P_MinDbId = Globals.DatabaseWrapper.MinTrainingNr();
+            HeaderStrings = new List<string> { "Training" };
         }
-
-        public override VerticalAxis GetVerticalAxis()
-            => new VerticalAxisTrainings();
 
         public override int GetModelIndexFromId(int id)
             => Globals.DatabaseWrapper.m_trainings.FindIndex(x => id == x.Id);
@@ -29,20 +28,20 @@ namespace AVF.MemberManagement.Reports
             Training training = Globals.DatabaseWrapper.TrainingFromId(idTraining);
             return action
                ? ReportMain.SwitchToPanel(new ReportTraining(training))
-               : $"Klicken für Details zum Training " + GetDescription(idTraining, ' ');
+               : $"Klicken für Details zum Training " + GetDescription(idTraining);
         }
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => tn.TrainingID;
 
-        public override string GetDescription(int idTraining, char separator)
-            => GetDesc(idTraining, separator);
+        public override string GetDescription(int idTraining, int iNr = 1)
+            => GetDesc(idTraining, iNr);
 
-        public static string GetDesc(int idTraining, char separator)
+        public static string GetDesc(int idTraining, int iNr = 1)
         {
             Debug.Assert(idTraining > 0);
             Training training = Globals.DatabaseWrapper.TrainingFromId(idTraining);
-            return $"{training.Termin:dd}{separator}{training.Termin:MM}{separator}{training.Termin:yy}";
+            return $"{training.Termin:dd}\n{training.Termin:MM}\n{training.Termin:yy}";
         }
     }
 }

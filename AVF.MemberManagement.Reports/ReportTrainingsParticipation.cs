@@ -18,15 +18,14 @@ namespace AVF.MemberManagement.Reports
 
         private bool P_Hide { get; set; } = false;
 
-        public static string Title = "Trainingsteilnahme ";
-
         public ReportTrainingsParticipation(DateTime datStart, DateTime datEnd)
         {
             m_datStart = datStart;
             m_datEnd = datEnd;
 
             InitializeReportTrainingsParticipation(); // creates DataGridView ...
-            m_labelReportName.Text = Title;
+            m_labelReportName.Text = "Trainingsteilnahme";
+            m_labelZeitraum.Text = Globals.GetTimeRangeDescription(m_datStart, m_datEnd);
         }
 
         protected void CreateModel
@@ -39,20 +38,19 @@ namespace AVF.MemberManagement.Reports
         {
             P_Hide = bHide;
 
-            m_xAxis = yAxisType.GetHorizontalAxis();
-            m_yAxis = yAxisType.GetVerticalAxis();
+            m_xAxis = new HorizontalAxis();
+            m_yAxis = new VerticalAxis();
 
             m_xAxisType = xAxisType;
             m_yAxisType = yAxisType;
 
-            m_xAxis.P_startIndex = m_yAxis.P_NrOfKeyColumns;
-            m_yAxis.P_startIndex = m_xAxis.P_NrOfKeyColumns;
+            m_xAxis.P_startIndex = yAxisType.HeaderStrings.Count + 1; ;
+            m_yAxis.P_startIndex = 0;
 
             List<TrainingsTeilnahme> tpList         = Globals.DatabaseWrapper.TrainingsTeilnahme(m_datStart, m_datEnd);
             List<TrainingsTeilnahme> tpListFiltered = Globals.DatabaseWrapper.Filter(tpList, filter);
 
             m_tpModel = new TrainingParticipationModel( tpListFiltered, m_xAxisType, m_yAxisType );
-            m_labelZeitraum.Text = Globals.GetTimeRangeDescription(m_datStart, m_datEnd);
         }
 
         private void FillMainArea()
@@ -62,7 +60,7 @@ namespace AVF.MemberManagement.Reports
             (
                 action: iModelRow =>
                 {
-                    int iDgvCol = m_yAxis.P_NrOfKeyColumns;
+                    int iDgvCol = m_xAxis.P_startIndex;
                     m_tpModel.ForAllCols
                     (
                         action: iModelCol => m_dataGridView[iDgvCol++, iDgvRow].Value = FormatMatrixElement(m_tpModel.GetCell(iModelRow, iModelCol)),
@@ -77,9 +75,9 @@ namespace AVF.MemberManagement.Reports
         private void ReportFormSize()      // define dimensions of DataGridView
         {
             m_dataGridView.RowCount    = m_yAxisType.P_ActiveElementsOnly ? m_tpModel.GetNrOfActiveRows() : m_yAxisType.DatabaseIdRange();
-            m_dataGridView.ColumnCount = m_yAxis.P_NrOfKeyColumns;
+            m_dataGridView.ColumnCount = m_yAxisType.HeaderStrings.Count + 1;
             if (!P_Hide)
-                m_dataGridView.ColumnCount += m_xAxisType.P_ActiveElementsOnly ? m_tpModel.GetNrOfActiveCols() : m_xAxisType.DatabaseIdRange() + 1; // + 1 for summary column
+                m_dataGridView.ColumnCount += (m_xAxisType.P_ActiveElementsOnly ? m_tpModel.GetNrOfActiveCols() : m_xAxisType.DatabaseIdRange()) + 1; // + 1 for summary column
         }           
 
         protected override void ReportFormPopulate()    // Fill cells of DataGridView
@@ -88,7 +86,7 @@ namespace AVF.MemberManagement.Reports
             m_yAxis.Initialize( m_yAxisType.DatabaseIdRange() );
             ReportFormSize();
 
-            m_yAxis.FillKeyHeaderCells(m_dataGridView);
+            m_yAxis.FillKeyHeaderCells(m_dataGridView, m_yAxisType);
 
             int iDgvRow = 0;
             m_tpModel.ForAllRows
@@ -111,9 +109,10 @@ namespace AVF.MemberManagement.Reports
                 iDgvRow = 0;
                 m_tpModel.ForAllRows
                 (
-                    iModelRow => m_dataGridView[m_dataGridView.ColumnCount - 1, iDgvRow++].Value = m_tpModel.GetRowSum(iModelRow),
-                    m_yAxisType.P_ActiveElementsOnly
+                    action: iModelRow => m_dataGridView[m_dataGridView.ColumnCount - 1, iDgvRow++].Value = m_tpModel.GetRowSum(iModelRow),
+                    activeRowsOnly: m_yAxisType.P_ActiveElementsOnly
                 );
+
                 FillMainArea();
             }
         }
@@ -148,7 +147,7 @@ namespace AVF.MemberManagement.Reports
             => String.Empty;
 
         private bool ColIsKeyArea(int iCol)
-            => iCol < m_yAxis.P_NrOfKeyColumns;
+            => iCol < m_yAxisType.HeaderStrings.Count + 1;
 
         private bool ColIsSummary(int iCol)
             => iCol == m_dataGridView.ColumnCount - 1;

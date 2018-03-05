@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.ReportsBusinessLogic;
 
@@ -16,10 +17,8 @@ namespace AVF.MemberManagement.Reports
             m_datEnd   = datEnd;
             P_MinDbId  = 0;
             P_MaxDbId  = NrOfWeeks(datStart, datEnd);
+            HeaderStrings = new List<string> { "KW" };
         }
-
-        public override VerticalAxis GetVerticalAxis()
-            => new VerticalAxisWeeks(m_datStart, m_datEnd);
 
         private int NrOfWeeks(DateTime datStart, DateTime datEnd)
         {
@@ -40,16 +39,16 @@ namespace AVF.MemberManagement.Reports
         public override string MouseAxisEvent(DateTime datStart, DateTime datEnd, int idWeek, bool action)
            => action
                ? ReportMain.SwitchToPanel(ReportWeek.GetReport( datStart.Year, Globals.GetWeekOfYear(datStart) + idWeek ))
-               : $"Klicken für Details zur Woche " + GetDescription(idWeek, '/');
+               : $"Klicken für Details zur Woche " + GetDescription(idWeek);
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => NrOfWeeks(m_datStart, Globals.DatabaseWrapper.TerminFromTrainingId(tn.TrainingID));
 
-        public override string GetDescription(int idWeek, char separator)
-            => GetDesc(idWeek, separator, m_datStart);
+        public override string GetDescription(int idWeek, int iNr = 1)
+            => GetDesc(idWeek, m_datStart, iNr);
 
-        public static string GetDesc(int id, char separator, DateTime datStart)
-            => $"{Globals.GetWeekOfYear(datStart) + id}{separator}{datStart.Year}";
+        public static string GetDesc(int id, DateTime datStart, int iNr = 1)
+            => $"{Globals.GetWeekOfYear(datStart) + id} {datStart.Year}";
     }
 }
 

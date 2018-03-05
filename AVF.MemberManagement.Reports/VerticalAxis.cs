@@ -2,28 +2,28 @@
 
 namespace AVF.MemberManagement.Reports
 {
-    public abstract class VerticalAxis : Axis
+    public class VerticalAxis : Axis
     {
-        protected abstract void FillAdditionalKeyHeaderCells(DataGridView dgv);
-
-        public virtual void FillKeyHeaderCells(DataGridView dgv)
+        public virtual void FillKeyHeaderCells(DataGridView dgv, AxisType axisType)
         {
             dgv.Columns[0].HeaderText = "Nr";
-            FillAdditionalKeyHeaderCells(dgv);
+            for (int iCol = 1; iCol <= axisType.HeaderStrings.Count; iCol++)
+                dgv.Columns[iCol].HeaderText = axisType.HeaderStrings[iCol - 1];
         }
 
         public void Initialize(int axisLength) { }
 
-         public int GetDbIdFromDgvIndex(DataGridView dgv, int iDgvRow)
+        public int GetDbIdFromDgvIndex(DataGridView dgv, int iDgvRow)
              => (int)dgv.Rows[iDgvRow - P_startIndex].Cells[0].Value;
 
-        protected abstract void FillAdditionalKeyCells(DataGridView dgv, int iDgvRow, int id);
-
-        public override int FillMainKeyCell(DataGridView dgv, int iDgvRow, int iModelRow, AxisType axisType)
+        public override void FillMainKeyCell(DataGridView dgv, int iDgvRow, int iModelRow, AxisType axisType)
         {
-            int id = (int)(dgv[0, iDgvRow].Value = axisType.GetIdFromModelIndex(iModelRow));
-            FillAdditionalKeyCells(dgv, iDgvRow, id);
-            return id;
+            int id = axisType.GetIdFromModelIndex(iModelRow);
+
+            dgv[0, iDgvRow].Value = axisType.GetIdFromModelIndex(iModelRow);
+
+            for ( int iCol = 1; iCol <= axisType.HeaderStrings.Count; iCol++)
+                dgv[iCol, iDgvRow].Value = axisType.GetDescription(id, iCol);
         }
     }
 }
