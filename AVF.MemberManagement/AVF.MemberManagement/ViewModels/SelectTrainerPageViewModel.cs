@@ -56,14 +56,6 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _cotrainer2, value);
         }
 
-        private ObservableCollection<Mitglied> _trainers = new ObservableCollection<Mitglied>();
-
-        public ObservableCollection<Mitglied> Participants //TODO: Rename back to Trainer, and allow override of Binding in ParticipantsView, or rename to something more gerenic like MemberSelection
-        {
-            get => _trainers;
-            set => SetProperty(ref _trainers, value);
-        }
-
         private Mitglied _selectedParticipant;
 
         public Mitglied SelectedParticipant
