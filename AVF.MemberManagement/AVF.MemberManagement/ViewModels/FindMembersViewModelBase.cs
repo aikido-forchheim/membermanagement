@@ -19,17 +19,12 @@ namespace AVF.MemberManagement.ViewModels
     {
         protected List<Mitglied> _mitglieder = new List<Mitglied>();
 
-        protected string _searchText = string.Empty;
-
+        public string ParticipantsCountText => $"Bereits eingetragene Teilnehmer ({Participants.Count}):";
+        public string PreviousParticipantsCountText => $"Zuletzt anwesend ({PreviousParticipants.Count}):";
         public string FoundMembersCountText => $"Gefundene Mitglieder ({FoundMembers.Count}):";
 
-        private ObservableCollection<Mitglied> _foundMembers = new ObservableCollection<Mitglied>();
 
-        public ObservableCollection<Mitglied> FoundMembers
-        {
-            get => _foundMembers;
-            set => SetProperty(ref _foundMembers, value);
-        }
+        #region FindMembers
 
         private bool _childrenOnly;
 
@@ -44,6 +39,45 @@ namespace AVF.MemberManagement.ViewModels
             }
         }
 
+        private ObservableCollection<Mitglied> _foundMembers = new ObservableCollection<Mitglied>();
+
+        public ObservableCollection<Mitglied> FoundMembers
+        {
+            get => _foundMembers;
+            set => SetProperty(ref _foundMembers, value);
+        }
+
+        protected string _searchText = string.Empty;
+
+        public string SearchText
+        {
+            get => _searchText;
+            set
+            {
+                SetProperty(ref _searchText, value);
+                FindMembers(_searchText);
+                RaisePropertyChanged(nameof(FoundMembersCountText));
+                ((DelegateCommand)ClearSearchTextCommand).RaiseCanExecuteChanged();
+                ((DelegateCommand)AddAndClearSearchTextCommand).RaiseCanExecuteChanged();
+            }
+        }
+
+        private Mitglied _selectedMember;
+
+        public Mitglied SelectedMember
+        {
+            get => _selectedMember;
+            set
+            {
+                SetProperty(ref _selectedMember, value);
+                ((DelegateCommand)AddFoundMemberCommand).RaiseCanExecuteChanged();
+            }
+        }
+
+        #endregion
+
+        #region Participants
+
         protected ObservableCollection<Mitglied> _participants = new ObservableCollection<Mitglied>();
         public ObservableCollection<Mitglied> Participants
         {
@@ -51,9 +85,26 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _participants, value);
         }
 
+        #endregion
+
+        private ObservableCollection<Mitglied> _previousParticipants = new ObservableCollection<Mitglied>();
+
+        public ObservableCollection<Mitglied> PreviousParticipants
+        {
+            get => _previousParticipants;
+            set => SetProperty(ref _previousParticipants, value);
+        }
+
+
+        public ICommand AddFoundMemberCommand { get; set; }
+        public ICommand ClearSearchTextCommand { get; set; }
+        public ICommand AddAndClearSearchTextCommand { get; set; }
+
+        #region ctor
         public FindMembersViewModelBase(INavigationService navigationService, ILogger logger) : base(navigationService, logger)
         {
         }
+        #endregion
 
         protected void FindMembers(string searchText)
         {
@@ -94,6 +145,73 @@ namespace AVF.MemberManagement.ViewModels
             }
         }
 
+        #region AddFoundMemberCommand
+
+        protected bool CanAddFoundMember()
+        {
+            return FoundMembers != null && FoundMembers.Count > 0 && SelectedMember != null && FoundMembers.Contains(SelectedMember);
+        }
+
+        protected void AddFoundMember()
+        {
+            Participants.Add(SelectedMember);
+
+            PreviousParticipants.Remove(SelectedMember);
+            FoundMembers.Remove(SelectedMember);
+
+            ((DelegateCommand)AddFoundMemberCommand).RaiseCanExecuteChanged();
+
+            RaiseCounterPropertiesChanged();
+
+            if (FoundMembers.Count == 0) ClearSearchText();
+        }
+
+        #endregion
+
+        #region ClearSearchTextCommand
+
+        protected void ClearSearchText()
+        {
+            SearchText = string.Empty;
+        }
+
+        protected bool CanClearSearchText()
+        {
+            return !string.IsNullOrEmpty(SearchText);
+        }
+
+        #endregion
+
+        #region AddAndClearSearchTextCommand
+
+        protected void AddAndClearSearchText()
+        {
+            if (FoundMembers != null && FoundMembers.Count == 1)
+            {
+                SelectedMember = FoundMembers[0];
+
+                AddFoundMember();
+
+                SearchText = string.Empty;
+            }
+        }
+
+        protected bool CanAddAndClearSearchText()
+        {
+            return FoundMembers != null && FoundMembers.Count == 1;
+        }
+
+        #endregion
+
+        #region Helpers
+
+        protected void RaiseCounterPropertiesChanged()
+        {
+            RaisePropertyChanged(nameof(ParticipantsCountText));
+            RaisePropertyChanged(nameof(PreviousParticipantsCountText));
+            RaisePropertyChanged(nameof(FoundMembersCountText));
+        }
+
         private static bool DoesNamePartsContain(string searchText, string argVorname, string argNachname)
         {
             return argVorname.ToLower().Contains(searchText.ToLower()) ||
@@ -125,5 +243,7 @@ namespace AVF.MemberManagement.ViewModels
 
             return compareResult;
         }
+
+        #endregion
     }
 }

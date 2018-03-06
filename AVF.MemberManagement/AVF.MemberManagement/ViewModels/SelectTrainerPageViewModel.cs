@@ -64,24 +64,8 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _selectedParticipant, value);
         }
 
-        private string _participantsCountText;
-
-        public string ParticipantsCountText
-        {
-            get => _participantsCountText;
-            set => SetProperty(ref _participantsCountText, value);
-        }
-
-        private ObservableCollection<Mitglied> _previousTrainers = new ObservableCollection<Mitglied>();
-
         private readonly IRepository<Training> _trainingsRepository;
         private readonly IRepository<Mitglied> _mitgliederRepository;
-
-        public ObservableCollection<Mitglied> PreviousParticipants //TODO: Rename back to Trainer, and allow override of Binding in ParticipantsView, or rename to something more gerenic like MemberSelection
-        {
-            get => _previousTrainers;
-            set => SetProperty(ref _previousTrainers, value);
-        }
 
         public SelectTrainerPageViewModel(INavigationService navigationService, ILogger logger, IRepository<Training> trainingsRepository, IRepository<Mitglied> mitgliederRepository) : base(navigationService, logger)
         {
@@ -118,7 +102,7 @@ namespace AVF.MemberManagement.ViewModels
 
                 Title = $"{SelectedTraining.Class.Time} ({SelectedTraining.Class.Trainer.FirstName})";
 
-                ParticipantsCountText = $"Trainer ({Participants.Count}):";
+                //ParticipantsCountText = $"Trainer ({Participants.Count}):";
 
                 await GetPreviousTrainers();
 

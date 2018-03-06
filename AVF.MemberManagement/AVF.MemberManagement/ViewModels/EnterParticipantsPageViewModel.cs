@@ -21,11 +21,7 @@ namespace AVF.MemberManagement.ViewModels
         private readonly IRepository<Training> _trainingsRepository;
         private readonly IRepository<TrainingsTeilnahme> _trainingsTeilnahmenRepository;
 
-        public string ParticipantsCountText => $"Bereits eingetragene Teilnehmer ({Participants.Count}):";
-        public string PreviousParticipantsCountText => $"Zuletzt anwesend ({PreviousParticipants.Count}):";
-
-
-        #region Mitglieder, aktuelles Datum und Training
+        #region Aktuelles Datum und Training
 
         private string _selectedDate;
 
@@ -64,13 +60,7 @@ namespace AVF.MemberManagement.ViewModels
 
         #region PreviousParicipants
 
-        private ObservableCollection<Mitglied> _previousParticipants = new ObservableCollection<Mitglied>();
 
-        public ObservableCollection<Mitglied> PreviousParticipants
-        {
-            get => _previousParticipants;
-            set => SetProperty(ref _previousParticipants, value);
-        }
 
         private Mitglied _selectedPreviousParticipant;
 
@@ -86,45 +76,13 @@ namespace AVF.MemberManagement.ViewModels
 
         #endregion
 
-        #region FindMembers
-
-        public string SearchText
-        {
-            get => _searchText;
-            set
-            {
-                SetProperty(ref _searchText, value);
-                FindMembers(_searchText);
-                RaisePropertyChanged(nameof(FoundMembersCountText));
-                ((DelegateCommand)ClearSearchTextCommand).RaiseCanExecuteChanged();
-                ((DelegateCommand)AddAndClearSearchTextCommand).RaiseCanExecuteChanged();
-            }
-        }
-
-        private Mitglied _selectedMember;
-
-        public Mitglied SelectedMember
-        {
-            get => _selectedMember;
-            set
-            {
-                SetProperty(ref _selectedMember, value);
-                ((DelegateCommand)AddFoundMemberCommand).RaiseCanExecuteChanged();
-            }
-        }
-
-        #endregion
-
         List<Mitglied> _insertList = new List<Mitglied>();
         List<Mitglied> _deletedList = new List<Mitglied>();
 
         public ICommand RemoveParticipantCommand { get; set; }
         public ICommand AddPreviousParticipantCommand { get; set; }
-        public ICommand AddFoundMemberCommand { get; set; }
-        public ICommand ClearSearchTextCommand { get; set; }
-        public ICommand AddAndClearSearchTextCommand { get; set; }
 
-
+        #region ctor
         public EnterParticipantsPageViewModel(IRepository<Mitglied> mitgliederRepository, IRepository<Training> trainingsRepository, IRepository<TrainingsTeilnahme> trainingsTeilnahmenRepository, INavigationService navigationService, ILogger logger) : base(navigationService, logger)
         {
             _mitgliederRepository = mitgliederRepository;
@@ -137,6 +95,7 @@ namespace AVF.MemberManagement.ViewModels
             ClearSearchTextCommand = new DelegateCommand(ClearSearchText, CanClearSearchText);
             AddAndClearSearchTextCommand = new DelegateCommand(AddAndClearSearchText, CanAddAndClearSearchText);
         }
+        #endregion
 
         #region INavigatedAware
 
@@ -221,64 +180,8 @@ namespace AVF.MemberManagement.ViewModels
 
         #endregion
 
-        #region AddFoundMemberCommand
 
-        private bool CanAddFoundMember()
-        {
-            return FoundMembers != null && FoundMembers.Count > 0 && SelectedMember != null && FoundMembers.Contains(SelectedMember);
-        }
-
-        private void AddFoundMember()
-        {
-            Participants.Add(SelectedMember);
-
-            PreviousParticipants.Remove(SelectedMember);
-            FoundMembers.Remove(SelectedMember);
-
-            ((DelegateCommand)AddFoundMemberCommand).RaiseCanExecuteChanged();
-
-            RaiseCounterPropertiesChanged();
-
-            if (FoundMembers.Count == 0) ClearSearchText();
-        }
-
-        #endregion
-
-        #region ClearSearchTextCommand
-
-        private void ClearSearchText()
-        {
-            SearchText = string.Empty;
-        }
-
-        private bool CanClearSearchText()
-        {
-            return !string.IsNullOrEmpty(SearchText);
-        }
-
-        #endregion
-
-        #region AddAndClearSearchTextCommand
-
-        private void AddAndClearSearchText()
-        {
-            if (FoundMembers != null && FoundMembers.Count == 1)
-            {
-                SelectedMember = FoundMembers[0];
-
-                AddFoundMember();
-
-                SearchText = string.Empty;
-            }
-        }
-
-        private bool CanAddAndClearSearchText()
-        {
-            return FoundMembers != null && FoundMembers.Count == 1;
-        }
-
-        #endregion
-
+        #region Helper
 
         private ObservableCollection<Mitglied> GetExistingParticipants()
         {
@@ -338,15 +241,6 @@ namespace AVF.MemberManagement.ViewModels
             {
                 System.Diagnostics.Debug.WriteLine(ex.Message);
             }
-        }
-
-        #region Helper
-
-        private void RaiseCounterPropertiesChanged()
-        {
-            RaisePropertyChanged(nameof(ParticipantsCountText));
-            RaisePropertyChanged(nameof(PreviousParticipantsCountText));
-            RaisePropertyChanged(nameof(FoundMembersCountText));
         }
 
         public bool IsDirty()

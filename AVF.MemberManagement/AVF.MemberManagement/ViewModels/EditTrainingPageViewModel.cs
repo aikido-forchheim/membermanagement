@@ -161,9 +161,16 @@ namespace AVF.MemberManagement.ViewModels
 
         private void ChangeTrainer()
         {
-            NavigationParameters navigationParameters = new NavigationParameters { { "SelectedDateString", SelectedDateString }, { "SelectedTraining", SelectedTraining }, { "Trainer", Trainer }, { "Cotrainer1", Cotrainer1 }, { "Cotrainer2", Cotrainer2 } };
+            try
+            {
+                NavigationParameters navigationParameters = new NavigationParameters { { "SelectedDateString", SelectedDateString }, { "SelectedTraining", SelectedTraining }, { "Trainer", Trainer }, { "Cotrainer1", Cotrainer1 }, { "Cotrainer2", Cotrainer2 } };
 
-            NavigationService.NavigateAsync(nameof(SelectTrainerPage), navigationParameters);
+                NavigationService.NavigateAsync(nameof(SelectTrainerPage), navigationParameters);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
         }
 
         private bool CanChangeTrainer()
