@@ -27,7 +27,7 @@ namespace AVF.MemberManagement.Reports
                        int extraWidth = 20;   // TODO: find clean solution
                        int maxWidth = P_dataGridView.Columns.GetColumnsWidth(DataGridViewElementStates.None) + extraWidth;
                        int maxHeight = P_dataGridView.Rows.GetRowsHeight(DataGridViewElementStates.None) + extraHeight + P_dataGridView.ColumnHeadersHeight;
-                       P_dataGridView.Width  = Math.Min(ClientSize.Width  - P_dataGridView.Location.X,   maxWidth);
+                       P_dataGridView.Width  = Math.Min(ClientSize.Width  - P_dataGridView.Location.X, maxWidth);
                        P_dataGridView.Height = Math.Min(ClientSize.Height - P_dataGridView.Location.Y, maxHeight);
                    }
                );
@@ -41,9 +41,9 @@ namespace AVF.MemberManagement.Reports
 
         protected virtual void InitializeReportBase()
         {
-            P_font            = new Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            P_font = new Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             P_labelReportName = new Label();
-            P_dataGridView    = new DataGridView();
+            P_dataGridView = new DataGridView();
 
             // 
             // P_labelReportName
@@ -75,9 +75,9 @@ namespace AVF.MemberManagement.Reports
             P_dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             ((System.ComponentModel.ISupportInitialize)(P_dataGridView)).EndInit();
 
-            P_dataGridView.CellMouseClick += new DataGridViewCellMouseEventHandler(CellMouseClick);
-            P_dataGridView.CellMouseEnter += new DataGridViewCellEventHandler(CellMouseEnter);
-            P_dataGridView.CellMouseLeave += new DataGridViewCellEventHandler(CellMouseLeave);
+            P_dataGridView.CellMouseClick += new DataGridViewCellMouseEventHandler(delegate(Object sender, DataGridViewCellMouseEventArgs e) { MouseCellEvent(e.RowIndex, e.ColumnIndex, action: true); } );
+            P_dataGridView.CellMouseEnter += new DataGridViewCellEventHandler(delegate (object sender, DataGridViewCellEventArgs e) { ToolTip(e, true); });
+            P_dataGridView.CellMouseLeave += new DataGridViewCellEventHandler(delegate (object sender, DataGridViewCellEventArgs e) { ToolTip(e, false); });
 
             Controls.Add(P_dataGridView);
             Controls.Add(P_labelReportName);
@@ -108,15 +108,6 @@ namespace AVF.MemberManagement.Reports
                 cell.ToolTipText = String.Empty;
             }
         }
-
-        private void CellMouseClick(Object sender, DataGridViewCellMouseEventArgs e)
-            => MouseCellEvent(e.RowIndex, e.ColumnIndex, action: true);
-
-        private void CellMouseEnter(object sender, DataGridViewCellEventArgs e)
-           => ToolTip(e, true);
-
-        private void CellMouseLeave(object sender, DataGridViewCellEventArgs e)
-            => ToolTip(e, false);
 
         protected bool RowIsHeader(int iRow)
            => iRow < 0;

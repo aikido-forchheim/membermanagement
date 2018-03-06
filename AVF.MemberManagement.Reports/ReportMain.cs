@@ -51,36 +51,23 @@ namespace AVF.MemberManagement.Reports
 
         private void FormMain_Load(object sender, EventArgs e)
         {
-            // Set window location
             if (Settings.Default.WindowLocation != null)
-            {
                 Location = Settings.Default.WindowLocation;
-            }
 
-            // Set window size
             if (Settings.Default.WindowSize != null)
-            {
                 Size = Settings.Default.WindowSize;
-            }
         }
 
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // Copy window location to app settings
-            Settings.Default.WindowLocation = this.Location;
-
-            // Copy window size to app settings
-            if (this.WindowState == FormWindowState.Normal)
-            {
-                Settings.Default.WindowSize = this.Size;
-            }
-            else
-            {
-                Settings.Default.WindowSize = this.RestoreBounds.Size;
-            }
-
-            // Save settings
-            Settings.Default.Save();
+            Settings.Default.WindowLocation = this.Location;   // Copy window location to app settings
+            
+            Settings.Default.WindowSize =                     // Copy window size to app settings
+                (this.WindowState == FormWindowState.Normal) 
+                ? this.Size 
+                : this.RestoreBounds.Size;
+            
+            Settings.Default.Save();         // Save settings
         }
 
         private void Trainingsteilnahme_Kurse_Click(object sender, EventArgs e)
@@ -101,21 +88,6 @@ namespace AVF.MemberManagement.Reports
         private void ApplicationExit_Click(object sender, EventArgs e)
         {
             Application.Exit();
-        }
-
-        private void toolTip1_Popup(object sender, PopupEventArgs e)
-        {
-
-        }
-
-        private void labelAnimateLoadDb_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void toolStripButton1_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

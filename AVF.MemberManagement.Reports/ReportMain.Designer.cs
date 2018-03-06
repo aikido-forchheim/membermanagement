@@ -36,7 +36,6 @@
             this.TrainingsteilnahmeMonate = new System.Windows.Forms.Button();
             this.labelLadeDatenbank = new System.Windows.Forms.Label();
             this.labelAnimateLoadDb = new System.Windows.Forms.Label();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.dateiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportierenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -134,11 +133,6 @@
             this.labelAnimateLoadDb.Size = new System.Drawing.Size(224, 32);
             this.labelAnimateLoadDb.TabIndex = 7;
             this.labelAnimateLoadDb.Text = "................";
-            this.labelAnimateLoadDb.Click += new System.EventHandler(this.labelAnimateLoadDb_Click);
-            // 
-            // toolTip1
-            // 
-            this.toolTip1.Popup += new System.Windows.Forms.PopupEventHandler(this.toolTip1_Popup);
             // 
             // menuStrip1
             // 
@@ -301,7 +295,6 @@
         private System.Windows.Forms.Button TrainingsteilnahmeMonate;
         private System.Windows.Forms.Label labelLadeDatenbank;
         private System.Windows.Forms.Label labelAnimateLoadDb;
-        private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem dateiToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportierenToolStripMenuItem;

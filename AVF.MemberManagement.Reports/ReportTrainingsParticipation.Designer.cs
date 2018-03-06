@@ -15,7 +15,7 @@ namespace AVF.MemberManagement.Reports
             this.P_labelZeitraum = new System.Windows.Forms.Label();
             this.P_labelZeitraum.AutoSize = true;
             this.P_labelZeitraum.Font = P_font;
-            this.P_labelZeitraum.Location = new System.Drawing.Point(500, 20);
+            this.P_labelZeitraum.Location = new System.Drawing.Point(500, 30);
             this.P_labelZeitraum.Name = "P_labelZeitraum";
             this.P_labelZeitraum.TabIndex = 2;
             // 
