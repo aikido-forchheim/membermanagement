@@ -7,14 +7,10 @@ namespace AVF.MemberManagement.Reports
 {
     class AxisTypeWeek : AxisType
     {
-        protected DateTime m_datStart;
-        protected DateTime m_datEnd;
-
         public AxisTypeWeek(DateTime datStart, DateTime datEnd)
+             : base(datStart, datEnd)
         {
             P_ActiveElementsOnly = false;
-            m_datStart = datStart;
-            m_datEnd   = datEnd;
             P_MinDbId  = 0;
             P_MaxDbId  = NrOfWeeks(datStart, datEnd);
             HeaderStrings = new List<string> { "KW" };
@@ -36,16 +32,16 @@ namespace AVF.MemberManagement.Reports
         public override int GetIdFromModelIndex(int iModelIndex)
             => iModelIndex;
 
-        public override string MouseAxisEvent(DateTime datStart, DateTime datEnd, int idWeek, bool action)
+        public override string MouseAxisEvent(int idWeek, bool action)
            => action
-               ? ReportMain.SwitchToPanel(ReportWeek.GetReport( datStart.Year, Globals.GetWeekOfYear(datStart) + idWeek ))
+               ? ReportMain.SwitchToPanel(ReportWeek.GetReport( P_datStart.Year, Globals.GetWeekOfYear(P_datStart) + idWeek ))
                : $"Klicken für Details zur Woche " + GetDescription(idWeek);
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
-            => NrOfWeeks(m_datStart, Globals.DatabaseWrapper.TerminFromTrainingId(tn.TrainingID));
+            => NrOfWeeks(P_datStart, Globals.DatabaseWrapper.TerminFromTrainingId(tn.TrainingID));
 
         public override string GetDescription(int idWeek, int iNr = 1)
-            => $"{Globals.GetWeekOfYear(m_datStart) + idWeek} {m_datStart.Year}";
+            => $"{Globals.GetWeekOfYear(P_datStart) + idWeek} {P_datStart.Year}";
     }
 }
 

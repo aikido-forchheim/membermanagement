@@ -7,8 +7,8 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 {
     public class TrainingParticipationModel
     {
-        private int m_iNrOfCols;
-        private int m_iNrOfRows;
+        private int P_iNrOfCols;
+        private int P_iNrOfRows;
 
         private class Row : IComparable<Row>
         {
@@ -18,8 +18,8 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             public int CompareTo(Row other) => other.iRowSum - iRowSum;
         };
 
-        private Row[] m_Rows;
-        private int[] m_iColSum;
+        private Row[] P_Rows;
+        private int[] P_iColSum;
 
         public TrainingParticipationModel
         (
@@ -28,57 +28,57 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             IAxis yAxisType
         )
         {
-            m_iNrOfRows = yAxisType.DatabaseIdRange();
-            m_iNrOfCols = xAxisType.DatabaseIdRange();
+            P_iNrOfRows = yAxisType.DatabaseIdRange();
+            P_iNrOfCols = xAxisType.DatabaseIdRange();
 
-            m_Rows = new Row[m_iNrOfRows];
+            P_Rows = new Row[P_iNrOfRows];
 
-            for (int iRow = 0; iRow < m_iNrOfRows; ++iRow)
+            for (int iRow = 0; iRow < P_iNrOfRows; ++iRow)
             {
-                m_Rows[iRow] = new Row
+                P_Rows[iRow] = new Row
                 {
-                    aiValues = new int[m_iNrOfCols],
+                    aiValues = new int[P_iNrOfCols],
                     iRowSum = 0
                 };
             }
 
-            m_iColSum = new int[m_iNrOfCols];
+            P_iColSum = new int[P_iNrOfCols];
 
             foreach (var trainingsParticipation in tpList)
             {
                 int iRow = yAxisType.GetModelIndexFromTrainingsParticipation(trainingsParticipation);
                 int iCol = xAxisType.GetModelIndexFromTrainingsParticipation(trainingsParticipation);
-                ++m_Rows[iRow].aiValues[iCol];
-                ++m_Rows[iRow].iRowSum;
-                ++m_iColSum[iCol];
+                ++P_Rows[iRow].aiValues[iCol];
+                ++P_Rows[iRow].iRowSum;
+                ++P_iColSum[iCol];
             }
         }
 
         public void SortRows()
-            => Array.Sort(m_Rows);
+            => Array.Sort(P_Rows);
 
         public int GetNrOfActiveRows()
-            => m_Rows.Count(r => r.iRowSum > 0);
+            => P_Rows.Count(r => r.iRowSum > 0);
 
         public int GetNrOfActiveCols()
-            => m_iColSum.Count(c => c > 0);
+            => P_iColSum.Count(c => c > 0);
 
         public int GetCell(int iRow, int iCol)
-            => m_Rows[iRow].aiValues[iCol];
+            => P_Rows[iRow].aiValues[iCol];
 
         public int GetRowSum(int iRow)
-            => m_Rows[iRow].iRowSum;
+            => P_Rows[iRow].iRowSum;
 
         public void ForAllCols(Action<int> action, bool activeColsOnly  )
         {
-            for (int iCol = 0; iCol < m_iNrOfCols; ++iCol)
-                if ( !activeColsOnly || (m_iColSum[iCol] > 0 ) )
+            for (int iCol = 0; iCol < P_iNrOfCols; ++iCol)
+                if ( !activeColsOnly || (P_iColSum[iCol] > 0 ) )
                     action(iCol);
         }
 
         public void ForAllRows(Action<int> action, bool activeRowsOnly)
         {
-            for (int iRow = 0; iRow < m_iNrOfRows; ++iRow)
+            for (int iRow = 0; iRow < P_iNrOfRows; ++iRow)
                 if (!activeRowsOnly || (GetRowSum(iRow) > 0))
                     action(iRow);
         }

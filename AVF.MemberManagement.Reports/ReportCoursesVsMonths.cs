@@ -10,13 +10,12 @@ namespace AVF.MemberManagement.Reports
             CreateModel
             (
                 bHide: false,
-                new AxisTypeMonth(datStart, datEnd),
-                new AxisTypeCourse(),
+                new AxisTypeMonth(P_datStart, P_datEnd),
+                new AxisTypeCourse(P_datStart, P_datEnd),
                 filter: tn => (idMember == -1) ? true : (idMember == tn.MitgliedID)
             );
 
-            if (idMember != -1)
-                m_Info0.Text = m_axisTypeMember.GetFullDesc(idMember);
+            P_Info0.Text = P_axisTypeMember.GetFullDesc(idMember);
             ReportFormPopulate();
         }
     }

@@ -6,100 +6,108 @@ namespace AVF.MemberManagement.Reports
 {
     public abstract class ReportBase : Panel
     {
-        protected DataGridView   m_dataGridView;
-        protected Label          m_labelReportName;
-        protected Font           m_font;
-        protected AxisTypeMember m_axisTypeMember { get; private set; }
+        // properties
 
-        private Color m_ColorCell;
+        protected DataGridView  P_dataGridView { get; set; }
+        protected Label         P_labelReportName { get; set; }
+        protected Font          P_font { get; set; }
 
-        int BORDER_TOP = 200;
+        private Color P_ColorCell { get; set; }
+
+        private const int BORDER_TOP = 200;
+
+        // constructor
 
         public ReportBase()
-            => Resize += new EventHandler(ReportResize);
+            => Resize += new EventHandler
+               (
+                   delegate(object sender, System.EventArgs e)
+                   {
+                       int extraHeight = 2;   // values found by trial and error, to prevend scroll bars
+                       int extraWidth = 20;   // TODO: find clean solution
+                       int maxWidth = P_dataGridView.Columns.GetColumnsWidth(DataGridViewElementStates.None) + extraWidth;
+                       int maxHeight = P_dataGridView.Rows.GetRowsHeight(DataGridViewElementStates.None) + extraHeight + P_dataGridView.ColumnHeadersHeight;
+                       P_dataGridView.Width  = Math.Min(ClientSize.Width  - P_dataGridView.Location.X,   maxWidth);
+                       P_dataGridView.Height = Math.Min(ClientSize.Height - P_dataGridView.Location.Y, maxHeight);
+                   }
+               );
+
+        // abstract memeber functions
+
+        protected abstract void   ReportFormPopulate();    // Fill cells of DataGridView
+        protected abstract string MouseCellEvent(int row, int col, bool action);
+
+        // member functions
 
         protected virtual void InitializeReportBase()
         {
-            m_font            = new Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            m_labelReportName = new Label();
-            m_dataGridView    = new DataGridView();
-            m_axisTypeMember  = new AxisTypeMember();
+            P_font            = new Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            P_labelReportName = new Label();
+            P_dataGridView    = new DataGridView();
 
             // 
-            // m_labelReportName
+            // P_labelReportName
             // 
-            m_labelReportName.AutoSize = true;
-            m_labelReportName.Font = m_font;
-            m_labelReportName.Location = new System.Drawing.Point(0, 30);
-            m_labelReportName.Name = "m_labelReportName";
-            m_labelReportName.TabIndex = 1;
+            P_labelReportName.AutoSize = true;
+            P_labelReportName.Font = P_font;
+            P_labelReportName.Location = new System.Drawing.Point(0, 30);
+            P_labelReportName.Name = "P_labelReportName";
+            P_labelReportName.TabIndex = 1;
 
             // 
-            // m_dataGridView
+            // P_dataGridView
             // 
-            ((System.ComponentModel.ISupportInitialize)(m_dataGridView)).BeginInit();
-            m_dataGridView.AllowUserToAddRows = false;
-            m_dataGridView.AllowUserToDeleteRows = false;
-            m_dataGridView.ClipboardCopyMode = DataGridViewClipboardCopyMode.Disable;
-            m_dataGridView.EnableHeadersVisualStyles = false;
-            m_dataGridView.Location = new Point(0, BORDER_TOP);
-            m_dataGridView.MultiSelect = true;
-            m_dataGridView.Name = "m_dataGridView";
-            m_dataGridView.RowHeadersVisible = false;
-            m_dataGridView.RowHeadersWidth = 20;
-            m_dataGridView.RowTemplate.Height = 28;
-            m_dataGridView.Size = new Size(1345, 712);
-            m_dataGridView.TabIndex = 0;
-            m_dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            m_dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-            m_dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            ((System.ComponentModel.ISupportInitialize)(m_dataGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(P_dataGridView)).BeginInit();
+            P_dataGridView.AllowUserToAddRows = false;
+            P_dataGridView.AllowUserToDeleteRows = false;
+            P_dataGridView.ClipboardCopyMode = DataGridViewClipboardCopyMode.Disable;
+            P_dataGridView.EnableHeadersVisualStyles = false;
+            P_dataGridView.Location = new Point(0, BORDER_TOP);
+            P_dataGridView.MultiSelect = true;
+            P_dataGridView.Name = "P_dataGridView";
+            P_dataGridView.RowHeadersVisible = false;
+            P_dataGridView.RowHeadersWidth = 20;
+            P_dataGridView.RowTemplate.Height = 28;
+            P_dataGridView.Size = new Size(1345, 712);
+            P_dataGridView.TabIndex = 0;
+            P_dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            P_dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            P_dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            ((System.ComponentModel.ISupportInitialize)(P_dataGridView)).EndInit();
 
-            m_dataGridView.CellMouseClick += new DataGridViewCellMouseEventHandler(CellMouseClick);
-            m_dataGridView.CellMouseEnter += new DataGridViewCellEventHandler(CellMouseEnter);
-            m_dataGridView.CellMouseLeave += new DataGridViewCellEventHandler(CellMouseLeave);
+            P_dataGridView.CellMouseClick += new DataGridViewCellMouseEventHandler(CellMouseClick);
+            P_dataGridView.CellMouseEnter += new DataGridViewCellEventHandler(CellMouseEnter);
+            P_dataGridView.CellMouseLeave += new DataGridViewCellEventHandler(CellMouseLeave);
 
-            Controls.Add(m_dataGridView);
-            Controls.Add(m_labelReportName);
+            Controls.Add(P_dataGridView);
+            Controls.Add(P_labelReportName);
 
             Dock = DockStyle.Fill;
             BackColor = Color.AliceBlue;
-        }
-
-        private void ReportResize(object sender, System.EventArgs e)
-        {
-            int extraHeight = 2;   // values found by trial and error, to prevend scroll bars
-            int extraWidth  = 20;  // TODO: find clean solution
-            int maxWidth    = m_dataGridView.Columns.GetColumnsWidth(DataGridViewElementStates.None) + extraWidth;
-            int maxHeight   = m_dataGridView.Rows.   GetRowsHeight  (DataGridViewElementStates.None) + extraHeight + m_dataGridView.ColumnHeadersHeight;
-            m_dataGridView.Width  = Math.Min(ClientSize.Width  - m_dataGridView.Location.X,   maxWidth);
-            m_dataGridView.Height = Math.Min(ClientSize.Height - m_dataGridView.Location.Y, maxHeight);
         }
 
         protected void ToolTip(DataGridViewCellEventArgs e, bool showTip)
         {
             DataGridViewCell cell =
                 RowIsHeader(e.RowIndex)
-                ? m_dataGridView.Columns[e.ColumnIndex].HeaderCell
-                : m_dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                ? P_dataGridView.Columns[e.ColumnIndex].HeaderCell
+                : P_dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
 
             if (showTip)
             {
                 cell.ToolTipText = MouseCellEvent(e.RowIndex, e.ColumnIndex, action: false);
                 if ( cell.ToolTipText != String.Empty )
                 {
-                    m_ColorCell = cell.Style.BackColor;
+                    P_ColorCell = cell.Style.BackColor;
                     cell.Style.BackColor = Color.LawnGreen;
                 }
             }
             else
             {
-                cell.Style.BackColor = m_ColorCell;
+                cell.Style.BackColor = P_ColorCell;
                 cell.ToolTipText = String.Empty;
             }
         }
-
-        protected abstract string MouseCellEvent(int row, int col, bool action);
 
         private void CellMouseClick(Object sender, DataGridViewCellMouseEventArgs e)
             => MouseCellEvent(e.RowIndex, e.ColumnIndex, action: true);
@@ -112,8 +120,5 @@ namespace AVF.MemberManagement.Reports
 
         protected bool RowIsHeader(int iRow)
            => iRow < 0;
-
-        protected abstract void ReportFormPopulate();    // Fill cells of DataGridView
-
     }
 }

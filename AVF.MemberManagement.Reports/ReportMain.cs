@@ -10,16 +10,16 @@ namespace AVF.MemberManagement.Reports
 {
     public partial class ReportMain : Form
     {
-        private static IUnityContainer m_container;
+        private static IUnityContainer P_container;
 
-        private static Panel m_panelActual;
-        private static Form m_formMain;
+        private static Panel P_panelActual;
+        private static Form P_formMain;
 
-        private int m_iJahr = 2017;
+        private int P_iJahr = 2017;
 
         public ReportMain()
         {
-            m_formMain = this;
+            P_formMain = this;
             InitializeComponent();
             InitDatabase();
         }
@@ -28,24 +28,24 @@ namespace AVF.MemberManagement.Reports
         {
             var bootstrapper = new Bootstrapper(false);
             bootstrapper.Run();
-            m_container = bootstrapper.Container;
+            P_container = bootstrapper.Container;
             panelButtons.BringToFront();
             await Globals.Initialize
             (
-                m_container, 
+                P_container, 
                 tick: s => { progressBar1.PerformStep(); labelAnimateLoadDb.Text = s;  }
             );
             foreach (Control control in panelButtons.Controls)
                 control.Enabled = true;
             panelLoadDb.Dispose();
-            m_panelActual = panelButtons;
+            P_panelActual = panelButtons;
         }
 
         public static string SwitchToPanel( Panel panelNew )
         {
-            m_panelActual.Dispose();
-            m_panelActual = panelNew;
-            m_formMain.Controls.Add(m_panelActual);
+            P_panelActual.Dispose();
+            P_panelActual = panelNew;
+            P_formMain.Controls.Add(P_panelActual);
             return String.Empty;
         }
 
@@ -84,13 +84,13 @@ namespace AVF.MemberManagement.Reports
         }
 
         private void Trainingsteilnahme_Kurse_Click(object sender, EventArgs e)
-            => SwitchToPanel(new ReportMemberVsCourses(new DateTime(m_iJahr, 1, 1), new DateTime(m_iJahr, 12, 31)));
+            => SwitchToPanel(new ReportMemberVsCourses(new DateTime(P_iJahr, 1, 1), new DateTime(P_iJahr, 12, 31)));
 
         private void Kurse_Click(object sender, EventArgs e)
-             => SwitchToPanel(new ReportCoursesVsMonths(new DateTime(m_iJahr, 1, 1), new DateTime(m_iJahr, 12, 31), -1));
+             => SwitchToPanel(new ReportCoursesVsMonths(new DateTime(P_iJahr, 1, 1), new DateTime(P_iJahr, 12, 31), -1));
 
         private void Trainingsteilnahme_Monate_Click(object sender, EventArgs e)
-             => SwitchToPanel(new ReportMemberVsMonths(new DateTime(m_iJahr, 1, 1), new DateTime(m_iJahr, 12, 31)));
+             => SwitchToPanel(new ReportMemberVsMonths(new DateTime(P_iJahr, 1, 1), new DateTime(P_iJahr, 12, 31)));
 
         private void Gradierungsliste_Click(object sender, EventArgs e)
              => SwitchToPanel(new ReportGraduationList());

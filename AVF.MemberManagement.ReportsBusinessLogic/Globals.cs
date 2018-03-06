@@ -7,15 +7,15 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 {
     public class Globals
     {
-        private static DateTimeFormatInfo m_dfi;
-        private static Calendar m_cal;
+        private static DateTimeFormatInfo P_dfi;
+        private static Calendar P_cal;
 
         public static DatabaseWrapper DatabaseWrapper;
 
         public async static Task Initialize(IUnityContainer Container, Action<String> tick)
         {
-            m_dfi = DateTimeFormatInfo.CurrentInfo;
-            m_cal = m_dfi.Calendar;
+            P_dfi = DateTimeFormatInfo.CurrentInfo;
+            P_cal = P_dfi.Calendar;
             DatabaseWrapper = new DatabaseWrapper();
             await DatabaseWrapper.ReadTables(Container, tick);
         }
@@ -24,13 +24,19 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             => $"{ date:dd.MM.yyyy}";
 
         public static int GetMonth(DateTime date)
-            => m_cal.GetMonth( date );
+            => P_cal.GetMonth( date );
 
         public static string GetMonthName(int iMonth)
-            => m_dfi.GetMonthName(iMonth).ToString();
+            => P_dfi.GetMonthName(iMonth).ToString();
 
-         public static int GetWeekOfYear(DateTime date)
-            => m_cal.GetWeekOfYear(date, m_dfi.CalendarWeekRule, m_dfi.FirstDayOfWeek);
+        public static int GetWeekOfYear(DateTime date)
+            => P_cal.GetWeekOfYear(date, P_dfi.CalendarWeekRule, P_dfi.FirstDayOfWeek);
+
+        public static DateTime FirstDayOfMonth(DateTime datStart, int idMonth)
+            => new DateTime(datStart.Year, datStart.Month + idMonth, 1);
+
+        public static DateTime LastDayOfMonth(DateTime datStart, int idMonth)
+            => FirstDayOfMonth(datStart, idMonth).AddDays(DateTime.DaysInMonth(datStart.Year, datStart.Month) - 1);
 
         public static string GetTimeRangeDescription(DateTime datStart, DateTime datEnd)
             => Format(datStart) + ' ' + Format(datEnd);

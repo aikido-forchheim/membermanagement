@@ -7,26 +7,26 @@ namespace AVF.MemberManagement.Reports
 {
     class ReportMemberFees : ReportBase
     {
-        private decimal m_halfYearSum = 0;
+        private decimal P_halfYearSum { get; set; } = 0;
 
         public ReportMemberFees()
         {
             InitializeReportBase(); // creates DataGridView ...
 
-            m_dataGridView.Columns.Add("surname",      "Name");
-            m_dataGridView.Columns.Add("firstName",    "Vorname");
-            m_dataGridView.Columns.Add("hemberId",     "lfd.\nNr.");
-            m_dataGridView.Columns.Add("memberClass",  "Bei-\ntrags-\nklasse");
-            m_dataGridView.Columns.Add("stdFee",       "voller\nBeitrag\np.a.");
-            m_dataGridView.Columns.Add("familymember", "Familien-\nmitglied");
-            m_dataGridView.Columns.Add("effectiveFee", "Beitrag\np.a.");
-            m_dataGridView.Columns.Add("halfYearFee",  "Lastschrift");
+            P_dataGridView.Columns.Add("surname",      "Name");
+            P_dataGridView.Columns.Add("firstName",    "Vorname");
+            P_dataGridView.Columns.Add("hemberId",     "lfd.\nNr.");
+            P_dataGridView.Columns.Add("memberClass",  "Bei-\ntrags-\nklasse");
+            P_dataGridView.Columns.Add("stdFee",       "voller\nBeitrag\np.a.");
+            P_dataGridView.Columns.Add("familymember", "Familien-\nmitglied");
+            P_dataGridView.Columns.Add("effectiveFee", "Beitrag\np.a.");
+            P_dataGridView.Columns.Add("halfYearFee",  "Lastschrift");
 
-            m_dataGridView.RowHeadersVisible = false;
-            m_dataGridView.AllowUserToAddRows = false;
-            m_dataGridView.EnableHeadersVisualStyles = false;
+            P_dataGridView.RowHeadersVisible = false;
+            P_dataGridView.AllowUserToAddRows = false;
+            P_dataGridView.EnableHeadersVisualStyles = false;
 
-            foreach (DataGridViewColumn cols in m_dataGridView.Columns)
+            foreach (DataGridViewColumn cols in P_dataGridView.Columns)
                 cols.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 
             ReportFormPopulate();
@@ -39,7 +39,7 @@ namespace AVF.MemberManagement.Reports
                 decimal yearlyFee = MemberFees.GetMemberFee(member);
                 if ( yearlyFee > 0 )
                 {
-                    m_dataGridView.Rows.Add
+                    P_dataGridView.Rows.Add
                     (
                         member.Nachname,
                         member.Vorname,
@@ -50,7 +50,7 @@ namespace AVF.MemberManagement.Reports
                         yearlyFee,
                         yearlyFee / 2
                     );
-                    m_halfYearSum += yearlyFee / 2;
+                    P_halfYearSum += yearlyFee / 2;
                 }
             }
         }

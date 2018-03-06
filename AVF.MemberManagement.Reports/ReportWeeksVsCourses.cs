@@ -4,18 +4,18 @@ namespace AVF.MemberManagement.Reports
 {
     class ReportWeeksVsCourses : ReportTrainingsParticipation
     {
-        public ReportWeeksVsCourses(DateTime datStart, DateTime datEnd, int idMonth)
+        public ReportWeeksVsCourses(DateTime datStart, DateTime datEnd)
             : base(datStart, datEnd)
         {
             CreateModel
             (
                 bHide: false,
-                new AxisTypeCourse(),
-                new AxisTypeWeek(datStart, datEnd),
+                new AxisTypeCourse(P_datStart, P_datEnd),
+                new AxisTypeWeek(P_datStart, P_datEnd),
                 filter: tn => true
             );
 
-            m_Info0.Text = new AxisTypeMonth(datStart, datEnd).GetDescription(0);
+            P_Info0.Text = new AxisTypeMonth(datStart, datEnd).GetDescription(0);
             ReportFormPopulate();
         }
     }

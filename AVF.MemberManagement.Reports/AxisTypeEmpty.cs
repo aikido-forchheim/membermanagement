@@ -1,12 +1,12 @@
 ﻿using System;
 using AVF.MemberManagement.StandardLibrary.Tbo;
-using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
     public class AxisTypeEmpty : AxisType
     {
-        public AxisTypeEmpty()
+        public AxisTypeEmpty(DateTime datStart, DateTime datEnd)
+             : base(datStart, datEnd)
         {
             P_ActiveElementsOnly = false;
             P_MaxDbId = 0;
@@ -19,7 +19,7 @@ namespace AVF.MemberManagement.Reports
         public override int GetIdFromModelIndex(int iModelCol) 
             => 0;
 
-        public override string MouseAxisEvent(DateTime datStart, DateTime datEnd, int idMonth, bool action)
+        public override string MouseAxisEvent(int idMonth, bool action)
             => String.Empty;
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)

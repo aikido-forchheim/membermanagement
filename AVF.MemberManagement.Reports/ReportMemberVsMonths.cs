@@ -10,20 +10,21 @@ namespace AVF.MemberManagement.Reports
             CreateModel
             (
                 bHide: false,
-                new AxisTypeMonth(datStart, datEnd),
-                new AxisTypeMember(),
+                new AxisTypeMonth(P_datStart, P_datEnd),
+                new AxisTypeMember(P_datStart, P_datEnd),
                 filter: tn => true
             );
 
+            P_Info0.Text = P_axisTypeMember.GetFullDesc(-1);   // -1: all members
             ReportFormPopulate();
         }
 
         protected override string MouseMainDataAreaCellEvent(DateTime datStart, DateTime datEnd, int idMember, int idMonth, bool action)
             => action
-                ? ReportMain.SwitchToPanel(new ReportTrainingsVsCourses(m_datStart, m_datEnd, idMonth))
+                ? ReportMain.SwitchToPanel(new ReportTrainingsVsCourses(P_datStart, P_datEnd, idMonth))
                 : $"Klicken für Details zur Teilnahme von\n"
-                     + m_axisTypeMember.GetFullDesc(idMember)
+                     + P_axisTypeMember.GetFullDesc(idMember)
                      + $" im Monat\n"
-                     + m_xAxisType.GetDescription(idMonth);
+                     + P_xAxisType.GetDescription(idMonth);
     }
 }

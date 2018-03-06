@@ -8,7 +8,8 @@ namespace AVF.MemberManagement.Reports
 {
     public class AxisTypeMember : AxisType
     {
-        public AxisTypeMember()
+        public AxisTypeMember(DateTime datStart, DateTime datEnd)
+             : base(datStart, datEnd)
         {
             P_ActiveElementsOnly = true;
             P_MaxDbId = Globals.DatabaseWrapper.MaxMitgliedsNr();
@@ -17,21 +18,21 @@ namespace AVF.MemberManagement.Reports
         }
 
         public override int GetModelIndexFromId(int id)
-            => Globals.DatabaseWrapper.m_mitglieder.FindIndex(x => id == x.Id);
+            => Globals.DatabaseWrapper.P_mitglieder.FindIndex(x => id == x.Id);
 
         public override int GetIdFromModelIndex(int iModelIndex)
-            => Globals.DatabaseWrapper.m_mitglieder[iModelIndex].Id;
+            => Globals.DatabaseWrapper.P_mitglieder[iModelIndex].Id;
 
-        public override string MouseAxisEvent(DateTime datStart, DateTime datEnd, int idMember, bool action)
+        public override string MouseAxisEvent(int idMember, bool action)
             => action
-               ? ReportMain.SwitchToPanel(new ReportMonthsVsCourses(datStart, datEnd, idMember))
+               ? ReportMain.SwitchToPanel(new ReportMonthsVsCourses(P_datStart, P_datEnd, idMember))
                : $"Klicken für Details zu Mitglied\n" + GetFullDesc(idMember);
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => tn.MitgliedID;
 
-        public string GetFullDesc(int idMember)
-            => GetDescription(idMember, 1) + " " + GetDescription(idMember, 2);
+        public override string GetFullDesc(int idMember, char separator = ' ')
+            => (idMember < 0) ? "Alle Mitglieder" : GetDescription(idMember, 1) + separator + GetDescription(idMember, 2);
 
         public override string GetDescription(int idMember, int iNr)
         {
@@ -52,7 +53,7 @@ namespace AVF.MemberManagement.Reports
                     Debug.Assert(false);
                     break;
             }
-            return string.Empty;
+            return String.Empty;
         }
     }
 }

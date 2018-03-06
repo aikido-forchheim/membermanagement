@@ -1,5 +1,4 @@
 ﻿using System;
-//using System.Data;
 using System.Linq;
 using System.Collections.Generic;
 using AVF.MemberManagement.StandardLibrary.Tbo;
@@ -41,7 +40,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         {
             var examinations = new List<Pruefung>();
 
-            foreach (Pruefung pruefung in db.m_pruefung)
+            foreach (Pruefung pruefung in db.P_pruefung)
             {
                 if (pruefung.Pruefling == member.Id)
                 {

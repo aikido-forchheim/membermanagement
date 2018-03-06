@@ -10,61 +10,60 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 {
     public class DatabaseWrapper
     {
-        public List<Setting> m_settings { get; private set; }
-        public List<Training> m_trainings { get; private set; }
-        public List<Mitglied> m_mitglieder { get; private set; }
-        public List<TrainerErnennung> m_trainerErnennungen { get; private set; }
-        public List<Stundensatz> m_stundensaetze { get; private set; }
-        public List<ZuschlagKindertraining> m_zuschlagKinderTraining { get; private set; }
-        public List<TrainerStufe> m_trainerStufe { get; private set; }
-        public List<Wohnung> m_wohnung { get; private set; }
-        public List<Wohnungsbezug> m_wohnungsbezug { get; private set; }
-        public List<Wochentag> m_wochentag { get; private set; }
-        public List<Pruefung> m_pruefung { get; private set; }
-        public List<Graduierung> m_graduierung { get; private set; }
-        public List<Beitragsklasse> m_beitragsklasse { get; private set; }
-        public List<Familienrabatt> m_familienrabatt { get; private set; }
-        public List<TrainingsTeilnahme> m_trainingsTeilnahme { get; private set; }
-        public List<Kurs> m_kurs { get; private set; }
-        public List<Monat> m_monat { get; private set; }
+        public List<Setting> P_settings { get; private set; }
+        public List<Training> P_trainings { get; private set; }
+        public List<Mitglied> P_mitglieder { get; private set; }
+        public List<TrainerErnennung> P_trainerErnennungen { get; private set; }
+        public List<Stundensatz> P_stundensaetze { get; private set; }
+        public List<ZuschlagKindertraining> P_zuschlagKinderTraining { get; private set; }
+        public List<TrainerStufe> P_trainerStufe { get; private set; }
+        public List<Wohnung> P_wohnung { get; private set; }
+        public List<Wohnungsbezug> P_wohnungsbezug { get; private set; }
+        public List<Wochentag> P_wochentag { get; private set; }
+        public List<Pruefung> P_pruefung { get; private set; }
+        public List<Graduierung> P_graduierung { get; private set; }
+        public List<Beitragsklasse> P_beitragsklasse { get; private set; }
+        public List<Familienrabatt> P_familienrabatt { get; private set; }
+        public List<TrainingsTeilnahme> P_trainingsTeilnahme { get; private set; }
+        public List<Kurs> P_kurs { get; private set; }
 
         public async Task ReadTables( IUnityContainer Container, Action<string> tick )
         {
             tick("Trainings");
-            m_trainings = await Container.Resolve<IRepository<Training>>().GetAsync();
+            P_trainings = await Container.Resolve<IRepository<Training>>().GetAsync();
             tick("Mitglieder");
-            m_mitglieder = await Container.Resolve<IRepository<Mitglied>>().GetAsync();
+            P_mitglieder = await Container.Resolve<IRepository<Mitglied>>().GetAsync();
             tick("TrainerErnennung");
-            m_trainerErnennungen = await Container.Resolve<IRepository<TrainerErnennung>>().GetAsync();
+            P_trainerErnennungen = await Container.Resolve<IRepository<TrainerErnennung>>().GetAsync();
             tick("Stundensatz");
-            m_stundensaetze = await Container.Resolve<IRepository<Stundensatz>>().GetAsync();
+            P_stundensaetze = await Container.Resolve<IRepository<Stundensatz>>().GetAsync();
             tick("ZuschlagKindertraining");
-            m_zuschlagKinderTraining = await Container.Resolve<IRepository<ZuschlagKindertraining>>().GetAsync();
+            P_zuschlagKinderTraining = await Container.Resolve<IRepository<ZuschlagKindertraining>>().GetAsync();
             tick("TrainerStufe");
-            m_trainerStufe = await Container.Resolve<IRepository<TrainerStufe>>().GetAsync();
+            P_trainerStufe = await Container.Resolve<IRepository<TrainerStufe>>().GetAsync();
             tick("Wohnung");
-            m_wohnung = await Container.Resolve<IRepository<Wohnung>>().GetAsync();
+            P_wohnung = await Container.Resolve<IRepository<Wohnung>>().GetAsync();
             tick("Wohnungsbezug");
-            m_wohnungsbezug = await Container.Resolve<IRepository<Wohnungsbezug>>().GetAsync();
+            P_wohnungsbezug = await Container.Resolve<IRepository<Wohnungsbezug>>().GetAsync();
             tick("Wochentag");
-            m_wochentag = await Container.Resolve<IRepository<Wochentag>>().GetAsync();
+            P_wochentag = await Container.Resolve<IRepository<Wochentag>>().GetAsync();
             tick("Pruefung");
-            m_pruefung = await Container.Resolve<IRepository<Pruefung>>().GetAsync();
+            P_pruefung = await Container.Resolve<IRepository<Pruefung>>().GetAsync();
             tick("Graduierung");
-            m_graduierung = await Container.Resolve<IRepository<Graduierung>>().GetAsync();
+            P_graduierung = await Container.Resolve<IRepository<Graduierung>>().GetAsync();
             tick("Beitragsklasse");
-            m_beitragsklasse = await Container.Resolve<IRepository<Beitragsklasse>>().GetAsync();
+            P_beitragsklasse = await Container.Resolve<IRepository<Beitragsklasse>>().GetAsync();
             tick("Familienrabatt");
-            m_familienrabatt = await Container.Resolve<IRepository<Familienrabatt>>().GetAsync();
+            P_familienrabatt = await Container.Resolve<IRepository<Familienrabatt>>().GetAsync();
             tick("TrainingsTeilnahme");
-            m_trainingsTeilnahme = await Container.Resolve<IRepository<TrainingsTeilnahme>>().GetAsync();
+            P_trainingsTeilnahme = await Container.Resolve<IRepository<TrainingsTeilnahme>>().GetAsync();
             tick("Kurs");
-            m_kurs = await Container.Resolve<IRepository<Kurs>>().GetAsync();
+            P_kurs = await Container.Resolve<IRepository<Kurs>>().GetAsync();
             tick("Settings");
-            m_settings = await Container.Resolve<IRepositoryBase<Setting, string>>().GetAsync();
+            P_settings = await Container.Resolve<IRepositoryBase<Setting, string>>().GetAsync();
             tick("");
-            m_mitglieder.RemoveAt(0);   // Mitglied 0 is a dummy
-            m_trainings = m_trainings.OrderBy(t => t.Termin).ToList();
+            P_mitglieder.RemoveAt(0);   // Mitglied 0 is a dummy
+            P_trainings = P_trainings.OrderBy(t => t.Termin).ToList();
 
             // Add pseude course 0 for trainings without course
 
@@ -72,21 +71,12 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             kurs0.Id = 0;
             kurs0.Zeit = TimeSpan.Zero;
 
-            m_kurs.Add(kurs0);
+            P_kurs.Add(kurs0);
 
-            foreach (Training t in m_trainings)
+            foreach (Training t in P_trainings)
             {
                 if (!t.KursID.HasValue)
                     t.KursID = 0;
-            }
-
-            m_monat = new List<Monat>();
-            for ( int i = 0; i< 12; i++ )
-            {
-                Monat monat = new Monat();
-                monat.Id = i;
-                monat.Bezeichnung = Globals.GetMonthName(i+1);
-                m_monat.Add( monat );
             }
 
             tick("Finished ....");
@@ -94,13 +84,13 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 
         public DateTime GetStartValidData()
         {
-            string strStartValidData = m_settings.Single(s => s.Id == "DateValidData").Value;
+            string strStartValidData = P_settings.Single(s => s.Id == "DateValidData").Value;
             return DateTime.Parse(strStartValidData);
         }
 
         public string WeekDay(int id)
         {
-            var wochentag = m_wochentag.Single(s => s.Id == id);
+            var wochentag = P_wochentag.Single(s => s.Id == id);
             return wochentag.Bezeichnung;
         }
 
@@ -126,49 +116,46 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         }
 
         public List<Mitglied> CurrentMembers()
-            => m_mitglieder.Where(m => IstNochMitglied(m)).ToList();
+            => P_mitglieder.Where(m => IstNochMitglied(m)).ToList();
 
         public int MaxMitgliedsNr()
-            => m_mitglieder.Max(t => t.Id);
+            => P_mitglieder.Max(t => t.Id);
 
         public int MinMitgliedsNr()
-            => m_mitglieder.Min(t => t.Id);
+            => P_mitglieder.Min(t => t.Id);
 
         public int MaxKursNr()
-            => m_kurs.Max(t => t.Id);
+            => P_kurs.Max(t => t.Id);
 
         public int MinKursNr()
-            => m_kurs.Min(t => t.Id);
+            => P_kurs.Min(t => t.Id);
 
         public int MaxTrainingNr()
-            => m_trainings.Max(t => t.Id);
+            => P_trainings.Max(t => t.Id);
 
         public int MinTrainingNr()
-            => m_trainings.Min(t => t.Id);
+            => P_trainings.Min(t => t.Id);
 
         public Beitragsklasse BK(Mitglied mitglied) 
-            => m_beitragsklasse.Single(s => s.Id == mitglied.BeitragsklasseID);
+            => P_beitragsklasse.Single(s => s.Id == mitglied.BeitragsklasseID);
 
         public string BK_Text(Mitglied mitglied) 
             => BK(mitglied).BeitragsklasseRomanNumeral.ToString();
 
         public int Familienrabatt(Mitglied mitglied) 
-            => m_familienrabatt.Single(s => s.Id == mitglied.Familienmitglied).Faktor;
+            => P_familienrabatt.Single(s => s.Id == mitglied.Familienmitglied).Faktor;
 
         public string Trainerstufe(int i) 
-            => m_trainerStufe.Single(s => s.Id == i).Bezeichnung;
+            => P_trainerStufe.Single(s => s.Id == i).Bezeichnung;
 
         public int MaxTrainerstufe 
-            => m_trainerStufe.Max(t => t.Id);
+            => P_trainerStufe.Max(t => t.Id);
 
         public Mitglied MitgliedFromId(int id)
-            => m_mitglieder.Single(s => s.Id == id);
-
-        public Monat MonatFromId(int id)
-            => m_monat.Single(s => s.Id == id);
+            => P_mitglieder.Single(s => s.Id == id);
 
         public Training TrainingFromId(int id)
-            => m_trainings.Single(s => s.Id == id);
+            => P_trainings.Single(s => s.Id == id);
 
         public DateTime TerminFromTrainingId(int id)
             => TrainingFromId(id).Termin;
@@ -177,7 +164,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             => TrainingFromId(id).KursID.Value;
 
         public Boolean HatTeilgenommen(int member, Training training) 
-            => m_trainingsTeilnahme.Exists(x => (x.MitgliedID == member) && (x.TrainingID == training.Id));
+            => P_trainingsTeilnahme.Exists(x => (x.MitgliedID == member) && (x.TrainingID == training.Id));
 
         public Boolean HatTeilgenommen(int member, List<Training> trainings)
         {
@@ -206,10 +193,10 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         }
 
         public Kurs KursFromId(int id)
-            => m_kurs.Single(s => s.Id == id);
+            => P_kurs.Single(s => s.Id == id);
 
         public Graduierung GraduierungFromId(int id)
-            => m_graduierung.Single(s => s.Id == id);
+            => P_graduierung.Single(s => s.Id == id);
 
         public DateTime DateFromTrainingParticipation(TrainingsTeilnahme tn)
             => TrainingFromId(tn.TrainingID).Termin;
@@ -221,7 +208,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             => (datRangeStart <= date) && (date <= datRangeEnd);
 
         public int NrOfTrainingsSince(int idMember, DateTime datStart)
-            => m_trainingsTeilnahme.Count( p => (p.MitgliedID == idMember) && (DateFromTrainingParticipation(p) >= datStart) );
+            => P_trainingsTeilnahme.Count( p => (p.MitgliedID == idMember) && (DateFromTrainingParticipation(p) >= datStart) );
 
         public List<TrainingsTeilnahme> Filter(List<TrainingsTeilnahme> list, DateTime datStart)
             => list.Where(p => DateFromTrainingParticipation(p) >= datStart).ToList();
@@ -236,7 +223,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             => list.Where(p => filter(p)).ToList();
 
         public List<TrainingsTeilnahme> TrainingsTeilnahme(DateTime datStart, DateTime datEnd)
-            => Filter( m_trainingsTeilnahme, datStart, datEnd).ToList();
+            => Filter( P_trainingsTeilnahme, datStart, datEnd).ToList();
 
         public List<Training> Filter(List<Training> list, int? idKurs)
             => list.Where(training => training.KursID == idKurs).ToList();
@@ -246,7 +233,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 
         public List<Training> TrainingsInPeriod( int ? idKurs, DateTime datStart, DateTime datEnd )
         {
-            var result = Filter( m_trainings, datStart, datEnd );
+            var result = Filter( P_trainings, datStart, datEnd );
 
             if ( idKurs != -1 )
                 result = Filter( result, idKurs );

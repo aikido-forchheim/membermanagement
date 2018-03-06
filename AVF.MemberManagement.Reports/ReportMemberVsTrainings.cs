@@ -11,12 +11,13 @@ namespace AVF.MemberManagement.Reports
             CreateModel
             (
                 bHide: false,
-                new AxisTypeTraining(),
-                new AxisTypeMember(),
+                new AxisTypeTraining(P_datStart, P_datEnd),
+                new AxisTypeMember(P_datStart, P_datEnd),
                 filter: tn => idKurs == Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID)
             );
 
-            m_Info0.Text = new AxisTypeCourse().GetDescription(idKurs);
+            P_Info0.Text = $"Kurs Nr. {idKurs}: " + new AxisTypeCourse(P_datStart, P_datEnd).GetDescription(idKurs);
+            P_Info1.Text = $"Trainer: {P_axisTypeMember.GetFullDesc(Globals.DatabaseWrapper.KursFromId(idKurs).Trainer)}";
             ReportFormPopulate();
         }
 

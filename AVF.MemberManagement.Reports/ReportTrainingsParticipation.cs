@@ -7,25 +7,28 @@ namespace AVF.MemberManagement.Reports
 {
     public partial class ReportTrainingsParticipation : ReportBase
     {
-        protected VerticalAxis               m_yAxis     { get; private set; }
-        protected HorizontalAxis             m_xAxis     { get; private set; }
-        protected AxisType                   m_xAxisType { get; private set; }
-        protected AxisType                   m_yAxisType { get; private set; }
-        protected TrainingParticipationModel m_tpModel   { get; private set; }
+        protected VerticalAxis               P_yAxis     { get; private set; }
+        protected HorizontalAxis             P_xAxis     { get; private set; }
+        protected AxisType                   P_xAxisType { get; private set; }
+        protected AxisType                   P_yAxisType { get; private set; }
+        protected TrainingParticipationModel P_tpModel   { get; private set; }
 
-        protected DateTime m_datStart { get; private set; }
-        protected DateTime m_datEnd   { get; private set; }
+        protected AxisTypeMember P_axisTypeMember { get; private set; }
+
+        protected DateTime P_datStart { get; private set; }
+        protected DateTime P_datEnd   { get; private set; }
 
         private bool P_Hide { get; set; } = false;
 
         public ReportTrainingsParticipation(DateTime datStart, DateTime datEnd)
         {
-            m_datStart = datStart;
-            m_datEnd = datEnd;
+            P_datStart = datStart;
+            P_datEnd = datEnd;
 
             InitializeReportTrainingsParticipation(); // creates DataGridView ...
-            m_labelReportName.Text = "Trainingsteilnahme";
-            m_labelZeitraum.Text = Globals.GetTimeRangeDescription(m_datStart, m_datEnd);
+            P_labelReportName.Text = "Trainingsteilnahme";
+            P_labelZeitraum.Text = Globals.GetTimeRangeDescription(P_datStart, P_datEnd);
+            P_axisTypeMember = new AxisTypeMember(P_datStart, P_datEnd);
         }
 
         protected void CreateModel
@@ -38,79 +41,79 @@ namespace AVF.MemberManagement.Reports
         {
             P_Hide = bHide;
 
-            m_xAxis = new HorizontalAxis();
-            m_yAxis = new VerticalAxis();
+            P_xAxis = new HorizontalAxis();
+            P_yAxis = new VerticalAxis();
 
-            m_xAxisType = xAxisType;
-            m_yAxisType = yAxisType;
+            P_xAxisType = xAxisType;
+            P_yAxisType = yAxisType;
 
-            m_xAxis.P_startIndex = yAxisType.HeaderStrings.Count + 1; ;
-            m_yAxis.P_startIndex = 0;
+            P_xAxis.P_startIndex = yAxisType.HeaderStrings.Count + 1; ;
+            P_yAxis.P_startIndex = 0;
 
-            List<TrainingsTeilnahme> tpList         = Globals.DatabaseWrapper.TrainingsTeilnahme(m_datStart, m_datEnd);
+            List<TrainingsTeilnahme> tpList         = Globals.DatabaseWrapper.TrainingsTeilnahme(P_datStart, P_datEnd);
             List<TrainingsTeilnahme> tpListFiltered = Globals.DatabaseWrapper.Filter(tpList, filter);
 
-            m_tpModel = new TrainingParticipationModel( tpListFiltered, m_xAxisType, m_yAxisType );
+            P_tpModel = new TrainingParticipationModel( tpListFiltered, P_xAxisType, P_yAxisType );
         }
 
         private void FillMainArea()
         {
             int iDgvRow = 0;
-            m_tpModel.ForAllRows
+            P_tpModel.ForAllRows
             (
                 action: iModelRow =>
                 {
-                    int iDgvCol = m_xAxis.P_startIndex;
-                    m_tpModel.ForAllCols
+                    int iDgvCol = P_xAxis.P_startIndex;
+                    P_tpModel.ForAllCols
                     (
-                        action: iModelCol => m_dataGridView[iDgvCol++, iDgvRow].Value = FormatMatrixElement(m_tpModel.GetCell(iModelRow, iModelCol)),
-                        activeColsOnly: m_xAxisType.P_ActiveElementsOnly
+                        action: iModelCol => P_dataGridView[iDgvCol++, iDgvRow].Value = FormatMatrixElement(P_tpModel.GetCell(iModelRow, iModelCol)),
+                        activeColsOnly: P_xAxisType.P_ActiveElementsOnly
                     );
                     ++iDgvRow;
                 },
-                activeRowsOnly: m_yAxisType.P_ActiveElementsOnly
+                activeRowsOnly: P_yAxisType.P_ActiveElementsOnly
             );
         }
 
         private void ReportFormSize()      // define dimensions of DataGridView
         {
-            m_dataGridView.RowCount    = m_yAxisType.P_ActiveElementsOnly ? m_tpModel.GetNrOfActiveRows() : m_yAxisType.DatabaseIdRange();
-            m_dataGridView.ColumnCount = m_yAxisType.HeaderStrings.Count + 1;
+            P_dataGridView.RowCount    = P_yAxisType.P_ActiveElementsOnly ? P_tpModel.GetNrOfActiveRows() : P_yAxisType.DatabaseIdRange();
+            P_dataGridView.ColumnCount = P_yAxisType.HeaderStrings.Count + 1;
             if (!P_Hide)
-                m_dataGridView.ColumnCount += (m_xAxisType.P_ActiveElementsOnly ? m_tpModel.GetNrOfActiveCols() : m_xAxisType.DatabaseIdRange()) + 1; // + 1 for summary column
+                P_dataGridView.ColumnCount += (P_xAxisType.P_ActiveElementsOnly ? P_tpModel.GetNrOfActiveCols() : P_xAxisType.DatabaseIdRange()) + 1; // + 1 for summary column
         }           
 
         protected override void ReportFormPopulate()    // Fill cells of DataGridView
         {
-            m_xAxis.Initialize( m_xAxisType.DatabaseIdRange() );
-            m_yAxis.Initialize( m_yAxisType.DatabaseIdRange() );
+            P_xAxis.Initialize( P_xAxisType.DatabaseIdRange() );
+            P_yAxis.Initialize( P_yAxisType.DatabaseIdRange() );
             ReportFormSize();
 
-            m_yAxis.FillKeyHeaderCells(m_dataGridView, m_yAxisType);
+            P_yAxis.FillKeyHeaderCells(P_dataGridView, P_yAxisType);
 
             int iDgvRow = 0;
-            m_tpModel.ForAllRows
+            P_tpModel.ForAllRows
             (
-                action: iModelRow => m_yAxis.FillMainKeyCell(m_dataGridView, iDgvRow++, iModelRow, m_yAxisType),
-                activeRowsOnly: m_yAxisType.P_ActiveElementsOnly
+                action: iModelRow => P_yAxis.FillMainKeyCell(P_dataGridView, iDgvRow++, iModelRow, P_yAxisType),
+                activeRowsOnly: P_yAxisType.P_ActiveElementsOnly
             );
 
             if (!P_Hide)
             {
-                int iDgvCol = m_xAxis.P_startIndex;
-                m_tpModel.ForAllCols
+                int iDgvCol = P_xAxis.P_startIndex;
+                P_tpModel.ForAllCols
                 (
-                    action: iModelCol => m_xAxis.FillMainKeyCell(m_dataGridView, iDgvCol++, iModelCol, m_xAxisType),
-                    activeColsOnly: m_xAxisType.P_ActiveElementsOnly
+                    action: iModelCol => P_xAxis.FillMainKeyCell(P_dataGridView, iDgvCol++, iModelCol, P_xAxisType),
+                    activeColsOnly: P_xAxisType.P_ActiveElementsOnly
                 );
 
-                m_dataGridView.Columns[m_dataGridView.ColumnCount - 1].HeaderText = "\nSumme";
+                P_dataGridView.Columns[P_dataGridView.ColumnCount - 1].HeaderText = "\nSumme";
 
                 iDgvRow = 0;
-                m_tpModel.ForAllRows
+                P_tpModel.ForAllRows
                 (
-                    action: iModelRow => m_dataGridView[m_dataGridView.ColumnCount - 1, iDgvRow++].Value = m_tpModel.GetRowSum(iModelRow),
-                    activeRowsOnly: m_yAxisType.P_ActiveElementsOnly
+                    action: iModelRow => P_dataGridView[P_dataGridView.ColumnCount - 1, iDgvRow++].Value = P_tpModel.GetRowSum(iModelRow),
+                    activeRowsOnly: P_yAxisType.P_ActiveElementsOnly
                 );
 
                 FillMainArea();
@@ -123,22 +126,22 @@ namespace AVF.MemberManagement.Reports
             {
                 if (ColIsInMainArea(col))
                 {
-                    return m_xAxisType.MouseAxisEvent(m_datStart, m_datEnd, m_xAxis.GetDbIdFromDgvIndex(col), action);
+                    return P_xAxisType.MouseAxisEvent(P_xAxis.GetDbIdFromDgvIndex(col), action);
                 }
                 else // column header, key or summary columns
                 {
-                    return $"Klicken um nach {m_dataGridView.Columns[col].HeaderText} zu sortieren";
+                    return $"Klicken um nach {P_dataGridView.Columns[col].HeaderText} zu sortieren";
                 }
             }
             else // data row
             {
                 if (ColIsInMainArea(col))
                 {
-                    return MouseMainDataAreaCellEvent(m_datStart, m_datEnd, m_yAxis.GetDbIdFromDgvIndex(m_dataGridView, row), m_xAxis.GetDbIdFromDgvIndex(col), action);
+                    return MouseMainDataAreaCellEvent(P_datStart, P_datEnd, P_yAxis.GetDbIdFromDgvIndex(P_dataGridView, row), P_xAxis.GetDbIdFromDgvIndex(col), action);
                 }
                 else // key or summary 
                 {
-                    return m_yAxisType.MouseAxisEvent(m_datStart, m_datEnd, m_yAxis.GetDbIdFromDgvIndex(m_dataGridView, row), action);
+                    return P_yAxisType.MouseAxisEvent(P_yAxis.GetDbIdFromDgvIndex(P_dataGridView, row), action);
                 }
             }
         }
@@ -147,10 +150,10 @@ namespace AVF.MemberManagement.Reports
             => String.Empty;
 
         private bool ColIsKeyArea(int iCol)
-            => iCol < m_yAxisType.HeaderStrings.Count + 1;
+            => iCol < P_yAxisType.HeaderStrings.Count + 1;
 
         private bool ColIsSummary(int iCol)
-            => iCol == m_dataGridView.ColumnCount - 1;
+            => iCol == P_dataGridView.ColumnCount - 1;
 
         private bool ColIsInMainArea(int iCol)
             => !(ColIsKeyArea(iCol) || ColIsSummary(iCol));

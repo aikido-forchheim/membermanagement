@@ -10,49 +10,49 @@ namespace AVF.MemberManagement.Reports
             InitializeReportBase();
 
             // 
-            // m_labelZeitraum
+            // P_labelZeitraum
             // 
-            this.m_labelZeitraum = new System.Windows.Forms.Label();
-            this.m_labelZeitraum.AutoSize = true;
-            this.m_labelZeitraum.Font = m_font;
-            this.m_labelZeitraum.Location = new System.Drawing.Point(500, 20);
-            this.m_labelZeitraum.Name = "m_labelZeitraum";
-            this.m_labelZeitraum.TabIndex = 2;
+            this.P_labelZeitraum = new System.Windows.Forms.Label();
+            this.P_labelZeitraum.AutoSize = true;
+            this.P_labelZeitraum.Font = P_font;
+            this.P_labelZeitraum.Location = new System.Drawing.Point(500, 20);
+            this.P_labelZeitraum.Name = "P_labelZeitraum";
+            this.P_labelZeitraum.TabIndex = 2;
             // 
-            // m_Info0
+            // P_Info0
             // 
-            this.m_Info0 = new System.Windows.Forms.Label();
-            this.m_Info0.AutoSize = true;
-            this.m_Info0.Font = m_font;
-            this.m_Info0.Location = new System.Drawing.Point(20, 70);
-            this.m_Info0.Name = "m_Info0";
-            this.m_Info0.TabIndex = 3;
+            this.P_Info0 = new System.Windows.Forms.Label();
+            this.P_Info0.AutoSize = true;
+            this.P_Info0.Font = P_font;
+            this.P_Info0.Location = new System.Drawing.Point(20, 70);
+            this.P_Info0.Name = "P_Info0";
+            this.P_Info0.TabIndex = 3;
             // 
-            // m_Info1
+            // P_Info1
             // 
-            this.m_Info1 = new System.Windows.Forms.Label();
-            this.m_Info1.AutoSize = true;
-            this.m_Info1.Font = m_font;
-            this.m_Info1.Location = new System.Drawing.Point(500, 70);
-            this.m_Info1.Name = "m_Info1";
-            this.m_Info1.TabIndex = 4;
+            this.P_Info1 = new System.Windows.Forms.Label();
+            this.P_Info1.AutoSize = true;
+            this.P_Info1.Font = P_font;
+            this.P_Info1.Location = new System.Drawing.Point(500, 70);
+            this.P_Info1.Name = "P_Info1";
+            this.P_Info1.TabIndex = 4;
             // 
             // ReportForm
             // 
 //            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
 //            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1344, 712);
-            this.Controls.Add(this.m_Info1);
-            this.Controls.Add(this.m_labelZeitraum);
-            this.Controls.Add(this.m_Info0);
+            this.Controls.Add(this.P_Info1);
+            this.Controls.Add(this.P_labelZeitraum);
+            this.Controls.Add(this.P_Info0);
             this.Name = "ReportForm";
             this.Text = "AVF Mitgliederdatenbank";
 
             ResumeLayout();
         }
 
-        protected Label m_labelZeitraum;
-        protected Label m_Info0;
-        protected Label m_Info1;
+        protected Label P_labelZeitraum;
+        protected Label P_Info0;
+        protected Label P_Info1;
     }
 }

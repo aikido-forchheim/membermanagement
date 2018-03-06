@@ -7,28 +7,43 @@ namespace AVF.MemberManagement.Reports
 {
     public abstract class AxisType : IAxis
     {
-        public List<string> HeaderStrings { get; set; }
-
-        public abstract string MouseAxisEvent(DateTime datStart, DateTime datEnd, int id, bool action);
+        // properties 
 
         protected int P_MaxDbId { get; set; }
-
         protected int P_MinDbId { get; set; }
+
+        protected DateTime P_datStart { get; set; }
+        protected DateTime P_datEnd { get; set; }
+
+        public List<string> HeaderStrings { get; set; }
 
         public bool P_ActiveElementsOnly { get; protected set; } = false;
 
-        public abstract int GetModelIndexFromId(int id);
+        // constructor
 
-        public abstract int GetIdFromModelIndex(int id);
+        public AxisType(DateTime datStart, DateTime datEnd)
+        {
+            P_datStart = datStart;
+            P_datEnd = datEnd;
+        }
 
-        public abstract int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn);
-
-        public abstract string GetDescription(int id, int iNr = 1);
+        // member functions
 
         public int DatabaseIdRange()
             => P_MaxDbId - P_MinDbId + 1;
 
         public int GetModelIndexFromTrainingsParticipation(TrainingsTeilnahme tn)
             => GetModelIndexFromId(GetIdFromTrainingsParticipation(tn));
+
+        public virtual string GetFullDesc(int id, char separator = ' ')
+                => GetDescription(id);
+
+        // abstract member functions
+
+        public abstract string MouseAxisEvent(int id, bool action);
+        public abstract int    GetModelIndexFromId(int id);
+        public abstract int    GetIdFromModelIndex(int id);
+        public abstract int    GetIdFromTrainingsParticipation(TrainingsTeilnahme tn);
+        public abstract string GetDescription(int id, int iNr = 1);
     }
 }

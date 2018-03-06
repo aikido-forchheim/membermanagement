@@ -75,10 +75,10 @@
     <Compile Include="AxisTypeMember.cs" />
     <Compile Include="AxisTypeMonth.cs" />
     <Compile Include="ReportBase.cs">
-      <SubType>Form</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="ReportCoursesVsMonths.cs">
-      <SubType>Form</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="ReportMain.cs">
       <SubType>Form</SubType>
@@ -87,39 +87,39 @@
       <DependentUpon>ReportMain.cs</DependentUpon>
     </Compile>
     <Compile Include="ReportMemberFees.cs">
-      <SubType>Form</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="ReportMemberVsMonths.cs">
-      <SubType>Form</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="ReportMonthsVsCourses.cs">
-      <SubType>Form</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="ReportTrainingsParticipation.cs">
-      <SubType>Form</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="ReportTrainingsParticipation.Designer.cs">
       <DependentUpon>ReportTrainingsParticipation.cs</DependentUpon>
     </Compile>
     <Compile Include="ReportGraduationList.cs">
-      <SubType>Form</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="ReportMemberVsCourses.cs">
-      <SubType>Form</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="ReportMemberVsTrainings.cs">
-      <SubType>Form</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="ReportTraining.cs">
-      <SubType>Form</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="AxisTypeTraining.cs" />
     <Compile Include="ReportTrainingsVsCourses.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ReportWeek.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReportWeek.cs" />
     <Compile Include="VerticalAxis.cs" />
     <Compile Include="ReportWeeksVsCourses.cs">
       <SubType>Component</SubType>

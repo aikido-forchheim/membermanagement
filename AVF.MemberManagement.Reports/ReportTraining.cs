@@ -11,15 +11,15 @@ namespace AVF.MemberManagement.Reports
             CreateModel
             (
                 bHide: true,
-                new AxisTypeEmpty(),
-                new AxisTypeMember(),
+                new AxisTypeEmpty(P_datStart, P_datEnd),
+                new AxisTypeMember(P_datStart, P_datEnd),
                 filter: tn => tn.TrainingID == training.Id
             );
 
-            m_labelReportName.Text = $"Training am {Globals.DatabaseWrapper.WeekDay(training.WochentagID)} den ";
-            m_labelZeitraum.Text   = new AxisTypeTraining().GetDescription(training.Id);
-            m_Info0.Text           = $"um {training.Zeit:hh}:{training.Zeit:mm} Uhr";
-            m_Info1.Text           = $"Trainer: {m_axisTypeMember.GetFullDesc(training.Trainer)}";
+            P_labelReportName.Text = $"Training am {Globals.DatabaseWrapper.WeekDay(training.WochentagID)} den ";
+            P_labelZeitraum.Text   = new AxisTypeTraining(P_datStart, P_datEnd).GetFullDesc(training.Id, '.');
+            P_Info0.Text           = $"um {training.Zeit:hh}:{training.Zeit:mm} Uhr";
+            P_Info1.Text           = $"Trainer: {P_axisTypeMember.GetFullDesc(training.Trainer)}";
             ReportFormPopulate();
         }
     }

@@ -10,11 +10,12 @@ namespace AVF.MemberManagement.Reports
             CreateModel
             (
                 bHide: false,
-                new AxisTypeCourse(),
-                new AxisTypeTraining(),
+                new AxisTypeCourse(P_datStart, P_datEnd),
+                new AxisTypeTraining(P_datStart, P_datEnd),
                 filter: tn => true
             );
 
+            P_Info0.Text = "Monat:";
             ReportFormPopulate();
         }
     }
