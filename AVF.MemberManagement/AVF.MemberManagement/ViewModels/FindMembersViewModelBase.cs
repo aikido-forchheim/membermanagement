@@ -109,5 +109,21 @@ namespace AVF.MemberManagement.ViewModels
 
             return resignDate < DateTime.Now;
         }
+
+        protected static int CompareMemberNames(Mitglied x, Mitglied y)
+        {
+            var argVornameX = x.Vorname ?? string.Empty;
+            var argNachnameX = x.Nachname ?? string.Empty;
+
+            var argVornameY = y.Vorname ?? string.Empty;
+            var argNachnameY = y.Nachname ?? string.Empty;
+
+            var namex = argVornameX + argNachnameX;
+            var namey = argVornameY + argNachnameY;
+
+            var compareResult = string.Compare(namex, namey, StringComparison.Ordinal);
+
+            return compareResult;
+        }
     }
 }

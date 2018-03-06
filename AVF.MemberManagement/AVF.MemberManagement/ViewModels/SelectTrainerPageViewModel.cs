@@ -101,6 +101,9 @@ namespace AVF.MemberManagement.ViewModels
         {
             try
             {
+                _mitglieder = await _mitgliederRepository.GetAsync();
+                _mitglieder.Sort(CompareMemberNames);
+
                 SelectedTraining = (TrainingsModel)parameters["SelectedTraining"];
                 SelectedDateString = (string)parameters["SelectedDateString"];
 
@@ -126,6 +129,8 @@ namespace AVF.MemberManagement.ViewModels
                 ParticipantsCountText = $"Trainer ({Participants.Count}):";
 
                 await GetPreviousTrainers();
+
+                FindMembers(_searchText);
             }
             catch (Exception ex)
             {
