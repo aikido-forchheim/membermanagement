@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+﻿using System.IO;
 using System.Windows.Forms;
 using Microsoft.Office.Interop.Excel;
 using Excel = Microsoft.Office.Interop.Excel;
@@ -7,27 +7,23 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 {
     public class ExcelExport
     {
-        public void Export2Excel
+        public static void Export2Excel
         ( 
             DataGridView dgv,
-            int rowStart,   // 1 means data begins in row 1
-            int colStart,   // 1 means data begins in column A
-            string fileName // without file extension 
+            int    rowStart,     // 1 means data begins in row 1
+            int    colStart,     // 1 means data begins in column A
+            string reportName    // internal name of report
         )
         {
             Excel.Application excel = new Excel.Application();
-            Workbook workBook = excel.Workbooks.Open("Graduierungsliste", ReadOnly:false);
-//            Workbook workBook = excel.Workbooks.Add(Type.Missing);
-            Worksheet workSheet = workBook.ActiveSheet;
 
-            string fontName = dgv.DefaultCellStyle.Font.Name;
-            excel.StandardFont = fontName;
+            Workbook workBook = excel.Workbooks.Add(); //             .Open(reportName, ReadOnly:false);
+            Worksheet workSheet = workBook.ActiveSheet;
 
             foreach (DataGridViewColumn col in dgv.Columns)
             {
                 Range range = workSheet.Cells[rowStart, colStart + col.Index];
                 range.Value = col.HeaderCell.Value;
-//                range.Interior.Color = ColorTranslator.ToOle(col.HeaderCell.Style.BackColor);
             }
 
             foreach ( DataGridViewRow row in dgv.Rows )
@@ -36,15 +32,34 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
                 {
                     Range range = workSheet.Cells[rowStart + row.Index + 1, colStart + cell.ColumnIndex];
                     range.Value = cell.Value;
-                    range.Font.Color = ColorTranslator.ToOle(cell.Style.ForeColor);
+//                    range.Font.Color = ColorTranslator.ToOle(cell.Style.ForeColor);
                 }
             }
 
-//            workSheet.Rows.AutoFit();
-//            workSheet.Columns.AutoFit();
-//            workSheet.PageSetup.Orientation = Excel.XlPageOrientation.xlLandscape;
-//            workBook.SaveAs( fileName );
-            workBook.Save();
+            //            workSheet.Rows.AutoFit();
+            //            workSheet.Columns.AutoFit();
+            //            workBook.SaveAs( fileName );
+
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.InitialDirectory = "Desktp";
+            dialog.Title = "Bericht als Excel-Datei speichern";
+            dialog.CheckFileExists = true;
+            dialog.CheckPathExists = true;
+            dialog.DefaultExt = "xlsx";
+            dialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+            dialog.FilterIndex = 2;
+            dialog.RestoreDirectory = true;
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                Stream oStream;
+                if ((oStream = dialog.OpenFile()) != null)
+                {
+                    workBook.SaveAs(oStream);
+                    oStream.Close();
+                }
+            }
+
             workBook.Close();
             excel.Quit();
         }

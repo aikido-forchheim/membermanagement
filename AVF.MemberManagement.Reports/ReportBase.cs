@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
@@ -38,6 +39,9 @@ namespace AVF.MemberManagement.Reports
         protected abstract string MouseCellEvent(int row, int col, bool action);
 
         // member functions
+
+        public void Export2Excel()
+            => ExcelExport.Export2Excel( P_dataGridView, 2, 1, GetType().Name );
 
         protected virtual void InitializeReportBase()
         {

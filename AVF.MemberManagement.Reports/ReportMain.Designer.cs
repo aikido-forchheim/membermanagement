@@ -48,10 +48,10 @@
             this.graduierungslisteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mitgliederbeiträgeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MemberFees = new System.Windows.Forms.Button();
-            this.panelButtons = new System.Windows.Forms.Panel();
+//            this.panelButtons = new System.Windows.Forms.Panel();
             this.panelLoadDb = new System.Windows.Forms.Panel();
             this.menuStrip1.SuspendLayout();
-            this.panelButtons.SuspendLayout();
+//            this.panelButtons.SuspendLayout();
             this.panelLoadDb.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -160,6 +160,7 @@
             this.exportierenToolStripMenuItem.Name = "exportierenToolStripMenuItem";
             this.exportierenToolStripMenuItem.Size = new System.Drawing.Size(185, 30);
             this.exportierenToolStripMenuItem.Text = "Exportieren";
+            this.exportierenToolStripMenuItem.Click += new System.EventHandler(this.Export_Click);
             // 
             // schließenToolStripMenuItem
             // 
@@ -238,6 +239,7 @@
             // 
             // panelButtons
             // 
+/*
             this.panelButtons.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
             this.panelButtons.Controls.Add(this.TrainingsteilnahmeKurse);
             this.panelButtons.Controls.Add(this.MemberFees);
@@ -248,6 +250,7 @@
             this.panelButtons.Name = "panelButtons";
             this.panelButtons.Size = new System.Drawing.Size(801, 206);
             this.panelButtons.TabIndex = 10;
+*/
             // 
             // panelLoadDb
             // 
@@ -266,7 +269,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(839, 756);
             this.Controls.Add(this.panelLoadDb);
-            this.Controls.Add(this.panelButtons);
+//            this.Controls.Add(this.panelButtons);
             this.Controls.Add(this.menuStrip1);
             this.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::AVF.MemberManagement.Reports.Properties.Settings.Default, "WindowLocation", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.Location = global::AVF.MemberManagement.Reports.Properties.Settings.Default.WindowLocation;
@@ -278,7 +281,7 @@
             this.Load += new System.EventHandler(this.FormMain_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.panelButtons.ResumeLayout(false);
+//            this.panelButtons.ResumeLayout(false);
             this.panelLoadDb.ResumeLayout(false);
             this.panelLoadDb.PerformLayout();
             this.ResumeLayout(false);
@@ -307,7 +310,7 @@
         private System.Windows.Forms.ToolStripMenuItem graduierungslisteToolStripMenuItem;
         private System.Windows.Forms.Button MemberFees;
         private System.Windows.Forms.ToolStripMenuItem mitgliederbeiträgeToolStripMenuItem;
-        private System.Windows.Forms.Panel panelButtons;
+//        private System.Windows.Forms.Panel panelButtons;
         private System.Windows.Forms.Panel panelLoadDb;
     }
 }

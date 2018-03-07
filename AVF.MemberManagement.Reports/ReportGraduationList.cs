@@ -45,7 +45,6 @@ namespace AVF.MemberManagement.Reports
 
         private void ColorizeImportantDates( DataGridViewRow row, BestGraduation bestGrad )
         {
-
             if ((bestGrad.P_yearsOfMembership % 10 == 0) || (bestGrad.P_yearsOfMembership % 25 == 0))
                 row.Cells["AVF-entry"].Style.ForeColor = Color.Red;
 
@@ -109,8 +108,6 @@ namespace AVF.MemberManagement.Reports
 
                 ColorizeImportantDates(P_dataGridView.Rows[P_dataGridView.Rows.Count - 1], bestGrad); 
             }
-//            ExcelExport e = new ExcelExport();
-//            e.Export2Excel(P_dataGridView, 2, 1, "Graduierungsliste" );
         }
 
         protected override string MouseCellEvent(int row, int col, bool action)
