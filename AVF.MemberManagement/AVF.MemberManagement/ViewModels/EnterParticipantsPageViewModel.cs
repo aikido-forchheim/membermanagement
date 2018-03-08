@@ -60,7 +60,13 @@ namespace AVF.MemberManagement.ViewModels
 
         #region PreviousParicipants
 
+        private ObservableCollection<Mitglied> _previousParticipants = new ObservableCollection<Mitglied>();
 
+        public override ObservableCollection<Mitglied> PreviousParticipants
+        {
+            get => _previousParticipants;
+            set => SetProperty(ref _previousParticipants, value);
+        }
 
         private Mitglied _selectedPreviousParticipant;
 

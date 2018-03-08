@@ -87,13 +87,7 @@ namespace AVF.MemberManagement.ViewModels
 
         #endregion
 
-        private ObservableCollection<Mitglied> _previousParticipants = new ObservableCollection<Mitglied>();
-
-        public ObservableCollection<Mitglied> PreviousParticipants
-        {
-            get => _previousParticipants;
-            set => SetProperty(ref _previousParticipants, value);
-        }
+        public virtual ObservableCollection<Mitglied> PreviousParticipants { get; set; }
 
 
         public ICommand AddFoundMemberCommand { get; set; }
@@ -156,7 +150,7 @@ namespace AVF.MemberManagement.ViewModels
         {
             Participants.Add(SelectedMember);
 
-            PreviousParticipants.Remove(SelectedMember);
+            PreviousParticipants?.Remove(SelectedMember);
             FoundMembers.Remove(SelectedMember);
 
             ((DelegateCommand)AddFoundMemberCommand).RaiseCanExecuteChanged();
