@@ -56,14 +56,6 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _cotrainer2, value);
         }
 
-        private Mitglied _selectedParticipant;
-
-        public Mitglied SelectedParticipant
-        {
-            get => _selectedParticipant;
-            set => SetProperty(ref _selectedParticipant, value);
-        }
-
         private ObservableCollection<Mitglied> _previousParticipants = new ObservableCollection<Mitglied>();
 
         public override ObservableCollection<Mitglied> PreviousParticipants
@@ -112,7 +104,7 @@ namespace AVF.MemberManagement.ViewModels
 
                 //ParticipantsCountText = $"Trainer ({Participants.Count}):";
 
-                await GetPreviousTrainers();
+                await FindPreviousParticipants();
 
                 FindMembers(_searchText);
             }
@@ -122,7 +114,7 @@ namespace AVF.MemberManagement.ViewModels
             }
         }
 
-        private async Task GetPreviousTrainers()
+        public override async Task FindPreviousParticipants()
         {
             //Bei beiden ausgetretene Mitglieder nicht mehr berücksichtigen: HasResigned()-Methode
             //Bei beiden egal ob Trainer, Cotrainer1 oder 2
