@@ -57,8 +57,8 @@ namespace AVF.MemberManagement.ViewModels
                 SetProperty(ref _searchText, value);
                 FindMembers(_searchText);
                 RaisePropertyChanged(nameof(FoundMembersCountText));
-                ((DelegateCommand)ClearSearchTextCommand).RaiseCanExecuteChanged();
-                ((DelegateCommand)AddAndClearSearchTextCommand).RaiseCanExecuteChanged();
+                ((DelegateCommand)ClearSearchTextCommand)?.RaiseCanExecuteChanged();
+                ((DelegateCommand)AddAndClearSearchTextCommand)?.RaiseCanExecuteChanged();
             }
         }
 
@@ -70,7 +70,7 @@ namespace AVF.MemberManagement.ViewModels
             set
             {
                 SetProperty(ref _selectedMember, value);
-                ((DelegateCommand)AddFoundMemberCommand).RaiseCanExecuteChanged();
+                ((DelegateCommand)AddFoundMemberCommand)?.RaiseCanExecuteChanged();
             }
         }
 
