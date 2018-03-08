@@ -6,7 +6,7 @@
                 <RowDefinition Height="56"></RowDefinition>
                 <RowDefinition></RowDefinition>
                 <RowDefinition Height="72"></RowDefinition>
-                <RowDefinition Height="64"></RowDefinition>
+                <RowDefinition Height="72"></RowDefinition>
             </Grid.RowDefinitions>
             <Label Grid.Row="0" Text="{Binding FoundMembersCountText}" Margin="8,8,8,16">
             </Label>
@@ -28,11 +28,11 @@
             </StackLayout>
             <Grid Grid.Row="3" Margin="16,0,16,32">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="32">
+                    <ColumnDefinition Width="44">
                     </ColumnDefinition>
                     <ColumnDefinition Width="*">
                     </ColumnDefinition>
-                    <ColumnDefinition Width="32">
+                    <ColumnDefinition Width="44">
                     </ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="0" Text="X" Command="{Binding ClearSearchTextCommand}" Style="{StaticResource Button}">

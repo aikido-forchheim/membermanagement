@@ -19,7 +19,7 @@ namespace AVF.MemberManagement.UserControls
 
         private void Parent_OnItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            ((EnterParticipantsPageViewModel)BindingContext).AddPreviousParticipantCommand.Execute(null);
+            (BindingContext as EnterParticipantsPageViewModel)?.AddPreviousParticipantCommand.Execute(null);
         }
 
         private void Parent_OnItemAppearing(object sender, ItemVisibilityEventArgs e)

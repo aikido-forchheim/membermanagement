@@ -19,12 +19,12 @@ namespace AVF.MemberManagement.UserControls
 
         private void Parent_OnItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            ((EnterParticipantsPageViewModel)BindingContext).AddFoundMemberCommand.Execute(null);
+            (BindingContext as EnterParticipantsPageViewModel)?.AddFoundMemberCommand?.Execute(null);
         }
 
         void Handle_Completed(object sender, System.EventArgs e)
         {
-            ((EnterParticipantsPageViewModel)BindingContext).AddAndClearSearchTextCommand.Execute(null);
+            (BindingContext as EnterParticipantsPageViewModel)?.AddAndClearSearchTextCommand?.Execute(null);
             EntrySearchText.Focus();
         }
     }
