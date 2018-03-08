@@ -64,6 +64,14 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _selectedParticipant, value);
         }
 
+        private ObservableCollection<Mitglied> _previousParticipants = new ObservableCollection<Mitglied>();
+
+        public override ObservableCollection<Mitglied> PreviousParticipants
+        {
+            get => _previousParticipants;
+            set => SetProperty(ref _previousParticipants, value);
+        }
+
         private readonly IRepository<Training> _trainingsRepository;
         private readonly IRepository<Mitglied> _mitgliederRepository;
 
@@ -77,8 +85,8 @@ namespace AVF.MemberManagement.ViewModels
         {
             try
             {
-                _mitglieder = await _mitgliederRepository.GetAsync();
-                _mitglieder.Sort(CompareMemberNames);
+                Mitglieder = await _mitgliederRepository.GetAsync();
+                Mitglieder.Sort(CompareMemberNames);
 
                 SelectedTraining = (TrainingsModel)parameters["SelectedTraining"];
                 SelectedDateString = (string)parameters["SelectedDateString"];

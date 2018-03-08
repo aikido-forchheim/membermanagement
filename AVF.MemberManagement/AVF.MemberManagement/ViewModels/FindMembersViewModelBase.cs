@@ -17,13 +17,30 @@ namespace AVF.MemberManagement.ViewModels
 {
     public class FindMembersViewModelBase : ViewModelBase
     {
-        protected List<Mitglied> _mitglieder = new List<Mitglied>();
+        protected List<Mitglied> Mitglieder = new List<Mitglied>();
 
-        public string ParticipantsCountText => $"Bereits eingetragene Teilnehmer ({Participants.Count}):";
-        public string PreviousParticipantsCountText => $"Zuletzt anwesend ({PreviousParticipants.Count}):";
+        public string ParticipantsCountText => $"Bereits eingetragen ({Participants.Count}):";
+        public string PreviousParticipantsCountText => $"Zuletzt anwesend ({PreviousParticipants?.Count}):";
         public string FoundMembersCountText => $"Gefundene Mitglieder ({FoundMembers.Count}):";
 
 
+        #region Participants
+
+        protected ObservableCollection<Mitglied> _participants = new ObservableCollection<Mitglied>();
+        public ObservableCollection<Mitglied> Participants
+        {
+            get => _participants;
+            set => SetProperty(ref _participants, value);
+        }
+
+        #endregion
+        
+        #region PreviousParticipants
+
+        public virtual ObservableCollection<Mitglied> PreviousParticipants { get; set; }
+
+        #endregion
+        
         #region FindMembers
 
         private bool _childrenOnly;
@@ -76,19 +93,6 @@ namespace AVF.MemberManagement.ViewModels
 
         #endregion
 
-        #region Participants
-
-        protected ObservableCollection<Mitglied> _participants = new ObservableCollection<Mitglied>();
-        public ObservableCollection<Mitglied> Participants
-        {
-            get => _participants;
-            set => SetProperty(ref _participants, value);
-        }
-
-        #endregion
-
-        public virtual ObservableCollection<Mitglied> PreviousParticipants { get; set; }
-
 
         public ICommand AddFoundMemberCommand { get; set; }
         public ICommand ClearSearchTextCommand { get; set; }
@@ -97,6 +101,9 @@ namespace AVF.MemberManagement.ViewModels
         #region ctor
         public FindMembersViewModelBase(INavigationService navigationService, ILogger logger) : base(navigationService, logger)
         {
+            AddFoundMemberCommand = new DelegateCommand(AddFoundMember, CanAddFoundMember);
+            ClearSearchTextCommand = new DelegateCommand(ClearSearchText, CanClearSearchText);
+            AddAndClearSearchTextCommand = new DelegateCommand(AddAndClearSearchText, CanAddAndClearSearchText);
         }
         #endregion
 
@@ -108,7 +115,7 @@ namespace AVF.MemberManagement.ViewModels
 
             var searchStrings = searchText.Split(' ');
 
-            var foundMembers = _mitglieder.Where(m =>
+            var foundMembers = Mitglieder.Where(m =>
             {
                 var argVorname = m.Vorname ?? string.Empty;
                 var argNachname = m.Nachname ?? string.Empty;

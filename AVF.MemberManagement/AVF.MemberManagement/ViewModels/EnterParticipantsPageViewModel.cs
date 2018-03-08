@@ -96,10 +96,7 @@ namespace AVF.MemberManagement.ViewModels
             _trainingsTeilnahmenRepository = trainingsTeilnahmenRepository;
 
             AddPreviousParticipantCommand = new DelegateCommand(AddPreviousParticipant, CanAddPreviousParticipant);
-            AddFoundMemberCommand = new DelegateCommand(AddFoundMember, CanAddFoundMember);
             RemoveParticipantCommand = new DelegateCommand(RemoveParticipant, CanRemoveParticipant);
-            ClearSearchTextCommand = new DelegateCommand(ClearSearchText, CanClearSearchText);
-            AddAndClearSearchTextCommand = new DelegateCommand(AddAndClearSearchText, CanAddAndClearSearchText);
         }
         #endregion
 
@@ -117,8 +114,8 @@ namespace AVF.MemberManagement.ViewModels
 
             Title = $"{Training.Class.Time} ({Training.Class.Trainer.Vorname})";
 
-            _mitglieder = await _mitgliederRepository.GetAsync();
-            _mitglieder.Sort(CompareMemberNames);
+            Mitglieder = await _mitgliederRepository.GetAsync();
+            Mitglieder.Sort(CompareMemberNames);
 
             #region GetExistingParticipants()
             foreach (var existingParticipant in GetExistingParticipants())
@@ -193,7 +190,7 @@ namespace AVF.MemberManagement.ViewModels
         {
             foreach (var trainingParticipation in Training.Participations)
             {
-                var member = _mitglieder.Single(m => m.Id == trainingParticipation.MitgliedID);
+                var member = Mitglieder.Single(m => m.Id == trainingParticipation.MitgliedID);
 
                 Participants.Add(member);
             }
@@ -239,7 +236,7 @@ namespace AVF.MemberManagement.ViewModels
                     if (Participants.Any(p => p.Id == memberMapping.Key))
                         continue;
 
-                    PreviousParticipants.Add(_mitglieder.Single(m => m.Id == memberMapping.Key));
+                    PreviousParticipants.Add(Mitglieder.Single(m => m.Id == memberMapping.Key));
                 }
             }
 
