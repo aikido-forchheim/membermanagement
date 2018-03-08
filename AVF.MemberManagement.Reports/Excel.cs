@@ -15,53 +15,55 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             string reportName    // internal name of report
         )
         {
-            Excel.Application excel = new Excel.Application();
-
-            Workbook workBook = excel.Workbooks.Add(); //             .Open(reportName, ReadOnly:false);
-            Worksheet workSheet = workBook.ActiveSheet;
-
-            foreach (DataGridViewColumn col in dgv.Columns)
-            {
-                Range range = workSheet.Cells[rowStart, colStart + col.Index];
-                range.Value = col.HeaderCell.Value;
-            }
-
-            foreach ( DataGridViewRow row in dgv.Rows )
-            { 
-                foreach ( DataGridViewCell cell in row.Cells )
-                {
-                    Range range = workSheet.Cells[rowStart + row.Index + 1, colStart + cell.ColumnIndex];
-                    range.Value = cell.Value;
-//                    range.Font.Color = ColorTranslator.ToOle(cell.Style.ForeColor);
-                }
-            }
-
-            //            workSheet.Rows.AutoFit();
-            //            workSheet.Columns.AutoFit();
-            //            workBook.SaveAs( fileName );
-
             SaveFileDialog dialog = new SaveFileDialog();
-            dialog.InitialDirectory = "Desktp";
+            dialog.InitialDirectory = "Desktop";
             dialog.Title = "Bericht als Excel-Datei speichern";
-            dialog.CheckFileExists = true;
             dialog.CheckPathExists = true;
             dialog.DefaultExt = "xlsx";
-            dialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
-            dialog.FilterIndex = 2;
             dialog.RestoreDirectory = true;
 
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                Stream oStream;
-                if ((oStream = dialog.OpenFile()) != null)
-                {
-                    workBook.SaveAs(oStream);
-                    oStream.Close();
-                }
-            }
+                Excel.Application excel = new Excel.Application();
 
-            workBook.Close();
-            excel.Quit();
+                string propertyName = "Last" + reportName;
+                string strPathLast  = Reports.Properties.Settings.Default[propertyName].ToString();
+
+                Workbook  workBook  = (File.Exists(strPathLast)) ? excel.Workbooks.Open(strPathLast) : excel.Workbooks.Add();                
+                Worksheet workSheet = workBook.ActiveSheet;
+
+                // delete any old content 
+
+                Range last = workSheet.Cells.SpecialCells(XlCellType.xlCellTypeLastCell);
+                Range range = workSheet.get_Range(workSheet.Cells[rowStart][colStart], last);
+                range.Delete();
+
+                // copy new data to workSheet
+
+                foreach (DataGridViewColumn col in dgv.Columns)
+                {
+                    workSheet.Cells[rowStart, colStart + col.Index].Value = col.HeaderCell.Value;
+                }
+
+                foreach ( DataGridViewRow row in dgv.Rows )
+                { 
+                    foreach ( DataGridViewCell cell in row.Cells )
+                    {
+                        workSheet.Cells[rowStart + row.Index + 1, colStart + cell.ColumnIndex].Value = cell.Value;
+                    }
+                }
+
+                workSheet.Rows.AutoFit();
+                workSheet.Columns.AutoFit();
+
+                workBook.SaveAs(dialog.FileName);
+
+                Reports.Properties.Settings.Default[propertyName] = dialog.FileName;
+                Reports.Properties.Settings.Default.Save();
+
+                workBook.Close();
+                excel.Quit();
+            }
         }
     }
 }

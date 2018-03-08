@@ -46,5 +46,137 @@ namespace AVF.MemberManagement.Reports.Properties {
                 this["WindowSize"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastReportCoursesVsMonth {
+            get {
+                return ((string)(this["LastReportCoursesVsMonth"]));
+            }
+            set {
+                this["LastReportCoursesVsMonth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastReportGraduationList {
+            get {
+                return ((string)(this["LastReportGraduationList"]));
+            }
+            set {
+                this["LastReportGraduationList"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastReportMemberFees {
+            get {
+                return ((string)(this["LastReportMemberFees"]));
+            }
+            set {
+                this["LastReportMemberFees"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastReportMemberVsCourses {
+            get {
+                return ((string)(this["LastReportMemberVsCourses"]));
+            }
+            set {
+                this["LastReportMemberVsCourses"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastReportMemberVsMonths {
+            get {
+                return ((string)(this["LastReportMemberVsMonths"]));
+            }
+            set {
+                this["LastReportMemberVsMonths"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastReportMemberVsTrainings {
+            get {
+                return ((string)(this["LastReportMemberVsTrainings"]));
+            }
+            set {
+                this["LastReportMemberVsTrainings"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastReportMonthsVsCourses {
+            get {
+                return ((string)(this["LastReportMonthsVsCourses"]));
+            }
+            set {
+                this["LastReportMonthsVsCourses"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastReportTraining {
+            get {
+                return ((string)(this["LastReportTraining"]));
+            }
+            set {
+                this["LastReportTraining"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastReportTrainingsVsCourses {
+            get {
+                return ((string)(this["LastReportTrainingsVsCourses"]));
+            }
+            set {
+                this["LastReportTrainingsVsCourses"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastReportWeek {
+            get {
+                return ((string)(this["LastReportWeek"]));
+            }
+            set {
+                this["LastReportWeek"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastReportWeeksVsCourses {
+            get {
+                return ((string)(this["LastReportWeeksVsCourses"]));
+            }
+            set {
+                this["LastReportWeeksVsCourses"] = value;
+            }
+        }
     }
 }
