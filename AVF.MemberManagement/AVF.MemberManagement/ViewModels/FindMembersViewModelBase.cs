@@ -19,6 +19,7 @@ namespace AVF.MemberManagement.ViewModels
     {
         protected List<Mitglied> Mitglieder = new List<Mitglied>();
 
+
         public string ParticipantsCountText => $"Bereits eingetragen ({Participants.Count}):";
         public string PreviousParticipantsCountText => $"Zuletzt anwesend ({PreviousParticipants?.Count}):";
         public string FoundMembersCountText => $"Gefundene Mitglieder ({FoundMembers.Count}):";
@@ -33,10 +34,32 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _participants, value);
         }
 
+        private Mitglied _selectedParticipant;
+        public Mitglied SelectedParticipant
+        {
+            get => _selectedParticipant;
+            set
+            {
+                SetProperty(ref _selectedParticipant, value);
+                ((DelegateCommand)RemoveParticipantCommand).RaiseCanExecuteChanged();
+            }
+        }
+
         #endregion
-        
+
         #region PreviousParticipants
 
+        private Mitglied _selectedPreviousParticipant;
+
+        public Mitglied SelectedPreviousParticipant
+        {
+            get => _selectedPreviousParticipant;
+            set
+            {
+                SetProperty(ref _selectedPreviousParticipant, value);
+                ((DelegateCommand)AddPreviousParticipantCommand).RaiseCanExecuteChanged();
+            }
+        }
         public virtual ObservableCollection<Mitglied> PreviousParticipants { get; set; }
 
         #endregion
@@ -97,6 +120,9 @@ namespace AVF.MemberManagement.ViewModels
         public ICommand AddFoundMemberCommand { get; set; }
         public ICommand ClearSearchTextCommand { get; set; }
         public ICommand AddAndClearSearchTextCommand { get; set; }
+        public ICommand RemoveParticipantCommand { get; set; }
+        public ICommand AddPreviousParticipantCommand { get; set; }
+
 
         #region ctor
         public FindMembersViewModelBase(INavigationService navigationService, ILogger logger) : base(navigationService, logger)
@@ -104,6 +130,8 @@ namespace AVF.MemberManagement.ViewModels
             AddFoundMemberCommand = new DelegateCommand(AddFoundMember, CanAddFoundMember);
             ClearSearchTextCommand = new DelegateCommand(ClearSearchText, CanClearSearchText);
             AddAndClearSearchTextCommand = new DelegateCommand(AddAndClearSearchText, CanAddAndClearSearchText);
+            AddPreviousParticipantCommand = new DelegateCommand(AddPreviousParticipant, CanAddPreviousParticipant);
+            RemoveParticipantCommand = new DelegateCommand(RemoveParticipant, CanRemoveParticipant);
         }
         #endregion
 
@@ -144,6 +172,11 @@ namespace AVF.MemberManagement.ViewModels
             {
                 FoundMembers.Add(foundMember);
             }
+        }
+
+        public virtual Task FindPreviousParticipants()
+        {
+            return Task.Run(() => { });
         }
 
         #region AddFoundMemberCommand
@@ -203,6 +236,49 @@ namespace AVF.MemberManagement.ViewModels
         }
 
         #endregion
+
+        #region RemoveParticipantCommand
+
+        private bool CanRemoveParticipant()
+        {
+            return Participants != null && Participants.Count > 0 && SelectedParticipant != null && Participants.Contains(SelectedParticipant);
+        }
+
+        private async void RemoveParticipant()
+        {
+            Participants.Remove(SelectedParticipant);
+
+            ((DelegateCommand)RemoveParticipantCommand).RaiseCanExecuteChanged();
+
+            await FindPreviousParticipants();
+            FindMembers(_searchText);
+
+            RaiseCounterPropertiesChanged();
+        }
+
+        #endregion
+
+        #region AddPreviousParticipantCommand
+
+        private bool CanAddPreviousParticipant()
+        {
+            return PreviousParticipants != null && PreviousParticipants.Count > 0 && SelectedPreviousParticipant != null && PreviousParticipants.Contains(SelectedPreviousParticipant);
+        }
+
+        private void AddPreviousParticipant()
+        {
+            Participants.Add(SelectedPreviousParticipant);
+
+            FoundMembers.Remove(SelectedPreviousParticipant);
+            PreviousParticipants.Remove(SelectedPreviousParticipant);
+
+            ((DelegateCommand)AddPreviousParticipantCommand).RaiseCanExecuteChanged();
+
+            RaiseCounterPropertiesChanged();
+        }
+
+        #endregion
+
 
         #region Helpers
 

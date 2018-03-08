@@ -21,6 +21,10 @@ namespace AVF.MemberManagement.ViewModels
         private readonly IRepository<Training> _trainingsRepository;
         private readonly IRepository<TrainingsTeilnahme> _trainingsTeilnahmenRepository;
 
+        private readonly ObservableCollection<Mitglied> _originalParticipantsList = new ObservableCollection<Mitglied>();
+        private readonly List<Mitglied> _insertList = new List<Mitglied>();
+        private readonly List<Mitglied> _deletedList = new List<Mitglied>();
+
         #region Aktuelles Datum und Training
 
         private string _selectedDate;
@@ -40,24 +44,7 @@ namespace AVF.MemberManagement.ViewModels
         }
 
         #endregion
-
-        #region Participants
-
-        private ObservableCollection<Mitglied> _originalParticipantsList = new ObservableCollection<Mitglied>();
-
-        private Mitglied _selectedParticipant;
-        public Mitglied SelectedParticipant
-        {
-            get => _selectedParticipant;
-            set
-            {
-                SetProperty(ref _selectedParticipant, value);
-                ((DelegateCommand)RemoveParticipantCommand).RaiseCanExecuteChanged();
-            }
-        }
-
-        #endregion
-
+        
         #region PreviousParicipants
 
         private ObservableCollection<Mitglied> _previousParticipants = new ObservableCollection<Mitglied>();
@@ -68,25 +55,7 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _previousParticipants, value);
         }
 
-        private Mitglied _selectedPreviousParticipant;
-
-        public Mitglied SelectedPreviousParticipant
-        {
-            get => _selectedPreviousParticipant;
-            set
-            {
-                SetProperty(ref _selectedPreviousParticipant, value);
-                ((DelegateCommand)AddPreviousParticipantCommand).RaiseCanExecuteChanged();
-            }
-        }
-
         #endregion
-
-        List<Mitglied> _insertList = new List<Mitglied>();
-        List<Mitglied> _deletedList = new List<Mitglied>();
-
-        public ICommand RemoveParticipantCommand { get; set; }
-        public ICommand AddPreviousParticipantCommand { get; set; }
 
         #region ctor
         public EnterParticipantsPageViewModel(IRepository<Mitglied> mitgliederRepository, IRepository<Training> trainingsRepository, IRepository<TrainingsTeilnahme> trainingsTeilnahmenRepository, INavigationService navigationService, ILogger logger) : base(navigationService, logger)
@@ -94,9 +63,6 @@ namespace AVF.MemberManagement.ViewModels
             _mitgliederRepository = mitgliederRepository;
             _trainingsRepository = trainingsRepository;
             _trainingsTeilnahmenRepository = trainingsTeilnahmenRepository;
-
-            AddPreviousParticipantCommand = new DelegateCommand(AddPreviousParticipant, CanAddPreviousParticipant);
-            RemoveParticipantCommand = new DelegateCommand(RemoveParticipant, CanRemoveParticipant);
         }
         #endregion
 
@@ -140,50 +106,6 @@ namespace AVF.MemberManagement.ViewModels
 
         #endregion
 
-
-        #region RemoveParticipantCommand
-
-        private bool CanRemoveParticipant()
-        {
-            return Participants != null && Participants.Count > 0 && SelectedParticipant != null && Participants.Contains(SelectedParticipant);
-        }
-
-        private async void RemoveParticipant()
-        {
-            Participants.Remove(SelectedParticipant);
-
-            ((DelegateCommand)RemoveParticipantCommand).RaiseCanExecuteChanged();
-
-            await FindPreviousParticipants();
-            FindMembers(_searchText);
-
-            RaiseCounterPropertiesChanged();
-        }
-
-        #endregion
-
-        #region AddPreviousParticipantCommand
-
-        private bool CanAddPreviousParticipant()
-        {
-            return PreviousParticipants != null && PreviousParticipants.Count > 0 && SelectedPreviousParticipant != null && PreviousParticipants.Contains(SelectedPreviousParticipant);
-        }
-
-        private void AddPreviousParticipant()
-        {
-            Participants.Add(SelectedPreviousParticipant);
-
-            FoundMembers.Remove(SelectedPreviousParticipant);
-            PreviousParticipants.Remove(SelectedPreviousParticipant);
-
-            ((DelegateCommand)AddPreviousParticipantCommand).RaiseCanExecuteChanged();
-
-            RaiseCounterPropertiesChanged();
-        }
-
-        #endregion
-
-
         #region Helper
 
         private ObservableCollection<Mitglied> GetExistingParticipants()
@@ -198,7 +120,7 @@ namespace AVF.MemberManagement.ViewModels
             return Participants;
         }
 
-        private async Task FindPreviousParticipants()
+        public override async Task FindPreviousParticipants()
         {
             try
             {

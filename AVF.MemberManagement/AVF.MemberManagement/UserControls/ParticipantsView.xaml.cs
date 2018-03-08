@@ -22,7 +22,7 @@ namespace AVF.MemberManagement.UserControls
         {
             try
             {
-                ((EnterParticipantsPageViewModel)BindingContext).RemoveParticipantCommand.Execute(null);
+                (BindingContext as FindMembersViewModelBase)?.RemoveParticipantCommand.Execute(null);
             }
             catch (Exception exception)
             {
