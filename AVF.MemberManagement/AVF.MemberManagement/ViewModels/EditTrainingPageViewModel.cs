@@ -1,6 +1,7 @@
 ﻿using Prism.Commands;
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using AVF.MemberManagement.StandardLibrary.Enums;
 using AVF.MemberManagement.StandardLibrary.Models;
@@ -88,17 +89,7 @@ namespace AVF.MemberManagement.ViewModels
 
                     Annotation = SelectedTraining.Training.Bemerkung; //erst beim weiter zurück an die Bemerkung binden
 
-                    Trainer = await _mitglieder.GetAsync(SelectedTraining.Training.Trainer);
-
-                    if (SelectedTraining.Training.Kotrainer1 != null && SelectedTraining.Training.Kotrainer1 != -1)
-                    {
-                        Cotrainer1 = await _mitglieder.GetAsync((int)SelectedTraining.Training.Kotrainer1);
-                    }
-
-                    if (SelectedTraining.Training.Kotrainer2 != null && SelectedTraining.Training.Kotrainer2 != -1)
-                    {
-                        Cotrainer2 = await _mitglieder.GetAsync((int)SelectedTraining.Training.Kotrainer2);
-                    }
+                    await SetTrainerFromIds();
                 }
                 else if (parameters.ContainsKey("Trainer"))
                 {
@@ -117,6 +108,29 @@ namespace AVF.MemberManagement.ViewModels
             }
         }
 
+        private async Task SetTrainerFromIds()
+        {
+            Trainer = await _mitglieder.GetAsync(SelectedTraining.Training.Trainer);
+
+            if (SelectedTraining.Training.Kotrainer1 != null && SelectedTraining.Training.Kotrainer1 != -1)
+            {
+                Cotrainer1 = await _mitglieder.GetAsync((int)SelectedTraining.Training.Kotrainer1);
+            }
+            else
+            {
+                Cotrainer1 = null;
+            }
+
+            if (SelectedTraining.Training.Kotrainer2 != null && SelectedTraining.Training.Kotrainer2 != -1)
+            {
+                Cotrainer2 = await _mitglieder.GetAsync((int)SelectedTraining.Training.Kotrainer2);
+            }
+            else
+            {
+                Cotrainer2 = null;
+            }
+        }
+
         #region EnterParticipantsCommand
 
         public ICommand EnterParticipantsCommand { get; }
@@ -125,7 +139,7 @@ namespace AVF.MemberManagement.ViewModels
         {
             try
             {
-                var updateAnnotation = SelectedTraining.Training.Bemerkung != Annotation;
+                //var updateAnnotation = SelectedTraining.Training.Bemerkung != Annotation;
 
                 SelectedTraining.Training.Bemerkung = Annotation;
 
@@ -135,9 +149,10 @@ namespace AVF.MemberManagement.ViewModels
                     await _trainingsRepository.CreateAsync(SelectedTraining.Training);
                     //TODO: Achtung beim zurück von EnterParticipants usw. darf nicht noch mal angelegt werden
                 }
-                else if (updateAnnotation)
+                else
                 {
                     //TODO: Update Traing on change of Bemerkung
+                    
                 }
 
                 await NavigationService.NavigateAsync(nameof(SaveParticipantsPage), new NavigationParameters { { "SelectedTraining", SelectedTraining }, { "SelectedDateString", SelectedDateString } });

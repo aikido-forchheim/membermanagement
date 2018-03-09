@@ -116,6 +116,31 @@ namespace AVF.MemberManagement.ViewModels
             }
         }
 
+        public override void OnNavigatedFrom(NavigationParameters parameters)
+        {
+            if (Participants.Count == 0) return; //do not change standard training/trainer
+            
+            SelectedTraining.Training.Trainer = Participants[0].Id;
+
+            switch (Participants.Count)
+            {
+                case 1:
+                    SelectedTraining.Training.Kotrainer1 = -1;
+                    SelectedTraining.Training.Kotrainer2 = -1;
+                    break;
+                case 2:
+                    SelectedTraining.Training.Kotrainer1 = Participants[1].Id;
+                    SelectedTraining.Training.Kotrainer2 = -1;
+                    break;
+                case 3:
+                    SelectedTraining.Training.Kotrainer1 = Participants[1].Id;
+                    SelectedTraining.Training.Kotrainer2 = Participants[2].Id;
+                    break;
+            }
+
+            parameters.Add(NavigationParameter.SelectedTraining, SelectedTraining);
+        }
+
         public override async Task FindPreviousParticipants()
         {
             //Bei beiden ausgetretene Mitglieder nicht mehr berücksichtigen: HasResigned()-Methode
