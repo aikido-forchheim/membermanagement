@@ -93,6 +93,11 @@ namespace AVF.MemberManagement.StandardLibrary.Repositories
             }
         }
 
+        public Task<int> UpdateAsync(Setting s)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<int> DeleteAsync(Setting s)
         {
             throw new NotImplementedException();

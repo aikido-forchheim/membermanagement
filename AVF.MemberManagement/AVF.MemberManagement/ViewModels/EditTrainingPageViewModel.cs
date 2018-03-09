@@ -3,9 +3,7 @@ using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using AVF.MemberManagement.StandardLibrary.Enums;
 using AVF.MemberManagement.StandardLibrary.Models;
-using AVF.MemberManagement.StandardLibrary.Services;
 using AVF.MemberManagement.Views;
 using Prism.Navigation;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
@@ -139,20 +137,15 @@ namespace AVF.MemberManagement.ViewModels
         {
             try
             {
-                //var updateAnnotation = SelectedTraining.Training.Bemerkung != Annotation;
-
                 SelectedTraining.Training.Bemerkung = Annotation;
 
                 if (SelectedTraining.Training.Id == 0)
                 {
-                    //TODO: Training anlegen
                     await _trainingsRepository.CreateAsync(SelectedTraining.Training);
-                    //TODO: Achtung beim zurück von EnterParticipants usw. darf nicht noch mal angelegt werden
                 }
                 else
                 {
-                    //TODO: Update Traing on change of Bemerkung
-                    
+                    await _trainingsRepository.UpdateAsync(SelectedTraining.Training);
                 }
 
                 await NavigationService.NavigateAsync(nameof(SaveParticipantsPage), new NavigationParameters { { "SelectedTraining", SelectedTraining }, { "SelectedDateString", SelectedDateString } });
@@ -178,7 +171,7 @@ namespace AVF.MemberManagement.ViewModels
         {
             try
             {
-                NavigationParameters navigationParameters = new NavigationParameters { { "SelectedDateString", SelectedDateString }, { "SelectedTraining", SelectedTraining }, { "Trainer", Trainer }, { "Cotrainer1", Cotrainer1 }, { "Cotrainer2", Cotrainer2 } };
+                var navigationParameters = new NavigationParameters { { "SelectedDateString", SelectedDateString }, { "SelectedTraining", SelectedTraining }, { "Trainer", Trainer }, { "Cotrainer1", Cotrainer1 }, { "Cotrainer2", Cotrainer2 } };
 
                 NavigationService.NavigateAsync(nameof(SelectTrainerPage), navigationParameters);
             }
