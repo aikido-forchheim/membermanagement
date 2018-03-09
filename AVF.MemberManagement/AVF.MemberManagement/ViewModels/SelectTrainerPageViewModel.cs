@@ -69,6 +69,8 @@ namespace AVF.MemberManagement.ViewModels
 
         public SelectTrainerPageViewModel(INavigationService navigationService, ILogger logger, IRepository<Training> trainingsRepository, IRepository<Mitglied> mitgliederRepository) : base(navigationService, logger)
         {
+            MaxParticipantsCount = 3;
+
             _trainingsRepository = trainingsRepository;
             _mitgliederRepository = mitgliederRepository;
         }
@@ -138,7 +140,10 @@ namespace AVF.MemberManagement.ViewModels
             foreach (var previousTrainerId in previousTrainersOfThisClass)
             {
                 var previousTrainer = await _mitgliederRepository.GetAsync(previousTrainerId);
-                PreviousParticipants.Add(previousTrainer);
+                if (!Participants.Contains(previousTrainer))
+                {
+                    PreviousParticipants.Add(previousTrainer);
+                }
             }
         }
     }

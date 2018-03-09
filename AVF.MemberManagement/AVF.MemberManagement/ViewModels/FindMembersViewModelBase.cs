@@ -19,6 +19,8 @@ namespace AVF.MemberManagement.ViewModels
     {
         protected List<Mitglied> Mitglieder = new List<Mitglied>();
 
+        public int MaxParticipantsCount = int.MaxValue;
+
 
         public string ParticipantsCountText => $"Bereits eingetragen ({Participants.Count}):";
         public string PreviousParticipantsCountText => $"Zuletzt anwesend ({PreviousParticipants?.Count}):";
@@ -183,17 +185,19 @@ namespace AVF.MemberManagement.ViewModels
 
         protected bool CanAddFoundMember()
         {
-            return FoundMembers != null && FoundMembers.Count > 0 && SelectedMember != null && FoundMembers.Contains(SelectedMember);
+            return FoundMembers != null && FoundMembers.Count > 0 && SelectedMember != null && FoundMembers.Contains(SelectedMember) && Participants.Count < MaxParticipantsCount;
         }
 
         protected void AddFoundMember()
         {
+            if (!CanAddFoundMember()) return;
+
             Participants.Add(SelectedMember);
 
             PreviousParticipants?.Remove(SelectedMember);
             FoundMembers.Remove(SelectedMember);
 
-            ((DelegateCommand)AddFoundMemberCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand) AddFoundMemberCommand).RaiseCanExecuteChanged();
 
             RaiseCounterPropertiesChanged();
 
@@ -262,17 +266,19 @@ namespace AVF.MemberManagement.ViewModels
 
         private bool CanAddPreviousParticipant()
         {
-            return PreviousParticipants != null && PreviousParticipants.Count > 0 && SelectedPreviousParticipant != null && PreviousParticipants.Contains(SelectedPreviousParticipant);
+            return PreviousParticipants != null && PreviousParticipants.Count > 0 && SelectedPreviousParticipant != null && PreviousParticipants.Contains(SelectedPreviousParticipant) && Participants.Count < MaxParticipantsCount;
         }
 
         private void AddPreviousParticipant()
         {
+            if (!CanAddPreviousParticipant()) return;
+
             Participants.Add(SelectedPreviousParticipant);
 
             FoundMembers.Remove(SelectedPreviousParticipant);
             PreviousParticipants.Remove(SelectedPreviousParticipant);
 
-            ((DelegateCommand)AddPreviousParticipantCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand) AddPreviousParticipantCommand).RaiseCanExecuteChanged();
 
             RaiseCounterPropertiesChanged();
         }
