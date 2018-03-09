@@ -8,7 +8,7 @@
     </ContentPage.Resources>
     <Grid VerticalOptions="Center" HorizontalOptions="Center" Margin="8,8,8,8" IsVisible="{Binding PassThroughMode, Converter={StaticResource BooleanNotConverter}}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="32">
+            <RowDefinition Height="36">
             </RowDefinition>
             <RowDefinition Height="3*">
             </RowDefinition>
@@ -21,7 +21,7 @@
             <RowDefinition Height="1*">
             </RowDefinition>
         </Grid.RowDefinitions>
-        <Label Text="Einfügen:" Margin="8,8,0,0">
+        <Label Text="Einfügen:" Margin="8,14,0,0">
         </Label>
         <ListView RowHeight="28" Grid.Row="1" ItemsSource="{Binding Inserts}" Margin="32,16,0,16">
             <ListView.ItemTemplate>
