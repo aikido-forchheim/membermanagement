@@ -40,8 +40,8 @@
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <Button Text="Abbrechen" Style="{StaticResource Button}" VerticalOptions="Center"></Button>
-                <Button Grid.Column="1" Text="Speichern" Style="{StaticResource Button}" VerticalOptions="Center"></Button>
+                <Button Text="Abbrechen" Command="{Binding CancelCommand}" Style="{StaticResource Button}" VerticalOptions="Center"></Button>
+                <Button Grid.Column="1" Command="{Binding SaveCommand}" Text="Speichern" Style="{StaticResource Button}" VerticalOptions="Center"></Button>
             </Grid>
         </Grid>
     </ContentView.Content>

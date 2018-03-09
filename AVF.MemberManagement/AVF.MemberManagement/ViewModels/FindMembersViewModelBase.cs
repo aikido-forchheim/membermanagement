@@ -185,7 +185,7 @@ namespace AVF.MemberManagement.ViewModels
             return FoundMembers != null && FoundMembers.Count > 0 && SelectedMember != null && FoundMembers.Contains(SelectedMember) && Participants.Count < MaxParticipantsCount;
         }
 
-        protected void AddFoundMember()
+        protected virtual void AddFoundMember()
         {
             if (!CanAddFoundMember()) return;
 
@@ -245,7 +245,7 @@ namespace AVF.MemberManagement.ViewModels
             return Participants != null && Participants.Count > 0 && SelectedParticipant != null && Participants.Contains(SelectedParticipant);
         }
 
-        private async void RemoveParticipant()
+        protected virtual async void RemoveParticipant()
         {
             Participants.Remove(SelectedParticipant);
 
@@ -266,7 +266,7 @@ namespace AVF.MemberManagement.ViewModels
             return PreviousParticipants != null && PreviousParticipants.Count > 0 && SelectedPreviousParticipant != null && PreviousParticipants.Contains(SelectedPreviousParticipant) && Participants.Count < MaxParticipantsCount;
         }
 
-        private void AddPreviousParticipant()
+        protected virtual void AddPreviousParticipant()
         {
             if (!CanAddPreviousParticipant()) return;
 

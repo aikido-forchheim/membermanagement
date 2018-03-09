@@ -8,11 +8,15 @@ using Prism.Navigation;
 using System.Collections.ObjectModel;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using Prism.Commands;
 
 namespace AVF.MemberManagement.ViewModels
 {
     public class SelectTrainerPageViewModel : FindMembersViewModelBase
     {
+        private bool _shouldCancel = false;
+
         private readonly IRepository<Training> _trainingsRepository;
         private readonly IRepository<Mitglied> _mitgliederRepository;
 
@@ -62,6 +66,9 @@ namespace AVF.MemberManagement.ViewModels
 
         public SelectTrainerPageViewModel(INavigationService navigationService, ILogger logger, IRepository<Training> trainingsRepository, IRepository<Mitglied> mitgliederRepository) : base(navigationService, logger)
         {
+            SaveCommand = new DelegateCommand(Save, CanSave);
+            CancelCommand = new DelegateCommand(Cancel, CanCancel);
+
             MaxParticipantsCount = 3;
 
             _trainingsRepository = trainingsRepository;
@@ -101,6 +108,85 @@ namespace AVF.MemberManagement.ViewModels
 
         #region Commands
 
+        #region SaveCommand
+
+        public ICommand SaveCommand { get; }
+
+        private void Save()
+        {
+            NavigationService.GoBackAsync();
+        }
+
+        private void SetSaveParameters(NavigationParameters parameters)
+        {
+            if (Participants.Count == 0) return; //do not change standard training/trainer
+
+            SelectedTraining.Training.Trainer = Participants[0].Id;
+
+            switch (Participants.Count)
+            {
+                case 1:
+                    SelectedTraining.Training.Kotrainer1 = -1;
+                    SelectedTraining.Training.Kotrainer2 = -1;
+                    break;
+                case 2:
+                    SelectedTraining.Training.Kotrainer1 = Participants[1].Id;
+                    SelectedTraining.Training.Kotrainer2 = -1;
+                    break;
+                case 3:
+                    SelectedTraining.Training.Kotrainer1 = Participants[1].Id;
+                    SelectedTraining.Training.Kotrainer2 = Participants[2].Id;
+                    break;
+            }
+
+            parameters.Add(NavigationParameter.SelectedTraining, SelectedTraining);
+        }
+
+        private bool CanSave()
+        {
+            return Participants.Count > 0 && Participants.Count <= 3;
+        }
+
+        protected override void RemoveParticipant()
+        {
+            base.RemoveParticipant();
+
+            (SaveCommand as DelegateCommand)?.RaiseCanExecuteChanged();
+        }
+
+        protected override void AddPreviousParticipant()
+        {
+            base.AddPreviousParticipant();
+
+            (SaveCommand as DelegateCommand)?.RaiseCanExecuteChanged();
+        }
+
+        protected override void AddFoundMember()
+        {
+            base.AddFoundMember();
+
+            (SaveCommand as DelegateCommand)?.RaiseCanExecuteChanged();
+        }
+
+        #endregion
+
+        #region CancelCommand
+
+        public ICommand CancelCommand { get; }
+
+        private void Cancel()
+        {
+            _shouldCancel = true;
+            NavigationService.GoBackAsync();
+        }
+
+        private bool CanCancel()
+        {
+            return true;
+        }
+
+        #endregion
+
         #endregion
 
         #region INavigatedAware
@@ -131,6 +217,8 @@ namespace AVF.MemberManagement.ViewModels
                     Participants.Add(Cotrainer2);
                 }
 
+                (SaveCommand as DelegateCommand)?.RaiseCanExecuteChanged();
+
                 Title = $"{SelectedTraining.Class.Time} ({SelectedTraining.Class.Trainer.FirstName})";
 
                 await FindPreviousParticipants();
@@ -145,27 +233,8 @@ namespace AVF.MemberManagement.ViewModels
 
         public override void OnNavigatedFrom(NavigationParameters parameters)
         {
-            if (Participants.Count == 0) return; //do not change standard training/trainer
-            
-            SelectedTraining.Training.Trainer = Participants[0].Id;
-
-            switch (Participants.Count)
-            {
-                case 1:
-                    SelectedTraining.Training.Kotrainer1 = -1;
-                    SelectedTraining.Training.Kotrainer2 = -1;
-                    break;
-                case 2:
-                    SelectedTraining.Training.Kotrainer1 = Participants[1].Id;
-                    SelectedTraining.Training.Kotrainer2 = -1;
-                    break;
-                case 3:
-                    SelectedTraining.Training.Kotrainer1 = Participants[1].Id;
-                    SelectedTraining.Training.Kotrainer2 = Participants[2].Id;
-                    break;
-            }
-
-            parameters.Add(NavigationParameter.SelectedTraining, SelectedTraining);
+            if (_shouldCancel) return;
+            SetSaveParameters(parameters);
         }
         #endregion
     }
