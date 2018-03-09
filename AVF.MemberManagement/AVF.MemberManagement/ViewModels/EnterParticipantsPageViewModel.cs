@@ -1,5 +1,4 @@
-﻿using Prism.Mvvm;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -8,9 +7,6 @@ using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Models;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Prism.Navigation;
-using System.Windows.Input;
-using AVF.MemberManagement.Views;
-using Prism.Commands;
 using Microsoft.Extensions.Logging;
 
 namespace AVF.MemberManagement.ViewModels
@@ -72,7 +68,7 @@ namespace AVF.MemberManagement.ViewModels
         {
             if (!parameters.ContainsKey("SelectedTraining")) return;
 
-            _participants.Clear();
+            Participants.Clear();
 
             SelectedDateString = (string)parameters["SelectedDateString"];
             Training = (TrainingsModel)parameters["SelectedTraining"];
@@ -90,7 +86,7 @@ namespace AVF.MemberManagement.ViewModels
             }
             #endregion
             await FindPreviousParticipants();
-            FindMembers(_searchText);
+            FindMembers(SearchText);
 
             RaiseCounterPropertiesChanged();
         }
@@ -173,7 +169,7 @@ namespace AVF.MemberManagement.ViewModels
             _insertList.Clear();
             _deletedList.Clear();
 
-            foreach (var participant in _participants)
+            foreach (var participant in Participants)
             {
                 if (!_originalParticipantsList.Contains(participant))
                 {
@@ -183,7 +179,7 @@ namespace AVF.MemberManagement.ViewModels
 
             foreach (var participant in _originalParticipantsList)
             {
-                if (!_participants.Contains(participant))
+                if (!Participants.Contains(participant))
                 {
                     _deletedList.Add(participant);
                 }

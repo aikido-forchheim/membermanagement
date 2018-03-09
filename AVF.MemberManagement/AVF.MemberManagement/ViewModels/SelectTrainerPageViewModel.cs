@@ -1,7 +1,4 @@
-﻿using Prism.Commands;
-using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Diagnostics;
 using System.Linq;
 using AVF.MemberManagement.StandardLibrary.Models;
@@ -108,7 +105,7 @@ namespace AVF.MemberManagement.ViewModels
 
                 await FindPreviousParticipants();
 
-                FindMembers(_searchText);
+                FindMembers(SearchText);
             }
             catch (Exception ex)
             {

@@ -1,15 +1,11 @@
-﻿using Prism.Mvvm;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using AVF.MemberManagement.StandardLibrary.Interfaces;
-using AVF.MemberManagement.StandardLibrary.Models;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Prism.Navigation;
 using System.Windows.Input;
-using AVF.MemberManagement.Views;
 using Prism.Commands;
 using Microsoft.Extensions.Logging;
 
@@ -29,7 +25,7 @@ namespace AVF.MemberManagement.ViewModels
 
         #region Participants
 
-        protected ObservableCollection<Mitglied> _participants = new ObservableCollection<Mitglied>();
+        private ObservableCollection<Mitglied> _participants = new ObservableCollection<Mitglied>();
         public ObservableCollection<Mitglied> Participants
         {
             get => _participants;
@@ -89,7 +85,7 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _foundMembers, value);
         }
 
-        protected string _searchText = string.Empty;
+        private string _searchText = string.Empty;
 
         public string SearchText
         {
@@ -149,13 +145,14 @@ namespace AVF.MemberManagement.ViewModels
             {
                 var argVorname = m.Vorname ?? string.Empty;
                 var argNachname = m.Nachname ?? string.Empty;
+				var argRufname = m.Rufname ?? string.Empty;
 
                 if (m.Vorname == null && m.Nachname == null) return false;
 
                 var allSearchStringsMatch = true;
                 foreach (var searchString in searchStrings)
                 {
-                    var containsNamePart = DoesNamePartsContain(searchString, argVorname, argNachname);
+                    var containsNamePart = DoesNamePartsContain(searchString, argVorname, argNachname, argRufname);
                     if (!containsNamePart) allSearchStringsMatch = false;
                 }
 
@@ -295,10 +292,11 @@ namespace AVF.MemberManagement.ViewModels
             RaisePropertyChanged(nameof(FoundMembersCountText));
         }
 
-        private static bool DoesNamePartsContain(string searchText, string argVorname, string argNachname)
+        private static bool DoesNamePartsContain(string searchText, string argVorname, string argNachname, string argRufname)
         {
             return argVorname.ToLower().Contains(searchText.ToLower()) ||
-                                   argNachname.ToLower().Contains(searchText.ToLower());
+                                   argNachname.ToLower().Contains(searchText.ToLower()) ||
+								   argRufname.ToLower().Contains(searchText.ToLower());
         }
 
         private static bool HasResigned(Mitglied mitglied)
