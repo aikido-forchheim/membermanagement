@@ -71,8 +71,8 @@
                 <ColumnDefinition>
                 </ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Button Text="Nein" VerticalOptions="Center" Style="{StaticResource Button}"></Button>
-            <Button Grid.Column="1" Text="Ja" VerticalOptions="Center" Style="{StaticResource Button}"></Button>
+            <Button Text="Nein" VerticalOptions="Center" Style="{StaticResource Button}" Command="{Binding DontSaveCommand}"></Button>
+            <Button Grid.Column="1" Text="Ja" VerticalOptions="Center" Style="{StaticResource Button}" Command="{Binding SaveCommand}"></Button>
         </Grid>
     </Grid>
 </ContentPage>

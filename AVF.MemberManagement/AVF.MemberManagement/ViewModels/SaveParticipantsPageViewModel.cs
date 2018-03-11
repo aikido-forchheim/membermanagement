@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Input;
 using Prism.Navigation;
 using AVF.MemberManagement.StandardLibrary.Services;
 using AVF.MemberManagement.StandardLibrary.Enums;
@@ -41,6 +42,8 @@ namespace AVF.MemberManagement.ViewModels
 
         public SaveParticipantsPageViewModel(INavigationService navigationService, ILogger logger) : base(navigationService, logger)
         {
+            DontSaveCommand = new DelegateCommand(DontSave, CanDontSave);
+            SaveCommand = new DelegateCommand(Save, CanSave);
         }
 
         public override async void OnNavigatedTo(NavigationParameters parameters)
@@ -50,7 +53,7 @@ namespace AVF.MemberManagement.ViewModels
             Inserts.Clear();
             Deletes.Clear();
 
-            if (parameters == null || !parameters.Any()) return;
+            if (!parameters.Any()) return;
            
             if (parameters["__NavigationMode"].ToString() != "Back")
             {
@@ -65,7 +68,7 @@ namespace AVF.MemberManagement.ViewModels
                 var deletedList = parameters["DeletedList"] as List<Mitglied>;
                 var insertList = parameters["InsertList"] as List<Mitglied>;
 
-                if (deletedList != null && insertList != null && insertList.Count == 0 && deletedList.Count == 0)
+                if ((deletedList == null || deletedList.Count == 0) && (insertList == null || insertList.Count == 0))
                 {
                     await NavigationService.GoBackAsync();
                     return;
@@ -96,5 +99,46 @@ namespace AVF.MemberManagement.ViewModels
                 Deletes.Add(mitglied);
             }
         }
+
+        #region DontSaveCommand
+
+        public ICommand DontSaveCommand { get; }
+
+        private void DontSave()
+        {
+            NavigationService.GoBackAsync();
+        }
+
+        private bool CanDontSave()
+        {
+            return true;
+        }
+
+        #endregion
+
+        #region SaveCommand
+
+        public ICommand SaveCommand { get; }
+
+        private void Save()
+        {
+            foreach (var delete in Deletes)
+            {
+                //Get from TrainingsTeilnahmen with Mitglied.Id and Training.Id
+                //so we need the Training here
+            }
+
+            foreach (var insert in Inserts)
+            {
+                
+            }
+        }
+
+        private bool CanSave()
+        {
+            return true;
+        }
+
+        #endregion
     }
 }
