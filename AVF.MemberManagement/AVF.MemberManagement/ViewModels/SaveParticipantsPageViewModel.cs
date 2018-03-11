@@ -8,6 +8,7 @@ using System.Windows.Input;
 using Prism.Navigation;
 using AVF.MemberManagement.StandardLibrary.Services;
 using AVF.MemberManagement.StandardLibrary.Enums;
+using AVF.MemberManagement.StandardLibrary.Models;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.Views;
 using Microsoft.Extensions.Logging;
@@ -16,6 +17,20 @@ namespace AVF.MemberManagement.ViewModels
 {
     public class SaveParticipantsPageViewModel : ViewModelBase
     {
+        #region TrainingsModel
+
+        private TrainingsModel _training;
+
+        public TrainingsModel Training
+        {
+            get => _training;
+            set => SetProperty(ref _training, value);
+        }
+
+        #endregion
+
+        #region Lists
+
         private ObservableCollection<Mitglied> _inserts = new ObservableCollection<Mitglied>();
 
         public ObservableCollection<Mitglied> Inserts
@@ -31,6 +46,8 @@ namespace AVF.MemberManagement.ViewModels
             get => _deletes;
             set => SetProperty(ref _deletes, value);
         }
+
+        #endregion
 
         private bool _passThroughMode = true;
 
@@ -65,6 +82,7 @@ namespace AVF.MemberManagement.ViewModels
                 //is this a switch page or the save page directly then?
                 //we do not use this page directly, we create a empty switch page, so no UI is displayed temporarily
 
+                Training = parameters["SelectedTraining"] as TrainingsModel;
                 var deletedList = parameters["DeletedList"] as List<Mitglied>;
                 var insertList = parameters["InsertList"] as List<Mitglied>;
 
