@@ -15,8 +15,6 @@ namespace AVF.MemberManagement.ViewModels
 {
     public class SelectTrainerPageViewModel : FindMembersViewModelBase
     {
-        private bool _shouldCancel = false;
-
         private readonly IRepository<Training> _trainingsRepository;
         private readonly IRepository<Mitglied> _mitgliederRepository;
 
@@ -66,9 +64,6 @@ namespace AVF.MemberManagement.ViewModels
 
         public SelectTrainerPageViewModel(INavigationService navigationService, ILogger logger, IRepository<Training> trainingsRepository, IRepository<Mitglied> mitgliederRepository) : base(navigationService, logger)
         {
-            SaveCommand = new DelegateCommand(Save, CanSave);
-            CancelCommand = new DelegateCommand(Cancel, CanCancel);
-
             MaxParticipantsCount = 3;
 
             _trainingsRepository = trainingsRepository;
@@ -110,13 +105,6 @@ namespace AVF.MemberManagement.ViewModels
 
         #region SaveCommand
 
-        public ICommand SaveCommand { get; }
-
-        private void Save()
-        {
-            NavigationService.GoBackAsync();
-        }
-
         private void SetSaveParameters(NavigationParameters parameters)
         {
             if (Participants.Count == 0) return; //do not change standard training/trainer
@@ -142,47 +130,9 @@ namespace AVF.MemberManagement.ViewModels
             parameters.Add(NavigationParameter.SelectedTraining, SelectedTraining);
         }
 
-        private bool CanSave()
+        protected override bool CanSave()
         {
-            return Participants.Count > 0 && Participants.Count <= 3;
-        }
-
-        protected override void RemoveParticipant()
-        {
-            base.RemoveParticipant();
-
-            (SaveCommand as DelegateCommand)?.RaiseCanExecuteChanged();
-        }
-
-        protected override void AddPreviousParticipant()
-        {
-            base.AddPreviousParticipant();
-
-            (SaveCommand as DelegateCommand)?.RaiseCanExecuteChanged();
-        }
-
-        protected override void AddFoundMember()
-        {
-            base.AddFoundMember();
-
-            (SaveCommand as DelegateCommand)?.RaiseCanExecuteChanged();
-        }
-
-        #endregion
-
-        #region CancelCommand
-
-        public ICommand CancelCommand { get; }
-
-        private void Cancel()
-        {
-            _shouldCancel = true;
-            NavigationService.GoBackAsync();
-        }
-
-        private bool CanCancel()
-        {
-            return true;
+            return Participants.Count > 0 && Participants.Count <= MaxParticipantsCount;
         }
 
         #endregion
@@ -233,7 +183,7 @@ namespace AVF.MemberManagement.ViewModels
 
         public override void OnNavigatedFrom(NavigationParameters parameters)
         {
-            if (_shouldCancel) return;
+            if (ShouldCancel) return;
             SetSaveParameters(parameters);
         }
         #endregion

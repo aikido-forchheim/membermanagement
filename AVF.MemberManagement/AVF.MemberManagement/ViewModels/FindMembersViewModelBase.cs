@@ -13,6 +13,8 @@ namespace AVF.MemberManagement.ViewModels
 {
     public class FindMembersViewModelBase : ViewModelBase
     {
+        protected bool ShouldCancel;
+
         protected List<Mitglied> Mitglieder = new List<Mitglied>();
 
         public int MaxParticipantsCount = int.MaxValue;
@@ -121,6 +123,9 @@ namespace AVF.MemberManagement.ViewModels
         public ICommand RemoveParticipantCommand { get; set; }
         public ICommand AddPreviousParticipantCommand { get; set; }
 
+        public ICommand CancelCommand { get; }
+        public ICommand SaveCommand { get; }
+
 
         #region ctor
         public FindMembersViewModelBase(INavigationService navigationService, ILogger logger) : base(navigationService, logger)
@@ -130,6 +135,9 @@ namespace AVF.MemberManagement.ViewModels
             AddAndClearSearchTextCommand = new DelegateCommand(AddAndClearSearchText, CanAddAndClearSearchText);
             AddPreviousParticipantCommand = new DelegateCommand(AddPreviousParticipant, CanAddPreviousParticipant);
             RemoveParticipantCommand = new DelegateCommand(RemoveParticipant, CanRemoveParticipant);
+
+            CancelCommand = new DelegateCommand(Cancel, CanCancel);
+            SaveCommand = new DelegateCommand(Save, CanSave);
         }
         #endregion
 
@@ -194,7 +202,8 @@ namespace AVF.MemberManagement.ViewModels
             PreviousParticipants?.Remove(SelectedMember);
             FoundMembers.Remove(SelectedMember);
 
-            ((DelegateCommand) AddFoundMemberCommand).RaiseCanExecuteChanged();
+            (AddFoundMemberCommand as DelegateCommand)?.RaiseCanExecuteChanged();
+            (SaveCommand as DelegateCommand)?.RaiseCanExecuteChanged();
 
             RaiseCounterPropertiesChanged();
 
@@ -249,7 +258,8 @@ namespace AVF.MemberManagement.ViewModels
         {
             Participants.Remove(SelectedParticipant);
 
-            ((DelegateCommand)RemoveParticipantCommand).RaiseCanExecuteChanged();
+            (RemoveParticipantCommand as DelegateCommand)?.RaiseCanExecuteChanged();
+            (SaveCommand as DelegateCommand)?.RaiseCanExecuteChanged();
 
             await FindPreviousParticipants();
             FindMembers(_searchText);
@@ -275,9 +285,41 @@ namespace AVF.MemberManagement.ViewModels
             FoundMembers.Remove(SelectedPreviousParticipant);
             PreviousParticipants.Remove(SelectedPreviousParticipant);
 
-            ((DelegateCommand) AddPreviousParticipantCommand).RaiseCanExecuteChanged();
+            (AddPreviousParticipantCommand as DelegateCommand)?.RaiseCanExecuteChanged();
+
+            (SaveCommand as DelegateCommand)?.RaiseCanExecuteChanged();
 
             RaiseCounterPropertiesChanged();
+        }
+
+        #endregion
+
+
+        #region CancelCommand
+
+        private void Cancel()
+        {
+            ShouldCancel = true;
+            NavigationService.GoBackAsync();
+        }
+
+        private bool CanCancel()
+        {
+            return true;
+        }
+
+        #endregion
+
+        #region SaveCommand
+
+        private void Save()
+        {
+            NavigationService.GoBackAsync();
+        }
+
+        protected virtual bool CanSave()
+        {
+            return Participants.Count <= MaxParticipantsCount;
         }
 
         #endregion

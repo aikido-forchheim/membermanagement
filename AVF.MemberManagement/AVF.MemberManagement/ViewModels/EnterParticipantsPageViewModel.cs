@@ -93,7 +93,9 @@ namespace AVF.MemberManagement.ViewModels
 
         public override void OnNavigatedFrom(NavigationParameters parameters)
         {
-            IsDirty();
+            if (ShouldCancel) return;
+
+            FillLists();
 
             parameters.Add(NavigationParameter.SelectedTraining, Training);
             parameters.Add("DeletedList", _deletedList);
@@ -164,7 +166,7 @@ namespace AVF.MemberManagement.ViewModels
             }
         }
 
-        public bool IsDirty()
+        public bool FillLists()
         {
             _insertList.Clear();
             _deletedList.Clear();

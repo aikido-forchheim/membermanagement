@@ -79,6 +79,8 @@ namespace AVF.MemberManagement.ViewModels
 
         private void InsertParticipants(List<Mitglied> insertList)
         {
+            if (insertList == null) return;
+
             foreach (var mitglied in insertList)
             {
                 Inserts.Add(mitglied);
@@ -87,6 +89,8 @@ namespace AVF.MemberManagement.ViewModels
 
         private void DeleteParticipants(List<Mitglied> deletedList)
         {
+            if (deletedList == null) return;
+
             foreach (var mitglied in deletedList)
             {
                 Deletes.Add(mitglied);
