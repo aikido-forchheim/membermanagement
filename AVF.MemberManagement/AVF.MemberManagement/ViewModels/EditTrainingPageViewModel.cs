@@ -17,14 +17,6 @@ namespace AVF.MemberManagement.ViewModels
         private readonly IRepository<Mitglied> _mitglieder;
         private readonly IRepository<Training> _trainingsRepository;
 
-        private string _selectedDate;
-
-        public string SelectedDateString
-        {
-            get => _selectedDate;
-            set => SetProperty(ref _selectedDate, value);
-        }
-
         private TrainingsModel _training;
 
         public TrainingsModel SelectedTraining
@@ -81,9 +73,8 @@ namespace AVF.MemberManagement.ViewModels
                 if (parameters.ContainsKey("SelectedTraining"))
                 {
                     SelectedTraining = (TrainingsModel)parameters["SelectedTraining"];
-                    SelectedDateString = (string)parameters["SelectedDateString"];
 
-                    Title = $"{SelectedTraining.Class.Time} ({SelectedTraining.Class.Trainer.FirstName})";
+                    Title = SelectedTraining.Description;
 
                     Annotation = SelectedTraining.Training.Bemerkung; //erst beim weiter zurück an die Bemerkung binden
 
@@ -148,7 +139,7 @@ namespace AVF.MemberManagement.ViewModels
                     await _trainingsRepository.UpdateAsync(SelectedTraining.Training);
                 }
 
-                await NavigationService.NavigateAsync(nameof(SaveParticipantsPage), new NavigationParameters { { "SelectedTraining", SelectedTraining }, { "SelectedDateString", SelectedDateString } });
+                await NavigationService.NavigateAsync(nameof(SaveParticipantsPage), new NavigationParameters { { "SelectedTraining", SelectedTraining } });
             }
             catch (Exception ex)
             {
@@ -171,7 +162,7 @@ namespace AVF.MemberManagement.ViewModels
         {
             try
             {
-                var navigationParameters = new NavigationParameters { { "SelectedDateString", SelectedDateString }, { "SelectedTraining", SelectedTraining }, { "Trainer", Trainer }, { "Cotrainer1", Cotrainer1 }, { "Cotrainer2", Cotrainer2 } };
+                var navigationParameters = new NavigationParameters { { "SelectedTraining", SelectedTraining }, { "Trainer", Trainer }, { "Cotrainer1", Cotrainer1 }, { "Cotrainer2", Cotrainer2 } };
 
                 NavigationService.NavigateAsync(nameof(SelectTrainerPage), navigationParameters);
             }

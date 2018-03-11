@@ -21,15 +21,7 @@ namespace AVF.MemberManagement.ViewModels
         private readonly List<Mitglied> _insertList = new List<Mitglied>();
         private readonly List<Mitglied> _deletedList = new List<Mitglied>();
 
-        #region Aktuelles Datum und Training
-
-        private string _selectedDate;
-
-        public string SelectedDateString
-        {
-            get => _selectedDate;
-            set => SetProperty(ref _selectedDate, value);
-        }
+        #region TrainingsModel
 
         private TrainingsModel _training;
 
@@ -70,11 +62,10 @@ namespace AVF.MemberManagement.ViewModels
 
             Participants.Clear();
 
-            SelectedDateString = (string)parameters["SelectedDateString"];
             Training = (TrainingsModel)parameters["SelectedTraining"];
             ChildrenOnly = Training.Training.Kindertraining;
 
-            Title = $"{Training.Class.Time} ({Training.Class.Trainer.Vorname})";
+            Title = Training.Description;
 
             Mitglieder = await _mitgliederRepository.GetAsync();
             Mitglieder.Sort(CompareMemberNames);

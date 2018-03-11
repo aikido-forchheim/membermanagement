@@ -24,14 +24,6 @@ namespace AVF.MemberManagement.ViewModels
         private readonly IRepository<Training> _trainings;
         private readonly IRepository<TrainingsTeilnahme> _trainingsTeilnahmen;
 
-        private string _selectedDateString;
-
-        public string SelectedDateString
-        {
-            get => _selectedDateString;
-            private set => SetProperty(ref _selectedDateString, value);
-        }
-
         private Wochentag _wochentag;
 
         public Wochentag Wochentag
@@ -88,10 +80,10 @@ namespace AVF.MemberManagement.ViewModels
                 
                 Wochentag = await Globals.GetWochentagFromDayOfWeek(_wochentageRepository, SelectedDate.DayOfWeek);
 
-                SelectedDateString =
+                var selectedDateString =
                     $"{SelectedDate.Day.ToString().PadLeft(2, '0')}.{SelectedDate.Month.ToString().PadLeft(2, '0')}.{SelectedDate.Year} ({Wochentag.Bezeichnung})";
 
-                Title = SelectedDateString;
+                Title = selectedDateString;
 
                 var alleKurse = await _kurseRepository.GetAsync();
                 var trainings = await _trainings.GetAsync();
@@ -133,7 +125,9 @@ namespace AVF.MemberManagement.ViewModels
                     {
                         Class = classModel,
                         Training = training,
-                        Participations = GetParticipantListForTraining(trainingsTeilnahmen, training)
+                        Participations = GetParticipantListForTraining(trainingsTeilnahmen, training),
+                        Date = selectedDateString,
+                        Description = $"{classModel.Time} ({classModel.Trainer.FirstName})"
                     };
 
                     trainigModelsWithoutSort.Add(trainingsModel);
@@ -168,7 +162,7 @@ namespace AVF.MemberManagement.ViewModels
 
         private void EnterParticipants()
         {
-            NavigationService.NavigateAsync(nameof(EditTrainingPage), new NavigationParameters { { "SelectedTraining", SelectedTraining }, { "SelectedDateString", SelectedDateString } });
+            NavigationService.NavigateAsync(nameof(EditTrainingPage), new NavigationParameters { { "SelectedTraining", SelectedTraining } });
         }
 
         private bool CanEnterParticipants()
