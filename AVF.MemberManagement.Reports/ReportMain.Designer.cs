@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.Kurse = new System.Windows.Forms.Button();
             this.Graduierungsliste = new System.Windows.Forms.Button();
@@ -48,10 +47,8 @@
             this.graduierungslisteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mitgliederbeiträgeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MemberFees = new System.Windows.Forms.Button();
-//            this.panelButtons = new System.Windows.Forms.Panel();
             this.panelLoadDb = new System.Windows.Forms.Panel();
             this.menuStrip1.SuspendLayout();
-//            this.panelButtons.SuspendLayout();
             this.panelLoadDb.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -237,21 +234,6 @@
             this.MemberFees.UseVisualStyleBackColor = true;
             this.MemberFees.Click += new System.EventHandler(this.MemberFees_Click);
             // 
-            // panelButtons
-            // 
-/*
-            this.panelButtons.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            this.panelButtons.Controls.Add(this.TrainingsteilnahmeKurse);
-            this.panelButtons.Controls.Add(this.MemberFees);
-            this.panelButtons.Controls.Add(this.TrainingsteilnahmeMonate);
-            this.panelButtons.Controls.Add(this.Graduierungsliste);
-            this.panelButtons.Controls.Add(this.Kurse);
-            this.panelButtons.Location = new System.Drawing.Point(26, 49);
-            this.panelButtons.Name = "panelButtons";
-            this.panelButtons.Size = new System.Drawing.Size(801, 206);
-            this.panelButtons.TabIndex = 10;
-*/
-            // 
             // panelLoadDb
             // 
             this.panelLoadDb.Controls.Add(this.progressBar1);
@@ -269,7 +251,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(839, 756);
             this.Controls.Add(this.panelLoadDb);
-//            this.Controls.Add(this.panelButtons);
             this.Controls.Add(this.menuStrip1);
             this.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::AVF.MemberManagement.Reports.Properties.Settings.Default, "WindowLocation", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.Location = global::AVF.MemberManagement.Reports.Properties.Settings.Default.WindowLocation;
@@ -281,7 +262,6 @@
             this.Load += new System.EventHandler(this.FormMain_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-//            this.panelButtons.ResumeLayout(false);
             this.panelLoadDb.ResumeLayout(false);
             this.panelLoadDb.PerformLayout();
             this.ResumeLayout(false);
@@ -310,7 +290,6 @@
         private System.Windows.Forms.ToolStripMenuItem graduierungslisteToolStripMenuItem;
         private System.Windows.Forms.Button MemberFees;
         private System.Windows.Forms.ToolStripMenuItem mitgliederbeiträgeToolStripMenuItem;
-//        private System.Windows.Forms.Panel panelButtons;
         private System.Windows.Forms.Panel panelLoadDb;
     }
 }

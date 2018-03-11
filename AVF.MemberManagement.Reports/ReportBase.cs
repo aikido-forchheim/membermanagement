@@ -79,9 +79,9 @@ namespace AVF.MemberManagement.Reports
             P_dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             ((System.ComponentModel.ISupportInitialize)(P_dataGridView)).EndInit();
 
-            P_dataGridView.CellMouseClick += new DataGridViewCellMouseEventHandler(delegate(Object sender, DataGridViewCellMouseEventArgs e) { MouseCellEvent(e.RowIndex, e.ColumnIndex, action: true); } );
-            P_dataGridView.CellMouseEnter += new DataGridViewCellEventHandler(delegate (object sender, DataGridViewCellEventArgs e) { ToolTip(e, true); });
-            P_dataGridView.CellMouseLeave += new DataGridViewCellEventHandler(delegate (object sender, DataGridViewCellEventArgs e) { ToolTip(e, false); });
+            P_dataGridView.CellMouseClick += new DataGridViewCellMouseEventHandler(delegate (object sender, DataGridViewCellMouseEventArgs e) { MouseCellEvent(e.RowIndex, e.ColumnIndex, action: true); } );
+            P_dataGridView.CellMouseEnter += new DataGridViewCellEventHandler     (delegate (object sender, DataGridViewCellEventArgs e) { ToolTip(e, true); });
+            P_dataGridView.CellMouseLeave += new DataGridViewCellEventHandler     (delegate (object sender, DataGridViewCellEventArgs e) { ToolTip(e, false); });
 
             Controls.Add(P_dataGridView);
             Controls.Add(P_labelReportName);
@@ -93,7 +93,7 @@ namespace AVF.MemberManagement.Reports
         protected void ToolTip(DataGridViewCellEventArgs e, bool showTip)
         {
             DataGridViewCell cell =
-                RowIsHeader(e.RowIndex)
+                IsHeaderRow(e.RowIndex)
                 ? P_dataGridView.Columns[e.ColumnIndex].HeaderCell
                 : P_dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
 
@@ -113,7 +113,10 @@ namespace AVF.MemberManagement.Reports
             }
         }
 
-        protected bool RowIsHeader(int iRow)
+        protected bool IsHeaderRow(int iRow)
            => iRow < 0;
+
+        protected bool IsSummaryRow(int iRow)
+           => iRow == P_dataGridView.RowCount - 1;
     }
 }

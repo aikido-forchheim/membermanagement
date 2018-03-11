@@ -29,14 +29,11 @@ namespace AVF.MemberManagement.Reports
             var bootstrapper = new Bootstrapper(false);
             bootstrapper.Run();
             P_container = bootstrapper.Container;
-//            panelButtons.BringToFront();
             await Globals.Initialize
             (
                 P_container, 
-                tick: s => { progressBar1.PerformStep(); labelAnimateLoadDb.Text = s;  }
+                tick: s => { progressBar1.PerformStep(); labelAnimateLoadDb.Text = s; }
             );
-//            foreach (Control control in panelButtons.Controls)
-//                control.Enabled = true;
             panelLoadDb.Dispose();
             P_panelActual = new ReportMemberVsCourses(new DateTime(P_iJahr, 1, 1), new DateTime(P_iJahr, 12, 31));
             P_formMain.Controls.Add(P_panelActual);
@@ -92,5 +89,10 @@ namespace AVF.MemberManagement.Reports
 
         private void Export_Click(object sender, EventArgs e)
             => P_panelActual.Export2Excel();
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

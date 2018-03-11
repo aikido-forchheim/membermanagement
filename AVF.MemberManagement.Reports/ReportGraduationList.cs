@@ -106,7 +106,7 @@ namespace AVF.MemberManagement.Reports
                     strTrainingsDone + strTrainingsNeeded
                 );
 
-                ColorizeImportantDates(P_dataGridView.Rows[P_dataGridView.Rows.Count - 1], bestGrad); 
+                ColorizeImportantDates(P_dataGridView.Rows[P_dataGridView.RowCount - 1], bestGrad); 
             }
         }
 
