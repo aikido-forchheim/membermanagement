@@ -216,6 +216,8 @@ namespace AVF.MemberManagement.ViewModels
 
         private void OnStart()
         {
+            if (!CanStart()) return;
+
             if (!IsInitialPassword)
             {
                 var navigationParametersForPasswordPage = new NavigationParameters {{"User", ServerUser}};
