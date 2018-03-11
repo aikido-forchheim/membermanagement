@@ -8,6 +8,7 @@ using System.Windows.Input;
 using Prism.Navigation;
 using AVF.MemberManagement.StandardLibrary.Services;
 using AVF.MemberManagement.StandardLibrary.Enums;
+using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Models;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.Views;
@@ -17,6 +18,8 @@ namespace AVF.MemberManagement.ViewModels
 {
     public class SaveParticipantsPageViewModel : ViewModelBase
     {
+        private readonly IRepository<TrainingsTeilnahme> _trainingsTeilnahmenRepository;
+
         #region TrainingsModel
 
         private TrainingsModel _training;
@@ -57,8 +60,9 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _passThroughMode, value);
         }
 
-        public SaveParticipantsPageViewModel(INavigationService navigationService, ILogger logger) : base(navigationService, logger)
+        public SaveParticipantsPageViewModel(INavigationService navigationService, ILogger logger, IRepository<TrainingsTeilnahme> trainingsTeilnahmenRepository) : base(navigationService, logger)
         {
+            _trainingsTeilnahmenRepository = trainingsTeilnahmenRepository;
             DontSaveCommand = new DelegateCommand(DontSave, CanDontSave);
             SaveCommand = new DelegateCommand(Save, CanSave);
         }
@@ -138,18 +142,60 @@ namespace AVF.MemberManagement.ViewModels
 
         public ICommand SaveCommand { get; }
 
-        private void Save()
+        private async void Save()
         {
-            foreach (var delete in Deletes)
+            var trainingsTeilnahmen = await _trainingsTeilnahmenRepository.GetAsync();
+
+            foreach (var memberToDeleteFromTraining in Deletes)
             {
-                //Get from TrainingsTeilnahmen with Mitglied.Id and Training.Id
-                //so we need the Training here
+                try
+                {
+                    var trainingsTeilnahmenQuery= trainingsTeilnahmen.Where(t => t.MitgliedID == memberToDeleteFromTraining.Id && t.TrainingID == Training.Training.Id);
+
+                    var teilnahmenQuery = trainingsTeilnahmenQuery.ToList();
+                    if (!teilnahmenQuery.Any()) continue;
+
+                    var participationToDelete = teilnahmenQuery.Single();
+
+                    await _trainingsTeilnahmenRepository.DeleteAsync(participationToDelete);
+
+                    //var participationsQuery = Training.Participations.Where(t => t.MitgliedID == memberToDeleteFromTraining.Id && t.TrainingID == Training.Training.Id);
+
+                    //if (participationsQuery.Any())
+                    //{
+                    //    var participationFromTrainingToDelete = participationsQuery.Single();
+                    //    Training.Participations.
+                    //}
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError(e.ToString());
+                }
             }
 
-            foreach (var insert in Inserts)
+            foreach (var memberToInsertToTraining in Inserts)
             {
-                
+                try
+                {
+                    var trainingsTeilnahme = new TrainingsTeilnahme
+                    {
+                        MitgliedID = memberToInsertToTraining.Id,
+                        TrainingID = Training.Training.Id,
+                        DatensatzAngelegtAm = DateTime.Now,
+                        DatensatzAngelegtVon = Globals.User.Id,
+                        DatensatzGeaendertAm = DateTime.Now,
+                        DatensatzGeaendertVon = Globals.User.Id
+                    };
+
+                    await _trainingsTeilnahmenRepository.CreateAsync(trainingsTeilnahme);
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError(e.ToString());
+                }
             }
+
+            await NavigationService.GoBackAsync();
         }
 
         private bool CanSave()

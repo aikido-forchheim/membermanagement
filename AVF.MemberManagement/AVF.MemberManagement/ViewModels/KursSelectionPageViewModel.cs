@@ -113,8 +113,8 @@ namespace AVF.MemberManagement.ViewModels
                             KursID = kurs.Id,
                             DatensatzAngelegtAm = DateTime.Now,
                             DatensatzGeaendertAm = DateTime.Now,
-                            DatensatzAngelegtVon = 1, //TODO: User logged in MemberId
-                            DatensatzGeaendertVon = 1,
+                            DatensatzAngelegtVon = Globals.User.Id,
+                            DatensatzGeaendertVon = Globals.User.Id,
                             WochentagID = kurs.WochentagID,
                             DauerMinuten = kurs.DauerMinuten,
                             Bemerkung = string.Empty
