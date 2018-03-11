@@ -195,6 +195,9 @@ namespace AVF.MemberManagement.ViewModels
                 }
             }
 
+            Training.Participations =
+                KursSelectionPageViewModel.GetParticipantListForTraining(trainingsTeilnahmen, Training.Training);
+
             await NavigationService.GoBackAsync();
         }
 

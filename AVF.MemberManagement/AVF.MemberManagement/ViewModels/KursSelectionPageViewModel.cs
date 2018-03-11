@@ -172,7 +172,7 @@ namespace AVF.MemberManagement.ViewModels
 
         #endregion
 
-        private static IEnumerable<TrainingsTeilnahme> GetParticipantListForTraining(IEnumerable<TrainingsTeilnahme> appearances, Training training)
+        public static IEnumerable<TrainingsTeilnahme> GetParticipantListForTraining(IEnumerable<TrainingsTeilnahme> appearances, Training training)
         {
             IEnumerable<TrainingsTeilnahme> participations;
 
