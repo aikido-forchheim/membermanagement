@@ -31,7 +31,7 @@ namespace AVF.MemberManagement.Reports
             P_labelReportName.Text = "Trainingsteilnahme";
             P_labelZeitraum.Text = Globals.GetTimeRangeDescription(P_datStart, P_datEnd);
             P_axisTypeMember = new AxisTypeMember(P_datStart, P_datEnd);
-            P_dataGridView.Sorted      += new EventHandler(delegate (object s, EventArgs e) { Sorted(s, e); });
+            P_dataGridView.Sorted += new EventHandler(delegate (object s, EventArgs e) { Sorted(s, e); });
         }
 
         protected void CreateModel

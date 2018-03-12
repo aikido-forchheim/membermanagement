@@ -1,7 +1,9 @@
 ﻿using System;
-using System.Threading.Tasks;
+using System.Diagnostics;
 using System.Windows.Forms;
+using System.Threading.Tasks;
 using Microsoft.Practices.Unity;
+using System.Collections.Generic;
 using AVF.MemberManagement.xUnitIntegrationTests;
 using AVF.MemberManagement.ReportsBusinessLogic;
 using AVF.MemberManagement.Reports.Properties;
@@ -10,10 +12,9 @@ namespace AVF.MemberManagement.Reports
 {
     public partial class ReportMain : Form
     {
-        private static IUnityContainer P_container;
+        private UndoRedoStack m_UndoRedo;
 
-        private static ReportBase P_panelActual;
-        private static Form P_formMain;
+        public static ReportMain P_formMain { set; get; }
 
         private int P_iJahr = 2017;
 
@@ -26,6 +27,7 @@ namespace AVF.MemberManagement.Reports
 
         private async Task InitDatabase()
         {
+            IUnityContainer P_container;
             var bootstrapper = new Bootstrapper(false);
             bootstrapper.Run();
             P_container = bootstrapper.Container;
@@ -35,16 +37,13 @@ namespace AVF.MemberManagement.Reports
                 tick: s => { progressBar1.PerformStep(); labelAnimateLoadDb.Text = s; }
             );
             panelLoadDb.Dispose();
-            P_panelActual = new ReportMemberVsCourses(new DateTime(P_iJahr, 1, 1), new DateTime(P_iJahr, 12, 31));
-            P_formMain.Controls.Add(P_panelActual);
+            m_UndoRedo = new UndoRedoStack(P_formMain, buttonUndo, buttonRedo);
+            m_UndoRedo.Add(new ReportMemberVsCourses(new DateTime(P_iJahr, 1, 1), new DateTime(P_iJahr, 12, 31)));
         }
 
-        public static string SwitchToPanel(ReportBase panelNew )
+        public string SwitchToPanel(ReportBase panelNew )
         {
-            P_formMain.Controls.Remove(P_panelActual);
-            P_panelActual.Dispose();
-            P_panelActual = panelNew;
-            P_formMain.Controls.Add(P_panelActual);
+            m_UndoRedo.Add(panelNew);
             return String.Empty;
         }
 
@@ -88,11 +87,12 @@ namespace AVF.MemberManagement.Reports
             => Application.Exit();
 
         private void Export_Click(object sender, EventArgs e)
-            => P_panelActual.Export2Excel();
+            => m_UndoRedo.GetActualReport().Export2Excel();
 
-        private void toolStripButton1_Click(object sender, EventArgs e)
-        {
+        private void Undo_Click(object sender, EventArgs e)
+            => m_UndoRedo.Undo();
 
-        }
+        private void Redo_Click(object sender, EventArgs e)
+            => m_UndoRedo.Redo();
     }
 }

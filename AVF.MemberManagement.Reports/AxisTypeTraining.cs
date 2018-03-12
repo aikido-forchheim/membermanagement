@@ -28,7 +28,7 @@ namespace AVF.MemberManagement.Reports
             Debug.Assert(idTraining > 0);
             Training training = Globals.DatabaseWrapper.TrainingFromId(idTraining);
             return action
-               ? ReportMain.SwitchToPanel(new ReportTraining(training))
+               ? ReportMain.P_formMain.SwitchToPanel(new ReportTraining(training))
                : $"Klicken für Details zum Training " + GetFullDesc(training.Id, '.');
         }
 

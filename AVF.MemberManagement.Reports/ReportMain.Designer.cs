@@ -48,6 +48,8 @@
             this.mitgliederbeiträgeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MemberFees = new System.Windows.Forms.Button();
             this.panelLoadDb = new System.Windows.Forms.Panel();
+            this.buttonUndo = new System.Windows.Forms.Button();
+            this.buttonRedo = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.panelLoadDb.SuspendLayout();
             this.SuspendLayout();
@@ -189,14 +191,14 @@
             // monateToolStripMenuItem
             // 
             this.monateToolStripMenuItem.Name = "monateToolStripMenuItem";
-            this.monateToolStripMenuItem.Size = new System.Drawing.Size(157, 30);
+            this.monateToolStripMenuItem.Size = new System.Drawing.Size(210, 30);
             this.monateToolStripMenuItem.Text = "Monate";
             this.monateToolStripMenuItem.Click += new System.EventHandler(this.Trainingsteilnahme_Monate_Click);
             // 
             // kurseToolStripMenuItem1
             // 
             this.kurseToolStripMenuItem1.Name = "kurseToolStripMenuItem1";
-            this.kurseToolStripMenuItem1.Size = new System.Drawing.Size(157, 30);
+            this.kurseToolStripMenuItem1.Size = new System.Drawing.Size(210, 30);
             this.kurseToolStripMenuItem1.Text = "Kurse";
             this.kurseToolStripMenuItem1.Click += new System.EventHandler(this.Trainingsteilnahme_Kurse_Click);
             // 
@@ -245,14 +247,42 @@
             this.panelLoadDb.Size = new System.Drawing.Size(819, 703);
             this.panelLoadDb.TabIndex = 11;
             // 
+            // buttonUndo
+            // 
+            this.buttonUndo.AutoSize = true;
+            this.buttonUndo.Enabled = false;
+            this.buttonUndo.Image = global::AVF.MemberManagement.Reports.Properties.Resources.Undo_16x_32;
+            this.buttonUndo.Location = new System.Drawing.Point(192, 14);
+            this.buttonUndo.Name = "buttonUndo";
+            this.buttonUndo.Size = new System.Drawing.Size(22, 23);
+            this.buttonUndo.TabIndex = 8;
+            this.buttonUndo.UseMnemonic = false;
+            this.buttonUndo.UseVisualStyleBackColor = true;
+            this.buttonUndo.Click += new System.EventHandler(this.Undo_Click);
+            // 
+            // buttonRedo
+            // 
+            this.buttonRedo.AutoSize = true;
+            this.buttonRedo.Enabled = false;
+            this.buttonRedo.Image = global::AVF.MemberManagement.Reports.Properties.Resources.Redo_16x_32;
+            this.buttonRedo.Location = new System.Drawing.Point(220, 14);
+            this.buttonRedo.Name = "buttonRedo";
+            this.buttonRedo.Size = new System.Drawing.Size(26, 23);
+            this.buttonRedo.TabIndex = 12;
+            this.buttonRedo.UseVisualStyleBackColor = true;
+            this.buttonRedo.Click += new System.EventHandler(this.Redo_Click);
+            // 
             // ReportMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(839, 756);
+            this.Controls.Add(this.buttonRedo);
+            this.Controls.Add(this.buttonUndo);
             this.Controls.Add(this.panelLoadDb);
             this.Controls.Add(this.menuStrip1);
             this.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::AVF.MemberManagement.Reports.Properties.Settings.Default, "WindowLocation", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.KeyPreview = true;
             this.Location = global::AVF.MemberManagement.Reports.Properties.Settings.Default.WindowLocation;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "ReportMain";
@@ -291,5 +321,7 @@
         private System.Windows.Forms.Button MemberFees;
         private System.Windows.Forms.ToolStripMenuItem mitgliederbeiträgeToolStripMenuItem;
         private System.Windows.Forms.Panel panelLoadDb;
+        private System.Windows.Forms.Button buttonUndo;
+        private System.Windows.Forms.Button buttonRedo;
     }
 }

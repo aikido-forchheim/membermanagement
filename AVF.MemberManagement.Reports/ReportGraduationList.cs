@@ -120,7 +120,7 @@ namespace AVF.MemberManagement.Reports
                 DateTime datValidData = Globals.DatabaseWrapper.GetStartValidData();
                 DateTime dateStart    = (datValidData <= dateGrad) ? dateGrad : datValidData;
                 return action
-                    ? ReportMain.SwitchToPanel(new ReportMonthsVsCourses(dateStart, DateTime.Now, idMember))
+                    ? ReportMain.P_formMain.SwitchToPanel(new ReportMonthsVsCourses(dateStart, DateTime.Now, idMember))
                     : $"Klicken für Details zu Mitglied\n" + P_axisTypeMember.GetFullDesc(idMember);
             }
             else

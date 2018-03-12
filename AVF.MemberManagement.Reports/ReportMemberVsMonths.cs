@@ -21,7 +21,7 @@ namespace AVF.MemberManagement.Reports
 
         protected override string MouseMainDataAreaCellEvent(DateTime datStart, DateTime datEnd, int idMember, int idMonth, bool action)
             => action
-                ? ReportMain.SwitchToPanel(new ReportTrainingsVsCourses(P_datStart, P_datEnd, idMonth))
+                ? ReportMain.P_formMain.SwitchToPanel(new ReportTrainingsVsCourses(P_datStart, P_datEnd, idMonth))
                 : $"Klicken für Details zur Teilnahme von\n"
                      + P_axisTypeMember.GetFullDesc(idMember)
                      + $" im Monat\n"

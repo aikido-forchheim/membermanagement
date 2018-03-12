@@ -34,7 +34,7 @@ namespace AVF.MemberManagement.Reports
 
         public override string MouseAxisEvent(int idWeek, bool action)
            => action
-               ? ReportMain.SwitchToPanel(ReportWeek.GetReport( P_datStart.Year, Globals.GetWeekOfYear(P_datStart) + idWeek ))
+               ? ReportMain.P_formMain.SwitchToPanel(ReportWeek.GetReport( P_datStart.Year, Globals.GetWeekOfYear(P_datStart) + idWeek ))
                : $"Klicken für Details zur Woche " + GetDescription(idWeek);
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
