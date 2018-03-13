@@ -105,6 +105,13 @@
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="NavigationParameter.cs" />
     <Compile Include="ViewModels\FindMembersViewModelBase.cs" />
+    <Compile Include="Views\MainMasterDetailPage.xaml.cs">
+      <DependentUpon>MainMasterDetailPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MenuPage.xaml.cs">
+      <DependentUpon>MenuPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\MenuPageViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App.xaml">
@@ -115,6 +122,14 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <EmbeddedResource Include="UserControls\MemberView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\MainMasterDetailPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\MenuPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>

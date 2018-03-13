@@ -35,7 +35,8 @@ namespace AVF.MemberManagement
 
             Globals.Idiom = (Idiom)(int)Device.Idiom;
 
-            await NavigationService.NavigateAsync("NavigationPage/MainPage");
+            //await NavigationService.NavigateAsync("NavigationPage/MainPage");
+            await NavigationService.NavigateAsync("MainMasterDetailPage");
         }
 
         protected override void RegisterTypes()
@@ -83,6 +84,8 @@ namespace AVF.MemberManagement
             //RefreshCache().Wait();
             //RefreshCache(); //UWP
 
+            Container.RegisterTypeForNavigation<MainMasterDetailPage>();
+            Container.RegisterTypeForNavigation<MenuPage>();
             Container.RegisterTypeForNavigation<NavigationPage>();
             Container.RegisterTypeForNavigation<MainPage>();
             Container.RegisterTypeForNavigation<RestApiSettingsPage>();
