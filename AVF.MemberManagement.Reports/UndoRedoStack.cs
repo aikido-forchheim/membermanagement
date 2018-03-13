@@ -1,97 +1,60 @@
-﻿using System.Diagnostics;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using System.Collections.Generic;
 
 namespace AVF.MemberManagement.Reports
 {
     class UndoRedoStack
     {
-        private int              m_UndoRedoIndex;
-        private List<ReportBase> m_UndoRedoStack;
-        private Form             m_formParent;
-        private Control          m_ctrlUndo;
-        private Control          m_ctrlRedo;
+        public ReportBase P_reportActual { get; private set; }
 
-        public UndoRedoStack(Form formParent, Control ctrlUndo, Control ctrlRedo)
+        private Stack<ReportBase> m_UndoStack;
+        private Stack<ReportBase> m_RedoStack;
+        private Form              m_formParent;
+        private Control           m_ctrlUndo;
+        private Control           m_ctrlRedo;
+
+        public UndoRedoStack(Form formParent, Control ctrlUndo, Control ctrlRedo, ReportBase reportActual)
         {
             m_formParent = formParent;
             m_ctrlUndo = ctrlUndo;
             m_ctrlRedo = ctrlRedo;
-            m_UndoRedoStack = new List<ReportBase>();
-            m_UndoRedoIndex = -1;
+            m_RedoStack = new Stack<ReportBase>();
+            m_UndoStack = new Stack<ReportBase>();
+            SwitchTo(reportActual);
         }
 
-        public void Add(ReportBase panelNew)
+        public void Add(ReportBase reportNew)
         {
-            if (!IsEmpty())
-            {
-                SkipTail();
-                UnLoad();
-            }
-            m_UndoRedoStack.Add(panelNew);
-            IncUndoRedoIndex();
-            Load();
+            m_RedoStack.Clear();  // Once we issue a new report, the redo stack clears 
+            m_UndoStack.Push(P_reportActual);
+            SwitchTo(reportNew);
         }
 
         public void Undo()
         {
-            if (!IsAtStart())
+            if (m_UndoStack.Count > 0)
             {
-                UnLoad();
-                DecUndoRedoIndex();
-                Load();
+                m_RedoStack.Push(P_reportActual);
+                SwitchTo(m_UndoStack.Pop());
             }
         }
 
         public void Redo()
         {
-            if (!IsAtEnd())
+            if (m_RedoStack.Count > 0)
             {
-                UnLoad();
-                IncUndoRedoIndex();
-                Load();
+                m_UndoStack.Push(P_reportActual);
+                SwitchTo(m_RedoStack.Pop());
             }
         }
 
-        public ReportBase GetActualReport()
-            => m_UndoRedoStack[m_UndoRedoIndex];
-
-        private void Load()
-            => m_formParent.Controls.Add(GetActualReport());
-
-        private void UnLoad()
-            => m_formParent.Controls.Remove(GetActualReport());
-
-        private bool IsEmpty()
-            => m_UndoRedoIndex < 0;
-
-        private bool IsAtStart()
-            => m_UndoRedoIndex == 0;
-
-        private bool IsAtEnd()
-            => m_UndoRedoIndex == m_UndoRedoStack.Count - 1;
-
-        private void SkipTail()
-            => m_UndoRedoStack.RemoveRange(m_UndoRedoIndex + 1, m_UndoRedoStack.Count - m_UndoRedoIndex - 1);
-
-        private void SetControls()
+        private void SwitchTo(ReportBase reportNew)
         {
-            m_ctrlRedo.Enabled = !IsAtEnd();
-            m_ctrlUndo.Enabled = !IsAtStart();
-        }
-
-        private void IncUndoRedoIndex()
-        {
-            Debug.Assert(!IsAtEnd());
-            m_UndoRedoIndex++;
-            SetControls();
-        }
-
-        private void DecUndoRedoIndex()
-        {
-            Debug.Assert(!IsAtStart());
-            m_UndoRedoIndex--;
-            SetControls();
+            m_formParent.Controls.Remove(P_reportActual);
+            P_reportActual = reportNew;
+            m_formParent.Controls.Add(P_reportActual);
+            m_ctrlRedo.Enabled = m_RedoStack.Count > 0;
+            m_ctrlUndo.Enabled = m_UndoStack.Count > 0;
         }
     }
 }

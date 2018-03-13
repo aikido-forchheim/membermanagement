@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 using Microsoft.Practices.Unity;
-using System.Collections.Generic;
 using AVF.MemberManagement.xUnitIntegrationTests;
 using AVF.MemberManagement.ReportsBusinessLogic;
 using AVF.MemberManagement.Reports.Properties;
@@ -37,8 +35,7 @@ namespace AVF.MemberManagement.Reports
                 tick: s => { progressBar1.PerformStep(); labelAnimateLoadDb.Text = s; }
             );
             panelLoadDb.Dispose();
-            m_UndoRedo = new UndoRedoStack(P_formMain, buttonUndo, buttonRedo);
-            m_UndoRedo.Add(new ReportMemberVsCourses(new DateTime(P_iJahr, 1, 1), new DateTime(P_iJahr, 12, 31)));
+            m_UndoRedo = new UndoRedoStack(P_formMain, buttonUndo, buttonRedo, new ReportMemberVsCourses(new DateTime(P_iJahr, 1, 1), new DateTime(P_iJahr, 12, 31)));
         }
 
         public string SwitchToPanel(ReportBase panelNew )
@@ -87,7 +84,7 @@ namespace AVF.MemberManagement.Reports
             => Application.Exit();
 
         private void Export_Click(object sender, EventArgs e)
-            => m_UndoRedo.GetActualReport().Export2Excel();
+            => m_UndoRedo.P_reportActual.Export2Excel();
 
         private void Undo_Click(object sender, EventArgs e)
             => m_UndoRedo.Undo();
