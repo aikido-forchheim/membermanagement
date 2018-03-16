@@ -36,22 +36,25 @@ namespace AVF.MemberManagement.Reports
 
         public override string GetDescription(int idMember, int iNr)
         {
-            Mitglied mitglied = Globals.DatabaseWrapper.MitgliedFromId(idMember);
-
-            switch ( iNr )
+            if (idMember > 0)
             {
-                case 0:
-                    return $"MitgliedNr. {mitglied.Id}";
+                Mitglied mitglied = Globals.DatabaseWrapper.MitgliedFromId(idMember);
 
-                case 1:
-                    return $"{mitglied.Vorname}";
+                switch (iNr)
+                {
+                    case 0:
+                        return $"MitgliedNr. {mitglied.Id}";
 
-                case 2:
-                    return $"{mitglied.Nachname}";
+                    case 1:
+                        return $"{mitglied.Vorname}";
 
-                default:
-                    Debug.Assert(false);
-                    break;
+                    case 2:
+                        return $"{mitglied.Nachname}";
+
+                    default:
+                        Debug.Assert(false);
+                        break;
+                }
             }
             return String.Empty;
         }

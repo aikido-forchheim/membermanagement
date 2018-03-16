@@ -191,14 +191,14 @@
             // monateToolStripMenuItem
             // 
             this.monateToolStripMenuItem.Name = "monateToolStripMenuItem";
-            this.monateToolStripMenuItem.Size = new System.Drawing.Size(210, 30);
+            this.monateToolStripMenuItem.Size = new System.Drawing.Size(157, 30);
             this.monateToolStripMenuItem.Text = "Monate";
             this.monateToolStripMenuItem.Click += new System.EventHandler(this.Trainingsteilnahme_Monate_Click);
             // 
             // kurseToolStripMenuItem1
             // 
             this.kurseToolStripMenuItem1.Name = "kurseToolStripMenuItem1";
-            this.kurseToolStripMenuItem1.Size = new System.Drawing.Size(210, 30);
+            this.kurseToolStripMenuItem1.Size = new System.Drawing.Size(157, 30);
             this.kurseToolStripMenuItem1.Text = "Kurse";
             this.kurseToolStripMenuItem1.Click += new System.EventHandler(this.Trainingsteilnahme_Kurse_Click);
             // 

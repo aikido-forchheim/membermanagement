@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.Office.Interop.Excel;
-using AVF.MemberManagement.BusinessLogic;
+using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Console
 {

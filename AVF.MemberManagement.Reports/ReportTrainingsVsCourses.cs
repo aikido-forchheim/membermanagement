@@ -15,7 +15,7 @@ namespace AVF.MemberManagement.Reports
                 filter: tn => true
             );
 
-            P_Info0.Text = "Monat:";
+            P_labelMonat.Text = "Monat:" + new AxisTypeMonth(datStart, datEnd).GetDescription(idMonth);
             ReportFormPopulate();
         }
     }

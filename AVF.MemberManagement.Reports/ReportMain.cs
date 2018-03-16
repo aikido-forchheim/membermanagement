@@ -35,7 +35,8 @@ namespace AVF.MemberManagement.Reports
                 tick: s => { progressBar1.PerformStep(); labelAnimateLoadDb.Text = s; }
             );
             panelLoadDb.Dispose();
-            m_UndoRedo = new UndoRedoStack(P_formMain, buttonUndo, buttonRedo, new ReportMemberVsCourses(new DateTime(P_iJahr, 1, 1), new DateTime(P_iJahr, 12, 31)));
+            m_UndoRedo = new ReportsUndoRedo(P_formMain);
+            m_UndoRedo.SwitchTo(new ReportMemberVsCourses(new DateTime(P_iJahr, 1, 1), new DateTime(P_iJahr, 12, 31)));
         }
 
         public string SwitchToPanel(ReportBase panelNew )
@@ -55,12 +56,12 @@ namespace AVF.MemberManagement.Reports
 
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Settings.Default.WindowLocation = this.Location;   // Copy window location to app settings
+            Settings.Default.WindowLocation = Location;   // Copy window location to app settings
             
             Settings.Default.WindowSize =                     // Copy window size to app settings
-                (this.WindowState == FormWindowState.Normal) 
-                ? this.Size 
-                : this.RestoreBounds.Size;
+                (WindowState == FormWindowState.Normal) 
+                ? Size 
+                : RestoreBounds.Size;
             
             Settings.Default.Save();         // Save settings
         }
@@ -72,7 +73,7 @@ namespace AVF.MemberManagement.Reports
              => SwitchToPanel(new ReportCoursesVsMonths(new DateTime(P_iJahr, 1, 1), new DateTime(P_iJahr, 12, 31), -1));
 
         private void Trainingsteilnahme_Monate_Click(object sender, EventArgs e)
-             => SwitchToPanel(new ReportMemberVsMonths(new DateTime(P_iJahr, 1, 1), new DateTime(P_iJahr, 12, 31)));
+             => SwitchToPanel(new ReportMemberVsMonths(new DateTime(P_iJahr, 1, 1), new DateTime(P_iJahr, 12, 31), -1 ));
 
         private void Gradierungsliste_Click(object sender, EventArgs e)
              => SwitchToPanel(new ReportGraduationList());
@@ -91,5 +92,11 @@ namespace AVF.MemberManagement.Reports
 
         private void Redo_Click(object sender, EventArgs e)
             => m_UndoRedo.Redo();
+
+        public void UndoEnabled(bool state)
+            => buttonUndo.Enabled = state;
+
+        public void RedoEnabled(bool state)
+            => buttonRedo.Enabled = state;
     }
 }

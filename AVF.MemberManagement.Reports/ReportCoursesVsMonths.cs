@@ -15,7 +15,7 @@ namespace AVF.MemberManagement.Reports
                 filter: tn => (idMember == -1) ? true : (idMember == tn.MitgliedID)
             );
 
-            P_Info0.Text = P_axisTypeMember.GetFullDesc(idMember);
+            P_labelMember.Text = P_axisTypeMember.GetFullDesc(idMember);
             ReportFormPopulate();
         }
     }

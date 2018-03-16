@@ -95,6 +95,7 @@
     <Compile Include="ReportMonthsVsCourses.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ReportsUndoRedo.cs" />
     <Compile Include="ReportTrainingsParticipation.cs">
       <SubType>Component</SubType>
     </Compile>

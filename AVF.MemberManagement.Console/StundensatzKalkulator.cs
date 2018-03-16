@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Tbo;
-using AVF.MemberManagement.BusinessLogic;
+using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Console
 {
@@ -160,9 +160,9 @@ namespace AVF.MemberManagement.Console
             }
         }
 
-        private TrainerVerguetung[] InitTrData( DatabaseWrapper db )
+        private TrainerVerguetung[] InitTrData( )
         {
-            TrainerVerguetung[] aTrData = new TrainerVerguetung[db.MaxMitgliedsNr() + 1];
+            TrainerVerguetung[] aTrData = new TrainerVerguetung[Globals.DatabaseWrapper.MaxMitgliedsNr() + 1];
 
             for (int i = 0; i < aTrData.Length; i++)
             {
@@ -172,17 +172,17 @@ namespace AVF.MemberManagement.Console
             return aTrData;
         }
 
-        internal async Task Main( DatabaseWrapper db, int iJahr )
+        internal async Task Main( int iJahr )
         {
-            m_aTrData = InitTrData( db );
+            m_aTrData = InitTrData();
 
-            var trainingsInPeriod = db.TrainingsInPeriod( -1, iJahr );
-            var trainerAward = new TrainerAward(db);
+            var trainingsInPeriod = Globals.DatabaseWrapper.TrainingsInPeriod( -1, iJahr );
+            var trainerAward = new TrainerAward();
 
             // Create summary account
 
             {
-                OutputTarget oTarget = new OutputTarget( @"Trainerverguetung.txt", db );
+                OutputTarget oTarget = new OutputTarget( @"Trainerverguetung.txt" );
 
                 SettlePeriod(trainerAward, oTarget, null, trainingsInPeriod, false );
 
@@ -192,7 +192,7 @@ namespace AVF.MemberManagement.Console
 
                 TrainerVerguetung tvSum = new TrainerVerguetung(0, 0, 0);
 
-                foreach (Mitglied mitglied in db.m_mitglieder)
+                foreach (Mitglied mitglied in Globals.DatabaseWrapper.P_mitglieder)
                 {
                     TrainerVerguetung tv = m_aTrData[mitglied.Id];
 
@@ -217,11 +217,11 @@ namespace AVF.MemberManagement.Console
 
          // Create individual accounts
 
-            foreach ( Mitglied mitglied in db.m_mitglieder )
+            foreach ( Mitglied mitglied in Globals.DatabaseWrapper.P_mitglieder )
             {
                 if ( ! m_aTrData[mitglied.Id].IsEmpty( ) )    // filled by summary account calculation if trainer
                 {
-                    OutputTarget oTarget = new OutputTarget( $"{ mitglied.Nachname }_{ mitglied.Vorname }.txt  ", db );
+                    OutputTarget oTarget = new OutputTarget( $"{ mitglied.Nachname }_{ mitglied.Vorname }.txt  " );
 
                     oTarget.WriteLine( $"{ mitglied.Nachname,-10 } { mitglied.Vorname,-10 } MitgliedsNr. ({ mitglied.Id,3 }) ") ;
                     oTarget.WriteLine();
@@ -249,8 +249,8 @@ namespace AVF.MemberManagement.Console
                     oTarget.WriteLine("3 - Zweiter Kotrainer");
                     oTarget.WriteLine();
                     oTarget.WriteLine("TS: Trainerstufe");
-                    for (int i = 1; i <= db.MaxTrainerstufe; i++)
-                        oTarget.WriteLine( $"{ i } - { db.Trainerstufe( i )}" );
+                    for (int i = 1; i <= Globals.DatabaseWrapper.MaxTrainerstufe; i++)
+                        oTarget.WriteLine( $"{ i } - { Globals.DatabaseWrapper.Trainerstufe( i )}" );
 
                     oTarget.CloseAndReset2Console();
                 }

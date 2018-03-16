@@ -15,7 +15,7 @@ namespace AVF.MemberManagement.Reports
                 filter: tn => true
             );
 
-            P_Info0.Text = P_axisTypeMember.GetFullDesc(-1);   // -1: all members
+            P_labelMember.Text = P_axisTypeMember.GetFullDesc(-1);   // -1: all members
             ReportFormPopulate();
         }
 

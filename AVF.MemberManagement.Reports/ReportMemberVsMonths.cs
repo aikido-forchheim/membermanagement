@@ -1,10 +1,11 @@
 ﻿using System;
+using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
     class ReportMemberVsMonths : ReportTrainingsParticipation
     {
-        public ReportMemberVsMonths(DateTime datStart, DateTime datEnd)
+        public ReportMemberVsMonths(DateTime datStart, DateTime datEnd, int idKurs)
             : base(datStart, datEnd)
         {
             CreateModel
@@ -12,10 +13,11 @@ namespace AVF.MemberManagement.Reports
                 bHide: false,
                 new AxisTypeMonth(P_datStart, P_datEnd),
                 new AxisTypeMember(P_datStart, P_datEnd),
-                filter: tn => true
+                filter: tn => (idKurs == -1) ? true : (idKurs == Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID))
             );
 
-            P_Info0.Text = P_axisTypeMember.GetFullDesc(-1);   // -1: all members
+            P_labelMember.Text = P_axisTypeMember.GetFullDesc(-1);   // -1: all members
+            SetupCourseSelector(idKurs);
             ReportFormPopulate();
         }
 

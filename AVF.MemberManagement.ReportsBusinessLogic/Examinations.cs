@@ -36,11 +36,11 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 
     public static class Examinations
     {
-        public static Examination[] GetListOfExaminations(DatabaseWrapper db, Mitglied member )
+        public static Examination[] GetListOfExaminations( Mitglied member )
         {
             var examinations = new List<Pruefung>();
 
-            foreach (Pruefung pruefung in db.P_pruefung)
+            foreach (Pruefung pruefung in Globals.DatabaseWrapper.P_pruefung)
             {
                 if (pruefung.Pruefling == member.Id)
                 {

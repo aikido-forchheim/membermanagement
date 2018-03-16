@@ -30,19 +30,30 @@ namespace AVF.MemberManagement.Reports
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID);
 
-        public override string GetDescription(int idKurs, int iNr = 1)
+        public static string GetDesc(int idKurs)
         {
-            Kurs kurs = Globals.DatabaseWrapper.KursFromId(idKurs);
-
-            if (kurs.Zeit == TimeSpan.Zero)
+            if (idKurs < 0)
             {
-                return $"_Lehrg. etc.";
+                return "Alle Kurse";
             }
             else
             {
-                string day = Globals.DatabaseWrapper.WeekDay(kurs.WochentagID).Substring(0, 2);
-                return $"{ day } {kurs.Zeit:hh}:{kurs.Zeit:mm}";
+                Kurs kurs = Globals.DatabaseWrapper.KursFromId(idKurs);
+
+                if (kurs.Zeit == TimeSpan.Zero)
+                {
+                    return $"_Lehrg. etc.";
+                }
+                else
+                {
+                    string day = Globals.DatabaseWrapper.WeekDay(kurs.WochentagID).Substring(0, 2);
+                    return $"{ day } {kurs.Zeit:hh}:{kurs.Zeit:mm}";
+                }
+
             }
         }
+
+        public override string GetDescription(int idKurs, int iNr = 1)
+            => GetDesc(idKurs);
     }
 }

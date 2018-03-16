@@ -12,47 +12,82 @@ namespace AVF.MemberManagement.Reports
             // 
             // P_labelZeitraum
             // 
-            this.P_labelZeitraum = new System.Windows.Forms.Label();
-            this.P_labelZeitraum.AutoSize = true;
-            this.P_labelZeitraum.Font = P_font;
-            this.P_labelZeitraum.Location = new System.Drawing.Point(500, 30);
-            this.P_labelZeitraum.Name = "P_labelZeitraum";
-            this.P_labelZeitraum.TabIndex = 2;
+            P_labelZeitraum = new System.Windows.Forms.Label();
+            P_labelZeitraum.AutoSize = true;
+            P_labelZeitraum.Font = P_font;
+            P_labelZeitraum.Location = new System.Drawing.Point(500, 30);
+            P_labelZeitraum.Name = "P_labelZeitraum";
+            P_labelZeitraum.TabIndex = 1;
             // 
-            // P_Info0
+            // P_labelMember
             // 
-            this.P_Info0 = new System.Windows.Forms.Label();
-            this.P_Info0.AutoSize = true;
-            this.P_Info0.Font = P_font;
-            this.P_Info0.Location = new System.Drawing.Point(20, 70);
-            this.P_Info0.Name = "P_Info0";
-            this.P_Info0.TabIndex = 3;
+            P_labelMember = new System.Windows.Forms.Label();
+            P_labelMember.AutoSize = true;
+            P_labelMember.Font = P_font;
+            P_labelMember.Location = new System.Drawing.Point(20, 70);
+            P_labelMember.Name = "P_labelMember";
+            P_labelMember.TabIndex =2;
             // 
-            // P_Info1
+            // P_labelKurs
             // 
-            this.P_Info1 = new System.Windows.Forms.Label();
-            this.P_Info1.AutoSize = true;
-            this.P_Info1.Font = P_font;
-            this.P_Info1.Location = new System.Drawing.Point(500, 70);
-            this.P_Info1.Name = "P_Info1";
-            this.P_Info1.TabIndex = 4;
+            P_labelKurs = new System.Windows.Forms.Label();
+            P_labelKurs.AutoSize = true;
+            P_labelKurs.Font = P_font;
+            P_labelKurs.Location = new System.Drawing.Point(20, 100);
+            P_labelKurs.Name = "P_labelKurs";
+            P_labelKurs.TabIndex = 3;
+            // 
+            // P_comboBoxKurs
+            // 
+            P_comboBoxKurs = new ComboBox();
+            P_comboBoxKurs.AutoSize = true;
+            P_comboBoxKurs.DropDownStyle = ComboBoxStyle.DropDown;
+            P_comboBoxKurs.Location = new System.Drawing.Point(85, 100);
+            P_comboBoxKurs.Name = "P_comboBoxKurs";
+            P_comboBoxKurs.TabIndex = 4;
+            P_comboBoxKurs.Enabled = false;
+
+            // 
+            // P_labelMonat
+            // 
+            P_labelMonat = new System.Windows.Forms.Label();
+            P_labelMonat.AutoSize = true;
+            P_labelMonat.Font = P_font;
+            P_labelMonat.Location = new System.Drawing.Point(300, 70);
+            P_labelMonat.Name = "P_labelTrainer";
+            P_labelMonat.TabIndex = 5;
+            // 
+            // P_labelTrainer
+            // 
+            P_labelTrainer = new System.Windows.Forms.Label();
+            P_labelTrainer.AutoSize = true;
+            P_labelTrainer.Font = P_font;
+            P_labelTrainer.Location = new System.Drawing.Point(500, 70);
+            P_labelTrainer.Name = "P_labelTrainer";
+            P_labelTrainer.TabIndex = 6;
             // 
             // ReportForm
             // 
-//            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
-//            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1344, 712);
-            this.Controls.Add(this.P_Info1);
-            this.Controls.Add(this.P_labelZeitraum);
-            this.Controls.Add(this.P_Info0);
-            this.Name = "ReportForm";
-            this.Text = "AVF Mitgliederdatenbank";
+            //            AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            //            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(1344, 712);
+            Controls.Add(P_labelTrainer);
+            Controls.Add(P_labelZeitraum);
+            Controls.Add(P_labelMember);
+            Controls.Add(P_labelMonat);
+            Controls.Add(P_labelKurs);
+            Controls.Add(P_comboBoxKurs);
+            Name = "ReportForm";
+            Text = "AVF Mitgliederdatenbank";
 
             ResumeLayout();
         }
 
         protected Label P_labelZeitraum;
-        protected Label P_Info0;
-        protected Label P_Info1;
+        protected Label P_labelMember;
+        protected Label P_labelMonat;
+        protected Label P_labelKurs;
+        protected Label P_labelTrainer;
+        protected ComboBox P_comboBoxKurs;
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Tbo;
-using AVF.MemberManagement.ReportBusinessLogic;
+using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Console
 {
@@ -62,23 +62,23 @@ namespace AVF.MemberManagement.Console
 
     class Graduierungsliste
     {
-        internal async Task Main(DatabaseWrapper db)
+        internal async Task Main()
         {
-            OutputTarget oTarget = new OutputTarget( "Graduierungsliste.txt", db );
+            OutputTarget oTarget = new OutputTarget( "Graduierungsliste.txt" );
 
             List<ComparableMember> m_memberList = new List<ComparableMember>();
 
             DateTime dateZero = new DateTime(1, 1, 1);
 
-            foreach (Mitglied mitglied in db.m_mitglieder)
+            foreach (Mitglied mitglied in Globals.DatabaseWrapper.P_mitglieder)
             {
-                if (db.IstNochMitglied(mitglied.Id))
+                if (Globals.DatabaseWrapper.IstNochMitglied(mitglied.Id))
                 {
                     int      iStartGrad = (mitglied.BeitragsklasseID == 4) ? 1 : 7; // Erwachsene und Jugendliche beginnen mit dem 6. Kyu
                     DateTime iStartDate = (mitglied.Eintritt.HasValue) ? mitglied.Eintritt.Value : dateZero;
                     ComparableMember member = new ComparableMember(mitglied.Id, iStartGrad, iStartDate);
 
-                    foreach (Pruefung pruefung in db.m_pruefung)
+                    foreach (Pruefung pruefung in Globals.DatabaseWrapper.P_pruefung)
                     {
                         if (pruefung.Pruefling == mitglied.Id)
                         {
@@ -94,15 +94,15 @@ namespace AVF.MemberManagement.Console
 
             int iGradIdLast = 0;
             DateTime datFirstReliableData = new DateTime(2017, 1, 1);
-            List<TrainingsTeilnahme> tn = db.TrainingsTeilnahme(datFirstReliableData, DateTime.Now);
+            List<TrainingsTeilnahme> tn = Globals.DatabaseWrapper.TrainingsTeilnahme(datFirstReliableData, DateTime.Now);
             foreach (ComparableMember cmem in m_memberList)
             {
-                Graduierung grad     = db.GraduierungFromId(cmem.GetGraduierung());
-                Mitglied    mitglied = db.MitgliedFromId(cmem.GetMemberId());
+                Graduierung grad     = Globals.DatabaseWrapper.GraduierungFromId(cmem.GetGraduierung());
+                Mitglied    mitglied = Globals.DatabaseWrapper.MitgliedFromId(cmem.GetMemberId());
                 DateTime    dateGrad = cmem.GetDatumGraduierung();
                 DateTime    dateNext = dateGrad.AddYears(grad.WartezeitJahre).AddMonths(grad.WartezeitMonate);
-                var         tnMember = db.Filter(tn, mitglied.Id);
-                int         iCount   = db.Filter(tnMember, dateGrad, DateTime.Now).Count;
+                var         tnMember = Globals.DatabaseWrapper.Filter(tn, mitglied.Id);
+                int         iCount   = Globals.DatabaseWrapper.Filter(tnMember, dateGrad, DateTime.Now).Count;
 
                 string sGrad = "";
                 if (grad.Id != iGradIdLast)
@@ -116,7 +116,7 @@ namespace AVF.MemberManagement.Console
                 oTarget.WriteMitglied( mitglied );
                 oTarget.Write($"{ mitglied.Geburtsdatum:dd.MM.yyyy} ");
                 oTarget.Write($"{ mitglied.Geburtsort, -20} ");
-                oTarget.Write($"{ db.BK_Text(mitglied), 3} ");
+                oTarget.Write($"{ Globals.DatabaseWrapper.BK_Text(mitglied), 3} ");
                 oTarget.Write($"{ mitglied.Eintritt:dd.MM.yyyy} ");
                 oTarget.Write($"{ dateGrad:dd.MM.yyyy} ");
                 oTarget.Write($"{ dateNext:dd.MM.yyyy} ");

@@ -3,24 +3,25 @@ using System.Collections.Generic;
 
 namespace AVF.MemberManagement.Reports
 {
-    class UndoRedoStack
+    public abstract class UndoRedoStack
     {
         public ReportBase P_reportActual { get; private set; }
 
         private Stack<ReportBase> m_UndoStack;
         private Stack<ReportBase> m_RedoStack;
         private Form              m_formParent;
-        private Control           m_ctrlUndo;
-        private Control           m_ctrlRedo;
 
-        public UndoRedoStack(Form formParent, Control ctrlUndo, Control ctrlRedo, ReportBase reportActual)
+        protected bool AnyUndoCommands()
+            => m_UndoStack.Count > 0;
+
+        protected bool AnyRedoCommands()
+            => m_RedoStack.Count > 0;
+
+        public UndoRedoStack(Form formParent)
         {
             m_formParent = formParent;
-            m_ctrlUndo = ctrlUndo;
-            m_ctrlRedo = ctrlRedo;
             m_RedoStack = new Stack<ReportBase>();
             m_UndoStack = new Stack<ReportBase>();
-            SwitchTo(reportActual);
         }
 
         public void Add(ReportBase reportNew)
@@ -32,7 +33,7 @@ namespace AVF.MemberManagement.Reports
 
         public void Undo()
         {
-            if (m_UndoStack.Count > 0)
+            if (AnyUndoCommands())
             {
                 m_RedoStack.Push(P_reportActual);
                 SwitchTo(m_UndoStack.Pop());
@@ -41,20 +42,21 @@ namespace AVF.MemberManagement.Reports
 
         public void Redo()
         {
-            if (m_RedoStack.Count > 0)
+            if (AnyRedoCommands())
             {
                 m_UndoStack.Push(P_reportActual);
                 SwitchTo(m_RedoStack.Pop());
             }
         }
 
-        private void SwitchTo(ReportBase reportNew)
+        public abstract void RefreshControls();
+
+        public void SwitchTo(ReportBase reportNew)
         {
             m_formParent.Controls.Remove(P_reportActual);
             P_reportActual = reportNew;
             m_formParent.Controls.Add(P_reportActual);
-            m_ctrlRedo.Enabled = m_RedoStack.Count > 0;
-            m_ctrlUndo.Enabled = m_UndoStack.Count > 0;
+            RefreshControls();
         }
     }
 }
