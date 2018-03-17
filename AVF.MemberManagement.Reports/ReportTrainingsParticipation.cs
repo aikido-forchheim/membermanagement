@@ -21,8 +21,6 @@ namespace AVF.MemberManagement.Reports
 
         private bool P_Hide { get; set; } = false;
 
-        private int m_idKurs;
-
         public ReportTrainingsParticipation(DateTime datStart, DateTime datEnd)
         {
             P_datStart = datStart;
@@ -33,7 +31,6 @@ namespace AVF.MemberManagement.Reports
             P_labelZeitraum.Text = Globals.GetTimeRangeDescription(P_datStart, P_datEnd);
             P_axisTypeMember = new AxisTypeMember(P_datStart, P_datEnd);
             P_dataGridView.Sorted += new EventHandler(delegate (object s, EventArgs e) { Sorted(s, e); });
-            VisibleChanged += new EventHandler(delegate (object s, EventArgs e) { if (Visible) SetCourseSelection(m_idKurs); });
         }
 
         protected void CreateModel
@@ -193,37 +190,6 @@ namespace AVF.MemberManagement.Reports
                 {
                     return P_yAxisType.MouseAxisEvent(P_yAxis.GetDbIdFromDgvIndex(P_dataGridView, row), action);
                 }
-            }
-        }
-
-        protected void SetCourseSelection(int idKurs)
-            => P_comboBoxKurs.SelectedIndex = P_comboBoxKurs.FindStringExact(AxisTypeCourse.GetDesc(idKurs));
-
-        protected void SetupCourseSelector(int idKursInitial)
-        {
-            m_idKurs = idKursInitial;
-            P_labelKurs.Text = $"Kurs";
-            P_comboBoxKurs.Items.Add(AxisTypeCourse.GetDesc(-1));  // -1 : all courses
-            Globals.DatabaseWrapper.P_kurs.ForEach(kurs => P_comboBoxKurs.Items.Add(AxisTypeCourse.GetDesc(kurs.Id)));
-            SetCourseSelection(idKursInitial);
-            P_comboBoxKurs.SelectedValueChanged += ComboBox_SelectedValueChanged;
-            P_comboBoxKurs.Enabled = true;
-        }
-
-        public void ComboBox_SelectedValueChanged(object sender, EventArgs e)
-        {
-            ComboBox comboBox = (ComboBox)sender;
-            if (comboBox.SelectedIndex != -1)
-            {
-                int idKurs = 0;
-                string strSelected = comboBox.SelectedItem.ToString();
-
-                if (strSelected == AxisTypeCourse.GetDesc(-1))
-                    idKurs = -1;
-                else
-                    Globals.DatabaseWrapper.P_kurs.ForEach(action: kurs => { if (AxisTypeCourse.GetDesc(kurs.Id) == strSelected) idKurs = kurs.Id; });
-
-                ReportMain.P_formMain.SwitchToPanel(new ReportMemberVsTrainings(P_datStart, P_datEnd, idKurs));
             }
         }
 

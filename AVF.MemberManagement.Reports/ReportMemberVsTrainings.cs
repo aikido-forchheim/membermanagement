@@ -23,7 +23,6 @@ namespace AVF.MemberManagement.Reports
                     P_labelTrainer.Text = $"Trainer: {P_axisTypeMember.GetFullDesc(idTrainer)}";
             }
 
-            SetupCourseSelector( idKurs );
             ReportFormPopulate();
         }
 

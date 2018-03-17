@@ -17,7 +17,6 @@ namespace AVF.MemberManagement.Reports
             );
 
             P_labelMember.Text = P_axisTypeMember.GetFullDesc(-1);   // -1: all members
-            SetupCourseSelector(idKurs);
             ReportFormPopulate();
         }
 

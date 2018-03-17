@@ -37,17 +37,6 @@ namespace AVF.MemberManagement.Reports
             P_labelKurs.Name = "P_labelKurs";
             P_labelKurs.TabIndex = 3;
             // 
-            // P_comboBoxKurs
-            // 
-            P_comboBoxKurs = new ComboBox();
-            P_comboBoxKurs.AutoSize = true;
-            P_comboBoxKurs.DropDownStyle = ComboBoxStyle.DropDown;
-            P_comboBoxKurs.Location = new System.Drawing.Point(85, 100);
-            P_comboBoxKurs.Name = "P_comboBoxKurs";
-            P_comboBoxKurs.TabIndex = 4;
-            P_comboBoxKurs.Enabled = false;
-
-            // 
             // P_labelMonat
             // 
             P_labelMonat = new System.Windows.Forms.Label();
@@ -76,7 +65,6 @@ namespace AVF.MemberManagement.Reports
             Controls.Add(P_labelMember);
             Controls.Add(P_labelMonat);
             Controls.Add(P_labelKurs);
-            Controls.Add(P_comboBoxKurs);
             Name = "ReportForm";
             Text = "AVF Mitgliederdatenbank";
 
@@ -88,6 +76,5 @@ namespace AVF.MemberManagement.Reports
         protected Label P_labelMonat;
         protected Label P_labelKurs;
         protected Label P_labelTrainer;
-        protected ComboBox P_comboBoxKurs;
     }
 }
