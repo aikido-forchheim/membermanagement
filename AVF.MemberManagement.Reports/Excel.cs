@@ -34,8 +34,9 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 
                 // delete any old content 
 
-                Range last  = workSheet.Cells.SpecialCells(XlCellType.xlCellTypeLastCell);
-                Range range = workSheet.get_Range(workSheet.Cells[rowStart][colStart], last);
+                Range frst = workSheet.Cells[rowStart][colStart];
+                Range last = workSheet.Cells.SpecialCells(XlCellType.xlCellTypeLastCell);
+                Range range = workSheet.Range[frst, last];
                 range.Delete();
 
                 // copy new data to workSheet

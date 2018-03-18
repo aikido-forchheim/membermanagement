@@ -38,11 +38,11 @@ namespace AVF.MemberManagement.Console
             // Prüfling and Prüfer müssen Teilnehmer sein
 
             foreach (Pruefung pruefung in Globals.DatabaseWrapper.P_pruefung)
-            {
+            {  
                 bool found = false;
                 foreach (Training training in Globals.DatabaseWrapper.P_trainings)
                 {
-                     if ( 
+                     if (
                           ( training.Termin == pruefung.Datum ) &&
                           (Globals.DatabaseWrapper.HatTeilgenommen(pruefung.Pruefling, training )) &&
                           (Globals.DatabaseWrapper.HatTeilgenommen(pruefung.Pruefer,   training ))

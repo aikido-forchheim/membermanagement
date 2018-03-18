@@ -49,7 +49,6 @@ namespace AVF.MemberManagement.Reports
                     string day = Globals.DatabaseWrapper.WeekDay(kurs.WochentagID).Substring(0, 2);
                     return $"{ day } {kurs.Zeit:hh}:{kurs.Zeit:mm}";
                 }
-
             }
         }
 
