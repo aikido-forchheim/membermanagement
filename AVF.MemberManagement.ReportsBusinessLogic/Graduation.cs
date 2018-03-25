@@ -29,11 +29,11 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             DateTime    datValidData = Globals.DatabaseWrapper.GetStartValidData();
             Graduierung gradNext     = Globals.DatabaseWrapper.GraduierungFromId(P_graduierung + 1);
 
-            datValidData = new DateTime(2016, 1, 1);  // TODO: remove this line
+            //  datValidData = new DateTime(2016, 1, 1);  // TODO: remove this line
 
             P_memberId          = member.Id;
             P_datumMinNextGrad  = P_datumGraduierung.AddYears(gradNext.WartezeitJahre).AddMonths(gradNext.WartezeitMonate);
-            P_trainingsNeeded   = ((P_datumMinNextGrad - P_datumGraduierung).Days / 7) * 2;  // 2 trainings per week needed
+            P_trainingsNeeded   = gradNext.WartezeitJahre * 100 + (gradNext.WartezeitMonate * 100) / 12;   // ((P_datumMinNextGrad - P_datumGraduierung).Days / 7) * 2;  // 2 trainings per week needed
             P_fAllTrainingsInDb = (datValidData <= P_datumGraduierung);
             P_dateStart         = P_fAllTrainingsInDb ? P_datumGraduierung : datValidData;
             P_TrainngsDone      = Globals.DatabaseWrapper.NrOfTrainingsSince(P_memberId, P_dateStart);

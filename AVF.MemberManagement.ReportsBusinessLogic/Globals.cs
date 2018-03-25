@@ -39,7 +39,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             => FirstDayOfMonth(datStart, idMonth).AddDays(DateTime.DaysInMonth(datStart.Year, datStart.Month) - 1);
 
         public static string GetTimeRangeDescription(DateTime datStart, DateTime datEnd)
-            => Format(datStart) + ' ' + Format(datEnd);
+            => Format(datStart) + " - " + Format(datEnd);
 
         public static DateTime FirstDateOfWeekISO8601(int year, int weekOfYear)
         {
@@ -57,6 +57,31 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             }
             var result = firstThursday.AddDays(weekNum * 7);
             return result.AddDays(-3);
+        }
+
+        public static string GetVersionString(System.Reflection.Assembly a)
+        {
+            string versionString;
+            var version = a.GetName().Version;
+            var buildDateTime = new DateTime(2000, 1, 1).Add(new TimeSpan(TimeSpan.TicksPerDay * version.Build + // days since 1 January 2000
+                TimeSpan.TicksPerSecond * 2 * version.Revision)); // seconds since midnight, (multiply by 2 to get original)
+                                                                  // a valid date-string can now be constructed like this
+            versionString = String.Format("Version: {0}.{1}.{2}.{3} ", version.Major, version.Minor, version.Build, version.Revision).PadRight(30);
+            versionString += String.Format("Build time: {0:G}", buildDateTime);
+            return versionString;
+        }
+
+        public static string GetFullVersionInfo()
+        {
+            System.Reflection.Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            string strResult = string.Empty;
+            foreach (var a in assemblies)
+            {
+                string name = a.GetName().Name;
+                if (name.Substring(0, 4) == "AVF.")
+                    strResult += name.PadRight(50) + Globals.GetVersionString(a) + "\n";
+            }
+            return strResult;
         }
     }
 }

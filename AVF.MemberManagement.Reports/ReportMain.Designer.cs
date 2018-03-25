@@ -50,6 +50,7 @@
             this.panelLoadDb = new System.Windows.Forms.Panel();
             this.buttonUndo = new System.Windows.Forms.Button();
             this.buttonRedo = new System.Windows.Forms.Button();
+            this.infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.panelLoadDb.SuspendLayout();
             this.SuspendLayout();
@@ -149,7 +150,8 @@
             // 
             this.dateiToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exportierenToolStripMenuItem,
-            this.schließenToolStripMenuItem});
+            this.schließenToolStripMenuItem,
+            this.infoToolStripMenuItem});
             this.dateiToolStripMenuItem.Name = "dateiToolStripMenuItem";
             this.dateiToolStripMenuItem.Size = new System.Drawing.Size(65, 29);
             this.dateiToolStripMenuItem.Text = "Datei";
@@ -157,14 +159,14 @@
             // exportierenToolStripMenuItem
             // 
             this.exportierenToolStripMenuItem.Name = "exportierenToolStripMenuItem";
-            this.exportierenToolStripMenuItem.Size = new System.Drawing.Size(185, 30);
+            this.exportierenToolStripMenuItem.Size = new System.Drawing.Size(210, 30);
             this.exportierenToolStripMenuItem.Text = "Exportieren";
             this.exportierenToolStripMenuItem.Click += new System.EventHandler(this.Export_Click);
             // 
             // schließenToolStripMenuItem
             // 
             this.schließenToolStripMenuItem.Name = "schließenToolStripMenuItem";
-            this.schließenToolStripMenuItem.Size = new System.Drawing.Size(185, 30);
+            this.schließenToolStripMenuItem.Size = new System.Drawing.Size(210, 30);
             this.schließenToolStripMenuItem.Text = "Schließen";
             this.schließenToolStripMenuItem.Click += new System.EventHandler(this.ApplicationExit_Click);
             // 
@@ -272,6 +274,13 @@
             this.buttonRedo.UseVisualStyleBackColor = true;
             this.buttonRedo.Click += new System.EventHandler(this.Redo_Click);
             // 
+            // infoToolStripMenuItem
+            // 
+            this.infoToolStripMenuItem.Name = "infoToolStripMenuItem";
+            this.infoToolStripMenuItem.Size = new System.Drawing.Size(210, 30);
+            this.infoToolStripMenuItem.Text = "Info";
+            this.infoToolStripMenuItem.Click += new System.EventHandler(this.Info_Click);
+            // 
             // ReportMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -323,5 +332,6 @@
         private System.Windows.Forms.Panel panelLoadDb;
         private System.Windows.Forms.Button buttonUndo;
         private System.Windows.Forms.Button buttonRedo;
+        private System.Windows.Forms.ToolStripMenuItem infoToolStripMenuItem;
     }
 }

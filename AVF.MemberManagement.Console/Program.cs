@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using AVF.MemberManagement.Factories;
 using AVF.MemberManagement.xUnitIntegrationTests;
 using Microsoft.Practices.Unity;
@@ -31,20 +30,9 @@ namespace AVF.MemberManagement.Console
                 System.Console.Clear();
 
                 var input = 0;
-                while (input == 0)
+                while (input == 0) 
                 {
-                    {
-                        var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-                        var buildDateTime = new DateTime(2000, 1, 1).Add(new TimeSpan(TimeSpan.TicksPerDay * version.Build + // days since 1 January 2000
-                            TimeSpan.TicksPerSecond * 2 * version.Revision)); // seconds since midnight, (multiply by 2 to get original)
-                                                                              // a valid date-string can now be constructed like this
-                        string date = buildDateTime.ToShortDateString();
-
-                        string fmtStd = "Standard version:\n  major.minor.build.revision = {0}.{1}.{2}.{3}";
-
-                        System.Console.WriteLine(fmtStd, version.Major, version.Minor, version.Build, version.Revision);
-                        System.Console.WriteLine(date);
-                    }
+                    System.Console.WriteLine(Globals.GetFullVersionInfo());
                     System.Console.WriteLine();
                     System.Console.WriteLine("1: Generate class prototypes");
                     System.Console.WriteLine("2: Stundensatz-Kalkulator");

@@ -14,7 +14,15 @@ namespace AVF.MemberManagement.Reports
 
         public static ReportMain P_formMain { set; get; }
 
-        private int P_iJahr = 2017;
+        private int m_iYear;
+        public  int P_iJahr
+        {
+            set{
+                   if ( (Globals.DatabaseWrapper.GetStartValidData().Year <= value) && (value <= DateTime.Now.Year) )
+                       m_iYear = value;
+               }
+            get{ return m_iYear; }
+        }
 
         public ReportMain()
         {
@@ -35,6 +43,7 @@ namespace AVF.MemberManagement.Reports
                 tick: s => { progressBar1.PerformStep(); labelAnimateLoadDb.Text = s; }
             );
             panelLoadDb.Dispose();
+            P_iJahr = DateTime.Now.Year - 1;
             m_UndoRedo = new ReportsUndoRedo(P_formMain);
             m_UndoRedo.SwitchTo(new ReportMemberVsCourses(new DateTime(P_iJahr, 1, 1), new DateTime(P_iJahr, 12, 31)));
         }
@@ -86,6 +95,14 @@ namespace AVF.MemberManagement.Reports
 
         private void Export_Click(object sender, EventArgs e)
             => m_UndoRedo.P_reportActual.Export2Excel();
+
+        private void Info_Click(object sender, EventArgs e)
+        {
+            string message = Globals.GetFullVersionInfo();
+            string caption = "AVF Mitgliederdatenbank Reports";
+            MessageBoxButtons buttons = MessageBoxButtons.OK;
+            MessageBox.Show(message, caption, buttons);
+        }
 
         private void Undo_Click(object sender, EventArgs e)
             => m_UndoRedo.Undo();
