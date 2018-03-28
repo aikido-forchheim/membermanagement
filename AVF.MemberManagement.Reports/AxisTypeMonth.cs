@@ -36,17 +36,13 @@ namespace AVF.MemberManagement.Reports
         public override string GetDescription(int idMonth, int iNr = 1)
         {
             if (idMonth < 0)
-            {
-                return "Alle Monate";
-            }
-            else
-            {
-                int nrOfMonths = (P_reportDescriptor.P_timeRange.P_datStart.Month - 1) + idMonth;
-                int year = P_reportDescriptor.P_timeRange.P_datStart.Year + nrOfMonths / 12;
-                string strMonat = Globals.GetMonthName(nrOfMonths % 12 + 1);
-                string strMonthShort = strMonat.Substring(0, 3);
-                return $"{strMonthShort} {year}";
-            }
+                return "";
+
+            int nrOfMonths = (P_reportDescriptor.P_timeRange.P_datStart.Month - 1) + idMonth;
+            int year = P_reportDescriptor.P_timeRange.P_datStart.Year + nrOfMonths / 12;
+            string strMonat = Globals.GetMonthName(nrOfMonths % 12 + 1);
+            string strMonthShort = strMonat.Substring(0, 3);
+            return $"{strMonthShort} {year}";
         }
     }
 }

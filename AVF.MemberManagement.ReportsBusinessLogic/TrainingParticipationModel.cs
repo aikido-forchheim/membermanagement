@@ -23,11 +23,25 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 
         public TrainingParticipationModel
         (
-            List<TrainingsTeilnahme> tpList,
+            ReportDescriptor desc,
             IAxis xAxisType,
             IAxis yAxisType
         )
         {
+            List<TrainingsTeilnahme> tpList = Globals.DatabaseWrapper.P_trainingsTeilnahme;
+
+            if (desc.P_timeRange != Globals.ALL_YEARS)
+                tpList = Globals.DatabaseWrapper.Filter(tpList, tn => desc.P_timeRange.Includes(Globals.DatabaseWrapper.TerminFromTrainingId(tn.TrainingID)));
+
+            if (desc.P_idMember != Globals.ALL_MEMBERS)
+                tpList = Globals.DatabaseWrapper.Filter(tpList, tn => desc.P_idMember == tn.MitgliedID);
+
+            if (desc.P_idCourse != Globals.ALL_COURSES)
+                tpList = Globals.DatabaseWrapper.Filter(tpList, tn => desc.P_idCourse == Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID));
+
+            if (desc.P_idTraining != Globals.ALL_TRAININGS)
+                tpList = Globals.DatabaseWrapper.Filter(tpList, tn => tn.TrainingID == desc.P_idTraining);
+
             P_iNrOfRows = yAxisType.DatabaseIdRange();
             P_iNrOfCols = xAxisType.DatabaseIdRange();
 

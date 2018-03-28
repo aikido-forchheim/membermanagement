@@ -26,10 +26,9 @@ namespace AVF.MemberManagement.Reports
         public override string MouseAxisEvent(int idTraining, bool action)
         {
             Debug.Assert(idTraining > 0);
-            Training training = Globals.DatabaseWrapper.TrainingFromId(idTraining);
             return action
-               ? ReportMain.P_formMain.SwitchToPanel(new ReportTraining(training))
-               : $"Klicken für Details zum Training " + GetFullDesc(training.Id, '.');
+               ? ReportMain.P_formMain.SwitchToPanel(new ReportTraining(Globals.DatabaseWrapper.TrainingFromId(idTraining)))
+               : $"Klicken für Details zum Training " + GetFullDesc(idTraining, '.');
         }
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)

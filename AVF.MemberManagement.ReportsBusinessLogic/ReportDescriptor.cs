@@ -1,6 +1,4 @@
-﻿using AVF.MemberManagement.ReportsBusinessLogic;
-
-namespace AVF.MemberManagement.Reports
+﻿namespace AVF.MemberManagement.ReportsBusinessLogic
 {
     public class ReportDescriptor
     {

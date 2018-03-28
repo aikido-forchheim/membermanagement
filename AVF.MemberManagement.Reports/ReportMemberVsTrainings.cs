@@ -15,8 +15,5 @@ namespace AVF.MemberManagement.Reports
 
             ReportFormPopulate();
         }
-
-        protected override string FormatMatrixElement(int iValue) 
-            => (iValue > 0) ? "X" : " ";
     }
 }

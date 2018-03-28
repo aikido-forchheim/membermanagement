@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using System.Collections.Generic;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.ReportsBusinessLogic;
 
@@ -51,26 +50,13 @@ namespace AVF.MemberManagement.Reports
             P_xAxisType = xAxisType;
             P_yAxisType = yAxisType;
 
-            P_xAxis.P_startIndex = yAxisType.HeaderStrings.Count + 1; ;
+//            Type t = typeof(AxisTypeTraining);
+//            AxisType a = (AxisType)Activator.CreateInstance(t, m_reportDescriptor);
+
+            P_xAxis.P_startIndex = P_yAxisType.HeaderStrings.Count + 1; ;
             P_yAxis.P_startIndex = 0;
 
-            List<TrainingsTeilnahme> tpList = Globals.DatabaseWrapper.P_trainingsTeilnahme;
-
-            if (m_reportDescriptor.P_timeRange != Globals.ALL_YEARS)
-                tpList = Globals.DatabaseWrapper.Filter(tpList, tn => m_reportDescriptor.P_timeRange.Includes(Globals.DatabaseWrapper.TerminFromTrainingId(tn.TrainingID)));
-
-            Globals.DatabaseWrapper.TrainingsTeilnahme(m_reportDescriptor.P_timeRange);
-
-            if (m_reportDescriptor.P_idMember != Globals.ALL_MEMBERS)
-                tpList = Globals.DatabaseWrapper.Filter(tpList, tn => m_reportDescriptor.P_idMember == tn.MitgliedID);
-
-            if (m_reportDescriptor.P_idCourse != Globals.ALL_COURSES)
-                tpList = Globals.DatabaseWrapper.Filter(tpList, tn => m_reportDescriptor.P_idCourse == Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID));
-
-            if (m_reportDescriptor.P_idTraining != Globals.ALL_TRAININGS)
-                tpList = Globals.DatabaseWrapper.Filter(tpList, tn => tn.TrainingID == m_reportDescriptor.P_idTraining);
-
-            P_tpModel = new TrainingParticipationModel(tpList, P_xAxisType, P_yAxisType );
+            P_tpModel = new TrainingParticipationModel(m_reportDescriptor, P_xAxisType, P_yAxisType );
         }
 
         private void FillMainArea()
@@ -113,6 +99,13 @@ namespace AVF.MemberManagement.Reports
                 int idTrainer = Globals.DatabaseWrapper.KursFromId(m_reportDescriptor.P_idCourse).Trainer;
                 if (idTrainer > 0)
                     P_labelTrainer.Text = $"Trainer: {P_axisTypeMember.GetFullDesc(idTrainer)}";
+            }
+            if (m_reportDescriptor.P_idTraining != Globals.ALL_TRAININGS)
+            {
+                Training training = Globals.DatabaseWrapper.TrainingFromId(m_reportDescriptor.P_idTraining);
+                P_labelReportName.Text = $"Training am {Globals.DatabaseWrapper.WeekDay(training.WochentagID)} den ";
+                P_labelZeitraum.Text = new AxisTypeTraining(m_reportDescriptor).GetFullDesc(m_reportDescriptor.P_idTraining, '.');
+                //            P_labelMember.Text     = $"um {training.Zeit:hh}:{training.Zeit:mm} Uhr";
             }
 
             P_yAxis.FillKeyHeaderCells(P_dataGridView, P_yAxisType);
@@ -249,6 +242,10 @@ namespace AVF.MemberManagement.Reports
             => !(ColIsKeyArea(iCol) || ColIsSummary(iCol));
 
         protected virtual string FormatMatrixElement(int iValue)
-            => (iValue > 0) ? $"{ iValue, -3 }" : "   ";
+            => (iValue == 0) 
+               ?   " " 
+               :   ( P_xAxisType.GetType() == typeof(AxisTypeTraining) )
+                   ?   "X"
+                   :   $"{ iValue,-3 }";
     }
 }
