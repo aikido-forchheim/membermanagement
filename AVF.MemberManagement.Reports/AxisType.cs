@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.ReportsBusinessLogic;
 
@@ -12,7 +11,7 @@ namespace AVF.MemberManagement.Reports
         public int P_MaxDbId { get; protected set; }
         public int P_MinDbId { get; protected set; }
 
-        protected TimeRange P_timeRange { get; private set; }
+        protected ReportDescriptor P_reportDescriptor { get; private set; }
 
         public List<string> HeaderStrings { get; set; }
 
@@ -20,8 +19,8 @@ namespace AVF.MemberManagement.Reports
 
         // constructor
 
-        public AxisType(TimeRange timeRange)
-            => P_timeRange = timeRange;
+        public AxisType(ReportDescriptor desc)
+            => P_reportDescriptor = desc;
 
         // member functions
 

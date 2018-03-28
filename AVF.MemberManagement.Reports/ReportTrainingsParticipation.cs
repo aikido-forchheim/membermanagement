@@ -16,18 +16,16 @@ namespace AVF.MemberManagement.Reports
 
         protected AxisTypeMember P_axisTypeMember { get; private set; }
 
-        protected TimeRange P_timeRange { get; private set; }
+        protected ReportDescriptor m_reportDescriptor;
 
-        private bool P_Hide { get; set; } = false;
-
-        public ReportTrainingsParticipation(TimeRange timeRange)
+        public ReportTrainingsParticipation(TimeRange timeRange, int idMember, int idCourse)
         {
-            P_timeRange = timeRange;
+            m_reportDescriptor = new ReportDescriptor(timeRange, idMember, idCourse);
 
             InitializeReportTrainingsParticipation(); // creates DataGridView ...
             P_labelReportName.Text = "Trainingsteilnahme";
-            P_labelZeitraum.Text = Globals.GetTimeRangeDescription(P_timeRange);
-            P_axisTypeMember = new AxisTypeMember(P_timeRange);
+            P_labelZeitraum.Text = Globals.GetTimeRangeDescription(m_reportDescriptor.P_timeRange);
+            P_axisTypeMember = new AxisTypeMember(m_reportDescriptor);
             P_dataGridView.Sorted += new EventHandler(delegate (object s, EventArgs e) { Sorted(s, e); });
             P_yearSelector.Minimum = Globals.DatabaseWrapper.GetStartValidData().Year;
             P_yearSelector.Maximum = DateTime.Now.Year;
@@ -41,8 +39,6 @@ namespace AVF.MemberManagement.Reports
             Func<TrainingsTeilnahme, bool> filter
         )
         {
-            P_Hide = (xAxisType.P_MaxDbId == 0);
-
             P_xAxis = new HorizontalAxis();
             P_yAxis = new VerticalAxis();
 
@@ -52,7 +48,7 @@ namespace AVF.MemberManagement.Reports
             P_xAxis.P_startIndex = yAxisType.HeaderStrings.Count + 1; ;
             P_yAxis.P_startIndex = 0;
 
-            List<TrainingsTeilnahme> tpList         = Globals.DatabaseWrapper.TrainingsTeilnahme(P_timeRange);
+            List<TrainingsTeilnahme> tpList         = Globals.DatabaseWrapper.TrainingsTeilnahme(m_reportDescriptor.P_timeRange);
             List<TrainingsTeilnahme> tpListFiltered = Globals.DatabaseWrapper.Filter(tpList, filter);
 
             P_tpModel = new TrainingParticipationModel( tpListFiltered, P_xAxisType, P_yAxisType );
@@ -81,7 +77,7 @@ namespace AVF.MemberManagement.Reports
         {
             P_dataGridView.RowCount = (P_yAxisType.P_ActiveElementsOnly ? P_tpModel.GetNrOfActiveRows() : P_yAxisType.DatabaseIdRange()) + 1; // + 1 for summary row
             P_dataGridView.ColumnCount = P_yAxisType.HeaderStrings.Count + 1;
-            if (!P_Hide)
+            if (P_xAxisType.P_MaxDbId > 0)
                 P_dataGridView.ColumnCount += (P_xAxisType.P_ActiveElementsOnly ? P_tpModel.GetNrOfActiveCols() : P_xAxisType.DatabaseIdRange()) + 1; // + 1 for summary column
         }           
 
@@ -100,7 +96,7 @@ namespace AVF.MemberManagement.Reports
                 activeRowsOnly: P_yAxisType.P_ActiveElementsOnly
             );
 
-            if (!P_Hide)
+            if (P_xAxisType.P_MaxDbId > 0)
             {
                 int iDgvCol = P_xAxis.P_startIndex;
                 P_tpModel.ForAllCols
@@ -184,7 +180,7 @@ namespace AVF.MemberManagement.Reports
             {
                 if (ColIsInMainArea(col))
                 {
-                    return MouseMainDataAreaCellEvent(P_timeRange, P_yAxis.GetDbIdFromDgvIndex(P_dataGridView, row), P_xAxis.GetDbIdFromDgvIndex(col), action);
+                    return MouseMainDataAreaCellEvent(m_reportDescriptor.P_timeRange, P_yAxis.GetDbIdFromDgvIndex(P_dataGridView, row), P_xAxis.GetDbIdFromDgvIndex(col), action);
                 }
                 else // key or summary 
                 {

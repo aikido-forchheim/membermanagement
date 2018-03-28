@@ -39,7 +39,7 @@ namespace AVF.MemberManagement.Reports
 
             int iYear = DateTime.Now.Year - 1;
             m_timeRange = new TimeRange( new DateTime(iYear,  1,  1), new DateTime(iYear, 12, 31) );
-            m_UndoRedo.SwitchTo(new ReportMemberVsCourses(m_timeRange));
+            m_UndoRedo.SwitchTo(new ReportMemberVsCourses(m_timeRange, Globals.ALL_MEMBERS));
         }
 
         public string SwitchToPanel(ReportBase panelNew )
@@ -70,13 +70,13 @@ namespace AVF.MemberManagement.Reports
         }
 
         private void Trainingsteilnahme_Kurse_Click(object sender, EventArgs e)
-            => SwitchToPanel(new ReportMemberVsCourses(m_timeRange));
+            => SwitchToPanel(new ReportMemberVsCourses(m_timeRange, Globals.ALL_MEMBERS));
 
         private void Kurse_Click(object sender, EventArgs e)
-             => SwitchToPanel(new ReportCoursesVsMonths(m_timeRange, -1));
+             => SwitchToPanel(new ReportCoursesVsMonths(m_timeRange, Globals.ALL_MEMBERS));
 
         private void Trainingsteilnahme_Monate_Click(object sender, EventArgs e)
-             => SwitchToPanel(new ReportMemberVsMonths(m_timeRange, -1));
+             => SwitchToPanel(new ReportMemberVsMonths(m_timeRange, Globals.ALL_MEMBERS, Globals.ALL_COURSES));
 
         private void Gradierungsliste_Click(object sender, EventArgs e)
              => SwitchToPanel(new ReportGraduationList());

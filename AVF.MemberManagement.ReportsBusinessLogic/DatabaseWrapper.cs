@@ -238,7 +238,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         {
             var result = Filter( P_trainings, datStart, datEnd );
 
-            if ( idKurs != -1 )
+            if ( idKurs != Globals.ALL_COURSES )
                 result = Filter( result, idKurs );
 
             return result.OrderBy(x => x.Termin).ToList();

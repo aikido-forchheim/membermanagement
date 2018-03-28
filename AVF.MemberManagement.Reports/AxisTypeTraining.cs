@@ -8,8 +8,8 @@ namespace AVF.MemberManagement.Reports
 {
     public class AxisTypeTraining : AxisType
     {
-        public AxisTypeTraining(TimeRange timeRange)
-             : base(timeRange)
+        public AxisTypeTraining(ReportDescriptor desc)
+             : base(desc)
         {
             P_ActiveElementsOnly = true;
             P_MaxDbId = Globals.DatabaseWrapper.MaxTrainingNr();

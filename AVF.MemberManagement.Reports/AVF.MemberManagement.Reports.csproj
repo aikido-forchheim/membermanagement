@@ -80,6 +80,7 @@
     <Compile Include="ReportCoursesVsMonths.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ReportDescriptor.cs" />
     <Compile Include="ReportMain.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -39,7 +39,7 @@ namespace AVF.MemberManagement.Reports
 
             P_dataGridView.DefaultCellStyle.Font = new Font("Comic Sans MS", 11);
 
-            P_axisTypeMember = new AxisTypeMember(new TimeRange());
+            P_axisTypeMember = new AxisTypeMember(new ReportDescriptor(new TimeRange(), Globals.ALL_MEMBERS, Globals.ALL_COURSES));
             ReportFormPopulate();
         }
 

@@ -1,18 +1,17 @@
-﻿using System;
-using AVF.MemberManagement.ReportsBusinessLogic;
+﻿using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
     class ReportMemberVsTrainings : ReportTrainingsParticipation
     {
-        public ReportMemberVsTrainings(TimeRange timeRange, int idKurs)
-            : base(timeRange)
+        public ReportMemberVsTrainings(TimeRange timeRange, int idMember, int idKurs)
+            : base(timeRange, idMember, idKurs)
         {
             CreateModel
             (
-                new AxisTypeTraining(timeRange),
-                new AxisTypeMember(timeRange),
-                filter: tn => (idKurs == -1) ? true : (idKurs == Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID))
+                new AxisTypeTraining(m_reportDescriptor),
+                new AxisTypeMember(m_reportDescriptor),
+                filter: tn => (idKurs == Globals.ALL_COURSES) ? true : (idKurs == Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID))
             );
 
             if (idKurs >= 0)

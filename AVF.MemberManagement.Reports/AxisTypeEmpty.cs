@@ -6,8 +6,8 @@ namespace AVF.MemberManagement.Reports
 {
     public class AxisTypeEmpty : AxisType
     {
-        public AxisTypeEmpty(TimeRange timeRange)
-             : base(timeRange)
+        public AxisTypeEmpty(ReportDescriptor desc)
+             : base(desc)
         {
             P_ActiveElementsOnly = false;
             P_MaxDbId = 0;
