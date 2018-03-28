@@ -5,13 +5,12 @@ namespace AVF.MemberManagement.Reports
     class ReportMemberVsCourses : ReportTrainingsParticipation
     {
         public ReportMemberVsCourses( TimeRange timeRange, int idMember )
-            : base(timeRange, idMember, Globals.ALL_COURSES)
+            : base(timeRange, idMember, Globals.ALL_COURSES, Globals.ALL_TRAININGS)
         {
             CreateModel
             (
                 new AxisTypeCourse(m_reportDescriptor),
-                new AxisTypeMember(m_reportDescriptor),
-                filter: tn => true
+                new AxisTypeMember(m_reportDescriptor)
             );
 
             P_labelMember.Text = P_axisTypeMember.GetFullDesc(Globals.ALL_MEMBERS);

@@ -6,14 +6,12 @@ namespace AVF.MemberManagement.Reports
     class ReportTraining : ReportTrainingsParticipation
     {
         public ReportTraining(Training training)
-            : base(new TimeRange(training.Termin), Globals.ALL_MEMBERS, Globals.ALL_COURSES)
+            : base(new TimeRange(training.Termin), Globals.ALL_MEMBERS, Globals.ALL_COURSES, training.Id)
         {
-            ReportDescriptor desc = new ReportDescriptor(new TimeRange(training.Termin), Globals.ALL_MEMBERS, Globals.ALL_COURSES);
             CreateModel
             (
-                new AxisTypeEmpty(desc),
-                new AxisTypeMember(desc),
-                filter: tn => tn.TrainingID == training.Id
+                new AxisTypeEmpty(m_reportDescriptor),
+                new AxisTypeMember(m_reportDescriptor)
             );
 
             P_labelReportName.Text = $"Training am {Globals.DatabaseWrapper.WeekDay(training.WochentagID)} den ";

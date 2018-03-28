@@ -18,9 +18,9 @@ namespace AVF.MemberManagement.Reports
 
         protected ReportDescriptor m_reportDescriptor;
 
-        public ReportTrainingsParticipation(TimeRange timeRange, int idMember, int idCourse)
+        public ReportTrainingsParticipation(TimeRange timeRange, int idMember, int idCourse, int idTraining)
         {
-            m_reportDescriptor = new ReportDescriptor(timeRange, idMember, idCourse);
+            m_reportDescriptor = new ReportDescriptor(timeRange, idMember, idCourse, idTraining);
 
             InitializeReportTrainingsParticipation(); // creates DataGridView ...
             P_labelReportName.Text = "Trainingsteilnahme";
@@ -35,8 +35,7 @@ namespace AVF.MemberManagement.Reports
         protected void CreateModel
         (
             AxisType xAxisType,
-            AxisType yAxisType,
-            Func<TrainingsTeilnahme, bool> filter
+            AxisType yAxisType
         )
         {
             P_xAxis = new HorizontalAxis();
@@ -48,10 +47,18 @@ namespace AVF.MemberManagement.Reports
             P_xAxis.P_startIndex = yAxisType.HeaderStrings.Count + 1; ;
             P_yAxis.P_startIndex = 0;
 
-            List<TrainingsTeilnahme> tpList         = Globals.DatabaseWrapper.TrainingsTeilnahme(m_reportDescriptor.P_timeRange);
-            List<TrainingsTeilnahme> tpListFiltered = Globals.DatabaseWrapper.Filter(tpList, filter);
+            List<TrainingsTeilnahme> tpList = Globals.DatabaseWrapper.TrainingsTeilnahme(m_reportDescriptor.P_timeRange);
 
-            P_tpModel = new TrainingParticipationModel( tpListFiltered, P_xAxisType, P_yAxisType );
+            if (m_reportDescriptor.P_idMember != Globals.ALL_MEMBERS)
+                tpList = Globals.DatabaseWrapper.Filter(tpList, tn => m_reportDescriptor.P_idMember == tn.MitgliedID);
+
+            if (m_reportDescriptor.P_idCourse != Globals.ALL_COURSES)
+                tpList = Globals.DatabaseWrapper.Filter(tpList, tn => m_reportDescriptor.P_idCourse == Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID));
+
+            if (m_reportDescriptor.P_idTraining != Globals.ALL_TRAININGS)
+                tpList = Globals.DatabaseWrapper.Filter(tpList, tn => tn.TrainingID == m_reportDescriptor.P_idTraining);
+
+            P_tpModel = new TrainingParticipationModel(tpList, P_xAxisType, P_yAxisType );
         }
 
         private void FillMainArea()
