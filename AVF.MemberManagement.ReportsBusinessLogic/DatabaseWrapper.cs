@@ -223,7 +223,10 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             => list.Where(p => filter(p)).ToList();
 
         public List<TrainingsTeilnahme> TrainingsTeilnahme(DateTime datStart, DateTime datEnd)
-            => Filter( P_trainingsTeilnahme, datStart, datEnd).ToList();
+            => Filter(P_trainingsTeilnahme, datStart, datEnd).ToList();
+
+        public List<TrainingsTeilnahme> TrainingsTeilnahme(TimeRange timeRange)
+            => TrainingsTeilnahme(timeRange.P_datStart, timeRange.P_datEnd);
 
         public List<Training> Filter(List<Training> list, int? idKurs)
             => list.Where(training => training.KursID == idKurs).ToList();

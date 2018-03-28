@@ -1,12 +1,13 @@
 ﻿using System;
 using AVF.MemberManagement.StandardLibrary.Tbo;
+using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
     public class AxisTypeEmpty : AxisType
     {
-        public AxisTypeEmpty(DateTime datStart, DateTime datEnd)
-             : base(datStart, datEnd)
+        public AxisTypeEmpty(TimeRange timeRange)
+             : base(timeRange)
         {
             P_ActiveElementsOnly = false;
             P_MaxDbId = 0;

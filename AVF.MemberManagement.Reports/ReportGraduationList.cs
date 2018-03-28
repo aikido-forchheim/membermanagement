@@ -39,7 +39,7 @@ namespace AVF.MemberManagement.Reports
 
             P_dataGridView.DefaultCellStyle.Font = new Font("Comic Sans MS", 11);
 
-            P_axisTypeMember = new AxisTypeMember(new DateTime(0), new DateTime(0));
+            P_axisTypeMember = new AxisTypeMember(new TimeRange());
             ReportFormPopulate();
         }
 
@@ -114,13 +114,14 @@ namespace AVF.MemberManagement.Reports
         {
             if (row >= 0)
             {
-                int      idMember     = (int)P_dataGridView.Rows[row].Cells["memberId"].Value;
-                string   strDateGrad  = P_dataGridView.Rows[row].Cells["dateGrad"].Value.ToString();
-                DateTime dateGrad     = DateTime.Parse(strDateGrad);
-                DateTime datValidData = Globals.DatabaseWrapper.GetStartValidData();
-                DateTime dateStart    = (datValidData <= dateGrad) ? dateGrad : datValidData;
+                int       idMember     = (int)P_dataGridView.Rows[row].Cells["memberId"].Value;
+                string    strDateGrad  = P_dataGridView.Rows[row].Cells["dateGrad"].Value.ToString();
+                DateTime  dateGrad     = DateTime.Parse(strDateGrad);
+                DateTime  datValidData = Globals.DatabaseWrapper.GetStartValidData();
+                DateTime  dateStart    = (datValidData <= dateGrad) ? dateGrad : datValidData;
+                TimeRange timeRange    = new TimeRange(dateStart, DateTime.Now);
                 return action
-                    ? ReportMain.P_formMain.SwitchToPanel(new ReportMonthsVsCourses(dateStart, DateTime.Now, idMember))
+                    ? ReportMain.P_formMain.SwitchToPanel(new ReportMonthsVsCourses(timeRange, idMember))
                     : $"Klicken für Details zu Mitglied\n" + P_axisTypeMember.GetFullDesc(idMember);
             }
             else

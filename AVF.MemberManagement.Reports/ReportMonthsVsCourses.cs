@@ -1,16 +1,16 @@
-﻿using System;
+﻿using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
     class ReportMonthsVsCourses : ReportTrainingsParticipation
     {
-        public ReportMonthsVsCourses(DateTime datStart, DateTime datEnd, int idMember)
-            : base(datStart, datEnd)
+        public ReportMonthsVsCourses(TimeRange timeRange, int idMember)
+            : base(timeRange)
         {
             CreateModel
             (
-                new AxisTypeCourse(P_datStart, P_datEnd),
-                new AxisTypeMonth(P_datStart, P_datEnd),
+                new AxisTypeCourse(timeRange),
+                new AxisTypeMonth(timeRange),
                 filter: tn => idMember == tn.MitgliedID
             );
 

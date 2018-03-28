@@ -1,16 +1,16 @@
-﻿using System;
+﻿using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
     class ReportMemberVsCourses : ReportTrainingsParticipation
     {
-        public ReportMemberVsCourses( DateTime datStart, DateTime datEnd )
-            : base( datStart, datEnd )
+        public ReportMemberVsCourses( TimeRange timeRange )
+            : base(timeRange)
         {
             CreateModel
             (
-                new AxisTypeCourse(P_datStart, P_datEnd),
-                new AxisTypeMember(P_datStart, P_datEnd),
+                new AxisTypeCourse(timeRange),
+                new AxisTypeMember(timeRange),
                 filter: tn => true
             );
 
@@ -18,9 +18,9 @@ namespace AVF.MemberManagement.Reports
             ReportFormPopulate();
         }
 
-        protected override string MouseMainDataAreaCellEvent(DateTime datStart, DateTime datEnd, int idMember, int idKurs, bool action )
+        protected override string MouseMainDataAreaCellEvent(TimeRange timeRange, int idMember, int idKurs, bool action )
             => action
-                ? ReportMain.P_formMain.SwitchToPanel( new ReportMemberVsTrainings(P_datStart, P_datEnd, idKurs) )
+                ? ReportMain.P_formMain.SwitchToPanel( new ReportMemberVsTrainings(timeRange, idKurs) )
                 : $"Klicken für Details zur Teilnahme von\n"
                      + P_axisTypeMember.GetFullDesc(idMember)
                      + $" am Kurs\n" 

@@ -38,8 +38,11 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         public static DateTime LastDayOfMonth(DateTime datStart, int idMonth)
             => FirstDayOfMonth(datStart, idMonth).AddDays(DateTime.DaysInMonth(datStart.Year, datStart.Month) - 1);
 
-        public static string GetTimeRangeDescription(DateTime datStart, DateTime datEnd)
-            => Format(datStart) + " - " + Format(datEnd);
+        public static TimeRange GetMonthRange(DateTime dat, int idMonth)
+            => new TimeRange( FirstDayOfMonth(dat, idMonth), LastDayOfMonth(dat, idMonth) );
+
+        public static string GetTimeRangeDescription(TimeRange timeRange)
+            => Format(timeRange.P_datStart) + " - " + Format(timeRange.P_datEnd);
 
         public static DateTime FirstDateOfWeekISO8601(int year, int weekOfYear)
         {

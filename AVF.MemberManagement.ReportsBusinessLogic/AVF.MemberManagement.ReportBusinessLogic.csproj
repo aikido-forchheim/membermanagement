@@ -51,6 +51,7 @@
     <Compile Include="IAxis.cs" />
     <Compile Include="MemberFees.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TimeRange.cs" />
     <Compile Include="TrainerAward.cs" />
     <Compile Include="TrainingParticipationModel.cs" />
   </ItemGroup>

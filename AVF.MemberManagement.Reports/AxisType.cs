@@ -12,8 +12,7 @@ namespace AVF.MemberManagement.Reports
         public int P_MaxDbId { get; protected set; }
         public int P_MinDbId { get; protected set; }
 
-        protected DateTime P_datStart { get; set; }
-        protected DateTime P_datEnd { get; set; }
+        protected TimeRange P_timeRange { get; private set; }
 
         public List<string> HeaderStrings { get; set; }
 
@@ -21,11 +20,8 @@ namespace AVF.MemberManagement.Reports
 
         // constructor
 
-        public AxisType(DateTime datStart, DateTime datEnd)
-        {
-            P_datStart = datStart;
-            P_datEnd = datEnd;
-        }
+        public AxisType(TimeRange timeRange)
+            => P_timeRange = timeRange;
 
         // member functions
 

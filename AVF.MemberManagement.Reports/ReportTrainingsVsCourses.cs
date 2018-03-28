@@ -1,20 +1,20 @@
-﻿using System;
+﻿using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
     class ReportTrainingsVsCourses : ReportTrainingsParticipation
     {
-        public ReportTrainingsVsCourses(DateTime datStart, DateTime datEnd, int idMonth)
-            : base(datStart, datEnd)
+        public ReportTrainingsVsCourses(TimeRange timeRange, int idMonth)
+            : base(timeRange)
         {
             CreateModel
             (
-                new AxisTypeCourse(P_datStart, P_datEnd),
-                new AxisTypeTraining(P_datStart, P_datEnd),
+                new AxisTypeCourse(timeRange),
+                new AxisTypeTraining(timeRange),
                 filter: tn => true
             );
 
-            P_labelMonat.Text = "Monat:" + new AxisTypeMonth(datStart, datEnd).GetDescription(idMonth);
+            P_labelMonat.Text = "Monat:" + new AxisTypeMonth(timeRange).GetDescription(idMonth);
             ReportFormPopulate();
         }
     }

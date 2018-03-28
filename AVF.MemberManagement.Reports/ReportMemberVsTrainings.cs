@@ -5,13 +5,13 @@ namespace AVF.MemberManagement.Reports
 {
     class ReportMemberVsTrainings : ReportTrainingsParticipation
     {
-        public ReportMemberVsTrainings(DateTime datStart, DateTime datEnd, int idKurs)
-            : base(datStart, datEnd)
+        public ReportMemberVsTrainings(TimeRange timeRange, int idKurs)
+            : base(timeRange)
         {
             CreateModel
             (
-                new AxisTypeTraining(P_datStart, P_datEnd),
-                new AxisTypeMember(P_datStart, P_datEnd),
+                new AxisTypeTraining(timeRange),
+                new AxisTypeMember(timeRange),
                 filter: tn => (idKurs == -1) ? true : (idKurs == Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID))
             );
 

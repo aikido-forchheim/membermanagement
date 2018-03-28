@@ -16,20 +16,18 @@ namespace AVF.MemberManagement.Reports
 
         protected AxisTypeMember P_axisTypeMember { get; private set; }
 
-        protected DateTime P_datStart { get; private set; }
-        protected DateTime P_datEnd   { get; private set; }
+        protected TimeRange P_timeRange { get; private set; }
 
         private bool P_Hide { get; set; } = false;
 
-        public ReportTrainingsParticipation(DateTime datStart, DateTime datEnd)
+        public ReportTrainingsParticipation(TimeRange timeRange)
         {
-            P_datStart = datStart;
-            P_datEnd = datEnd;
+            P_timeRange = timeRange;
 
             InitializeReportTrainingsParticipation(); // creates DataGridView ...
             P_labelReportName.Text = "Trainingsteilnahme";
-            P_labelZeitraum.Text = Globals.GetTimeRangeDescription(P_datStart, P_datEnd);
-            P_axisTypeMember = new AxisTypeMember(P_datStart, P_datEnd);
+            P_labelZeitraum.Text = Globals.GetTimeRangeDescription(P_timeRange);
+            P_axisTypeMember = new AxisTypeMember(P_timeRange);
             P_dataGridView.Sorted += new EventHandler(delegate (object s, EventArgs e) { Sorted(s, e); });
             P_yearSelector.Minimum = Globals.DatabaseWrapper.GetStartValidData().Year;
             P_yearSelector.Maximum = DateTime.Now.Year;
@@ -54,7 +52,7 @@ namespace AVF.MemberManagement.Reports
             P_xAxis.P_startIndex = yAxisType.HeaderStrings.Count + 1; ;
             P_yAxis.P_startIndex = 0;
 
-            List<TrainingsTeilnahme> tpList         = Globals.DatabaseWrapper.TrainingsTeilnahme(P_datStart, P_datEnd);
+            List<TrainingsTeilnahme> tpList         = Globals.DatabaseWrapper.TrainingsTeilnahme(P_timeRange);
             List<TrainingsTeilnahme> tpListFiltered = Globals.DatabaseWrapper.Filter(tpList, filter);
 
             P_tpModel = new TrainingParticipationModel( tpListFiltered, P_xAxisType, P_yAxisType );
@@ -186,7 +184,7 @@ namespace AVF.MemberManagement.Reports
             {
                 if (ColIsInMainArea(col))
                 {
-                    return MouseMainDataAreaCellEvent(P_datStart, P_datEnd, P_yAxis.GetDbIdFromDgvIndex(P_dataGridView, row), P_xAxis.GetDbIdFromDgvIndex(col), action);
+                    return MouseMainDataAreaCellEvent(P_timeRange, P_yAxis.GetDbIdFromDgvIndex(P_dataGridView, row), P_xAxis.GetDbIdFromDgvIndex(col), action);
                 }
                 else // key or summary 
                 {
@@ -214,7 +212,7 @@ namespace AVF.MemberManagement.Reports
             }
         }
 
-        protected virtual string MouseMainDataAreaCellEvent(DateTime datStart, DateTime datEnd, int row, int col, bool action)
+        protected virtual string MouseMainDataAreaCellEvent(TimeRange timeRange, int row, int col, bool action)
             => String.Empty;
 
         private bool ColIsKeyArea(int iCol)

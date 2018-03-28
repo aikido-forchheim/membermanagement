@@ -8,8 +8,8 @@ namespace AVF.MemberManagement.Reports
 {
     public class AxisTypeMember : AxisType
     {
-        public AxisTypeMember(DateTime datStart, DateTime datEnd)
-             : base(datStart, datEnd)
+        public AxisTypeMember(TimeRange timeRange)
+             : base(timeRange)
         {
             P_ActiveElementsOnly = true;
             P_MaxDbId = Globals.DatabaseWrapper.MaxMitgliedsNr();
@@ -25,7 +25,7 @@ namespace AVF.MemberManagement.Reports
 
         public override string MouseAxisEvent(int idMember, bool action)
             => action
-               ? ReportMain.P_formMain.SwitchToPanel(new ReportMonthsVsCourses(P_datStart, P_datEnd, idMember))
+               ? ReportMain.P_formMain.SwitchToPanel(new ReportMonthsVsCourses(P_timeRange, idMember))
                : $"Klicken für Details zu Mitglied\n" + GetFullDesc(idMember);
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
