@@ -10,7 +10,6 @@ namespace AVF.MemberManagement.Reports
         {
             CreateModel
             (
-                bHide: true,
                 new AxisTypeEmpty(P_datStart, P_datEnd),
                 new AxisTypeMember(P_datStart, P_datEnd),
                 filter: tn => tn.TrainingID == training.Id

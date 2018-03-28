@@ -9,7 +9,6 @@ namespace AVF.MemberManagement.Reports
         {
             CreateModel
             (
-                bHide: false,
                 new AxisTypeCourse(P_datStart, P_datEnd),
                 new AxisTypeWeek(P_datStart, P_datEnd),
                 filter: tn => true

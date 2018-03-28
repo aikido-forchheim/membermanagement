@@ -31,17 +31,19 @@ namespace AVF.MemberManagement.Reports
             P_labelZeitraum.Text = Globals.GetTimeRangeDescription(P_datStart, P_datEnd);
             P_axisTypeMember = new AxisTypeMember(P_datStart, P_datEnd);
             P_dataGridView.Sorted += new EventHandler(delegate (object s, EventArgs e) { Sorted(s, e); });
+            P_yearSelector.Minimum = Globals.DatabaseWrapper.GetStartValidData().Year;
+            P_yearSelector.Maximum = DateTime.Now.Year;
+            P_yearSelector.Value = P_yearSelector.Maximum - 1;
         }
 
         protected void CreateModel
         (
-            bool bHide,
             AxisType xAxisType,
             AxisType yAxisType,
             Func<TrainingsTeilnahme, bool> filter
         )
         {
-            P_Hide = bHide;
+            P_Hide = (xAxisType.P_MaxDbId == 0);
 
             P_xAxis = new HorizontalAxis();
             P_yAxis = new VerticalAxis();
@@ -190,6 +192,25 @@ namespace AVF.MemberManagement.Reports
                 {
                     return P_yAxisType.MouseAxisEvent(P_yAxis.GetDbIdFromDgvIndex(P_dataGridView, row), action);
                 }
+            }
+        }
+
+        private void YearSelectionChanged(object sender, EventArgs e)
+        {
+            int iYear = (int)((NumericUpDown)sender).Value;
+            if ((P_yearSelector.Minimum <= iYear) && (iYear <= P_yearSelector.Maximum))
+            {
+/*
+                m_iYearStart = new DateTime((int)P_yearSelector.Value, 1, 1);
+                m_iYearEnd = new DateTime((int)P_yearSelector.Value, 12, 31);
+                ReportBase newReport = m_UndoRedo.P_reportActual;
+                if (newReport != null)
+                {
+                    System.Type reportType = newReport.GetType();
+                    //                    ReportBase report = new (newReport.GetType());
+                    m_UndoRedo.SwitchTo(newReport); // (new DateTime(m_iYear, 1, 1), new DateTime(m_iYear, 12, 31)));
+                }
+*/
             }
         }
 

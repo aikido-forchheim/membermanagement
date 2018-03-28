@@ -55,6 +55,18 @@ namespace AVF.MemberManagement.Reports
             P_labelTrainer.Name = "P_labelTrainer";
             P_labelTrainer.TabIndex = 6;
             // 
+            // P_yearSelector
+            // 
+            P_yearSelector = new System.Windows.Forms.NumericUpDown();
+            P_yearSelector.Location = new System.Drawing.Point(20, 140);
+            P_yearSelector.Maximum = new decimal(new int[] {100, 0, 0, 0});
+            P_yearSelector.Minimum = new decimal(new int[] {  0, 0, 0, 0});
+            P_yearSelector.Name = "yearSelector";
+            P_yearSelector.Size = new System.Drawing.Size(120, 26);
+            P_yearSelector.TabIndex = 13;
+            P_yearSelector.Value = new decimal(new int[] {0, 0, 0, 0});
+            P_yearSelector.ValueChanged += new System.EventHandler(YearSelectionChanged);
+            // 
             // ReportForm
             // 
             //            AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -65,6 +77,7 @@ namespace AVF.MemberManagement.Reports
             Controls.Add(P_labelMember);
             Controls.Add(P_labelMonat);
             Controls.Add(P_labelKurs);
+            Controls.Add(P_yearSelector);
             Name = "ReportForm";
             Text = "AVF Mitgliederdatenbank";
 
@@ -76,5 +89,6 @@ namespace AVF.MemberManagement.Reports
         protected Label P_labelMonat;
         protected Label P_labelKurs;
         protected Label P_labelTrainer;
+        protected NumericUpDown P_yearSelector;
     }
 }

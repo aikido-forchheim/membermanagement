@@ -10,7 +10,6 @@ namespace AVF.MemberManagement.Reports
         {
             CreateModel
             (
-                bHide: false,
                 new AxisTypeTraining(P_datStart, P_datEnd),
                 new AxisTypeMember(P_datStart, P_datEnd),
                 filter: tn => (idKurs == -1) ? true : (idKurs == Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID))

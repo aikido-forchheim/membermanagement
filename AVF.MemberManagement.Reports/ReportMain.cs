@@ -14,15 +14,8 @@ namespace AVF.MemberManagement.Reports
 
         public static ReportMain P_formMain { set; get; }
 
-        private int m_iYear;
-        public  int P_iJahr
-        {
-            set{
-                   if ( (Globals.DatabaseWrapper.GetStartValidData().Year <= value) && (value <= DateTime.Now.Year) )
-                       m_iYear = value;
-               }
-            get{ return m_iYear; }
-        }
+        private DateTime m_iYearStart;
+        private DateTime m_iYearEnd;
 
         public ReportMain()
         {
@@ -43,9 +36,12 @@ namespace AVF.MemberManagement.Reports
                 tick: s => { progressBar1.PerformStep(); labelAnimateLoadDb.Text = s; }
             );
             panelLoadDb.Dispose();
-            P_iJahr = DateTime.Now.Year - 1;
             m_UndoRedo = new ReportsUndoRedo(P_formMain);
-            m_UndoRedo.SwitchTo(new ReportMemberVsCourses(new DateTime(P_iJahr, 1, 1), new DateTime(P_iJahr, 12, 31)));
+
+            int iYear = DateTime.Now.Year - 1;
+            m_iYearStart = new DateTime(iYear,  1,  1);
+            m_iYearEnd   = new DateTime(iYear, 12, 31);
+            m_UndoRedo.SwitchTo(new ReportMemberVsCourses(m_iYearStart, m_iYearEnd));
         }
 
         public string SwitchToPanel(ReportBase panelNew )
@@ -76,13 +72,13 @@ namespace AVF.MemberManagement.Reports
         }
 
         private void Trainingsteilnahme_Kurse_Click(object sender, EventArgs e)
-            => SwitchToPanel(new ReportMemberVsCourses(new DateTime(P_iJahr, 1, 1), new DateTime(P_iJahr, 12, 31)));
+            => SwitchToPanel(new ReportMemberVsCourses(m_iYearStart, m_iYearEnd));
 
         private void Kurse_Click(object sender, EventArgs e)
-             => SwitchToPanel(new ReportCoursesVsMonths(new DateTime(P_iJahr, 1, 1), new DateTime(P_iJahr, 12, 31), -1));
+             => SwitchToPanel(new ReportCoursesVsMonths(m_iYearStart, m_iYearEnd, -1));
 
         private void Trainingsteilnahme_Monate_Click(object sender, EventArgs e)
-             => SwitchToPanel(new ReportMemberVsMonths(new DateTime(P_iJahr, 1, 1), new DateTime(P_iJahr, 12, 31), -1 ));
+             => SwitchToPanel(new ReportMemberVsMonths(m_iYearStart, m_iYearEnd, -1));
 
         private void Gradierungsliste_Click(object sender, EventArgs e)
              => SwitchToPanel(new ReportGraduationList());

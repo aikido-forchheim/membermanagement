@@ -9,8 +9,8 @@ namespace AVF.MemberManagement.Reports
     {
         // properties 
 
-        protected int P_MaxDbId { get; set; }
-        protected int P_MinDbId { get; set; }
+        public int P_MaxDbId { get; protected set; }
+        public int P_MinDbId { get; protected set; }
 
         protected DateTime P_datStart { get; set; }
         protected DateTime P_datEnd { get; set; }

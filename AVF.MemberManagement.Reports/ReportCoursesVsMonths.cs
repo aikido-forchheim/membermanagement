@@ -9,7 +9,6 @@ namespace AVF.MemberManagement.Reports
         {
             CreateModel
             (
-                bHide: false,
                 new AxisTypeMonth(P_datStart, P_datEnd),
                 new AxisTypeCourse(P_datStart, P_datEnd),
                 filter: tn => (idMember == -1) ? true : (idMember == tn.MitgliedID)
