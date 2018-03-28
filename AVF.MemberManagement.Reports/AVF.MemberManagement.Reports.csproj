@@ -77,9 +77,6 @@
     <Compile Include="ReportBase.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ReportCoursesVsMonths.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="ReportMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -87,9 +84,6 @@
       <DependentUpon>ReportMain.cs</DependentUpon>
     </Compile>
     <Compile Include="ReportMemberFees.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="ReportMemberVsMonths.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="ReportsUndoRedo.cs" />
@@ -100,9 +94,6 @@
       <DependentUpon>ReportTrainingsParticipation.cs</DependentUpon>
     </Compile>
     <Compile Include="ReportGraduationList.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="ReportMemberVsCourses.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="ReportTraining.cs">

@@ -65,7 +65,6 @@ namespace AVF.MemberManagement.Reports
             P_yearSelector.Size = new System.Drawing.Size(120, 26);
             P_yearSelector.TabIndex = 13;
             P_yearSelector.Value = new decimal(new int[] {0, 0, 0, 0});
-            P_yearSelector.ValueChanged += new System.EventHandler(YearSelectionChanged);
             // 
             // ReportForm
             // 

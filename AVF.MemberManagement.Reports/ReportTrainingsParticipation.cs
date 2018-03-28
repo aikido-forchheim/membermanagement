@@ -21,9 +21,9 @@ namespace AVF.MemberManagement.Reports
         (
             Type xAxisType,
             Type yAxisType,
-            TimeRange timeRange = Globals.ALL_YEARS, 
-            int idMember = Globals.ALL_MEMBERS, 
-            int idCourse = Globals.ALL_COURSES, 
+            TimeRange timeRange = Globals.ALL_YEARS,
+            int idMember = Globals.ALL_MEMBERS,
+            int idCourse = Globals.ALL_COURSES,
             int idTraining = Globals.ALL_TRAININGS,
             int idMonth = Globals.ALL_MONTHS
         )
@@ -37,7 +37,8 @@ namespace AVF.MemberManagement.Reports
             P_dataGridView.Sorted += new EventHandler(delegate (object s, EventArgs e) { Sorted(s, e); });
             P_yearSelector.Minimum = Globals.DatabaseWrapper.GetStartValidData().Year;
             P_yearSelector.Maximum = DateTime.Now.Year;
-            P_yearSelector.Value = P_yearSelector.Maximum - 1;
+            P_yearSelector.Value = timeRange.P_datStart.Year;
+            P_yearSelector.ValueChanged += new System.EventHandler(YearSelectionChanged);
             CreateModel();
             ReportFormPopulate();
         }
@@ -49,9 +50,6 @@ namespace AVF.MemberManagement.Reports
 
             P_xAxisType = (AxisType)Activator.CreateInstance(m_reportDescriptor.P_xAxisType, m_reportDescriptor);
             P_yAxisType = (AxisType)Activator.CreateInstance(m_reportDescriptor.P_yAxisType, m_reportDescriptor);
-
-            //            Type t = typeof(AxisTypeTraining);
-            //            AxisType a = (AxisType)Activator.CreateInstance(t, m_reportDescriptor);
 
             P_xAxis.P_startIndex = P_yAxisType.HeaderStrings.Count + 1; ;
             P_yAxis.P_startIndex = 0;
@@ -215,17 +213,19 @@ namespace AVF.MemberManagement.Reports
             int iYear = (int)((NumericUpDown)sender).Value;
             if ((P_yearSelector.Minimum <= iYear) && (iYear <= P_yearSelector.Maximum))
             {
-/*
-                m_iYearStart = new DateTime((int)P_yearSelector.Value, 1, 1);
-                m_iYearEnd = new DateTime((int)P_yearSelector.Value, 12, 31);
-                ReportBase newReport = m_UndoRedo.P_reportActual;
-                if (newReport != null)
-                {
-                    System.Type reportType = newReport.GetType();
-                    //                    ReportBase report = new (newReport.GetType());
-                    m_UndoRedo.SwitchTo(newReport); // (new DateTime(m_iYear, 1, 1), new DateTime(m_iYear, 12, 31)));
-                }
-*/
+                DateTime datStart = new DateTime(iYear,  1, 1);
+                DateTime datEnd   = new DateTime(iYear, 12, 31);
+                ReportTrainingsParticipation reportNew = new ReportTrainingsParticipation
+                (
+                    m_reportDescriptor.P_xAxisType, 
+                    m_reportDescriptor.P_yAxisType,
+                    new TimeRange(datStart, datEnd),
+                    m_reportDescriptor.P_idMember,
+                    m_reportDescriptor.P_idCourse,
+                    m_reportDescriptor.P_idTraining,
+                    m_reportDescriptor.P_idMonth
+                );
+                ReportMain.P_formMain.SwitchToPanel(reportNew);
             }
         }
 
