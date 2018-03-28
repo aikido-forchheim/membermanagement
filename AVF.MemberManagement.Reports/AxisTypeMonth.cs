@@ -27,7 +27,7 @@ namespace AVF.MemberManagement.Reports
 
         public override string MouseAxisEvent(int idMonth, bool action)
             => action
-               ? ReportMain.P_formMain.SwitchToPanel(new ReportWeeksVsCourses(Globals.GetMonthRange(P_reportDescriptor.P_timeRange.P_datStart, idMonth), P_reportDescriptor.P_idMember))
+               ? ReportMain.P_formMain.SwitchToPanel(new ReportTrainingsParticipation(typeof(AxisTypeCourse), typeof(AxisTypeWeek), Globals.GetMonthRange(P_reportDescriptor.P_timeRange.P_datStart, idMonth), P_reportDescriptor.P_idMember))
                : $"Klicken für Details zum Monat " + GetDescription(idMonth);
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)

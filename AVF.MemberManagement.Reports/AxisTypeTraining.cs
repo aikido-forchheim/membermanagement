@@ -27,7 +27,7 @@ namespace AVF.MemberManagement.Reports
         {
             Debug.Assert(idTraining > 0);
             return action
-               ? ReportMain.P_formMain.SwitchToPanel(new ReportTraining(Globals.DatabaseWrapper.TrainingFromId(idTraining)))
+               ? ReportMain.P_formMain.SwitchToPanel(new ReportTrainingsParticipation(typeof(AxisTypeEmpty), typeof(AxisTypeMember), timeRange: new TimeRange(Globals.DatabaseWrapper.TrainingFromId(idTraining).Termin), idTraining: idTraining))
                : $"Klicken für Details zum Training " + GetFullDesc(idTraining, '.');
         }
 

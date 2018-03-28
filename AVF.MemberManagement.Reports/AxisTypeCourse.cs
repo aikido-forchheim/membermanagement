@@ -24,7 +24,7 @@ namespace AVF.MemberManagement.Reports
 
         public override string MouseAxisEvent(int idKurs, bool action)
             => action
-               ? ReportMain.P_formMain.SwitchToPanel(new ReportMemberVsTrainings(P_reportDescriptor.P_timeRange, Globals.ALL_MEMBERS, idKurs))
+               ? ReportMain.P_formMain.SwitchToPanel(new ReportTrainingsParticipation(typeof(AxisTypeTraining), typeof(AxisTypeMember), P_reportDescriptor.P_timeRange, Globals.ALL_MEMBERS, idKurs))
                : $"Klicken für Details zum Kurs\n" + GetDescription(idKurs);
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)

@@ -92,9 +92,6 @@
     <Compile Include="ReportMemberVsMonths.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ReportMonthsVsCourses.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="ReportsUndoRedo.cs" />
     <Compile Include="ReportTrainingsParticipation.cs">
       <SubType>Component</SubType>
@@ -108,24 +105,15 @@
     <Compile Include="ReportMemberVsCourses.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ReportMemberVsTrainings.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="ReportTraining.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="AxisTypeTraining.cs" />
-    <Compile Include="ReportTrainingsVsCourses.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReportWeek.cs" />
     <Compile Include="UndoRedoStack.cs" />
     <Compile Include="VerticalAxis.cs" />
-    <Compile Include="ReportWeeksVsCourses.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <EmbeddedResource Include="ReportMain.resx">
       <DependentUpon>ReportMain.cs</DependentUpon>
     </EmbeddedResource>

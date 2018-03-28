@@ -39,7 +39,7 @@ namespace AVF.MemberManagement.Reports
 
             int iYear = DateTime.Now.Year - 1;
             m_timeRange = new TimeRange( new DateTime(iYear,  1,  1), new DateTime(iYear, 12, 31) );
-            m_UndoRedo.SwitchTo(new ReportMemberVsCourses(m_timeRange, Globals.ALL_MEMBERS));
+            m_UndoRedo.SwitchTo(new ReportTrainingsParticipation(typeof(AxisTypeCourse), typeof(AxisTypeMember), m_timeRange, Globals.ALL_MEMBERS));
         }
 
         public string SwitchToPanel(ReportBase panelNew )
@@ -70,13 +70,13 @@ namespace AVF.MemberManagement.Reports
         }
 
         private void Trainingsteilnahme_Kurse_Click(object sender, EventArgs e)
-            => SwitchToPanel(new ReportMemberVsCourses(m_timeRange, Globals.ALL_MEMBERS));
+            => SwitchToPanel(new ReportTrainingsParticipation(typeof(AxisTypeCourse), typeof(AxisTypeMember), m_timeRange, Globals.ALL_MEMBERS));
 
         private void Kurse_Click(object sender, EventArgs e)
-             => SwitchToPanel(new ReportCoursesVsMonths(m_timeRange, Globals.ALL_MEMBERS));
+             => SwitchToPanel(new ReportTrainingsParticipation(typeof(AxisTypeMonth), typeof(AxisTypeCourse), m_timeRange, Globals.ALL_MEMBERS));
 
         private void Trainingsteilnahme_Monate_Click(object sender, EventArgs e)
-             => SwitchToPanel(new ReportMemberVsMonths(m_timeRange, Globals.ALL_MEMBERS, Globals.ALL_COURSES));
+             => SwitchToPanel(new ReportTrainingsParticipation(typeof(AxisTypeMonth), typeof(AxisTypeMember), m_timeRange, Globals.ALL_MEMBERS, Globals.ALL_COURSES));
 
         private void Gradierungsliste_Click(object sender, EventArgs e)
              => SwitchToPanel(new ReportGraduationList());
