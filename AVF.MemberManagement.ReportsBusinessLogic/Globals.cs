@@ -32,14 +32,18 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         public static int GetWeekOfYear(DateTime date)
             => P_cal.GetWeekOfYear(date, P_dfi.CalendarWeekRule, P_dfi.FirstDayOfWeek);
 
-        public static DateTime FirstDayOfMonth(DateTime datStart, int idMonth)
-            => new DateTime(datStart.Year, datStart.Month + idMonth, 1);
-
-        public static DateTime LastDayOfMonth(DateTime datStart, int idMonth)
-            => FirstDayOfMonth(datStart, idMonth).AddDays(DateTime.DaysInMonth(datStart.Year, datStart.Month) - 1);
+        public static int GetWeekOfYear(DateTime date, int iNrOfWeeks)
+            => GetWeekOfYear(date.Add(new TimeSpan(TimeSpan.TicksPerDay * iNrOfWeeks * 7)));
 
         public static TimeRange GetMonthRange(DateTime dat, int idMonth)
-            => new TimeRange( FirstDayOfMonth(dat, idMonth), LastDayOfMonth(dat, idMonth) );
+        {
+            int iNrOfMonths = dat.Month + idMonth - 1;
+            int iYear       = dat.Year + iNrOfMonths / 12;
+            int iMonth      = iNrOfMonths % 12 + 1;
+            DateTime datStart = new DateTime(iYear, iMonth, 1);
+            DateTime datEnd   = datStart.AddDays(DateTime.DaysInMonth(iYear, iMonth) - 1);
+            return new TimeRange(datStart, datEnd);
+        }
 
         public static string GetTimeRangeDescription(TimeRange timeRange)
             => Format(timeRange.P_datStart) + " - " + Format(timeRange.P_datEnd);
