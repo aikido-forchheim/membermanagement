@@ -5,7 +5,7 @@ namespace AVF.MemberManagement.Reports
     class ReportTrainingsVsCourses : ReportTrainingsParticipation
     {
         public ReportTrainingsVsCourses(TimeRange timeRange, int idMonth, int idMember)
-            : base(timeRange, idMember, Globals.ALL_COURSES, Globals.ALL_TRAININGS)
+            : base(timeRange, idMember, idMonth: idMonth)
         {
             CreateModel
             (
@@ -13,7 +13,6 @@ namespace AVF.MemberManagement.Reports
                 new AxisTypeTraining(m_reportDescriptor)
             );
 
-            P_labelMonat.Text = "Monat:" + new AxisTypeMonth(m_reportDescriptor).GetDescription(idMonth);
             ReportFormPopulate();
         }
     }

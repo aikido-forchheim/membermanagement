@@ -18,9 +18,16 @@ namespace AVF.MemberManagement.Reports
 
         protected ReportDescriptor m_reportDescriptor;
 
-        public ReportTrainingsParticipation(TimeRange timeRange, int idMember, int idCourse, int idTraining)
+        public ReportTrainingsParticipation
+        (
+            TimeRange timeRange = Globals.ALL_YEARS, 
+            int idMember = Globals.ALL_MEMBERS, 
+            int idCourse = Globals.ALL_COURSES, 
+            int idTraining = Globals.ALL_TRAININGS,
+            int idMonth = Globals.ALL_MONTHS
+        )
         {
-            m_reportDescriptor = new ReportDescriptor(timeRange, idMember, idCourse, idTraining);
+            m_reportDescriptor = new ReportDescriptor(timeRange, idMember, idCourse, idTraining, idMonth);
 
             InitializeReportTrainingsParticipation(); // creates DataGridView ...
             P_labelReportName.Text = "Trainingsteilnahme";
@@ -47,7 +54,12 @@ namespace AVF.MemberManagement.Reports
             P_xAxis.P_startIndex = yAxisType.HeaderStrings.Count + 1; ;
             P_yAxis.P_startIndex = 0;
 
-            List<TrainingsTeilnahme> tpList = Globals.DatabaseWrapper.TrainingsTeilnahme(m_reportDescriptor.P_timeRange);
+            List<TrainingsTeilnahme> tpList = Globals.DatabaseWrapper.P_trainingsTeilnahme;
+
+            if (m_reportDescriptor.P_timeRange != Globals.ALL_YEARS)
+                tpList = Globals.DatabaseWrapper.Filter(tpList, tn => m_reportDescriptor.P_timeRange.Includes(Globals.DatabaseWrapper.TerminFromTrainingId(tn.TrainingID)));
+
+            Globals.DatabaseWrapper.TrainingsTeilnahme(m_reportDescriptor.P_timeRange);
 
             if (m_reportDescriptor.P_idMember != Globals.ALL_MEMBERS)
                 tpList = Globals.DatabaseWrapper.Filter(tpList, tn => m_reportDescriptor.P_idMember == tn.MitgliedID);
@@ -93,6 +105,15 @@ namespace AVF.MemberManagement.Reports
             P_xAxis.Initialize( P_xAxisType.DatabaseIdRange() );
             P_yAxis.Initialize( P_yAxisType.DatabaseIdRange() );
             ReportFormSize();
+
+            P_labelMember.Text = P_axisTypeMember.GetFullDesc(m_reportDescriptor.P_idMember);
+            P_labelMonat.Text  = new AxisTypeMonth(m_reportDescriptor).GetDescription(m_reportDescriptor.P_idMonth);
+            if (m_reportDescriptor.P_idCourse != Globals.ALL_COURSES)
+            {
+                int idTrainer = Globals.DatabaseWrapper.KursFromId(m_reportDescriptor.P_idCourse).Trainer;
+                if (idTrainer > 0)
+                    P_labelTrainer.Text = $"Trainer: {P_axisTypeMember.GetFullDesc(idTrainer)}";
+            }
 
             P_yAxis.FillKeyHeaderCells(P_dataGridView, P_yAxisType);
 
