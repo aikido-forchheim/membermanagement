@@ -34,17 +34,13 @@ namespace AVF.MemberManagement.Reports
             P_labelReportName.Text = "Trainingsteilnahme";
             P_labelZeitraum.Text = Globals.GetTimeRangeDescription(m_reportDescriptor.P_timeRange);
             P_axisTypeMember = new AxisTypeMember(m_reportDescriptor);
+
             P_dataGridView.Sorted += new EventHandler(delegate (object s, EventArgs e) { Sorted(s, e); });
             P_yearSelector.Minimum = Globals.DatabaseWrapper.GetStartValidData().Year;
             P_yearSelector.Maximum = DateTime.Now.Year;
             P_yearSelector.Value = timeRange.P_datStart.Year;
             P_yearSelector.ValueChanged += new System.EventHandler(YearSelectionChanged);
-            CreateModel();
-            ReportFormPopulate();
-        }
 
-        protected void CreateModel()
-        {
             P_xAxis = new HorizontalAxis();
             P_yAxis = new VerticalAxis();
 
@@ -54,7 +50,9 @@ namespace AVF.MemberManagement.Reports
             P_xAxis.P_startIndex = P_yAxisType.HeaderStrings.Count + 1; ;
             P_yAxis.P_startIndex = 0;
 
-            P_tpModel = new TrainingParticipationModel(m_reportDescriptor, P_xAxisType, P_yAxisType );
+            P_tpModel = new TrainingParticipationModel(m_reportDescriptor, P_xAxisType, P_yAxisType);
+
+            ReportFormPopulate();
         }
 
         private void FillMainArea()
@@ -91,13 +89,16 @@ namespace AVF.MemberManagement.Reports
             ReportFormSize();
 
             P_labelMember.Text = P_axisTypeMember.GetFullDesc(m_reportDescriptor.P_idMember);
-            P_labelMonat.Text  = new AxisTypeMonth(m_reportDescriptor).GetDescription(m_reportDescriptor.P_idMonth);
+
+            P_labelMonat.Text = AxisTypeMonth.GetDesc(m_reportDescriptor, m_reportDescriptor.P_idMonth);
+
             if (m_reportDescriptor.P_idCourse != Globals.ALL_COURSES)
             {
                 int idTrainer = Globals.DatabaseWrapper.KursFromId(m_reportDescriptor.P_idCourse).Trainer;
                 if (idTrainer > 0)
                     P_labelTrainer.Text = $"Trainer: {P_axisTypeMember.GetFullDesc(idTrainer)}";
             }
+
             if (m_reportDescriptor.P_idTraining != Globals.ALL_TRAININGS)
             {
                 Training training = Globals.DatabaseWrapper.TrainingFromId(m_reportDescriptor.P_idTraining);
@@ -199,7 +200,7 @@ namespace AVF.MemberManagement.Reports
             {
                 if (ColIsInMainArea(col))
                 {
-                    return MouseMainDataAreaCellEvent(m_reportDescriptor.P_timeRange, P_yAxis.GetDbIdFromDgvIndex(P_dataGridView, row), P_xAxis.GetDbIdFromDgvIndex(col), action);
+                    return String.Empty; // TODO: add some action
                 }
                 else // key or summary 
                 {
@@ -228,9 +229,6 @@ namespace AVF.MemberManagement.Reports
                 ReportMain.P_formMain.SwitchToPanel(reportNew);
             }
         }
-
-        protected virtual string MouseMainDataAreaCellEvent(TimeRange timeRange, int row, int col, bool action)
-            => String.Empty;
 
         private bool ColIsKeyArea(int iCol)
             => iCol < P_yAxisType.HeaderStrings.Count + 1;

@@ -32,24 +32,16 @@ namespace AVF.MemberManagement.Reports
 
         public static string GetDesc(int idKurs)
         {
-            if (idKurs < 0)
-            {
+            if (idKurs == Globals.ALL_COURSES)
                 return "Alle Kurse";
-            }
-            else
-            {
-                Kurs kurs = Globals.DatabaseWrapper.KursFromId(idKurs);
 
-                if (kurs.Zeit == TimeSpan.Zero)
-                {
-                    return $"_Lehrg. etc.";
-                }
-                else
-                {
-                    string day = Globals.DatabaseWrapper.WeekDay(kurs.WochentagID).Substring(0, 2);
-                    return $"{ day } {kurs.Zeit:hh}:{kurs.Zeit:mm}";
-                }
-            }
+            Kurs kurs = Globals.DatabaseWrapper.KursFromId(idKurs);
+
+            if (kurs.Zeit == TimeSpan.Zero)
+                return $"_Lehrg. etc.";
+
+            string day = Globals.DatabaseWrapper.WeekDay(kurs.WochentagID).Substring(0, 2);
+                return $"{ day } {kurs.Zeit:hh}:{kurs.Zeit:mm}";
         }
 
         public override string GetDescription(int idKurs, int iNr = 1)
