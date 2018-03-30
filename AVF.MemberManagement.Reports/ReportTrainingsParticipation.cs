@@ -21,14 +21,15 @@ namespace AVF.MemberManagement.Reports
         (
             Type xAxisType,
             Type yAxisType,
-            TimeRange timeRange = Globals.ALL_YEARS,
+            TimeRange timeRange = Globals.ALL_TIMERANGE,
             int idMember = Globals.ALL_MEMBERS,
             int idCourse = Globals.ALL_COURSES,
             int idTraining = Globals.ALL_TRAININGS,
-            int idMonth = Globals.ALL_MONTHS
+            int idMonth = Globals.ALL_MONTHS,
+            int idYear = Globals.ALL_YEARS
         )
         {
-            m_reportDescriptor = new ReportDescriptor(xAxisType, yAxisType, timeRange, idMember, idCourse, idTraining, idMonth);
+            m_reportDescriptor = new ReportDescriptor(xAxisType, yAxisType, timeRange, idMember, idCourse, idTraining, idMonth, idYear);
 
             InitializeReportTrainingsParticipation(); // creates DataGridView ...
             P_labelReportName.Text = "Trainingsteilnahme";
@@ -249,7 +250,7 @@ namespace AVF.MemberManagement.Reports
         /*  ReportMemberVsCourses
         protected override string MouseMainDataAreaCellEvent(TimeRange timeRange, int idMember, int idKurs, bool action )
             => action
-                ? ReportMain.P_formMain.SwitchToPanel( new ReportTrainingsParticipation(typeof(AxisTypeTraining), typeof(AxisTypeMember), timeRange, idMember, idKurs) )
+                ? ReportMain.P_formMain.NewPanel(typeof(AxisTypeTraining), typeof(AxisTypeMember), timeRange, idMember, idKurs) )
                 : $"Klicken für Details zur Teilnahme von\n"
                         + P_axisTypeMember.GetFullDesc(idMember)
                         + $" am Kurs\n" 
@@ -259,7 +260,7 @@ namespace AVF.MemberManagement.Reports
         /*  ReportMemberVsMonths
         protected override string MouseMainDataAreaCellEvent(TimeRange timeRange, int idMember, int idMonth, bool action)
         => action
-            ? ReportMain.P_formMain.SwitchToPanel(new ReportTrainingsParticipation(typeof(AxisTypeCourse), typeof(AxisTypeTraining), timeRange, idMonth, idMember))
+            ? ReportMain.P_formMain.NewPanel(typeof(AxisTypeCourse), typeof(AxisTypeTraining), timeRange, idMonth, idMember))
             : $"Klicken für Details zur Teilnahme von\n"
                     + P_axisTypeMember.GetFullDesc(idMember)
                     + $" im Monat\n"

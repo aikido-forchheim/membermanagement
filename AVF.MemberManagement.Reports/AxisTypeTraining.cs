@@ -14,7 +14,7 @@ namespace AVF.MemberManagement.Reports
             P_ActiveElementsOnly = true;
             P_MaxDbId = Globals.DatabaseWrapper.MaxTrainingNr();
             P_MinDbId = Globals.DatabaseWrapper.MinTrainingNr();
-            HeaderStrings = new List<string> { "Training" };
+            HeaderStrings = new List<string> { "Training", "Zeit" };
         }
 
         public override int GetModelIndexFromId(int id)
@@ -27,7 +27,7 @@ namespace AVF.MemberManagement.Reports
         {
             Debug.Assert(idTraining > 0);
             return action
-               ? ReportMain.P_formMain.SwitchToPanel(new ReportTrainingsParticipation(typeof(AxisTypeEmpty), typeof(AxisTypeMember), timeRange: new TimeRange(Globals.DatabaseWrapper.TrainingFromId(idTraining).Termin), idTraining: idTraining))
+               ? ReportMain.P_formMain.NewPanel(typeof(AxisTypeEmpty), typeof(AxisTypeMember), new TimeRange(Globals.DatabaseWrapper.TrainingFromId(idTraining).Termin), idTraining: idTraining)
                : $"Klicken für Details zum Training " + GetFullDesc(idTraining, '.');
         }
 
@@ -35,7 +35,10 @@ namespace AVF.MemberManagement.Reports
             => tn.TrainingID;
 
         public override string GetFullDesc(int idTraining, char separator)
-            => GetDescription(idTraining, 1) + separator + GetDescription(idTraining, 2) + separator + GetDescription(idTraining, 3);
+        {
+            Training training = Globals.DatabaseWrapper.TrainingFromId(idTraining);
+            return $"{training.Termin:dd}{separator}{training.Termin:MM}{separator}{training.Termin:yy}";
+        }
 
         public override string GetDescription(int idTraining, int iNr = 1)
         {
@@ -52,6 +55,9 @@ namespace AVF.MemberManagement.Reports
 
                 case 3:
                     return $"{training.Termin:yy}";
+
+                case 4:
+                    return $"{training.Zeit:hh}:{training.Zeit:mm}";
 
                 default:
                     Debug.Assert(false);

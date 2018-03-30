@@ -121,7 +121,7 @@ namespace AVF.MemberManagement.Reports
                 DateTime  dateStart    = (datValidData <= dateGrad) ? dateGrad : datValidData;
                 TimeRange timeRange    = new TimeRange(dateStart, DateTime.Now);
                 return action
-                    ? ReportMain.P_formMain.SwitchToPanel(new ReportTrainingsParticipation(typeof(AxisTypeCourse), typeof(AxisTypeMonth), timeRange, idMember))
+                    ? ReportMain.P_formMain.NewPanel(typeof(AxisTypeCourse), typeof(AxisTypeMonth), timeRange, idMember: idMember)
                     : $"Klicken für Details zu Mitglied\n" + P_axisTypeMember.GetFullDesc(idMember);
             }
             else

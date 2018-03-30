@@ -42,6 +42,19 @@ namespace AVF.MemberManagement.Reports
             m_UndoRedo.SwitchTo(new ReportTrainingsParticipation(typeof(AxisTypeCourse), typeof(AxisTypeMember), m_timeRange, Globals.ALL_MEMBERS));
         }
 
+        public string NewPanel
+        (
+            Type xAxisType,
+            Type yAxisType,
+            TimeRange timeRange = Globals.ALL_TIMERANGE,
+            int idMember = Globals.ALL_MEMBERS,
+            int idCourse = Globals.ALL_COURSES,
+            int idTraining = Globals.ALL_TRAININGS,
+            int idMonth = Globals.ALL_MONTHS,
+            int idYear = Globals.ALL_YEARS
+        )
+            => SwitchToPanel(new ReportTrainingsParticipation(xAxisType, yAxisType, timeRange, idMember, idCourse, idTraining, idMonth, idYear));
+
         public string SwitchToPanel(ReportBase panelNew )
         {
             m_UndoRedo.Add(panelNew);
@@ -70,13 +83,13 @@ namespace AVF.MemberManagement.Reports
         }
 
         private void Trainingsteilnahme_Kurse_Click(object sender, EventArgs e)
-            => SwitchToPanel(new ReportTrainingsParticipation(typeof(AxisTypeCourse), typeof(AxisTypeMember), m_timeRange, Globals.ALL_MEMBERS));
+            => NewPanel(typeof(AxisTypeCourse), typeof(AxisTypeMember), m_timeRange);
 
         private void Kurse_Click(object sender, EventArgs e)
-             => SwitchToPanel(new ReportTrainingsParticipation(typeof(AxisTypeMonth), typeof(AxisTypeCourse), m_timeRange, Globals.ALL_MEMBERS));
+             => NewPanel(typeof(AxisTypeMonth), typeof(AxisTypeCourse), m_timeRange);
 
         private void Trainingsteilnahme_Monate_Click(object sender, EventArgs e)
-             => SwitchToPanel(new ReportTrainingsParticipation(typeof(AxisTypeMonth), typeof(AxisTypeMember), m_timeRange, Globals.ALL_MEMBERS, Globals.ALL_COURSES));
+             => NewPanel(typeof(AxisTypeMonth), typeof(AxisTypeMember), m_timeRange);
 
         private void Gradierungsliste_Click(object sender, EventArgs e)
              => SwitchToPanel(new ReportGraduationList());

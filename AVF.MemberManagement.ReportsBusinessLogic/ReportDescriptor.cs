@@ -8,11 +8,12 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         (
             Type xAxisType = null,
             Type yAxisType = null,
-            TimeRange timeRange = Globals.ALL_YEARS,
+            TimeRange timeRange = Globals.ALL_TIMERANGE,
             int idMember = Globals.ALL_MEMBERS,
             int idCourse = Globals.ALL_COURSES,
             int idTraining = Globals.ALL_TRAININGS,
-            int idMonth = Globals.ALL_MONTHS
+            int idMonth = Globals.ALL_MONTHS,
+            int idYear = Globals.ALL_YEARS
         )
         {
             P_xAxisType = xAxisType;
@@ -22,6 +23,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             P_idCourse = idCourse;
             P_idTraining = idTraining;
             P_idMonth = idMonth;
+            P_idYear = idYear;
         }
 
         public TimeRange P_timeRange { get; private set; }
@@ -29,6 +31,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         public int P_idCourse { get; private set; }
         public int P_idTraining { get; private set; }
         public int P_idMonth { get; private set; }
+        public int P_idYear { get; private set; }
         public Type P_xAxisType;
         public Type P_yAxisType;
     }

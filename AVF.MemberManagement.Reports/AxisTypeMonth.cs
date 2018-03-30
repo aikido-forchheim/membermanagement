@@ -5,30 +5,29 @@ using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
-    public class AxisTypeMonth : AxisType
+    public class AxisTypeMonth : AxisTypeTime
     {
         public AxisTypeMonth(ReportDescriptor desc)
              : base(desc)
         {
-            P_ActiveElementsOnly = false;
-            P_MinDbId = 0;
             P_MaxDbId = NrOfMonths(P_reportDescriptor.P_timeRange.P_datStart, P_reportDescriptor.P_timeRange.P_datEnd);
             HeaderStrings = new List<string> { "Monat" };
+            m_period = Period.MONTH;
         }
 
         private int NrOfMonths(DateTime datStart, DateTime datEnd)
             => (datEnd.Year - datStart.Year) * 12 + (datEnd.Month - datStart.Month);
 
-        public override int GetModelIndexFromId(int id)
-            => id;
-
-        public override int GetIdFromModelIndex(int iModelIndex)
-            => iModelIndex;
-
         public override string MouseAxisEvent(int idMonth, bool action)
             => action
-               ? ReportMain.P_formMain.SwitchToPanel(new ReportTrainingsParticipation(typeof(AxisTypeCourse), typeof(AxisTypeWeek), Globals.GetMonthRange(P_reportDescriptor.P_timeRange.P_datStart, idMonth), P_reportDescriptor.P_idMember))
-               : $"Klicken für Details zum Monat " + GetDescription(idMonth);
+               ? ReportMain.P_formMain.NewPanel
+                 (
+                    typeof(AxisTypeCourse), 
+                    typeof(AxisTypeWeek), 
+                    Globals.GetMonthRange(P_reportDescriptor, idMonth), 
+                    idMember: P_reportDescriptor.P_idMember
+                 )
+               : $"Klicken für Details zu " + HeaderStrings[0] + " " + GetDescription(idMonth);
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => NrOfMonths(P_reportDescriptor.P_timeRange.P_datStart, Globals.DatabaseWrapper.TerminFromTrainingId(tn.TrainingID));

@@ -30,7 +30,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         {
             List<TrainingsTeilnahme> tpList = Globals.DatabaseWrapper.P_trainingsTeilnahme;
 
-            if (desc.P_timeRange != Globals.ALL_YEARS)
+            if (desc.P_timeRange != Globals.ALL_TIMERANGE)
                 tpList = Globals.DatabaseWrapper.Filter(tpList, tn => desc.P_timeRange.Includes(Globals.DatabaseWrapper.TerminFromTrainingId(tn.TrainingID)));
 
             if (desc.P_idMember != Globals.ALL_MEMBERS)
