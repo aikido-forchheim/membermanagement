@@ -20,22 +20,22 @@ namespace AVF.MemberManagement.Reports
 
         public override string MouseAxisEvent(int idYear, bool action)
            => action
-              ? ReportMain.P_formMain.NewPanel
+              ? ReportMain.P_formMain.NewTrainingsParticipationPanel
                 (
-                   typeof(AxisTypeCourse), 
-                   typeof(AxisTypeMonth), 
-                   Globals.GetYearRange(P_reportDescriptor, idYear), 
-                   idMember: P_reportDescriptor.P_idMember
+                    defaultDesc: P_reportDescriptor,
+                    yAxisType: typeof(AxisTypeMonth), 
+                    idYear: idYear
                 )
               : $"Klicken für Details zu " + HeaderStrings[0] + " " + GetDescription(idYear);
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => NrOfYears(P_reportDescriptor.P_timeRange.P_datStart, Globals.DatabaseWrapper.TerminFromTrainingId(tn.TrainingID));
 
-        public override string GetDescription(int idYear, int iNr = 1)
-            => GetDesc(P_reportDescriptor, idYear, iNr);
-
-        public static string GetDesc(ReportDescriptor desc, int idYear, int iNr = 1)
-            => $"{desc.P_timeRange.P_datStart.Year + idYear}";
+        public override List<string> GetDescription(int idYear)
+        {
+            List<string> list = new List<string>();
+            list.Add($"{P_reportDescriptor.P_timeRange.P_datStart.Year + idYear}");
+            return list;
+        }
     }
 }

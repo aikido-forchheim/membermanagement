@@ -16,6 +16,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         public const int ALL_MEMBERS   = -1;  // legal member ids start with 1, -1 means "all members"
         public const int ALL_COURSES   = -1;  // legal course ids start with 0, -1 means "all courses"
         public const int ALL_TRAININGS = -1;  // legal training ids start with 0, -1 means "all trainings"
+        public const int ALL_WEEKS = -1;
         public const int ALL_MONTHS = -1;
         public const int ALL_YEARS = -1;
 

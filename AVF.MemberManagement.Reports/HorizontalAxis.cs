@@ -14,9 +14,8 @@ namespace AVF.MemberManagement.Reports
 
         public override void FillMainKeyCell(DataGridView dgv, int iDgvCol, int iModelCol, AxisType axisType)
         {
-            int id = axisType.GetIdFromModelIndex(iModelCol);
-
-            dgv.Columns[iDgvCol].HeaderText = axisType.GetFullDesc(id, '\n');
+            int id   = axisType.GetIdFromModelIndex(iModelCol);
+            dgv.Columns[iDgvCol].HeaderText = axisType.GetFullDesc(id, "\n");
             dgv.Columns[iDgvCol].SortMode = DataGridViewColumnSortMode.NotSortable;
 
             P_DbIds[iDgvCol - P_startIndex] = id;  // remember id 

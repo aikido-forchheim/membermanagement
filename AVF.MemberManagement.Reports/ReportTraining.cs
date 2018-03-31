@@ -3,11 +3,18 @@ using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
-    class ReportTraining : ReportTrainingsParticipation
+    class ReportTraining
     {
         public ReportTraining(Training training)
-            : base(typeof(AxisTypeEmpty), typeof(AxisTypeMember), timeRange: new TimeRange(training.Termin), idTraining: training.Id)
         {
+            ReportMain.P_formMain.NewTrainingsParticipationPanel
+                (
+                    defaultDesc: null,
+                    xAxisType: typeof(AxisTypeEmpty), 
+                    yAxisType: typeof(AxisTypeMember), 
+                    timeRange: new TimeRange(training.Termin), 
+                    idTraining: training.Id)
+                ;
         }
     }
 }

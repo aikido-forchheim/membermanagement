@@ -24,27 +24,41 @@ namespace AVF.MemberManagement.Reports
 
         public override string MouseAxisEvent(int idKurs, bool action)
             => action
-               ? ReportMain.P_formMain.NewPanel(typeof(AxisTypeTraining), typeof(AxisTypeMember), P_reportDescriptor.P_timeRange, idCourse: idKurs)
+               ? ReportMain.P_formMain.NewTrainingsParticipationPanel
+                 (
+                     defaultDesc: P_reportDescriptor,
+                     xAxisType: typeof(AxisTypeTraining), 
+                     yAxisType: typeof(AxisTypeMember), 
+                     idCourse: idKurs
+                 )
                : $"Klicken für Details zum Kurs\n" + GetDescription(idKurs);
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID);
 
-        public static string GetDesc(int idKurs)
+        public static List<string> GetDesc(int idKurs)
         {
+            List<string> list = new List<string>();
             if (idKurs == Globals.ALL_COURSES)
-                return "Alle Kurse";
+            {
+                list.Add("Alle Kurse");
+                return list;
+            }
 
             Kurs kurs = Globals.DatabaseWrapper.KursFromId(idKurs);
 
             if (kurs.Zeit == TimeSpan.Zero)
-                return $"_Lehrg. etc.";
+            {
+                list.Add("_Lehrg. etc.");
+                return list;
+            }
 
             string day = Globals.DatabaseWrapper.WeekDay(kurs.WochentagID).Substring(0, 2);
-                return $"{ day } {kurs.Zeit:hh}:{kurs.Zeit:mm}";
+            list.Add($"{ day } {kurs.Zeit:hh}:{kurs.Zeit:mm}");
+            return list;
         }
 
-        public override string GetDescription(int idKurs, int iNr = 1)
+        public override List<string> GetDescription(int idKurs)
             => GetDesc(idKurs);
-    }
+   }
 }

@@ -7,39 +7,27 @@ namespace AVF.MemberManagement.Reports
 {
     public partial class ReportTrainingsParticipation : ReportBase
     {
-        protected VerticalAxis               P_yAxis     { get; private set; }
-        protected HorizontalAxis             P_xAxis     { get; private set; }
-        protected AxisType                   P_xAxisType { get; private set; }
-        protected AxisType                   P_yAxisType { get; private set; }
-        protected TrainingParticipationModel P_tpModel   { get; private set; }
+        protected VerticalAxis P_yAxis { get; private set; }
+        protected HorizontalAxis P_xAxis { get; private set; }
+        protected AxisType P_xAxisType { get; private set; }
+        protected AxisType P_yAxisType { get; private set; }
+        protected TrainingParticipationModel P_tpModel { get; private set; }
 
         protected AxisTypeMember P_axisTypeMember { get; private set; }
 
         protected ReportDescriptor m_reportDescriptor;
 
-        public ReportTrainingsParticipation
-        (
-            Type xAxisType,
-            Type yAxisType,
-            TimeRange timeRange = Globals.ALL_TIMERANGE,
-            int idMember = Globals.ALL_MEMBERS,
-            int idCourse = Globals.ALL_COURSES,
-            int idTraining = Globals.ALL_TRAININGS,
-            int idMonth = Globals.ALL_MONTHS,
-            int idYear = Globals.ALL_YEARS
-        )
+        public ReportTrainingsParticipation( ReportDescriptor desc )
         {
-            m_reportDescriptor = new ReportDescriptor(xAxisType, yAxisType, timeRange, idMember, idCourse, idTraining, idMonth, idYear);
-
+            m_reportDescriptor = desc;
             InitializeReportTrainingsParticipation(); // creates DataGridView ...
             P_labelReportName.Text = "Trainingsteilnahme";
             P_labelZeitraum.Text = Globals.GetTimeRangeDescription(m_reportDescriptor.P_timeRange);
-            P_axisTypeMember = new AxisTypeMember(m_reportDescriptor);
 
             P_dataGridView.Sorted += new EventHandler(delegate (object s, EventArgs e) { Sorted(s, e); });
             P_yearSelector.Minimum = Globals.DatabaseWrapper.GetStartValidData().Year;
             P_yearSelector.Maximum = DateTime.Now.Year;
-            P_yearSelector.Value = timeRange.P_datStart.Year;
+            P_yearSelector.Value = m_reportDescriptor.P_timeRange.P_datStart.Year;
             P_yearSelector.ValueChanged += new System.EventHandler(YearSelectionChanged);
 
             P_xAxis = new HorizontalAxis();
@@ -81,7 +69,21 @@ namespace AVF.MemberManagement.Reports
             P_dataGridView.ColumnCount = P_yAxisType.HeaderStrings.Count + 1;
             if (P_xAxisType.P_MaxDbId > 0)
                 P_dataGridView.ColumnCount += (P_xAxisType.P_ActiveElementsOnly ? P_tpModel.GetNrOfActiveCols() : P_xAxisType.DatabaseIdRange()) + 1; // + 1 for summary column
-        }           
+        }
+
+        private void DisplayTrainer(int idTrainer)
+            => P_labelTrainer.Text = $"Trainer: {AxisTypeMember.GetFullName(Globals.DatabaseWrapper.MitgliedFromId(idTrainer))}";
+
+        private void DisplayCourse(int idCourse)
+        {
+            if (idCourse != Globals.ALL_COURSES)
+            {
+                P_labelKurs.Text = "Kurs: " + String.Join(" ", AxisTypeCourse.GetDesc(idCourse));
+                int idTrainer = Globals.DatabaseWrapper.KursFromId(idCourse).Trainer;
+                if (idTrainer > 0)
+                    DisplayTrainer(idTrainer);
+            }
+        }
 
         protected override void ReportFormPopulate()    // Fill cells of DataGridView
         {
@@ -89,23 +91,20 @@ namespace AVF.MemberManagement.Reports
             P_yAxis.Initialize( P_yAxisType.DatabaseIdRange() );
             ReportFormSize();
 
-            P_labelMember.Text = P_axisTypeMember.GetFullDesc(m_reportDescriptor.P_idMember);
+            if (m_reportDescriptor.P_idMember != Globals.ALL_MEMBERS)
+                P_labelMember.Text = AxisTypeMember.GetFullName(Globals.DatabaseWrapper.MitgliedFromId(m_reportDescriptor.P_idMember));
 
-            P_labelMonat.Text = AxisTypeMonth.GetDesc(m_reportDescriptor, m_reportDescriptor.P_idMonth);
+            P_labelMonat.Text = AxisTypeMonth.GetDesc(m_reportDescriptor, m_reportDescriptor.P_idMonth)[0];
 
-            if (m_reportDescriptor.P_idCourse != Globals.ALL_COURSES)
-            {
-                int idTrainer = Globals.DatabaseWrapper.KursFromId(m_reportDescriptor.P_idCourse).Trainer;
-                if (idTrainer > 0)
-                    P_labelTrainer.Text = $"Trainer: {P_axisTypeMember.GetFullDesc(idTrainer)}";
-            }
+            DisplayCourse(m_reportDescriptor.P_idCourse);
 
             if (m_reportDescriptor.P_idTraining != Globals.ALL_TRAININGS)
             {
-                Training training = Globals.DatabaseWrapper.TrainingFromId(m_reportDescriptor.P_idTraining);
+                Training training      = Globals.DatabaseWrapper.TrainingFromId(m_reportDescriptor.P_idTraining);
                 P_labelReportName.Text = $"Training am {Globals.DatabaseWrapper.WeekDay(training.WochentagID)} den ";
-                P_labelZeitraum.Text = new AxisTypeTraining(m_reportDescriptor).GetFullDesc(m_reportDescriptor.P_idTraining, '.');
-                //            P_labelMember.Text     = $"um {training.Zeit:hh}:{training.Zeit:mm} Uhr";
+                DisplayTrainer(training.Trainer);
+                P_labelZeitraum.Text   = AxisTypeTraining.GetDate(training, '.');
+                P_labelMember.Text     = AxisTypeTraining.GetTime(training);
             }
 
             P_yAxis.FillKeyHeaderCells(P_dataGridView, P_yAxisType);
@@ -215,19 +214,7 @@ namespace AVF.MemberManagement.Reports
             int iYear = (int)((NumericUpDown)sender).Value;
             if ((P_yearSelector.Minimum <= iYear) && (iYear <= P_yearSelector.Maximum))
             {
-                DateTime datStart = new DateTime(iYear,  1, 1);
-                DateTime datEnd   = new DateTime(iYear, 12, 31);
-                ReportTrainingsParticipation reportNew = new ReportTrainingsParticipation
-                (
-                    m_reportDescriptor.P_xAxisType, 
-                    m_reportDescriptor.P_yAxisType,
-                    new TimeRange(datStart, datEnd),
-                    m_reportDescriptor.P_idMember,
-                    m_reportDescriptor.P_idCourse,
-                    m_reportDescriptor.P_idTraining,
-                    m_reportDescriptor.P_idMonth
-                );
-                ReportMain.P_formMain.SwitchToPanel(reportNew);
+                ReportMain.P_formMain.NewTrainingsParticipationPanel(m_reportDescriptor, timeRange: new TimeRange(iYear));
             }
         }
 
@@ -250,7 +237,7 @@ namespace AVF.MemberManagement.Reports
         /*  ReportMemberVsCourses
         protected override string MouseMainDataAreaCellEvent(TimeRange timeRange, int idMember, int idKurs, bool action )
             => action
-                ? ReportMain.P_formMain.NewPanel(typeof(AxisTypeTraining), typeof(AxisTypeMember), timeRange, idMember, idKurs) )
+                ? ReportMain.P_formMain.NewTrainingsParticipationPanel(typeof(AxisTypeTraining), typeof(AxisTypeMember), timeRange, idMember, idKurs) )
                 : $"Klicken für Details zur Teilnahme von\n"
                         + P_axisTypeMember.GetFullDesc(idMember)
                         + $" am Kurs\n" 
@@ -260,7 +247,7 @@ namespace AVF.MemberManagement.Reports
         /*  ReportMemberVsMonths
         protected override string MouseMainDataAreaCellEvent(TimeRange timeRange, int idMember, int idMonth, bool action)
         => action
-            ? ReportMain.P_formMain.NewPanel(typeof(AxisTypeCourse), typeof(AxisTypeTraining), timeRange, idMonth, idMember))
+            ? ReportMain.P_formMain.NewTrainingsParticipationPanel(typeof(AxisTypeCourse), typeof(AxisTypeTraining), timeRange, idMonth, idMember))
             : $"Klicken für Details zur Teilnahme von\n"
                     + P_axisTypeMember.GetFullDesc(idMember)
                     + $" im Monat\n"

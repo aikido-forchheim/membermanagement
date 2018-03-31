@@ -16,6 +16,12 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             P_datEnd = dat;
         }
 
+        public TimeRange(int iYear)
+        {
+            P_datStart = new DateTime(iYear, 1, 1);
+            P_datEnd   = new DateTime(iYear, 12, 31);
+        }
+
         public TimeRange(DateTime datStart, DateTime datEnd)
         {
             P_datStart = datStart;

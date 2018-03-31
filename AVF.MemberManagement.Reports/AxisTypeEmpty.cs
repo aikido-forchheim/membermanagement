@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.ReportsBusinessLogic;
 
@@ -26,7 +27,11 @@ namespace AVF.MemberManagement.Reports
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => 0;
 
-        public override string GetDescription(int id, int iNr = 1)
-            => String.Empty;
+        public override List<string> GetDescription(int id)
+        {
+            List<string> list = new List<string>();
+            list.Add(String.Empty);
+            return list;
+        }
     }
 }

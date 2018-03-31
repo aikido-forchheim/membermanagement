@@ -25,38 +25,32 @@ namespace AVF.MemberManagement.Reports
 
         public override string MouseAxisEvent(int idMember, bool action)
             => action
-               ? ReportMain.P_formMain.NewPanel(typeof(AxisTypeCourse), typeof(AxisTypeMonth), P_reportDescriptor.P_timeRange, idMember: idMember)
-               : $"Klicken für Details zu Mitglied\n" + GetFullDesc(idMember);
+               ? ReportMain.P_formMain.NewTrainingsParticipationPanel
+                 (
+                     P_reportDescriptor,
+                     typeof(AxisTypeCourse), 
+                     typeof(AxisTypeMonth), 
+                     idMember: idMember
+                 )
+               : $"Klicken für Details zu Mitglied\n" + GetDescription(idMember);
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => tn.MitgliedID;
 
-        public override string GetFullDesc(int idMember, char separator = ' ')
-            => (idMember < 0) ? "Alle Mitglieder" : GetDescription(idMember, 1) + separator + GetDescription(idMember, 2);
+        public override List<string> GetDescription(int idMember)
+            => GetDesc(idMember);
 
-        public override string GetDescription(int idMember, int iNr)
+        public static List<string> GetDesc(int idMember)
         {
-            if (idMember > 0)
-            {
-                Mitglied mitglied = Globals.DatabaseWrapper.MitgliedFromId(idMember);
-
-                switch (iNr)
-                {
-                    case 0:
-                        return $"MitgliedNr. {mitglied.Id}";
-
-                    case 1:
-                        return $"{mitglied.Vorname}";
-
-                    case 2:
-                        return $"{mitglied.Nachname}";
-
-                    default:
-                        Debug.Assert(false);
-                        break;
-                }
-            }
-            return String.Empty;
+            Debug.Assert(idMember >= 0);
+            List<string> list = new List<string>();
+            Mitglied mitglied = Globals.DatabaseWrapper.MitgliedFromId(idMember);
+            list.Add($"{mitglied.Vorname}");
+            list.Add($"{mitglied.Nachname}");
+            return list;
         }
+
+        public static string GetFullName(Mitglied member)
+            => $"{member.Vorname} {member.Nachname}";
     }
 }

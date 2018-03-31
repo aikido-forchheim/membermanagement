@@ -10,11 +10,10 @@ namespace AVF.MemberManagement.Reports
 {
     public partial class ReportMain : Form
     {
-        private UndoRedoStack m_UndoRedo;
+        private UndoRedoStack    m_UndoRedo;
+        private ReportDescriptor m_descriptor;
 
         public static ReportMain P_formMain { set; get; }
-
-        private TimeRange m_timeRange;
 
         public ReportMain()
         {
@@ -37,28 +36,37 @@ namespace AVF.MemberManagement.Reports
             panelLoadDb.Dispose();
             m_UndoRedo = new ReportsUndoRedo(P_formMain);
 
-            int iYear = DateTime.Now.Year - 1;
-            m_timeRange = new TimeRange( new DateTime(iYear,  1,  1), new DateTime(iYear, 12, 31) );
-            m_UndoRedo.SwitchTo(new ReportTrainingsParticipation(typeof(AxisTypeCourse), typeof(AxisTypeMember), m_timeRange, Globals.ALL_MEMBERS));
+            m_descriptor = new ReportDescriptor
+                            (
+                                xAxisType: typeof(AxisTypeCourse),
+                                yAxisType: typeof(AxisTypeMember),
+                                timeRange: new TimeRange(DateTime.Now.Year - 1)
+                            );
+            m_UndoRedo.SwitchTo(new ReportTrainingsParticipation(m_descriptor));
         }
 
-        public string NewPanel
+        private string SwitchToPanel(ReportBase panel)
+        {
+            m_UndoRedo.Add(panel);
+            return String.Empty;
+        }
+
+        public string NewTrainingsParticipationPanel
         (
-            Type xAxisType,
-            Type yAxisType,
+            ReportDescriptor defaultDesc,
+            Type xAxisType = null,
+            Type yAxisType = null,
             TimeRange timeRange = Globals.ALL_TIMERANGE,
             int idMember = Globals.ALL_MEMBERS,
             int idCourse = Globals.ALL_COURSES,
             int idTraining = Globals.ALL_TRAININGS,
+            int idWeek = Globals.ALL_WEEKS,
             int idMonth = Globals.ALL_MONTHS,
             int idYear = Globals.ALL_YEARS
         )
-            => SwitchToPanel(new ReportTrainingsParticipation(xAxisType, yAxisType, timeRange, idMember, idCourse, idTraining, idMonth, idYear));
-
-        public string SwitchToPanel(ReportBase panelNew )
         {
-            m_UndoRedo.Add(panelNew);
-            return String.Empty;
+            ReportDescriptor descNew = new ReportDescriptor(defaultDesc, xAxisType, yAxisType, timeRange, idMember, idCourse, idTraining, idWeek, idMonth, idYear);
+            return SwitchToPanel(new ReportTrainingsParticipation(descNew));
         }
 
         private void FormMain_Load(object sender, EventArgs e)
@@ -83,13 +91,13 @@ namespace AVF.MemberManagement.Reports
         }
 
         private void Trainingsteilnahme_Kurse_Click(object sender, EventArgs e)
-            => NewPanel(typeof(AxisTypeCourse), typeof(AxisTypeMember), m_timeRange);
+            => NewTrainingsParticipationPanel(m_descriptor, typeof(AxisTypeCourse), typeof(AxisTypeMember));
 
         private void Kurse_Click(object sender, EventArgs e)
-             => NewPanel(typeof(AxisTypeMonth), typeof(AxisTypeCourse), m_timeRange);
+             => NewTrainingsParticipationPanel(m_descriptor, typeof(AxisTypeMonth), typeof(AxisTypeCourse));
 
         private void Trainingsteilnahme_Monate_Click(object sender, EventArgs e)
-             => NewPanel(typeof(AxisTypeMonth), typeof(AxisTypeMember), m_timeRange);
+             => NewTrainingsParticipationPanel(m_descriptor, typeof(AxisTypeMonth), typeof(AxisTypeMember));
 
         private void Gradierungsliste_Click(object sender, EventArgs e)
              => SwitchToPanel(new ReportGraduationList());

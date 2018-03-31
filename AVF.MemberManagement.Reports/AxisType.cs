@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.ReportsBusinessLogic;
 
@@ -30,8 +31,8 @@ namespace AVF.MemberManagement.Reports
         public int GetModelIndexFromTrainingsParticipation(TrainingsTeilnahme tn)
             => GetModelIndexFromId(GetIdFromTrainingsParticipation(tn));
 
-        public virtual string GetFullDesc(int id, char separator = ' ')
-                => GetDescription(id);
+        public string GetFullDesc(int id, string separator)
+            => String.Join(separator, GetDescription(id));
 
         // abstract member functions
 
@@ -39,6 +40,6 @@ namespace AVF.MemberManagement.Reports
         public abstract int    GetModelIndexFromId(int id);
         public abstract int    GetIdFromModelIndex(int id);
         public abstract int    GetIdFromTrainingsParticipation(TrainingsTeilnahme tn);
-        public abstract string GetDescription(int id, int iNr = 1);
+        public abstract List<string> GetDescription(int id);
     }
 }

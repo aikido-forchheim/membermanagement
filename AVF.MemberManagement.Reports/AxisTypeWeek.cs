@@ -27,19 +27,22 @@ namespace AVF.MemberManagement.Reports
 
         public override string MouseAxisEvent(int idWeek, bool action)
            => action
-               ? ReportMain.P_formMain.NewPanel
+               ? ReportMain.P_formMain.NewTrainingsParticipationPanel
                  (
-                    typeof(AxisTypeCourse), 
-                    typeof(AxisTypeTraining), 
-                    Globals.GetWeekRange(P_reportDescriptor, idWeek), 
-                    idMember: P_reportDescriptor.P_idMember
+                    defaultDesc: P_reportDescriptor,
+                    yAxisType: typeof(AxisTypeTraining), 
+                    idWeek: idWeek
                  )
                : $"Klicken für Details zu " + HeaderStrings[0] + " " + GetDescription(idWeek);
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => NrOfWeeks(P_reportDescriptor.P_timeRange.P_datStart, Globals.DatabaseWrapper.TerminFromTrainingId(tn.TrainingID));
 
-        public override string GetDescription(int idWeek, int iNr = 1)
-            => $"{Globals.GetWeekOfYear(P_reportDescriptor.P_timeRange.P_datStart, idWeek)}/{P_reportDescriptor.P_timeRange.P_datStart.Year}";
+        public override List<string> GetDescription(int idWeek)
+        {
+            List<string> list = new List<string>();
+            list.Add($"{Globals.GetWeekOfYear(P_reportDescriptor.P_timeRange.P_datStart, idWeek)}/{P_reportDescriptor.P_timeRange.P_datStart.Year}");
+            return list;
+        }
     }
 }

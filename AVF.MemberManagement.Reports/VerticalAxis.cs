@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace AVF.MemberManagement.Reports
 {
@@ -22,8 +23,9 @@ namespace AVF.MemberManagement.Reports
 
             dgv[0, iDgvRow].Value = id;  // column 0 is always reserved for key value
 
+            List<string> list = axisType.GetDescription(id);
             for ( int iCol = 1; iCol <= axisType.HeaderStrings.Count; iCol++)
-                dgv[iCol, iDgvRow].Value = axisType.GetDescription(id, iCol);
+                dgv[iCol, iDgvRow].Value = list[iCol-1];
         }
     }
 }
