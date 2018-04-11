@@ -4,16 +4,18 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 {
     public class TimeRange
     {
+        public const TimeRange UNRESTRICTED = null;
+
         public TimeRange()
         {
             P_datStart = new DateTime(0);
-            P_datEnd = new DateTime(0);
+            P_datEnd   = new DateTime(0);
         }
 
         public TimeRange(DateTime dat)
         {
             P_datStart = dat;
-            P_datEnd = dat;
+            P_datEnd   = dat;
         }
 
         public TimeRange(int iYear)
@@ -25,7 +27,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         public TimeRange(DateTime datStart, DateTime datEnd)
         {
             P_datStart = datStart;
-            P_datEnd = datEnd;
+            P_datEnd   = datEnd;
         }
 
         public bool Includes(DateTime date)

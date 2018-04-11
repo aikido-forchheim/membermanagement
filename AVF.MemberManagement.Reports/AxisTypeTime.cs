@@ -4,10 +4,6 @@ namespace AVF.MemberManagement.Reports
 {
     public abstract class AxisTypeTime : AxisType
     {
-        public enum Period { TRAINING, WEEK, MONTH, YEAR };
-
-        protected Period m_period;
-
         public AxisTypeTime(ReportDescriptor desc)
              : base(desc)
         {

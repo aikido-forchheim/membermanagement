@@ -94,7 +94,7 @@ namespace AVF.MemberManagement.Reports
             if (m_reportDescriptor.P_idMember != Globals.ALL_MEMBERS)
                 P_labelMember.Text = AxisTypeMember.GetFullName(Globals.DatabaseWrapper.MitgliedFromId(m_reportDescriptor.P_idMember));
 
-            P_labelMonat.Text = AxisTypeMonth.GetDesc(m_reportDescriptor, m_reportDescriptor.P_idMonth)[0];
+            P_labelMonat.Text = AxisTypeMonth.GetDesc(m_reportDescriptor, m_reportDescriptor.P_nrPeriod)[0];
 
             DisplayCourse(m_reportDescriptor.P_idCourse);
 
@@ -156,9 +156,9 @@ namespace AVF.MemberManagement.Reports
 
         private void FillSummaryRow()
         {
-            int sumSum    = 0;
-            int rowNrSum  = P_dataGridView.RowCount - 1;
-            int iDgvCol   = P_xAxis.P_startIndex;
+            int sumSum   = 0;
+            int rowNrSum = P_dataGridView.RowCount - 1;
+            int iDgvCol  = P_xAxis.P_startIndex;
             P_dataGridView.Rows[rowNrSum].Cells[iDgvCol-1].Value = "Summe";
             P_tpModel.ForAllCols
             (

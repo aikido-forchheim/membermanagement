@@ -12,7 +12,6 @@ namespace AVF.MemberManagement.Reports
         {
             P_MaxDbId = NrOfMonths(P_reportDescriptor.P_timeRange.P_datStart, P_reportDescriptor.P_timeRange.P_datEnd);
             HeaderStrings = new List<string> { "Monat" };
-            m_period = Period.MONTH;
         }
 
         private int NrOfMonths(DateTime datStart, DateTime datEnd)
@@ -23,8 +22,8 @@ namespace AVF.MemberManagement.Reports
                ? ReportMain.P_formMain.NewTrainingsParticipationPanel
                  (
                     defaultDesc: P_reportDescriptor,
-                    yAxisType: typeof(AxisTypeWeek), 
-                    idMonth: idMonth
+                    yAxisType: typeof(AxisTypeWeek),
+                    nrPeriod: idMonth
                  )
                : $"Klicken für Details zu " + HeaderStrings[0] + " " + GetDescription(idMonth);
 
@@ -37,7 +36,7 @@ namespace AVF.MemberManagement.Reports
         public static List<string> GetDesc( ReportDescriptor desc, int idMonth )
         {
             List<string> list = new List<string>();
-            if (idMonth == Globals.ALL_MONTHS)
+            if (idMonth == Globals._UNDEFINED)
             {
                 list.Add(string.Empty);
             }

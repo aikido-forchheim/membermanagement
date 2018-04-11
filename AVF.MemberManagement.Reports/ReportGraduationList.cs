@@ -45,7 +45,7 @@ namespace AVF.MemberManagement.Reports
 
         private void ColorizeImportantDates( DataGridViewRow row, BestGraduation bestGrad )
         {
-            if ((bestGrad.P_yearsOfMembership % 10 == 0) || (bestGrad.P_yearsOfMembership % 25 == 0))
+            if ((bestGrad.P_yearsOfMembership > 0) && ((bestGrad.P_yearsOfMembership % 10 == 0) || (bestGrad.P_yearsOfMembership % 25 == 0)))
                 row.Cells["AVF-entry"].Style.ForeColor = Color.Red;
 
             if (bestGrad.P_datumMinNextGrad < DateTime.Now)

@@ -56,16 +56,15 @@ namespace AVF.MemberManagement.Reports
             ReportDescriptor defaultDesc,
             Type xAxisType = null,
             Type yAxisType = null,
-            TimeRange timeRange = Globals.ALL_TIMERANGE,
+            TimeRange timeRange = TimeRange.UNRESTRICTED,
             int idMember = Globals.ALL_MEMBERS,
             int idCourse = Globals.ALL_COURSES,
             int idTraining = Globals.ALL_TRAININGS,
-            int idWeek = Globals.ALL_WEEKS,
-            int idMonth = Globals.ALL_MONTHS,
-            int idYear = Globals.ALL_YEARS
+            int nrPeriod = Globals._UNDEFINED,
+            ReportDescriptor.Period period = ReportDescriptor.Period.UNDEFINED
         )
         {
-            ReportDescriptor descNew = new ReportDescriptor(defaultDesc, xAxisType, yAxisType, timeRange, idMember, idCourse, idTraining, idWeek, idMonth, idYear);
+            ReportDescriptor descNew = new ReportDescriptor(defaultDesc, xAxisType, yAxisType, timeRange, idMember, idCourse, idTraining, nrPeriod, period);
             return SwitchToPanel(new ReportTrainingsParticipation(descNew));
         }
 

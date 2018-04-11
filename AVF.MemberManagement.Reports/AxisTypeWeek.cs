@@ -12,7 +12,6 @@ namespace AVF.MemberManagement.Reports
         {
             P_MaxDbId  = NrOfWeeks(P_reportDescriptor.P_timeRange.P_datStart, P_reportDescriptor.P_timeRange.P_datEnd);
             HeaderStrings = new List<string> { "KW" };
-            m_period = Period.WEEK;
         }
 
         private int NrOfWeeks(DateTime datStart, DateTime datEnd)
@@ -25,23 +24,23 @@ namespace AVF.MemberManagement.Reports
             return id;
         }
 
-        public override string MouseAxisEvent(int idWeek, bool action)
+        public override string MouseAxisEvent(int nrPeriod, bool action)
            => action
                ? ReportMain.P_formMain.NewTrainingsParticipationPanel
                  (
                     defaultDesc: P_reportDescriptor,
                     yAxisType: typeof(AxisTypeTraining), 
-                    idWeek: idWeek
+                    nrPeriod: nrPeriod
                  )
-               : $"Klicken für Details zu " + HeaderStrings[0] + " " + GetDescription(idWeek);
+               : $"Klicken für Details zu " + HeaderStrings[0] + " " + GetDescription(nrPeriod);
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => NrOfWeeks(P_reportDescriptor.P_timeRange.P_datStart, Globals.DatabaseWrapper.TerminFromTrainingId(tn.TrainingID));
 
-        public override List<string> GetDescription(int idWeek)
+        public override List<string> GetDescription(int nrPeriod)
         {
             List<string> list = new List<string>();
-            list.Add($"{Globals.GetWeekOfYear(P_reportDescriptor.P_timeRange.P_datStart, idWeek)}/{P_reportDescriptor.P_timeRange.P_datStart.Year}");
+            list.Add($"{Globals.GetWeekOfYear(P_reportDescriptor.P_timeRange.P_datStart, nrPeriod)}/{P_reportDescriptor.P_timeRange.P_datStart.Year}");
             return list;
         }
     }

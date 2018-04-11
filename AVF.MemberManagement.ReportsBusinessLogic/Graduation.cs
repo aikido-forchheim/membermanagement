@@ -29,7 +29,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             DateTime    datValidData = Globals.DatabaseWrapper.GetStartValidData();
             Graduierung gradNext     = Globals.DatabaseWrapper.GraduierungFromId(P_graduierung + 1);
 
-            //  datValidData = new DateTime(2016, 1, 1);  // TODO: remove this line
+            datValidData = new DateTime(2015, 1, 1);  // TODO: remove this line
 
             P_memberId          = member.Id;
             P_datumMinNextGrad  = P_datumGraduierung.AddYears(gradNext.WartezeitJahre).AddMonths(gradNext.WartezeitMonate);

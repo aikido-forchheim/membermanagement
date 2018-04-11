@@ -12,7 +12,6 @@ namespace AVF.MemberManagement.Reports
         {
             P_MaxDbId = NrOfYears(P_reportDescriptor.P_timeRange.P_datStart, P_reportDescriptor.P_timeRange.P_datEnd);
             HeaderStrings = new List<string> { "Jahr" };
-            m_period = Period.YEAR;
         }
 
         private int NrOfYears(DateTime datStart, DateTime datEnd)
@@ -23,8 +22,8 @@ namespace AVF.MemberManagement.Reports
               ? ReportMain.P_formMain.NewTrainingsParticipationPanel
                 (
                     defaultDesc: P_reportDescriptor,
-                    yAxisType: typeof(AxisTypeMonth), 
-                    idYear: idYear
+                    yAxisType: typeof(AxisTypeMonth),
+                    nrPeriod: idYear
                 )
               : $"Klicken für Details zu " + HeaderStrings[0] + " " + GetDescription(idYear);
 

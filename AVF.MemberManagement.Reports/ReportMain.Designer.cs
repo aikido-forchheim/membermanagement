@@ -159,21 +159,21 @@
             // exportierenToolStripMenuItem
             // 
             this.exportierenToolStripMenuItem.Name = "exportierenToolStripMenuItem";
-            this.exportierenToolStripMenuItem.Size = new System.Drawing.Size(185, 30);
+            this.exportierenToolStripMenuItem.Size = new System.Drawing.Size(264, 30);
             this.exportierenToolStripMenuItem.Text = "Exportieren";
             this.exportierenToolStripMenuItem.Click += new System.EventHandler(this.Export_Click);
             // 
             // schließenToolStripMenuItem
             // 
             this.schließenToolStripMenuItem.Name = "schließenToolStripMenuItem";
-            this.schließenToolStripMenuItem.Size = new System.Drawing.Size(185, 30);
+            this.schließenToolStripMenuItem.Size = new System.Drawing.Size(264, 30);
             this.schließenToolStripMenuItem.Text = "Schließen";
             this.schließenToolStripMenuItem.Click += new System.EventHandler(this.ApplicationExit_Click);
             // 
             // infoToolStripMenuItem
             // 
             this.infoToolStripMenuItem.Name = "infoToolStripMenuItem";
-            this.infoToolStripMenuItem.Size = new System.Drawing.Size(185, 30);
+            this.infoToolStripMenuItem.Size = new System.Drawing.Size(264, 30);
             this.infoToolStripMenuItem.Text = "Info";
             this.infoToolStripMenuItem.Click += new System.EventHandler(this.Info_Click);
             // 
