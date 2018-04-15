@@ -31,7 +31,7 @@ namespace AVF.MemberManagement.Reports
                      yAxisType: typeof(AxisTypeMember), 
                      idCourse: idKurs
                  )
-               : $"Klicken für Details zum Kurs\n" + GetDescription(idKurs);
+               : $"Klicken für Details zum Kurs\n" + GetFullDesc(idKurs, " ");
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID);

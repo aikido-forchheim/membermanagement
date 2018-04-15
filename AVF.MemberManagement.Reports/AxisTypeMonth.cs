@@ -23,9 +23,10 @@ namespace AVF.MemberManagement.Reports
                  (
                     defaultDesc: P_reportDescriptor,
                     yAxisType: typeof(AxisTypeWeek),
+                    period: ReportDescriptor.Period.MONTH,
                     nrPeriod: idMonth
                  )
-               : $"Klicken für Details zu " + HeaderStrings[0] + " " + GetDescription(idMonth);
+               : $"Klicken für Details zu " + HeaderStrings[0] + " " + GetFullDesc(idMonth, " ");
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => NrOfMonths(P_reportDescriptor.P_timeRange.P_datStart, Globals.DatabaseWrapper.TerminFromTrainingId(tn.TrainingID));

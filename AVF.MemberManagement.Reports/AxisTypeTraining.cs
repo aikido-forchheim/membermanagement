@@ -53,9 +53,8 @@ namespace AVF.MemberManagement.Reports
         {
             List<string> list = new List<string>();
             Training training = Globals.DatabaseWrapper.TrainingFromId(idTraining);
-            list.Add($"{training.Termin:dd}");
-            list.Add($"{training.Termin:MM}");
-            list.Add($"{training.Termin:yy}");
+            list.Add(GetDate(training, '.'));
+            list.Add(GetTime(training));
             return list;
         }
     }

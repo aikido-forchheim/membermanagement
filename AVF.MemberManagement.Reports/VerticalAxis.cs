@@ -12,14 +12,11 @@ namespace AVF.MemberManagement.Reports
                 dgv.Columns[iCol].HeaderText = axisType.HeaderStrings[iCol - 1];
         }
 
-        public void Initialize(int axisLength) { }
-
-        public int GetDbIdFromDgvIndex(DataGridView dgv, int iDgvRow)
-             => (int)dgv.Rows[iDgvRow - P_startIndex].Cells[0].Value;
-
         public override void FillMainKeyCell(DataGridView dgv, int iDgvRow, int iModelRow, AxisType axisType)
         {
-            int id = axisType.GetIdFromModelIndex(iModelRow);
+            base.FillMainKeyCell(dgv, iDgvRow, iModelRow, axisType);
+
+            int id = GetDbIdFromDgvIndex(iDgvRow);
 
             dgv[0, iDgvRow].Value = id;  // column 0 is always reserved for key value
 

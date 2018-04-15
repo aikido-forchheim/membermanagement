@@ -15,32 +15,26 @@ namespace AVF.MemberManagement.Reports
         }
 
         private int NrOfWeeks(DateTime datStart, DateTime datEnd)
-        {
-            int weekStart = Globals.GetWeekOfYear(datStart);
-            int weekEnd = Globals.GetWeekOfYear(datEnd);
-            if (weekStart > weekEnd)
-                weekStart = 0;
-            int id = weekEnd - weekStart;
-            return id;
-        }
+            => (datEnd - datStart).Days / 7;
 
-        public override string MouseAxisEvent(int nrPeriod, bool action)
+        public override string MouseAxisEvent(int nrWeek, bool action)
            => action
                ? ReportMain.P_formMain.NewTrainingsParticipationPanel
                  (
                     defaultDesc: P_reportDescriptor,
-                    yAxisType: typeof(AxisTypeTraining), 
-                    nrPeriod: nrPeriod
+                    yAxisType: typeof(AxisTypeTraining),
+                    period: ReportDescriptor.Period.WEEK,
+                    nrPeriod: nrWeek
                  )
-               : $"Klicken für Details zu " + HeaderStrings[0] + " " + GetDescription(nrPeriod);
+               : $"Klicken für Details zu " + HeaderStrings[0] + " " + GetFullDesc(nrWeek, " ");
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => NrOfWeeks(P_reportDescriptor.P_timeRange.P_datStart, Globals.DatabaseWrapper.TerminFromTrainingId(tn.TrainingID));
 
-        public override List<string> GetDescription(int nrPeriod)
+        public override List<string> GetDescription(int nrWeek)
         {
             List<string> list = new List<string>();
-            list.Add($"{Globals.GetWeekOfYear(P_reportDescriptor.P_timeRange.P_datStart, nrPeriod)}/{P_reportDescriptor.P_timeRange.P_datStart.Year}");
+            list.Add($"{Globals.GetWeekOfYear(P_reportDescriptor.P_timeRange.P_datStart, nrWeek)}/{P_reportDescriptor.P_timeRange.P_datStart.Year}");
             return list;
         }
     }

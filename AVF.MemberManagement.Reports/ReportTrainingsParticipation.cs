@@ -87,8 +87,8 @@ namespace AVF.MemberManagement.Reports
 
         protected override void ReportFormPopulate()    // Fill cells of DataGridView
         {
-            P_xAxis.Initialize( P_xAxisType.DatabaseIdRange() );
-            P_yAxis.Initialize( P_yAxisType.DatabaseIdRange() );
+            P_xAxis.Initialize( P_xAxisType );
+            P_yAxis.Initialize( P_yAxisType );
             ReportFormSize();
 
             if (m_reportDescriptor.P_idMember != Globals.ALL_MEMBERS)
@@ -204,7 +204,7 @@ namespace AVF.MemberManagement.Reports
                 }
                 else // key or summary 
                 {
-                    return P_yAxisType.MouseAxisEvent(P_yAxis.GetDbIdFromDgvIndex(P_dataGridView, row), action);
+                    return P_yAxisType.MouseAxisEvent(P_yAxis.GetDbIdFromDgvIndex(row), action);
                 }
             }
         }

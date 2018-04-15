@@ -23,9 +23,10 @@ namespace AVF.MemberManagement.Reports
                 (
                     defaultDesc: P_reportDescriptor,
                     yAxisType: typeof(AxisTypeMonth),
+                    period: ReportDescriptor.Period.YEAR,
                     nrPeriod: idYear
                 )
-              : $"Klicken für Details zu " + HeaderStrings[0] + " " + GetDescription(idYear);
+              : $"Klicken für Details zu " + HeaderStrings[0] + " " + GetFullDesc(idYear, " ");
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => NrOfYears(P_reportDescriptor.P_timeRange.P_datStart, Globals.DatabaseWrapper.TerminFromTrainingId(tn.TrainingID));

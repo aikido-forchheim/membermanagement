@@ -32,7 +32,7 @@ namespace AVF.MemberManagement.Reports
                      typeof(AxisTypeMonth), 
                      idMember: idMember
                  )
-               : $"Klicken für Details zu Mitglied\n" + GetDescription(idMember);
+               : $"Klicken für Details zu Mitglied\n" + GetFullDesc(idMember, " ");
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => tn.MitgliedID;
