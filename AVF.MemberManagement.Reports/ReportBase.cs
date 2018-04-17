@@ -77,40 +77,22 @@ namespace AVF.MemberManagement.Reports
             P_dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             P_dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             P_dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            ((System.ComponentModel.ISupportInitialize)(P_dataGridView)).EndInit();
 
             P_dataGridView.CellMouseClick += new DataGridViewCellMouseEventHandler(delegate (object sender, DataGridViewCellMouseEventArgs e) { MouseCellEvent(e.RowIndex, e.ColumnIndex, action: true); } );
-            P_dataGridView.CellMouseEnter += new DataGridViewCellEventHandler     (delegate (object sender, DataGridViewCellEventArgs e) { ToolTip(e, true); });
-            P_dataGridView.CellMouseLeave += new DataGridViewCellEventHandler     (delegate (object sender, DataGridViewCellEventArgs e) { ToolTip(e, false); });
+            P_dataGridView.CellFormatting += new DataGridViewCellFormattingEventHandler
+                (
+                    delegate (object sender, DataGridViewCellFormattingEventArgs e)
+                    {
+                        P_dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].ToolTipText = MouseCellEvent(e.RowIndex, e.ColumnIndex, action: false);
+                    }
+                );
 
+            ((System.ComponentModel.ISupportInitialize)(P_dataGridView)).EndInit();
             Controls.Add(P_dataGridView);
             Controls.Add(P_labelReportName);
 
             Dock = DockStyle.Fill;
             BackColor = Color.AliceBlue;
-        }
-
-        protected void ToolTip(DataGridViewCellEventArgs e, bool showTip)
-        {
-            DataGridViewCell cell =
-                IsHeaderRow(e.RowIndex)
-                ? P_dataGridView.Columns[e.ColumnIndex].HeaderCell
-                : P_dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
-
-            if (showTip)
-            {
-                cell.ToolTipText = MouseCellEvent(e.RowIndex, e.ColumnIndex, action: false);
-                if ( cell.ToolTipText != String.Empty )
-                {
-                    P_ColorCell = cell.Style.BackColor;
-                    cell.Style.BackColor = Color.LawnGreen;
-                }
-            }
-            else
-            {
-                cell.Style.BackColor = P_ColorCell;
-                cell.ToolTipText = String.Empty;
-            }
         }
 
         protected bool IsHeaderRow(int iRow)

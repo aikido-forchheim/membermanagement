@@ -130,7 +130,13 @@ namespace AVF.MemberManagement.Reports
                 iDgvRow = 0;
                 P_tpModel.ForAllRows
                 (
-                    action: iModelRow => P_dataGridView[P_dataGridView.ColumnCount - 1, iDgvRow++].Value = P_tpModel.GetRowSum(iModelRow),
+                    action: iModelRow =>
+                    {
+                        DataGridViewCell cell = P_dataGridView[P_dataGridView.ColumnCount - 1, iDgvRow];
+                        cell.Value = P_tpModel.GetRowSum(iModelRow);
+                        cell.ToolTipText = P_yAxisType.MouseAxisEvent(P_yAxis.GetDbIdFromDgvIndex(iDgvRow), false);
+                        iDgvRow++;
+                    },
                     activeRowsOnly: P_yAxisType.P_ActiveElementsOnly
                 );
 
@@ -187,10 +193,6 @@ namespace AVF.MemberManagement.Reports
                 {
                     return P_xAxisType.MouseAxisEvent(P_xAxis.GetDbIdFromDgvIndex(col), action);
                 }
-                else // column header, key or summary columns
-                {
-                    return $"Klicken um nach {P_dataGridView.Columns[col].HeaderText} zu sortieren";
-                }
             }
             else if (IsSummaryRow(row))
             {
@@ -204,9 +206,10 @@ namespace AVF.MemberManagement.Reports
                 }
                 else // key or summary 
                 {
-                    return P_yAxisType.MouseAxisEvent(P_yAxis.GetDbIdFromDgvIndex(row), action);
+                    return action ? P_yAxisType.MouseAxisEvent(P_yAxis.GetDbIdFromDgvIndex(row), action) : String.Empty;
                 }
             }
+            return String.Empty;
         }
 
         private void YearSelectionChanged(object sender, EventArgs e)
@@ -233,26 +236,5 @@ namespace AVF.MemberManagement.Reports
                :   ( P_xAxisType.GetType() == typeof(AxisTypeTraining) )
                    ?   "X"
                    :   $"{ iValue,-3 }";
-
-        /*  ReportMemberVsCourses
-        protected override string MouseMainDataAreaCellEvent(TimeRange timeRange, int idMember, int idKurs, bool action )
-            => action
-                ? ReportMain.P_formMain.NewTrainingsParticipationPanel(typeof(AxisTypeTraining), typeof(AxisTypeMember), timeRange, idMember, idKurs) )
-                : $"Klicken für Details zur Teilnahme von\n"
-                        + P_axisTypeMember.GetFullDesc(idMember)
-                        + $" am Kurs\n" 
-                        + P_xAxisType.GetDescription(idKurs);
-         */
-
-        /*  ReportMemberVsMonths
-        protected override string MouseMainDataAreaCellEvent(TimeRange timeRange, int idMember, int idMonth, bool action)
-        => action
-            ? ReportMain.P_formMain.NewTrainingsParticipationPanel(typeof(AxisTypeCourse), typeof(AxisTypeTraining), timeRange, idMonth, idMember))
-            : $"Klicken für Details zur Teilnahme von\n"
-                    + P_axisTypeMember.GetFullDesc(idMember)
-                    + $" im Monat\n"
-                    + P_xAxisType.GetDescription(idMonth);
-
-         */
     }
 }

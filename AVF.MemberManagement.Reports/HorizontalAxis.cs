@@ -12,6 +12,7 @@ namespace AVF.MemberManagement.Reports
 
             dgv.Columns[iDgvCol].HeaderText = axisType.GetFullDesc(id, "\n");
             dgv.Columns[iDgvCol].SortMode = DataGridViewColumnSortMode.NotSortable;
+            dgv.Columns[iDgvCol].HeaderCell.ToolTipText = $"Klicken um nach {dgv.Columns[iDgvCol].HeaderText} zu sortieren";
         }
     }
 }
