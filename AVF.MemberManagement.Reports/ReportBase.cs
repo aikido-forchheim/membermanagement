@@ -77,15 +77,7 @@ namespace AVF.MemberManagement.Reports
             P_dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             P_dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             P_dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-
             P_dataGridView.CellMouseClick += new DataGridViewCellMouseEventHandler(delegate (object sender, DataGridViewCellMouseEventArgs e) { MouseCellEvent(e.RowIndex, e.ColumnIndex, action: true); } );
-            P_dataGridView.CellFormatting += new DataGridViewCellFormattingEventHandler
-                (
-                    delegate (object sender, DataGridViewCellFormattingEventArgs e)
-                    {
-                        P_dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].ToolTipText = MouseCellEvent(e.RowIndex, e.ColumnIndex, action: false);
-                    }
-                );
 
             ((System.ComponentModel.ISupportInitialize)(P_dataGridView)).EndInit();
             Controls.Add(P_dataGridView);

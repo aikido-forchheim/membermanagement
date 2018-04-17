@@ -62,7 +62,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         public ReportDescriptor ShallowCopy()
             => (ReportDescriptor)MemberwiseClone();
 
-        public enum Period { UNDEFINED, TRAINING, WEEK, MONTH, YEAR, ALL };
+        public enum Period { UNDEFINED, TRAINING, WEEK, MONTH, YEAR, ALL }
 
         public Type      P_xAxisType  { get; private set; }
         public Type      P_yAxisType  { get; private set; }

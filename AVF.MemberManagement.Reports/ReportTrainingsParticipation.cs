@@ -128,7 +128,7 @@ namespace AVF.MemberManagement.Reports
                 P_dataGridView.Columns[P_dataGridView.ColumnCount - 1].HeaderText = "\nSumme";
 
                 iDgvRow = 0;
-                P_tpModel.ForAllRows
+                P_tpModel.ForAllRows   // summary column
                 (
                     action: iModelRow =>
                     {
