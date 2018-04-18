@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
@@ -11,7 +12,7 @@ namespace AVF.MemberManagement.Reports
             int id = GetDbIdFromDgvIndex(iDgvCol);
 
             DataGridViewColumn col = dgv.Columns[iDgvCol];
-            col.HeaderText = axisType.GetFullDesc(id, "\n");
+            col.HeaderText = axisType.GetFullDesc(id, Globals.TEXT_ORIENTATION.VERTICAL);
             col.SortMode = DataGridViewColumnSortMode.NotSortable;
             col.HeaderCell.ToolTipText = axisType.MouseAxisEvent(id, false);
         }

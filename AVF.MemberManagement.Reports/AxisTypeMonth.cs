@@ -26,12 +26,12 @@ namespace AVF.MemberManagement.Reports
                     period: ReportDescriptor.Period.MONTH,
                     nrPeriod: idMonth
                  )
-               : $"Klicken für Details zu " + HeaderStrings[0] + " " + GetFullDesc(idMonth, " ");
+               : $"Klicken für Details zu " + HeaderStrings[0] + " " + GetFullDesc(idMonth, Globals.TEXT_ORIENTATION.HORIZONTAL);
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => NrOfMonths(P_reportDescriptor.P_timeRange.P_datStart, Globals.DatabaseWrapper.TerminFromTrainingId(tn.TrainingID));
 
-        public override List<string> GetDescription(int idMonth)
+        public override List<string> GetDescription(int idMonth, Globals.TEXT_ORIENTATION o)
             => GetDesc(P_reportDescriptor, idMonth);
 
         public static List<string> GetDesc( ReportDescriptor desc, int idMonth )

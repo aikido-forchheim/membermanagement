@@ -34,28 +34,38 @@ namespace AVF.MemberManagement.Reports
                     timeRange: new TimeRange(Globals.DatabaseWrapper.TrainingFromId(idTraining).Termin), 
                     idTraining: idTraining
                  )
-               : $"Klicken für Details zu {HeaderStrings[0]} {idTraining}";
+               : $"Klicken für Details zu {HeaderStrings[0]} {GetDescription(idTraining, Globals.TEXT_ORIENTATION.HORIZONTAL)[0]}";
         }
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => tn.TrainingID;
 
-        public override List<string> GetDescription(int idTraining)
-            => GetDesc(idTraining);
+        public override List<string> GetDescription(int idTraining, Globals.TEXT_ORIENTATION o)
+        {
+            List<string> list = new List<string>();
+            Training training = Globals.DatabaseWrapper.TrainingFromId(idTraining);
+            switch (o)
+            {
+                case Globals.TEXT_ORIENTATION.VERTICAL:
+                    list.Add(GetDate(training, '\n'));
+                    break;
+
+                case Globals.TEXT_ORIENTATION.HORIZONTAL:
+                    list.Add(GetDate(training, '.') + " " + GetTime(training));
+                    break;
+
+                case Globals.TEXT_ORIENTATION.SPECIAL:
+                    list.Add(GetDate(training, '.'));
+                    list.Add(GetTime(training));
+                    break;
+            }
+            return list;
+        }
 
         public static string GetDate(Training training, char separator)
             => $"{training.Termin:dd}" + separator + $"{training.Termin:MM}" + separator + $"{training.Termin:yy}";
 
         public static string GetTime(Training training)
             => $"{training.Zeit:hh}" + ':' + $"{training.Zeit:mm}";
-
-        public static List<string> GetDesc(int idTraining)
-        {
-            List<string> list = new List<string>();
-            Training training = Globals.DatabaseWrapper.TrainingFromId(idTraining);
-            list.Add(GetDate(training, '.'));
-            list.Add(GetTime(training));
-            return list;
-        }
     }
 }

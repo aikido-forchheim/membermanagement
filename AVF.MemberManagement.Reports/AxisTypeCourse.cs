@@ -31,7 +31,7 @@ namespace AVF.MemberManagement.Reports
                      yAxisType: typeof(AxisTypeMember), 
                      idCourse: idKurs
                  )
-               : $"Klicken für Details zum Kurs\n" + GetFullDesc(idKurs, " ");
+               : $"Klicken für Details zum Kurs\n" + GetFullDesc(idKurs, Globals.TEXT_ORIENTATION.HORIZONTAL);
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => Globals.DatabaseWrapper.KursIdFromTrainingId(tn.TrainingID);
@@ -58,7 +58,7 @@ namespace AVF.MemberManagement.Reports
             return list;
         }
 
-        public override List<string> GetDescription(int idKurs)
+        public override List<string> GetDescription(int idKurs, Globals.TEXT_ORIENTATION o)
             => GetDesc(idKurs);
    }
 }

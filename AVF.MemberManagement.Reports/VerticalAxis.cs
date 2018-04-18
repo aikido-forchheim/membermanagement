@@ -1,5 +1,6 @@
 ﻿using System.Windows.Forms;
 using System.Collections.Generic;
+using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
@@ -24,7 +25,7 @@ namespace AVF.MemberManagement.Reports
 
             dgv[0, iDgvRow].Value = id;  // column 0 is always reserved for key value
 
-            List<string> list = axisType.GetDescription(id);
+            List<string> list = axisType.GetDescription(id, Globals.TEXT_ORIENTATION.SPECIAL);
             for (int iCol = 1; iCol <= axisType.HeaderStrings.Count; iCol++)
             {
                 DataGridViewCell cell = dgv[iCol, iDgvRow];

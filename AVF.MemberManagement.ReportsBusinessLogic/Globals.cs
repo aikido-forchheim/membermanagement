@@ -7,6 +7,13 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 {
     public class Globals
     {
+        public enum TEXT_ORIENTATION
+        {
+            HORIZONTAL,
+            VERTICAL,
+            SPECIAL
+        }
+
         private static DateTimeFormatInfo P_dfi;
         private static Calendar P_cal;
 

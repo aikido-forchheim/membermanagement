@@ -27,7 +27,7 @@ namespace AVF.MemberManagement.Reports
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => 0;
 
-        public override List<string> GetDescription(int id)
+        public override List<string> GetDescription(int id, Globals.TEXT_ORIENTATION o)
         {
             List<string> list = new List<string>();
             list.Add(String.Empty);

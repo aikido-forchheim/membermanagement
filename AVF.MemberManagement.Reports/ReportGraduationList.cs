@@ -122,7 +122,7 @@ namespace AVF.MemberManagement.Reports
                 TimeRange timeRange    = new TimeRange(dateStart, DateTime.Now);
                 return action
                     ? ReportMain.P_formMain.NewTrainingsParticipationPanel(null, typeof(AxisTypeCourse), typeof(AxisTypeMonth), timeRange, idMember: idMember)
-                    : $"Klicken für Details zu Mitglied\n" + P_axisTypeMember.GetFullDesc(idMember, " ");
+                    : $"Klicken für Details zu Mitglied\n" + P_axisTypeMember.GetFullDesc(idMember, Globals.TEXT_ORIENTATION.HORIZONTAL);
             }
             else
             {

@@ -30,14 +30,14 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             }
             else
             {
-                P_xAxisType  = (xAxisType  == null)                  ? desc.P_xAxisType  : xAxisType;
-                P_yAxisType  = (yAxisType  == null)                  ? desc.P_yAxisType  : yAxisType;
+                P_xAxisType  = (xAxisType  == null)                   ? desc.P_xAxisType  : xAxisType;
+                P_yAxisType  = (yAxisType  == null)                   ? desc.P_yAxisType  : yAxisType;
                 P_timeRange  = (timeRange  == TimeRange.UNRESTRICTED) ? desc.P_timeRange  : timeRange;
-                P_idMember   = (idMember   == Globals.ALL_MEMBERS)   ? desc.P_idMember   : idMember;
-                P_idCourse   = (idCourse   == Globals.ALL_COURSES)   ? desc.P_idCourse   : idCourse;
-                P_idTraining = (idTraining == Globals.ALL_TRAININGS) ? desc.P_idTraining : idTraining;
-                P_nrPeriod   = (nrPeriod     == Globals._UNDEFINED)     ? desc.P_nrPeriod : nrPeriod;
-                P_period     = (period     == Period.UNDEFINED)      ? desc.P_period     : period;
+                P_idMember   = (idMember   == Globals.ALL_MEMBERS)    ? desc.P_idMember   : idMember;
+                P_idCourse   = (idCourse   == Globals.ALL_COURSES)    ? desc.P_idCourse   : idCourse;
+                P_idTraining = (idTraining == Globals.ALL_TRAININGS ) ? desc.P_idTraining : idTraining;
+                P_nrPeriod   = (nrPeriod   == Globals._UNDEFINED)     ? desc.P_nrPeriod   : nrPeriod;
+                P_period     = (period     == Period.UNDEFINED)       ? desc.P_period     : period;
 
                 switch(P_period)
                 {

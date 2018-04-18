@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Collections.Generic;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.ReportsBusinessLogic;
@@ -32,12 +31,12 @@ namespace AVF.MemberManagement.Reports
                      typeof(AxisTypeMonth), 
                      idMember: idMember
                  )
-               : $"Klicken für Details zu Mitglied\n" + GetFullDesc(idMember, " ");
+               : $"Klicken für Details zu Mitglied\n" + GetFullDesc(idMember, Globals.TEXT_ORIENTATION.HORIZONTAL);
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => tn.MitgliedID;
 
-        public override List<string> GetDescription(int idMember)
+        public override List<string> GetDescription(int idMember, Globals.TEXT_ORIENTATION o)
             => GetDesc(idMember);
 
         public static List<string> GetDesc(int idMember)

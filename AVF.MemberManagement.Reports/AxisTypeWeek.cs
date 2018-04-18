@@ -26,12 +26,12 @@ namespace AVF.MemberManagement.Reports
                     period: ReportDescriptor.Period.WEEK,
                     nrPeriod: nrWeek
                  )
-               : $"Klicken für Details zu " + HeaderStrings[0] + " " + GetFullDesc(nrWeek, " ");
+               : $"Klicken für Details zu " + HeaderStrings[0] + " " + GetFullDesc(nrWeek, Globals.TEXT_ORIENTATION.HORIZONTAL);
 
         public override int GetIdFromTrainingsParticipation(TrainingsTeilnahme tn)
             => NrOfWeeks(P_reportDescriptor.P_timeRange.P_datStart, Globals.DatabaseWrapper.TerminFromTrainingId(tn.TrainingID));
 
-        public override List<string> GetDescription(int nrWeek)
+        public override List<string> GetDescription(int nrWeek, Globals.TEXT_ORIENTATION o)
         {
             List<string> list = new List<string>();
             list.Add($"{Globals.GetWeekOfYear(P_reportDescriptor.P_timeRange.P_datStart, nrWeek)}/{P_reportDescriptor.P_timeRange.P_datStart.Year}");

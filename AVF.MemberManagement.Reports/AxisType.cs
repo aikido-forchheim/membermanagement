@@ -7,8 +7,6 @@ namespace AVF.MemberManagement.Reports
 {
     public abstract class AxisType : IAxis
     {
-        public enum ORIENTATION { HORIZONTAL, VERTICAL }
-
         // properties 
 
         public int P_MaxDbId { get; protected set; }
@@ -33,10 +31,10 @@ namespace AVF.MemberManagement.Reports
         public int GetModelIndexFromTrainingsParticipation(TrainingsTeilnahme tn)
             => GetModelIndexFromId(GetIdFromTrainingsParticipation(tn));
 
-        public string GetFullDesc(int id, string separator)
+        public string GetFullDesc(int id, Globals.TEXT_ORIENTATION o)
         {
-            List<String> l = GetDescription(id);
-            string s = String.Join(separator, l);
+            List<String> l = GetDescription(id, o);
+            string s = String.Join((o== Globals.TEXT_ORIENTATION.HORIZONTAL)?" ":"\n", l);
             return s;
         }
 
@@ -46,6 +44,6 @@ namespace AVF.MemberManagement.Reports
         public abstract int    GetModelIndexFromId(int id);
         public abstract int    GetIdFromModelIndex(int id);
         public abstract int    GetIdFromTrainingsParticipation(TrainingsTeilnahme tn);
-        public abstract List<string> GetDescription(int id);
+        public abstract List<string> GetDescription(int id, Globals.TEXT_ORIENTATION o);
     }
 }
