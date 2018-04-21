@@ -56,6 +56,9 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
                     case Period.UNDEFINED:
                         break;
                 }
+
+                if (P_timeRange == TimeRange.UNRESTRICTED)
+                    P_timeRange = new TimeRange(Globals.DatabaseWrapper.GetStartValidData(), DateTime.Now);
             }
         }
 

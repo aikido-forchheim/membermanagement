@@ -11,7 +11,7 @@ namespace AVF.MemberManagement.Reports
              : base(desc)
         {
             P_MaxDbId = NrOfMonths(P_reportDescriptor.P_timeRange.P_datStart, P_reportDescriptor.P_timeRange.P_datEnd);
-            HeaderStrings = new List<string> { "Monat" };
+            HeaderStrings = new List<string> { "Monat", "Jahr" };
         }
 
         private int NrOfMonths(DateTime datStart, DateTime datEnd)

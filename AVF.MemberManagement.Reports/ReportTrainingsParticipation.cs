@@ -47,6 +47,8 @@ namespace AVF.MemberManagement.Reports
             P_yearSelector.Value = m_reportDescriptor.P_timeRange.P_datStart.Year;
             P_yearSelector.ValueChanged += new System.EventHandler(YearSelectionChanged);
 
+            P_yearSelector.Visible = desc.P_timeRange.IsOneYear(); // if time range spans more than one year, do not show year selector only
+
             ReportFormPopulate();
         }
 
@@ -227,7 +229,8 @@ namespace AVF.MemberManagement.Reports
                 }
                 else // key or summary 
                 {
-                    return action ? P_yAxisType.MouseAxisEvent(P_yAxis.GetDbIdFromDgvIndex(row), action) : String.Empty;
+                    int index = (int)P_dataGridView.Rows[row].Cells[0].Value;
+                    return action ? P_yAxisType.MouseAxisEvent(index, action) : String.Empty;
                 }
             }
             return String.Empty;

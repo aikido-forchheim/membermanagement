@@ -44,6 +44,7 @@
             this.trainingsteilnahmeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.monateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.kurseToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.jahreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.kurseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.graduierungslisteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mitgliederbeiträgeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -159,21 +160,21 @@
             // exportierenToolStripMenuItem
             // 
             this.exportierenToolStripMenuItem.Name = "exportierenToolStripMenuItem";
-            this.exportierenToolStripMenuItem.Size = new System.Drawing.Size(264, 30);
+            this.exportierenToolStripMenuItem.Size = new System.Drawing.Size(185, 30);
             this.exportierenToolStripMenuItem.Text = "Exportieren";
             this.exportierenToolStripMenuItem.Click += new System.EventHandler(this.Export_Click);
             // 
             // schließenToolStripMenuItem
             // 
             this.schließenToolStripMenuItem.Name = "schließenToolStripMenuItem";
-            this.schließenToolStripMenuItem.Size = new System.Drawing.Size(264, 30);
+            this.schließenToolStripMenuItem.Size = new System.Drawing.Size(185, 30);
             this.schließenToolStripMenuItem.Text = "Schließen";
             this.schließenToolStripMenuItem.Click += new System.EventHandler(this.ApplicationExit_Click);
             // 
             // infoToolStripMenuItem
             // 
             this.infoToolStripMenuItem.Name = "infoToolStripMenuItem";
-            this.infoToolStripMenuItem.Size = new System.Drawing.Size(264, 30);
+            this.infoToolStripMenuItem.Size = new System.Drawing.Size(185, 30);
             this.infoToolStripMenuItem.Text = "Info";
             this.infoToolStripMenuItem.Click += new System.EventHandler(this.Info_Click);
             // 
@@ -192,7 +193,8 @@
             // 
             this.trainingsteilnahmeToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.monateToolStripMenuItem,
-            this.kurseToolStripMenuItem1});
+            this.kurseToolStripMenuItem1,
+            this.jahreToolStripMenuItem});
             this.trainingsteilnahmeToolStripMenuItem.Name = "trainingsteilnahmeToolStripMenuItem";
             this.trainingsteilnahmeToolStripMenuItem.Size = new System.Drawing.Size(242, 30);
             this.trainingsteilnahmeToolStripMenuItem.Text = "Trainingsteilnahme";
@@ -200,16 +202,23 @@
             // monateToolStripMenuItem
             // 
             this.monateToolStripMenuItem.Name = "monateToolStripMenuItem";
-            this.monateToolStripMenuItem.Size = new System.Drawing.Size(157, 30);
+            this.monateToolStripMenuItem.Size = new System.Drawing.Size(210, 30);
             this.monateToolStripMenuItem.Text = "Monate";
             this.monateToolStripMenuItem.Click += new System.EventHandler(this.Trainingsteilnahme_Monate_Click);
             // 
             // kurseToolStripMenuItem1
             // 
             this.kurseToolStripMenuItem1.Name = "kurseToolStripMenuItem1";
-            this.kurseToolStripMenuItem1.Size = new System.Drawing.Size(157, 30);
+            this.kurseToolStripMenuItem1.Size = new System.Drawing.Size(210, 30);
             this.kurseToolStripMenuItem1.Text = "Kurse";
             this.kurseToolStripMenuItem1.Click += new System.EventHandler(this.Trainingsteilnahme_Kurse_Click);
+            // 
+            // jahreToolStripMenuItem
+            // 
+            this.jahreToolStripMenuItem.Name = "jahreToolStripMenuItem";
+            this.jahreToolStripMenuItem.Size = new System.Drawing.Size(210, 30);
+            this.jahreToolStripMenuItem.Text = "Jahre";
+            this.jahreToolStripMenuItem.Click += new System.EventHandler(this.Trainingsteilnahme_Jahre_Click);
             // 
             // kurseToolStripMenuItem
             // 
@@ -333,5 +342,6 @@
         private System.Windows.Forms.Button buttonUndo;
         private System.Windows.Forms.Button buttonRedo;
         private System.Windows.Forms.ToolStripMenuItem infoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem jahreToolStripMenuItem;
     }
 }

@@ -98,6 +98,9 @@ namespace AVF.MemberManagement.Reports
         private void Trainingsteilnahme_Monate_Click(object sender, EventArgs e)
              => NewTrainingsParticipationPanel(m_descriptor, typeof(AxisTypeMonth), typeof(AxisTypeMember));
 
+        private void Trainingsteilnahme_Jahre_Click(object sender, EventArgs e)
+            => NewTrainingsParticipationPanel(m_descriptor, typeof(AxisTypeYear), typeof(AxisTypeMember), timeRange: TimeRange.UNRESTRICTED, period: ReportDescriptor.Period.ALL);
+
         private void Gradierungsliste_Click(object sender, EventArgs e)
              => SwitchToPanel(new ReportGraduationList());
 
