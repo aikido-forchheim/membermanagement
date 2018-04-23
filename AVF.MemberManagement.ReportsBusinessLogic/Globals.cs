@@ -76,8 +76,8 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         public static TimeRange GetYearRange(ReportDescriptor desc, int idYear)
         {
             DateTime dat = desc.P_timeRange.P_datStart;
-            DateTime datStart = new DateTime(desc.P_idYear, 1, 1);
-            DateTime datEnd = datStart.AddYears(idYear - 1);
+            DateTime datStart = new DateTime(dat.Year,  1,  1);
+            DateTime datEnd   = new DateTime(dat.Year, 12, 31);
             return new TimeRange(datStart, datEnd);
         }
 

@@ -30,15 +30,6 @@ namespace AVF.MemberManagement.Reports
             P_yearSelector.TabIndex = 13;
             P_yearSelector.Value = new decimal(new int[] { 0, 0, 0, 0 });
             // 
-            // P_labelMonat
-            // 
-            P_labelMonat = new System.Windows.Forms.Label();
-            P_labelMonat.AutoSize = true;
-            P_labelMonat.Font = P_font;
-            P_labelMonat.Location = new System.Drawing.Point(300, 70);
-            P_labelMonat.Name = "P_labelTrainer";
-            P_labelMonat.TabIndex = 5;
-            // 
             // P_labelBemerkung
             // 
             P_labelBemerkung = new System.Windows.Forms.Label();
@@ -84,7 +75,6 @@ namespace AVF.MemberManagement.Reports
             Controls.Add(P_labelZeitraum);
             Controls.Add(P_labelBemerkung);
             Controls.Add(P_labelMember);
-            Controls.Add(P_labelMonat);
             Controls.Add(P_labelKurs);
             Controls.Add(P_yearSelector);
             Name = "ReportForm";
@@ -96,7 +86,6 @@ namespace AVF.MemberManagement.Reports
         protected Label P_labelZeitraum;
         protected Label P_labelBemerkung;
         protected Label P_labelMember;
-        protected Label P_labelMonat;
         protected Label P_labelKurs;
         protected Label P_labelTrainer;
         protected NumericUpDown P_yearSelector;

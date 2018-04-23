@@ -63,41 +63,44 @@ namespace AVF.MemberManagement.Reports
             }
         }
 
+        private void DisplayMember()
+            => P_labelMember.Text = AxisTypeMember.GetFullName(Globals.DatabaseWrapper.MitgliedFromId(m_reportDescriptor.P_idMember));
+
         private void DisplayTrainer(int idTrainer)
             => P_labelTrainer.Text = $"Trainer: {AxisTypeMember.GetFullName(Globals.DatabaseWrapper.MitgliedFromId(idTrainer))}";
 
-        private void DisplayCourse(int idCourse)
+        private void DisplayCourse()
         {
-            if (idCourse != Globals.ALL_COURSES)
-            {
-                P_labelKurs.Text = "Kurs: " + String.Join(" ", AxisTypeCourse.GetDesc(idCourse));
-                int idTrainer = Globals.DatabaseWrapper.KursFromId(idCourse).Trainer;
-                if (idTrainer > 0)
-                    DisplayTrainer(idTrainer);
-            }
+            P_labelKurs.Text = "Kurs: " + String.Join(" ", AxisTypeCourse.GetDesc(m_reportDescriptor.P_idCourse));
+            int idTrainer = Globals.DatabaseWrapper.KursFromId(m_reportDescriptor.P_idCourse).Trainer;
+            if (idTrainer > 0)
+                DisplayTrainer(idTrainer);
+        }
+
+        private void DisplayTraining()
+        {
+            Training training = Globals.DatabaseWrapper.TrainingFromId(m_reportDescriptor.P_idTraining);
+            P_labelReportName.Text = $"Training am {Globals.DatabaseWrapper.WeekDay(training.WochentagID)} den ";
+            DisplayTrainer(training.Trainer);
+            P_labelZeitraum.Text = AxisTypeTraining.GetDate(training, '.');
+            P_labelMember.Text = AxisTypeTraining.GetTime(training);
         }
 
         protected override void ReportFormPopulate()    // Fill cells of DataGridView
         {
             P_xAxis.Initialize( P_xAxisType );
             P_yAxis.Initialize( P_yAxisType );
+
             ReportFormSize();
 
             if (m_reportDescriptor.P_idMember != Globals.ALL_MEMBERS)
-                P_labelMember.Text = AxisTypeMember.GetFullName(Globals.DatabaseWrapper.MitgliedFromId(m_reportDescriptor.P_idMember));
+                DisplayMember();
 
-            P_labelMonat.Text = AxisTypeMonth.GetDesc(m_reportDescriptor, m_reportDescriptor.P_nrPeriod)[0];
-
-            DisplayCourse(m_reportDescriptor.P_idCourse);
+            if (m_reportDescriptor.P_idCourse != Globals.ALL_COURSES)
+                DisplayCourse();
 
             if (m_reportDescriptor.P_idTraining != Globals.ALL_TRAININGS)
-            {
-                Training training      = Globals.DatabaseWrapper.TrainingFromId(m_reportDescriptor.P_idTraining);
-                P_labelReportName.Text = $"Training am {Globals.DatabaseWrapper.WeekDay(training.WochentagID)} den ";
-                DisplayTrainer(training.Trainer);
-                P_labelZeitraum.Text   = AxisTypeTraining.GetDate(training, '.');
-                P_labelMember.Text     = AxisTypeTraining.GetTime(training);
-            }
+                DisplayTraining();
 
             FillVerticalAxis();
 

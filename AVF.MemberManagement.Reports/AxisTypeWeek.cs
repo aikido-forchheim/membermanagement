@@ -22,7 +22,8 @@ namespace AVF.MemberManagement.Reports
                ? ReportMain.P_formMain.NewTrainingsParticipationPanel
                  (
                     defaultDesc: P_reportDescriptor,
-                    yAxisType: typeof(AxisTypeTraining),
+                    xAxisType: typeof(AxisTypeCourse),
+                    yAxisType: typeof(AxisTypeMember),
                     period: ReportDescriptor.Period.WEEK,
                     nrPeriod: nrWeek
                  )
@@ -33,8 +34,26 @@ namespace AVF.MemberManagement.Reports
 
         public override List<string> GetDescription(int nrWeek, Globals.TEXT_ORIENTATION o)
         {
+            string strWeek = $"{Globals.GetWeekOfYear(P_reportDescriptor.P_timeRange.P_datStart, nrWeek)}";
+            string strYear = $"{P_reportDescriptor.P_timeRange.P_datStart.Year}";
+
             List<string> list = new List<string>();
-            list.Add($"{Globals.GetWeekOfYear(P_reportDescriptor.P_timeRange.P_datStart, nrWeek)}/{P_reportDescriptor.P_timeRange.P_datStart.Year}");
+            switch (o)
+            {
+                case Globals.TEXT_ORIENTATION.VERTICAL:
+                    list.Add($"KW\n{strWeek}\n{strYear}");
+                    break;
+
+                case Globals.TEXT_ORIENTATION.HORIZONTAL:
+                    list.Add($"{strWeek}/{strYear}");
+                    break;
+
+                case Globals.TEXT_ORIENTATION.SPECIAL:
+                    list.Add(strWeek);
+                    list.Add(strYear);
+                    break;
+            }
+
             return list;
         }
     }
