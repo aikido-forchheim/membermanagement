@@ -47,7 +47,7 @@ namespace AVF.MemberManagement.Reports
             P_yearSelector.Value = m_reportDescriptor.P_timeRange.P_datStart.Year;
             P_yearSelector.ValueChanged += new System.EventHandler(YearSelectionChanged);
 
-            P_yearSelector.Visible = desc.P_timeRange.IsOneYear(); // if time range spans more than one year, do not show year selector only
+            P_yearSelector.Visible = desc.P_timeRange.IsOneCalendarYear(); // if time range spans more than one year, do not show year selector only
 
             ReportFormPopulate();
         }
@@ -69,6 +69,17 @@ namespace AVF.MemberManagement.Reports
         private void DisplayTrainer(int idTrainer)
             => P_labelTrainer.Text = $"Trainer: {AxisTypeMember.GetFullName(Globals.DatabaseWrapper.MitgliedFromId(idTrainer))}";
 
+        private void DisplayTrainer(Training training)
+        {
+            int    idTrainer = training.Trainer;
+            string strTrainer = 
+                (idTrainer == Globals._UNDEFINED) 
+                ? training.Bemerkung 
+                : AxisTypeMember.GetFullName(Globals.DatabaseWrapper.MitgliedFromId(idTrainer));
+
+            P_labelTrainer.Text = "Trainer: " + strTrainer;
+        }
+
         private void DisplayCourse()
         {
             P_labelKurs.Text = "Kurs: " + String.Join(" ", AxisTypeCourse.GetDesc(m_reportDescriptor.P_idCourse));
@@ -81,9 +92,9 @@ namespace AVF.MemberManagement.Reports
         {
             Training training = Globals.DatabaseWrapper.TrainingFromId(m_reportDescriptor.P_idTraining);
             P_labelReportName.Text = $"Training am {Globals.DatabaseWrapper.WeekDay(training.WochentagID)} den ";
-            DisplayTrainer(training.Trainer);
+            DisplayTrainer(training);
             P_labelZeitraum.Text = AxisTypeTraining.GetDate(training, '.');
-            P_labelMember.Text = AxisTypeTraining.GetTime(training);
+            P_labelMember.Text   = AxisTypeTraining.GetTime(training);
         }
 
         protected override void ReportFormPopulate()    // Fill cells of DataGridView

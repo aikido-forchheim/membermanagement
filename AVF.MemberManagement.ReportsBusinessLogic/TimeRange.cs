@@ -36,8 +36,10 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         public bool IsOneDay()
             => P_datStart == P_datEnd;
 
-        public bool IsOneYear()
-            => P_datStart.Year == P_datEnd.Year;
+        public bool IsOneCalendarYear()
+            => (P_datStart.Year == P_datEnd.Year) &&
+               (P_datStart.Month ==  1) && (P_datStart.Day ==  1) &&
+               (P_datEnd.Month   == 12) && (P_datEnd.Day   == 31);
 
         public DateTime P_datStart { get; set; }
         public DateTime P_datEnd   { get; set; }

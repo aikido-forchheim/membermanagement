@@ -11,7 +11,7 @@ namespace AVF.MemberManagement.Reports
              : base(desc)
         {
             P_MaxDbId  = NrOfWeeks(P_reportDescriptor.P_timeRange.P_datStart, P_reportDescriptor.P_timeRange.P_datEnd);
-            HeaderStrings = new List<string> { "KW" };
+            HeaderStrings = new List<string> { "KW", "Jahr" };
         }
 
         private int NrOfWeeks(DateTime datStart, DateTime datEnd)

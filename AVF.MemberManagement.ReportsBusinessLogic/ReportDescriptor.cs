@@ -43,15 +43,19 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
                 {
                     case Period.YEAR:
                         P_timeRange = Globals.GetYearRange(this, P_nrPeriod);
+                        P_nrPeriod = 0;
                         break;
                     case Period.MONTH:
                         P_timeRange = Globals.GetMonthRange(this, P_nrPeriod);
+                        P_nrPeriod = 0;
                         break;
                     case Period.WEEK:
                         P_timeRange = Globals.GetWeekRange(this, P_nrPeriod);
+                        P_nrPeriod = 0;
                         break;
                     case Period.ALL:
                         P_timeRange = TimeRange.UNRESTRICTED;
+                        nrPeriod = Globals._UNDEFINED;
                         break;
                     case Period.UNDEFINED:
                         break;

@@ -22,7 +22,8 @@ namespace AVF.MemberManagement.Reports
                ? ReportMain.P_formMain.NewTrainingsParticipationPanel
                  (
                     defaultDesc: P_reportDescriptor,
-                    xAxisType: typeof(AxisTypeWeek),
+                    xAxisType: (P_reportDescriptor.P_xAxisType == typeof(AxisTypeMonth)) ? typeof(AxisTypeWeek) : P_reportDescriptor.P_xAxisType,
+                    yAxisType: (P_reportDescriptor.P_yAxisType == typeof(AxisTypeMonth)) ? typeof(AxisTypeWeek) : P_reportDescriptor.P_yAxisType,
                     period: ReportDescriptor.Period.MONTH,
                     nrPeriod: idMonth
                  )
