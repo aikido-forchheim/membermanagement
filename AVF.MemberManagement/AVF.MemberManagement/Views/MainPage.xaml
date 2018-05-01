@@ -38,7 +38,7 @@
                     </OnIdiom>
                 </Image.WidthRequest>
             </Image>
-            <Label Grid.Row="1" Text="{Binding Version}" HorizontalOptions="Center"></Label>
+            <Label Grid.Row="1" Text="{Binding Version}" HorizontalOptions="Center" FontSize="Micro"></Label>
             <StackLayout Grid.Row="2" x:Name="UserNameArea" HorizontalOptions="Center" VerticalOptions="Center">
                 <Label Text="Benutzername:">
                 </Label>

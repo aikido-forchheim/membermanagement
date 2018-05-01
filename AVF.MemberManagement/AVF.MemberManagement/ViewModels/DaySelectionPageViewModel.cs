@@ -70,7 +70,7 @@ namespace AVF.MemberManagement.ViewModels
 
             Title = "Trainingsteilnahme";
 
-            MinDate = DateTime.Now - new TimeSpan(64, 0, 0, 0);
+            MinDate = DateTime.Now - new TimeSpan(365, 0, 0, 0);
             MaxDate = DateTime.Now;
 
             //Samstag ist kein Training, Workaround um am Samstag beim Debuggen nicht ständig Datum wechseln zu müssen

@@ -4,8 +4,18 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="AVF.MemberManagement.Views.DaySelectionPage" Appearing="DaySelectionPage_OnAppearing" Title="{Binding Title}">
-    <StackLayout Grid.Row="1" VerticalOptions="Center" HorizontalOptions="Center">
-        <DatePicker DateSelected="DatePicker_OnDateSelected" Date="{Binding SelectedDate}" MinimumDate="{Binding MinDate}" MaximumDate="{Binding MaxDate}"></DatePicker>
-        <Button x:Name="BtnToday" Text="{Binding ButtonText}" Command="{Binding NavigateToKursSelectionPageCommand}" Style="{StaticResource Button}"></Button>
+    <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+        <StackLayout Orientation="Vertical">
+            <Label Text="Bitte Datum wählen" HorizontalOptions="Center" FontAttributes="Bold"></Label>
+            <Label Text="zwischen" HorizontalOptions="Center"></Label>
+            <Label Text="{Binding MinDate, StringFormat='{0:dd. MMMM yyyy}'}" HorizontalOptions="Center"></Label>
+            <Label Text="und" HorizontalOptions="Center"></Label>
+            <Label Text="{Binding MaxDate, StringFormat='{0:dd. MMMM yyyy}'}" HorizontalOptions="Center"></Label>
+        </StackLayout>
+
+        <DatePicker  Margin="0,64,0,64" DateSelected="DatePicker_OnDateSelected" Date="{Binding SelectedDate}" MinimumDate="{Binding MinDate}" MaximumDate="{Binding MaxDate}"></DatePicker>
+        
+        <Label HorizontalOptions="Center" x:Name="LblToday" Text="{Binding ButtonText}"></Label>
+        <Button x:Name="BtnToday" Text="Weiter" Command="{Binding NavigateToKursSelectionPageCommand}" Style="{StaticResource Button}"></Button>
     </StackLayout>
 </ContentPage>
