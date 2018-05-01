@@ -4,6 +4,7 @@ using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using AVF.MemberManagement.StandardLibrary.Services;
 
 namespace AVF.MemberManagement.UWP
 {
@@ -30,6 +31,8 @@ namespace AVF.MemberManagement.UWP
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             Frame rootFrame = Window.Current.Content as Frame;
+
+            Globals.Version = GetAppVersion();
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
@@ -60,6 +63,16 @@ namespace AVF.MemberManagement.UWP
             }
             // Ensure the current window is active
             Window.Current.Activate();
+        }
+
+        public static string GetAppVersion()
+        {
+            var package = Package.Current;
+            var packageId = package.Id;
+            var version = packageId.Version;
+
+            //return $"{version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
+            return $"{version.Major}.{version.Minor}.{version.Build}";
         }
 
         /// <summary>

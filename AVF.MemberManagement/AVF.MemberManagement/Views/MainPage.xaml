@@ -13,6 +13,8 @@
                 </RowDefinition>
                 <RowDefinition Height="Auto">
                 </RowDefinition>
+                <RowDefinition Height="Auto">
+                </RowDefinition>
                 <RowDefinition Height="2*">
                 </RowDefinition>
             </Grid.RowDefinitions>
@@ -36,7 +38,8 @@
                     </OnIdiom>
                 </Image.WidthRequest>
             </Image>
-            <StackLayout Grid.Row="1" x:Name="UserNameArea" HorizontalOptions="Center" VerticalOptions="Center">
+            <Label Grid.Row="1" Text="{Binding Version}" HorizontalOptions="Center"></Label>
+            <StackLayout Grid.Row="2" x:Name="UserNameArea" HorizontalOptions="Center" VerticalOptions="Center">
                 <Label Text="Benutzername:">
                 </Label>
                 <Entry x:Name="EntryUsername" Text="{Binding Username}" Completed="EntryUsername_OnCompleted" Keyboard="Email" WidthRequest="256" IsEnabled="{Binding IsRestApiAccountSet}" BackgroundColor="#EEEEEE">
@@ -50,7 +53,7 @@
                     </Button>
                 </StackLayout>
             </StackLayout>
-            <StackLayout Grid.Row="2" HorizontalOptions="Center" VerticalOptions="Center">
+            <StackLayout Grid.Row="3" HorizontalOptions="Center" VerticalOptions="Center">
                 <Label Text="Bitte erst Einstellungen setzen:" IsVisible="{Binding IsRestApiAccountSet, Converter={StaticResource BooleanNotConverter}}">
                 </Label>
                 <Button Text="Einstellungen" Command="{Binding SettingsCommand}" Style="{StaticResource Button}">

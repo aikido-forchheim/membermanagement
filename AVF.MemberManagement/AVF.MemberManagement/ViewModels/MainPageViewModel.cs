@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Models;
+using AVF.MemberManagement.StandardLibrary.Services;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Microsoft.Extensions.Logging;
 
@@ -177,6 +178,12 @@ namespace AVF.MemberManagement.ViewModels
             get => _isUserInDatabaseAndHasPassword;
             set => SetProperty(ref _isUserInDatabaseAndHasPassword, value);
         }
+
+        #endregion
+
+
+        #region Version
+        public string Version => Globals.Version;
 
         #endregion
 
