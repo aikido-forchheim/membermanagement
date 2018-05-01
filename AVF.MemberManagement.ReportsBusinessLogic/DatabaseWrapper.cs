@@ -85,7 +85,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         public DateTime GetStartValidData()
         {
             string strStartValidData = P_settings.Single(s => s.Id == "DateValidData").Value;
-            return new DateTime(2014, 1, 1); // DateTime.Parse(strStartValidData);
+            return DateTime.Parse(strStartValidData);
         }
 
         public string WeekDay(int id)
