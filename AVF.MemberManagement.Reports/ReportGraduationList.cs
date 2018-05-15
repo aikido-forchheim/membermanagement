@@ -51,7 +51,7 @@ namespace AVF.MemberManagement.Reports
             if (bestGrad.P_datumMinNextGrad < DateTime.Now)
                 row.Cells["dateNext"].Style.ForeColor = Color.Green;
 
-            if (bestGrad.P_TrainngsDone >= bestGrad.P_trainingsNeeded)
+            if (bestGrad.P_TrainingsDone >= bestGrad.P_nrOfTrainingsNeeded)
                 row.Cells["nrTrainingsParticipations"].Style.ForeColor = Color.Green;
         }
 
@@ -80,14 +80,14 @@ namespace AVF.MemberManagement.Reports
                 Mitglied member = Globals.DatabaseWrapper.MitgliedFromId(bestGrad.P_memberId);
                 string   sGrad  = DisplayStringGraduation( ref gradIdLast, Globals.DatabaseWrapper.GraduierungFromId(bestGrad.P_graduierung));
 
-                string strTrainingsNeeded = String.Empty;
-                string strTrainingsDone   = String.Empty;
-                string strDateNext        = String.Empty;
+                string strTrainings = String.Empty;
+                string strDateNext  = String.Empty;
                 if (bestGrad.P_graduierung >= 7) // index of 6. Kyu is 7
                 {
-                    strTrainingsNeeded = $" ({bestGrad.P_trainingsNeeded})";
-                    strTrainingsDone   = (bestGrad.P_fAllTrainingsInDb ? "  " : "> ") + $"{ bestGrad.P_TrainngsDone }";
-                    strDateNext        = Globals.Format(bestGrad.P_datumMinNextGrad);
+                    strTrainings += bestGrad.P_fAllTrainingsInDb ? "  " : "> ";
+                    strTrainings += $"{ bestGrad.P_TrainingsDone }";
+                    strTrainings += $" ({bestGrad.P_nrOfTrainingsNeeded})";
+                    strDateNext = Globals.Format(bestGrad.P_datumMinNextGrad);
                 }
 
                 P_dataGridView.Rows.Add
@@ -96,14 +96,14 @@ namespace AVF.MemberManagement.Reports
                     member.Nachname,
                     member.Vorname,
                     member.Id,
-                    Globals.Format( member.Geburtsdatum ),
+                    Globals.Format(member.Geburtsdatum),
                     member.Geburtsort,
                     Globals.DatabaseWrapper.BK_Text(member),
                     member.AikidoBeginn,
                     Globals.Format(member.Eintritt.Value),
                     Globals.Format(bestGrad.P_datumGraduierung),
                     strDateNext,
-                    strTrainingsDone + strTrainingsNeeded
+                    strTrainings
                 );
 
                 ColorizeImportantDates(P_dataGridView.Rows[P_dataGridView.RowCount - 1], bestGrad); 

@@ -41,6 +41,9 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
                (P_datStart.Month ==  1) && (P_datStart.Day ==  1) &&
                (P_datEnd.Month   == 12) && (P_datEnd.Day   == 31);
 
+        public int NrOfMonthsInRange()
+            => (P_datEnd.Month - P_datStart.Month) + 12 * (P_datEnd.Year - P_datStart.Year);
+
         public DateTime P_datStart { get; set; }
         public DateTime P_datEnd   { get; set; }
     }

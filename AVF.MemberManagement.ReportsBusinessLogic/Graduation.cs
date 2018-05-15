@@ -4,38 +4,44 @@ using AVF.MemberManagement.StandardLibrary.Tbo;
 
 namespace AVF.MemberManagement.ReportsBusinessLogic
 {
+    public class Graduation
+    {
+        public static int WaitTimeMonths(Graduierung grad)
+            => grad.WartezeitJahre * 12 + grad.WartezeitMonate;
+
+        public static int TrainingsNeeded(Graduierung grad)
+            => (WaitTimeMonths(grad) * 100) / 12;
+
+        public static DateTime MinDateGradNext(Graduierung gradNext, DateTime dateGrad)
+            => dateGrad.AddYears(gradNext.WartezeitJahre).AddMonths(gradNext.WartezeitMonate);
+    }
+
     public class BestGraduation : IComparable<BestGraduation>
     {
-        public int      P_memberId          { get; private set; }
-        public int      P_graduierung       { get; private set; }
-        public DateTime P_dateStart         { get; private set; }
-        public DateTime P_datumGraduierung  { get; private set; }
-        public DateTime P_datumMinNextGrad  { get; private set; }
-        public int      P_trainingsNeeded   { get; private set; }
-        public bool     P_fAllTrainingsInDb { get; private set; }
-        public int      P_TrainngsDone      { get; private set; }
-        public int      P_yearsOfMembership { get; private set; }
+        public int      P_memberId            { get; private set; }
+        public int      P_graduierung         { get; private set; }
+        public DateTime P_dateStart           { get; private set; }
+        public DateTime P_datumGraduierung    { get; private set; }
+        public DateTime P_datumMinNextGrad    { get; private set; }
+        public int      P_nrOfTrainingsNeeded { get; private set; }
+        public bool     P_fAllTrainingsInDb   { get; private set; }
+        public int      P_TrainingsDone       { get; private set; }
+        public int      P_yearsOfMembership   { get; private set; }
 
-        private DateTime dateZero = new DateTime(1, 1, 1);
-
-        public BestGraduation(Mitglied member)
+        public BestGraduation(Mitglied member, Examination ex)
         {
-            P_graduierung      = (member.BeitragsklasseID == 4) ? 1 : 7; // Erwachsene und Jugendliche beginnen mit dem 6. Kyu
-            P_datumGraduierung = (member.Eintritt.HasValue) ? member.Eintritt.Value : dateZero;
-        }
+            DateTime datValidData = Globals.DatabaseWrapper.GetStartValidData();
+            Graduierung gradNext = Globals.DatabaseWrapper.GraduierungFromId(ex.P_exam.GraduierungID + 1);
 
-        public void Complete(Mitglied member)
-        {
-            DateTime    datValidData = Globals.DatabaseWrapper.GetStartValidData();
-            Graduierung gradNext     = Globals.DatabaseWrapper.GraduierungFromId(P_graduierung + 1);
-
-            P_memberId          = member.Id;
-            P_datumMinNextGrad  = P_datumGraduierung.AddYears(gradNext.WartezeitJahre).AddMonths(gradNext.WartezeitMonate);
-            P_trainingsNeeded   = gradNext.WartezeitJahre * 100 + (gradNext.WartezeitMonate * 100) / 12;   // ((P_datumMinNextGrad - P_datumGraduierung).Days / 7) * 2;  // 2 trainings per week needed
-            P_fAllTrainingsInDb = (datValidData <= P_datumGraduierung);
-            P_dateStart         = P_fAllTrainingsInDb ? P_datumGraduierung : datValidData;
-            P_TrainngsDone      = Globals.DatabaseWrapper.NrOfTrainingsSince(P_memberId, P_dateStart);
-            P_yearsOfMembership = DateTime.Now.Year - member.Eintritt.Value.Year;
+            P_memberId            = member.Id;
+            P_graduierung         = ex.P_exam.GraduierungID;
+            P_datumGraduierung    = ex.P_exam.Datum;
+            P_datumMinNextGrad    = Graduation.MinDateGradNext(gradNext, P_datumGraduierung); 
+            P_nrOfTrainingsNeeded = Graduation.TrainingsNeeded(gradNext); 
+            P_fAllTrainingsInDb   = (datValidData <= P_datumGraduierung);
+            P_dateStart           = P_fAllTrainingsInDb ? P_datumGraduierung : datValidData;
+            P_TrainingsDone       = Globals.DatabaseWrapper.NrOfTrainingsSince(P_memberId, P_dateStart);
+            P_yearsOfMembership   = DateTime.Now.Year - member.Eintritt.Value.Year;
         }
 
         public int CompareTo(BestGraduation other)
@@ -53,15 +59,6 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             else
                 return 1;
         }
-
-        public void ReplaceIfBetter(int grad, DateTime date)
-        {
-            if (grad > P_graduierung)
-            {
-                P_graduierung      = grad;
-                P_datumGraduierung = date;
-            }
-        }
     }
 
     public class BestGraduationList
@@ -74,18 +71,11 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 
             foreach (Mitglied member in Globals.DatabaseWrapper.CurrentMembers())
             {
-                BestGraduation best = new BestGraduation(member);
-
-                foreach (Pruefung pruefung in Globals.DatabaseWrapper.P_pruefung)
+                var examinations = new Examinations().GetSortedListOfExaminations(member);
+                if (examinations.Count > 0)
                 {
-                    if (pruefung.Pruefling == member.Id)
-                    {
-                        best.ReplaceIfBetter(pruefung.GraduierungID, pruefung.Datum);
-                    }
+                    P_listBestGraduation.Add(new BestGraduation(member, examinations[0]));
                 }
-
-                best.Complete(member);
-                P_listBestGraduation.Add(best);
             }
 
             P_listBestGraduation.Sort();

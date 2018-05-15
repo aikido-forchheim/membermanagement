@@ -167,30 +167,10 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             => P_trainingsTeilnahme.Exists(x => (x.MitgliedID == member) && (x.TrainingID == training.Id));
 
         public Boolean HatTeilgenommen(int member, List<Training> trainings)
-        {
-            bool found = false;
-            foreach (var training in trainings)
-            {
-                if (HatTeilgenommen(member, training))
-                {
-                    found = true;
-                    break;
-                }
-            }
-            return found;
-        }
+            => trainings.Exists(t => HatTeilgenommen(member, t));
 
         public int AnzahleBesuche(int member, List<Training> trainings)
-        {
-            int iCount = 0;
-            foreach (var training in trainings)
-            {
-                if (HatTeilgenommen(member, training))
-                    ++iCount;
-            }
-
-            return iCount;
-        }
+            => trainings.Count(t => HatTeilgenommen(member, t));
 
         public Kurs KursFromId(int id)
             => P_kurs.Single(s => s.Id == id);
@@ -201,58 +181,38 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         public DateTime DateFromTrainingParticipation(TrainingsTeilnahme tn)
             => TrainingFromId(tn.TrainingID).Termin;
 
-        public bool DateIsInRange(TrainingsTeilnahme tn, DateTime datRangeStart, DateTime datRangeEnd)
-            => DateIsInRange(DateFromTrainingParticipation(tn), datRangeStart, datRangeEnd);
-
-        public bool DateIsInRange(DateTime date, DateTime datRangeStart, DateTime datRangeEnd)
-            => (datRangeStart <= date) && (date <= datRangeEnd);
+        public int NrOfTrainingsInRange(int idMember, TimeRange range)
+            => P_trainingsTeilnahme.Count(p => (p.MitgliedID == idMember) && range.Includes(DateFromTrainingParticipation(p)));
 
         public int NrOfTrainingsSince(int idMember, DateTime datStart)
-            => P_trainingsTeilnahme.Count( p => (p.MitgliedID == idMember) && (DateFromTrainingParticipation(p) >= datStart) );
-
-        public List<TrainingsTeilnahme> Filter(List<TrainingsTeilnahme> list, DateTime datStart)
-            => list.Where(p => DateFromTrainingParticipation(p) >= datStart).ToList();
-
-        public List<TrainingsTeilnahme> Filter(List<TrainingsTeilnahme> list, DateTime datStart, DateTime datEnd)
-            => list.Where(p => DateIsInRange(DateFromTrainingParticipation(p), datStart, datEnd)).ToList();
+            => P_trainingsTeilnahme.Count(p => (p.MitgliedID == idMember) && (DateFromTrainingParticipation(p) >= datStart));
 
         public List<TrainingsTeilnahme> Filter(List<TrainingsTeilnahme> list, int idMember)
             => list.Where(p => p.MitgliedID == idMember).ToList();
 
+        public List<TrainingsTeilnahme> Filter(List<TrainingsTeilnahme> list, TimeRange range)
+            => list.Where(p => range.Includes(DateFromTrainingParticipation(p))).ToList();
+
         public List<TrainingsTeilnahme> Filter(List<TrainingsTeilnahme> list, Func<TrainingsTeilnahme, bool> filter)
             => list.Where(p => filter(p)).ToList();
-
-        public List<TrainingsTeilnahme> TrainingsTeilnahme(DateTime datStart, DateTime datEnd)
-            => Filter(P_trainingsTeilnahme, datStart, datEnd).ToList();
-
-        public List<TrainingsTeilnahme> TrainingsTeilnahme(TimeRange timeRange)
-            => TrainingsTeilnahme(timeRange.P_datStart, timeRange.P_datEnd);
 
         public List<Training> Filter(List<Training> list, int? idKurs)
             => list.Where(training => training.KursID == idKurs).ToList();
 
-        public List<Training> Filter(List<Training> list, DateTime datStart, DateTime datEnd)
-            => list.Where(training => training.Termin > datStart && training.Termin < datEnd).ToList();
+        public List<Training> Filter(List<Training> list, TimeRange range)
+            => list.Where(training => range.Includes(training.Termin)).ToList();
 
-        public List<Training> TrainingsInPeriod( int ? idKurs, DateTime datStart, DateTime datEnd )
+        public List<Training> TrainingsInPeriod(int? idKurs, TimeRange range)
         {
-            var result = Filter( P_trainings, datStart, datEnd );
+            var result = Filter(P_trainings, range);
 
-            if ( idKurs != Globals.ALL_COURSES )
-                result = Filter( result, idKurs );
+            if (idKurs != Globals.ALL_COURSES)
+                result = Filter(result, idKurs);
 
             return result.OrderBy(x => x.Termin).ToList();
         }
 
         public List<Training> TrainingsInPeriod( int? idKurs, int iJahr )
-        {
-            DateTime datStart = new DateTime(iJahr, 1, 1);
-            DateTime datEnd = new DateTime(iJahr, 12, 31);
-
-            return TrainingsInPeriod(idKurs, datStart, datEnd );
-        }
-
-        public List<Training> TrainingsInPeriod(DateTime datStart, DateTime datEnd) 
-            => TrainingsInPeriod(null, datStart, datEnd);
+            => TrainingsInPeriod(idKurs, new TimeRange(iJahr));
     }
 }

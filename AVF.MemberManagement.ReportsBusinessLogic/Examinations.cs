@@ -7,64 +7,43 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 {
     public class Examination
     {
-        public Examination(Pruefung examThis)
+        public Examination(Pruefung examThis, DateTime dateStart)
         {
-            exam = examThis;
-            yearsSinceLastExam = 0;
-            monthsSinceLastExam = 0;
+            TimeRange   range            = new TimeRange(dateStart, examThis.Datum);
+            Graduierung grad             = Globals.DatabaseWrapper.GraduierungFromId(examThis.GraduierungID);
+            P_waitTimeMonths             = Graduation.WaitTimeMonths(grad);
+            P_nrOfTrainingsNeeded        = Graduation.TrainingsNeeded(grad);
+            P_monthsSinceLastExam        = range.NrOfMonthsInRange();
+            P_nrOfTrainingsSinceLastExam = Globals.DatabaseWrapper.NrOfTrainingsInRange(examThis.Pruefling, range);
+            P_dateLastExam               = dateStart;
+            P_exam                       = examThis;
         }
 
-        public Examination(Pruefung examThis, Pruefung examLast)
-        {
-            exam = examThis;
-
-            TimeSpan diff = exam.Datum - examLast.Datum;
-            /*
-                        int monthDiff = System.Data.Linq.SqlClient.SqlMethods.DateDiffMonth(examLast.Datum, exam.Datum);
-                        int dayDiff = System.Data.Linq.SqlClient.SqlMethods.DateDiffDay(startDT, exam.Datum);
-                        int yearDiff = System.Data.Linq.SqlClient.SqlMethods.DateDiffYear(startDT, exam.Datum);
-                        yearsSinceLastExam = diff.
-            */
-            yearsSinceLastExam = 0;
-            monthsSinceLastExam = 0;
-        }
-
-        public Pruefung exam { get; private set; }
-        public int yearsSinceLastExam { get; private set; }
-        public int monthsSinceLastExam { get; private set; }
+        public Pruefung P_exam                       { get; private set; }
+        public int      P_monthsSinceLastExam        { get; private set; }
+        public int      P_nrOfTrainingsSinceLastExam { get; private set; }
+        public int      P_waitTimeMonths             { get; private set; }
+        public int      P_nrOfTrainingsNeeded        { get; private set; }
+        public DateTime P_dateLastExam               { get; private set; }
     }
 
-    public static class Examinations
+    public class Examinations
     {
-        public static Examination[] GetListOfExaminations( Mitglied member )
+        public List<Examination> GetSortedListOfExaminations( Mitglied member )
         {
-            var examinations = new List<Pruefung>();
+            var examinations = Globals.DatabaseWrapper.P_pruefung.Where(p => p.Pruefling == member.Id).OrderBy(x => x.GraduierungID).ToList();
 
-            foreach (Pruefung pruefung in Globals.DatabaseWrapper.P_pruefung)
-            {
-                if (pruefung.Pruefling == member.Id)
-                {
-                    examinations.Add(pruefung);
-                }
-            }
+            List<Examination> result = new List<Examination>();
 
-            examinations = examinations.OrderBy(x => x.GraduierungID).ToList();
-
-            int nrOfExams = examinations.Count();
-            Examination[] result = new Examination[nrOfExams];
-
-            // Fill result array with examinations in reverse order, highest graduation first
-
-            int index = nrOfExams-1;
+            DateTime dateStart = member.Eintritt.Value;
 
             foreach (Pruefung exam in examinations)
             {
-                result[index] = ( index == nrOfExams - 1) 
-                                ? new Examination( exam ) 
-                                : new Examination( exam, result[index+1].exam );
-                --index;
+                result.Add(new Examination(exam, dateStart));
+                dateStart = exam.Datum;
             }
 
+            result.Reverse();
             return result;
         }
     }

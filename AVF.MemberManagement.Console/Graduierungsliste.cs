@@ -93,16 +93,18 @@ namespace AVF.MemberManagement.Console
             m_memberList.Sort();
 
             int iGradIdLast = 0;
-            DateTime datFirstReliableData = new DateTime(2017, 1, 1);
-            List<TrainingsTeilnahme> tn = Globals.DatabaseWrapper.TrainingsTeilnahme(datFirstReliableData, DateTime.Now);
+            DateTime datFirstReliableData = Globals.DatabaseWrapper.GetStartValidData();
+            List<TrainingsTeilnahme> tn = Globals.DatabaseWrapper.P_trainingsTeilnahme;
             foreach (ComparableMember cmem in m_memberList)
             {
                 Graduierung grad     = Globals.DatabaseWrapper.GraduierungFromId(cmem.GetGraduierung());
+                Graduierung gradNext = Globals.DatabaseWrapper.GraduierungFromId(cmem.GetGraduierung() + 1);
                 Mitglied    mitglied = Globals.DatabaseWrapper.MitgliedFromId(cmem.GetMemberId());
                 DateTime    dateGrad = cmem.GetDatumGraduierung();
-                DateTime    dateNext = dateGrad.AddYears(grad.WartezeitJahre).AddMonths(grad.WartezeitMonate);
+                DateTime    dateNext = Graduation.MinDateGradNext(gradNext, dateGrad); 
                 var         tnMember = Globals.DatabaseWrapper.Filter(tn, mitglied.Id);
-                int         iCount   = Globals.DatabaseWrapper.Filter(tnMember, dateGrad, DateTime.Now).Count;
+                TimeRange   range    = new TimeRange(dateGrad, DateTime.Now);
+                int         iCount   = Globals.DatabaseWrapper.Filter(tnMember, range).Count;
 
                 string sGrad = "";
                 if (grad.Id != iGradIdLast)
@@ -115,7 +117,7 @@ namespace AVF.MemberManagement.Console
                 oTarget.Write(sGrad.PadRight(20));
                 oTarget.WriteMitglied( mitglied );
                 oTarget.Write($"{ mitglied.Geburtsdatum:dd.MM.yyyy} ");
-                oTarget.Write($"{ mitglied.Geburtsort, -20} ");
+//                oTarget.Write($"{ mitglied.Geburtsort, -20} ");
                 oTarget.Write($"{ Globals.DatabaseWrapper.BK_Text(mitglied), 3} ");
                 oTarget.Write($"{ mitglied.Eintritt:dd.MM.yyyy} ");
                 oTarget.Write($"{ dateGrad:dd.MM.yyyy} ");
