@@ -1,4 +1,4 @@
-﻿
+﻿using System;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.ReportsBusinessLogic;
 
@@ -81,6 +81,11 @@ namespace AVF.MemberManagement.Console
             System.Console.Write(Utilities.FormatMitglied(mitglied));
         }
 
+        public void WriteDatum(DateTime date)
+        {
+            System.Console.Write($"{date:dd-MM-yyyy}");
+        }
+
         public void WriteMitglied( int id )
         {
             WriteMitglied(Globals.DatabaseWrapper.MitgliedFromId(id));
@@ -89,7 +94,8 @@ namespace AVF.MemberManagement.Console
         public void WritePruefung( Pruefung pruefung )
         {
             Graduierung grad = Globals.DatabaseWrapper.GraduierungFromId(pruefung.GraduierungID);
-            System.Console.Write($"{grad.Bezeichnung} {pruefung.Datum:dd-MM-yyyy} ");
+            Write($"{grad.Bezeichnung} ");
+            WriteDatum(pruefung.Datum);
             /*
                         System.Console.Write("Prüfer: ");
                         if (pruefung.Pruefer > 0)

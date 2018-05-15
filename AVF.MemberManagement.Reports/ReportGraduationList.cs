@@ -78,11 +78,11 @@ namespace AVF.MemberManagement.Reports
             foreach (BestGraduation bestGrad in gradList.P_listBestGraduation)
             {
                 Mitglied member = Globals.DatabaseWrapper.MitgliedFromId(bestGrad.P_memberId);
-                string   sGrad  = DisplayStringGraduation( ref gradIdLast, Globals.DatabaseWrapper.GraduierungFromId(bestGrad.P_graduierung));
+                string   sGrad  = DisplayStringGraduation( ref gradIdLast, Globals.DatabaseWrapper.GraduierungFromId(bestGrad.P_gradId));
 
                 string strTrainings = String.Empty;
                 string strDateNext  = String.Empty;
-                if (bestGrad.P_graduierung >= 7) // index of 6. Kyu is 7
+                if (bestGrad.P_gradId >= 7) // index of 6. Kyu is 7
                 {
                     strTrainings += bestGrad.P_fAllTrainingsInDb ? "  " : "> ";
                     strTrainings += $"{ bestGrad.P_TrainingsDone }";

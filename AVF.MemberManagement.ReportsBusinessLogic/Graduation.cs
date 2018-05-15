@@ -19,8 +19,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
     public class BestGraduation : IComparable<BestGraduation>
     {
         public int      P_memberId            { get; private set; }
-        public int      P_graduierung         { get; private set; }
-        public DateTime P_dateStart           { get; private set; }
+        public int      P_gradId              { get; private set; }
         public DateTime P_datumGraduierung    { get; private set; }
         public DateTime P_datumMinNextGrad    { get; private set; }
         public int      P_nrOfTrainingsNeeded { get; private set; }
@@ -31,24 +30,22 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         public BestGraduation(Mitglied member, Examination ex)
         {
             DateTime datValidData = Globals.DatabaseWrapper.GetStartValidData();
-            Graduierung gradNext = Globals.DatabaseWrapper.GraduierungFromId(ex.P_exam.GraduierungID + 1);
 
-            P_memberId            = member.Id;
-            P_graduierung         = ex.P_exam.GraduierungID;
-            P_datumGraduierung    = ex.P_exam.Datum;
-            P_datumMinNextGrad    = Graduation.MinDateGradNext(gradNext, P_datumGraduierung); 
-            P_nrOfTrainingsNeeded = Graduation.TrainingsNeeded(gradNext); 
+            P_memberId            = ex.P_memberId;
+            P_gradId              = ex.P_gradId;
+            P_datumGraduierung    = ex.P_range.P_datStart;
+            P_datumMinNextGrad    = Graduation.MinDateGradNext(ex.P_gradNext, P_datumGraduierung); 
+            P_nrOfTrainingsNeeded = Graduation.TrainingsNeeded(ex.P_gradNext); 
             P_fAllTrainingsInDb   = (datValidData <= P_datumGraduierung);
-            P_dateStart           = P_fAllTrainingsInDb ? P_datumGraduierung : datValidData;
-            P_TrainingsDone       = Globals.DatabaseWrapper.NrOfTrainingsSince(P_memberId, P_dateStart);
+            P_TrainingsDone       = ex.P_nrOfTrainingsSinceLastExam; // Globals.DatabaseWrapper.NrOfTrainingsSince(P_memberId, P_dateStart);
             P_yearsOfMembership   = DateTime.Now.Year - member.Eintritt.Value.Year;
         }
 
         public int CompareTo(BestGraduation other)
         {
-            if (P_graduierung > other.P_graduierung)
+            if (P_gradId > other.P_gradId)
                 return -1;
-            else if (P_graduierung < other.P_graduierung)
+            else if (P_gradId < other.P_gradId)
                 return 1;
             else if (P_datumGraduierung < other.P_datumGraduierung)
                 return -1;
