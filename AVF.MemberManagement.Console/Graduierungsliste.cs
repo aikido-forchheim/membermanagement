@@ -101,7 +101,7 @@ namespace AVF.MemberManagement.Console
                 Graduierung gradNext = Globals.DatabaseWrapper.GraduierungFromId(cmem.GetGraduierung() + 1);
                 Mitglied    mitglied = Globals.DatabaseWrapper.MitgliedFromId(cmem.GetMemberId());
                 DateTime    dateGrad = cmem.GetDatumGraduierung();
-                DateTime    dateNext = Graduation.MinDateGradNext(gradNext, dateGrad); 
+//                DateTime    dateNext = Graduation.MinDateGradNext(gradNext, dateGrad); 
                 var         tnMember = Globals.DatabaseWrapper.Filter(tn, mitglied.Id);
                 TimeRange   range    = new TimeRange(dateGrad, DateTime.Now);
                 int         iCount   = Globals.DatabaseWrapper.Filter(tnMember, range).Count;
@@ -121,7 +121,7 @@ namespace AVF.MemberManagement.Console
                 oTarget.Write($"{ Globals.DatabaseWrapper.BK_Text(mitglied), 3} ");
                 oTarget.Write($"{ mitglied.Eintritt:dd.MM.yyyy} ");
                 oTarget.Write($"{ dateGrad:dd.MM.yyyy} ");
-                oTarget.Write($"{ dateNext:dd.MM.yyyy} ");
+//                oTarget.Write($"{ dateNext:dd.MM.yyyy} ");
                 oTarget.Write((dateGrad < datFirstReliableData) ? "> " : "  ");
                 oTarget.Write($" { iCount }");
                 oTarget.WriteLine( );

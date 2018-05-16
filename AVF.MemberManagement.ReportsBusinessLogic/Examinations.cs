@@ -5,23 +5,21 @@ using AVF.MemberManagement.StandardLibrary.Tbo;
 
 namespace AVF.MemberManagement.ReportsBusinessLogic
 {
-    public class Examination
+    public class Examination : IComparable<Examination>
     {
         public Examination(Pruefung examThis, DateTime dateNextExam)
         {
             P_gradNext = Globals.DatabaseWrapper.GraduierungFromId(examThis.GraduierungID + 1);
-            P_range = new TimeRange(examThis.Datum, dateNextExam);
+            P_range    = new TimeRange(examThis.Datum, dateNextExam);
             P_memberId = examThis.Pruefling;
-            P_exam     = examThis;
             initialize();
         }
 
-        public Examination(int idMember, TimeRange range, Graduierung gradNext)
+        public Examination(Mitglied member, DateTime dateEnd, Graduierung gradNext)
         {
-            P_memberId = idMember;
-            P_range = range;
+            P_memberId = member.Id;
+            P_range = new TimeRange(member.Eintritt.Value, dateEnd);
             P_gradNext = gradNext;
-            P_exam = null;
             initialize();
         }
 
@@ -29,12 +27,28 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         {
             P_nrOfTrainingsSinceLastExam = Globals.DatabaseWrapper.NrOfTrainingsInRange(P_memberId, P_range);
             P_monthsTilNextExam          = P_range.NrOfMonthsInRange();
-            P_waitTimeMonths             = Graduation.WaitTimeMonths(P_gradNext);
-            P_nrOfTrainingsNeeded        = Graduation.TrainingsNeeded(P_gradNext);
+            P_waitTimeMonths             = P_gradNext.WartezeitJahre * 12 + P_gradNext.WartezeitMonate;
+            P_nrOfTrainingsNeeded        = (P_waitTimeMonths * 100) / 12;
             P_gradId                     = P_gradNext.Id - 1;
+            P_datumMinNextGrad           = P_range.P_datStart.AddYears(P_gradNext.WartezeitJahre).AddMonths(P_gradNext.WartezeitMonate);
         }
 
-        public Pruefung    P_exam                       { get; private set; }
+        public int CompareTo(Examination other)
+        {
+            if (P_gradId > other.P_gradId)
+                return -1;
+            else if (P_gradId < other.P_gradId)
+                return 1;
+            else if (P_range.P_datStart < other.P_range.P_datStart)
+                return -1;
+            else if (P_range.P_datStart > other.P_range.P_datStart)
+                return 1;
+            else if (P_memberId < other.P_memberId)
+                return -1;
+            else
+                return 1;
+        }
+
         public int         P_monthsTilNextExam          { get; private set; }
         public int         P_nrOfTrainingsSinceLastExam { get; private set; }
         public int         P_waitTimeMonths             { get; private set; }
@@ -43,15 +57,15 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         public int         P_memberId                   { get; private set; }
         public Graduierung P_gradNext                   { get; private set; }
         public int         P_gradId                     { get; private set; }
+        public DateTime    P_datumMinNextGrad           { get; private set; }
     }
 
     public class Examinations
     {
-        public List<Examination> GetSortedListOfExaminations( Mitglied member )
+        public List<Examination> GetSortedListOfExaminations( Mitglied member )  // highest graduation first
         {
-            var pruefungen = Globals.DatabaseWrapper.P_pruefung.Where(p => p.Pruefling == member.Id).OrderByDescending(x => x.GraduierungID).ToList();
-
-            List<Examination> result = new List<Examination>();
+            List<Pruefung>    pruefungen = Globals.DatabaseWrapper.P_pruefung.Where(p => p.Pruefling == member.Id).OrderByDescending(x => x.GraduierungID).ToList();
+            List<Examination> result     = new List<Examination>();
 
             DateTime dateNext = DateTime.Now;
 
@@ -61,21 +75,30 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
                 dateNext = p.Datum;
             }
 
-            Graduierung gradNext;
+             // add pseudo examination for AVF entry
 
             if (pruefungen.Count > 0)
             {
-                dateNext = pruefungen.Last().Datum;
-                gradNext = Globals.DatabaseWrapper.GraduierungFromId(pruefungen.Last().GraduierungID);
+                result.Add(new Examination(member, pruefungen.Last().Datum, Globals.DatabaseWrapper.GraduierungFromId(pruefungen.Last().GraduierungID)));
             }
             else
             {
-                dateNext = DateTime.Now;
-                gradNext = Globals.DatabaseWrapper.GraduierungFromId(8);   // 5. Kyu
+                result.Add(new Examination(member, DateTime.Now, Globals.DatabaseWrapper.GraduierungFromId(8)));
             }
-            TimeRange range = new TimeRange(member.Eintritt.Value, dateNext);
-            result.Add(new Examination(member.Id, range, gradNext));
 
+            return result;
+        }
+
+        public List<Examination> GetBestGraduationList()   // list of highest graduations for each member
+        {
+            List<Examination> result = new List<Examination>();
+
+            foreach (Mitglied member in Globals.DatabaseWrapper.CurrentMembers())
+            {
+                result.Add(GetSortedListOfExaminations(member)[0]);
+            }
+
+            result.Sort();
             return result;
         }
     }

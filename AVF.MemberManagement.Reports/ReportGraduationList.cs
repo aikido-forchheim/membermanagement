@@ -43,15 +43,17 @@ namespace AVF.MemberManagement.Reports
             ReportFormPopulate();
         }
 
-        private void ColorizeImportantDates( DataGridViewRow row, BestGraduation bestGrad )
+        private void ColorizeImportantDates( DataGridViewRow row, Examination bestGrad )
         {
-            if ((bestGrad.P_yearsOfMembership > 0) && ((bestGrad.P_yearsOfMembership % 10 == 0) || (bestGrad.P_yearsOfMembership % 25 == 0)))
+            int yearsOfMembership = Globals.DatabaseWrapper.YearsOfMembership(bestGrad.P_memberId);
+
+            if ((yearsOfMembership > 0) && ((yearsOfMembership % 10 == 0) || (yearsOfMembership % 25 == 0)))
                 row.Cells["AVF-entry"].Style.ForeColor = Color.Red;
 
             if (bestGrad.P_datumMinNextGrad < DateTime.Now)
                 row.Cells["dateNext"].Style.ForeColor = Color.Green;
 
-            if (bestGrad.P_TrainingsDone >= bestGrad.P_nrOfTrainingsNeeded)
+            if (bestGrad.P_nrOfTrainingsSinceLastExam >= bestGrad.P_nrOfTrainingsNeeded)
                 row.Cells["nrTrainingsParticipations"].Style.ForeColor = Color.Green;
         }
 
@@ -71,11 +73,11 @@ namespace AVF.MemberManagement.Reports
 
         protected override void ReportFormPopulate()
         {
-            DateTime           datValidData = Globals.DatabaseWrapper.GetStartValidData();
-            BestGraduationList gradList     = new BestGraduationList();
+            DateTime datValidData = Globals.DatabaseWrapper.GetStartValidData();
+            var      gradList     = new Examinations().GetBestGraduationList();
 
             int gradIdLast = 0;
-            foreach (BestGraduation bestGrad in gradList.P_listBestGraduation)
+            foreach (Examination bestGrad in gradList)
             {
                 Mitglied member = Globals.DatabaseWrapper.MitgliedFromId(bestGrad.P_memberId);
                 string   sGrad  = DisplayStringGraduation( ref gradIdLast, Globals.DatabaseWrapper.GraduierungFromId(bestGrad.P_gradId));
@@ -84,8 +86,8 @@ namespace AVF.MemberManagement.Reports
                 string strDateNext  = String.Empty;
                 if (bestGrad.P_gradId >= 7) // index of 6. Kyu is 7
                 {
-                    strTrainings += bestGrad.P_fAllTrainingsInDb ? "  " : "> ";
-                    strTrainings += $"{ bestGrad.P_TrainingsDone }";
+                    strTrainings += (datValidData <= bestGrad.P_range.P_datStart) ? "  " : "> ";
+                    strTrainings += $"{ bestGrad.P_nrOfTrainingsSinceLastExam }";
                     strTrainings += $" ({bestGrad.P_nrOfTrainingsNeeded})";
                     strDateNext = Globals.Format(bestGrad.P_datumMinNextGrad);
                 }
@@ -101,7 +103,7 @@ namespace AVF.MemberManagement.Reports
                     Globals.DatabaseWrapper.BK_Text(member),
                     member.AikidoBeginn,
                     Globals.Format(member.Eintritt.Value),
-                    Globals.Format(bestGrad.P_datumGraduierung),
+                    Globals.Format(bestGrad.P_range.P_datStart),
                     strDateNext,
                     strTrainings
                 );

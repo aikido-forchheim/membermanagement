@@ -47,7 +47,6 @@
     <Compile Include="DatabaseWrapper.cs" />
     <Compile Include="Examinations.cs" />
     <Compile Include="Globals.cs" />
-    <Compile Include="Graduation.cs" />
     <Compile Include="IAxis.cs" />
     <Compile Include="MemberFees.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

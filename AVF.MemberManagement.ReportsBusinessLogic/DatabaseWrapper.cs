@@ -154,6 +154,18 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         public Mitglied MitgliedFromId(int id)
             => P_mitglieder.Single(s => s.Id == id);
 
+        public DateTime EntryDateFromMemberId(int id)
+            => MitgliedFromId(id).Eintritt.Value;
+
+        public int YearsOfMembership(int id)
+        {
+            Mitglied member = MitgliedFromId(id);
+            if (member.Eintritt.HasValue)
+                return DateTime.Now.Year - member.Eintritt.Value.Year;
+            else
+                return 9999;
+        }
+
         public Training TrainingFromId(int id)
             => P_trainings.Single(s => s.Id == id);
 
