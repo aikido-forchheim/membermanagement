@@ -9,9 +9,9 @@ namespace AVF.MemberManagement.Reports
     {
         // properties
 
-        protected DataGridView  P_dataGridView { get; set; }
-        protected Label         P_labelReportName { get; set; }
-        protected Font          P_font { get; set; }
+        protected DataGridView P_dataGridView { get; set; }
+        protected Label        P_labelReportName { get; set; }
+        protected Font         P_font { get; set; }
 
         private Color P_ColorCell { get; set; }
 
@@ -35,7 +35,7 @@ namespace AVF.MemberManagement.Reports
 
         // abstract memeber functions
 
-        protected abstract void   ReportFormPopulate();    // Fill cells of DataGridView
+        protected abstract void   ReportFormPopulate(Action<String> tick);    // Fill cells of DataGridView
         protected abstract string MouseCellEvent(int row, int col, bool action);
 
         // member functions

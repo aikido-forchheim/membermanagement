@@ -89,15 +89,17 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             return result;
         }
 
-        public List<Examination> GetBestGraduationList()   // list of highest graduations for each member
+        public List<Examination> GetBestGraduationList(Action<String> tick)   // list of highest graduations for each member
         {
             List<Examination> result = new List<Examination>();
 
             foreach (Mitglied member in Globals.DatabaseWrapper.CurrentMembers())
-            {
+            {                
+                tick($"{member.Vorname} {member.Nachname}");
                 result.Add(GetSortedListOfExaminations(member)[0]);
             }
 
+            tick("");
             result.Sort();
             return result;
         }

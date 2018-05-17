@@ -9,7 +9,7 @@ namespace AVF.MemberManagement.Reports
     {
         private decimal P_halfYearSum { get; set; } = 0;
 
-        public ReportMemberFees()
+        public ReportMemberFees(Action<String> tick)
         {
             InitializeReportBase(); // creates DataGridView ...
 
@@ -29,16 +29,17 @@ namespace AVF.MemberManagement.Reports
             foreach (DataGridViewColumn cols in P_dataGridView.Columns)
                 cols.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 
-            ReportFormPopulate();
+            ReportFormPopulate(tick);
         }
 
-        protected override void ReportFormPopulate()
+        protected override void ReportFormPopulate(Action<String> tick)
         {
             foreach (Mitglied member in Globals.DatabaseWrapper.CurrentMembers())
             {
                 decimal yearlyFee = MemberFees.GetMemberFee(member);
                 if ( yearlyFee > 0 )
                 {
+                    tick($"{member.Vorname} {member.Nachname}");
                     P_dataGridView.Rows.Add
                     (
                         member.Nachname,

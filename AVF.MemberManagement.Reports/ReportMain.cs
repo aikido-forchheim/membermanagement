@@ -22,6 +22,12 @@ namespace AVF.MemberManagement.Reports
             InitDatabase();
         }
 
+        public void ShowAnimationString(string s)
+        {
+            labelAnimation.Text = s;
+            labelAnimation.Refresh();
+        }
+
         private async Task InitDatabase()
         {
             IUnityContainer P_container;
@@ -31,7 +37,7 @@ namespace AVF.MemberManagement.Reports
             await Globals.Initialize
             (
                 P_container, 
-                tick: s => { progressBar1.PerformStep(); labelAnimateLoadDb.Text = s; }
+                tick: s => { progressBar1.PerformStep(); ShowAnimationString(s); }
             );
             panelLoadDb.Dispose();
             m_UndoRedo = new ReportsUndoRedo(P_formMain);
@@ -42,7 +48,7 @@ namespace AVF.MemberManagement.Reports
                                 yAxisType: typeof(AxisTypeMember),
                                 timeRange: new TimeRange(DateTime.Now.Year - 1)
                             );
-            m_UndoRedo.SwitchTo(new ReportTrainingsParticipation(m_descriptor));
+            m_UndoRedo.SwitchTo(new ReportTrainingsParticipation(m_descriptor, tick: s => ShowAnimationString(s)));
         }
 
         private string SwitchToPanel(ReportBase panel)
@@ -65,7 +71,7 @@ namespace AVF.MemberManagement.Reports
         )
         {
             ReportDescriptor descNew = new ReportDescriptor(defaultDesc, xAxisType, yAxisType, timeRange, idMember, idCourse, idTraining, nrPeriod, period);
-            return SwitchToPanel(new ReportTrainingsParticipation(descNew));
+            return SwitchToPanel(new ReportTrainingsParticipation(descNew, tick: s => ShowAnimationString(s)));
         }
 
         private void FormMain_Load(object sender, EventArgs e)
@@ -102,10 +108,10 @@ namespace AVF.MemberManagement.Reports
             => NewTrainingsParticipationPanel(m_descriptor, typeof(AxisTypeYear), typeof(AxisTypeMember), timeRange: TimeRange.UNRESTRICTED, period: ReportDescriptor.Period.ALL);
 
         private void Gradierungsliste_Click(object sender, EventArgs e)
-             => SwitchToPanel(new ReportGraduationList());
+           => SwitchToPanel(new ReportGraduationList(tick: s => ShowAnimationString(s)));
 
         private void MemberFees_Click(object sender, EventArgs e)
-             => SwitchToPanel(new ReportMemberFees());
+             => SwitchToPanel(new ReportMemberFees(tick: s => ShowAnimationString(s)));
 
         private void ApplicationExit_Click(object sender, EventArgs e)
             => Application.Exit();
@@ -132,5 +138,10 @@ namespace AVF.MemberManagement.Reports
 
         public void RedoEnabled(bool state)
             => buttonRedo.Enabled = state;
+
+        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
     }
 }

@@ -10,7 +10,7 @@ namespace AVF.MemberManagement.Reports
     {
         private AxisTypeMember P_axisTypeMember { get; set; }
 
-        public ReportGraduationList()
+        public ReportGraduationList(Action<String> tick)
         {
             InitializeReportBase(); // creates DataGridView ...
 
@@ -40,7 +40,7 @@ namespace AVF.MemberManagement.Reports
             P_dataGridView.DefaultCellStyle.Font = new Font("Comic Sans MS", 11);
 
             P_axisTypeMember = new AxisTypeMember(new ReportDescriptor());
-            ReportFormPopulate();
+            ReportFormPopulate(tick);
         }
 
         private void ColorizeImportantDates( DataGridViewRow row, Examination bestGrad )
@@ -71,10 +71,10 @@ namespace AVF.MemberManagement.Reports
             return sGrad;
         }
 
-        protected override void ReportFormPopulate()
+        protected override void ReportFormPopulate(Action<String> tick)
         {
             DateTime datValidData = Globals.DatabaseWrapper.GetStartValidData();
-            var      gradList     = new Examinations().GetBestGraduationList();
+            var      gradList     = new Examinations().GetBestGraduationList(tick);
 
             int gradIdLast = 0;
             foreach (Examination bestGrad in gradList)

@@ -19,7 +19,7 @@ namespace AVF.MemberManagement.Reports
 
         private bool m_fDataAreaVisible;
 
-        public ReportTrainingsParticipation( ReportDescriptor desc )
+        public ReportTrainingsParticipation( ReportDescriptor desc, Action<String> tick)
         {
             m_reportDescriptor = desc;
             InitializeReportTrainingsParticipation(); // creates DataGridView ...
@@ -49,7 +49,7 @@ namespace AVF.MemberManagement.Reports
 
             P_yearSelector.Visible = desc.P_timeRange.IsOneCalendarYear(); // if time range spans more than one year, do not show year selector only
 
-            ReportFormPopulate();
+            ReportFormPopulate(tick);
         }
 
         private void ReportFormSize()      // define dimensions of DataGridView
@@ -97,7 +97,7 @@ namespace AVF.MemberManagement.Reports
             P_labelMember.Text   = AxisTypeTraining.GetTime(training);
         }
 
-        protected override void ReportFormPopulate()    // Fill cells of DataGridView
+        protected override void ReportFormPopulate(Action<String> tick)    // Fill cells of DataGridView
         {
             P_xAxis.Initialize( P_xAxisType );
             P_yAxis.Initialize( P_yAxisType );
