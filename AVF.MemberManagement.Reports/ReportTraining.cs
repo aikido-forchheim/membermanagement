@@ -8,13 +8,13 @@ namespace AVF.MemberManagement.Reports
         public ReportTraining(Training training)
         {
             ReportMain.P_formMain.NewTrainingsParticipationPanel
-                (
-                    defaultDesc: null,
-                    xAxisType: typeof(AxisTypeEmpty), 
-                    yAxisType: typeof(AxisTypeMember), 
-                    timeRange: new TimeRange(training.Termin), 
-                    idTraining: training.Id)
-                ;
+            (
+                defaultDesc: null,
+                xAxisType: typeof(AxisTypeEmpty), 
+                yAxisType: typeof(AxisTypeMember), 
+                timeRange: new TimeRange(training.Termin), 
+                idTraining: training.Id
+            );
         }
     }
 }

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.Kurse = new System.Windows.Forms.Button();
             this.Graduierungsliste = new System.Windows.Forms.Button();
@@ -137,7 +138,6 @@
             this.menuStrip1.Size = new System.Drawing.Size(819, 33);
             this.menuStrip1.TabIndex = 8;
             this.menuStrip1.Text = "menuStrip1";
-            this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
             // 
             // dateiToolStripMenuItem
             // 
@@ -152,21 +152,21 @@
             // exportierenToolStripMenuItem
             // 
             this.exportierenToolStripMenuItem.Name = "exportierenToolStripMenuItem";
-            this.exportierenToolStripMenuItem.Size = new System.Drawing.Size(252, 30);
+            this.exportierenToolStripMenuItem.Size = new System.Drawing.Size(185, 30);
             this.exportierenToolStripMenuItem.Text = "Exportieren";
             this.exportierenToolStripMenuItem.Click += new System.EventHandler(this.Export_Click);
             // 
             // schließenToolStripMenuItem
             // 
             this.schließenToolStripMenuItem.Name = "schließenToolStripMenuItem";
-            this.schließenToolStripMenuItem.Size = new System.Drawing.Size(252, 30);
+            this.schließenToolStripMenuItem.Size = new System.Drawing.Size(185, 30);
             this.schließenToolStripMenuItem.Text = "Schließen";
             this.schließenToolStripMenuItem.Click += new System.EventHandler(this.ApplicationExit_Click);
             // 
             // infoToolStripMenuItem
             // 
             this.infoToolStripMenuItem.Name = "infoToolStripMenuItem";
-            this.infoToolStripMenuItem.Size = new System.Drawing.Size(252, 30);
+            this.infoToolStripMenuItem.Size = new System.Drawing.Size(185, 30);
             this.infoToolStripMenuItem.Text = "Info";
             this.infoToolStripMenuItem.Click += new System.EventHandler(this.Info_Click);
             // 
@@ -188,7 +188,7 @@
             this.kurseToolStripMenuItem1,
             this.jahreToolStripMenuItem});
             this.trainingsteilnahmeToolStripMenuItem.Name = "trainingsteilnahmeToolStripMenuItem";
-            this.trainingsteilnahmeToolStripMenuItem.Size = new System.Drawing.Size(252, 30);
+            this.trainingsteilnahmeToolStripMenuItem.Size = new System.Drawing.Size(242, 30);
             this.trainingsteilnahmeToolStripMenuItem.Text = "Trainingsteilnahme";
             // 
             // monateToolStripMenuItem
@@ -215,21 +215,21 @@
             // kurseToolStripMenuItem
             // 
             this.kurseToolStripMenuItem.Name = "kurseToolStripMenuItem";
-            this.kurseToolStripMenuItem.Size = new System.Drawing.Size(252, 30);
+            this.kurseToolStripMenuItem.Size = new System.Drawing.Size(242, 30);
             this.kurseToolStripMenuItem.Text = "Kurse";
             this.kurseToolStripMenuItem.Click += new System.EventHandler(this.Kurse_Click);
             // 
             // graduierungslisteToolStripMenuItem
             // 
             this.graduierungslisteToolStripMenuItem.Name = "graduierungslisteToolStripMenuItem";
-            this.graduierungslisteToolStripMenuItem.Size = new System.Drawing.Size(252, 30);
+            this.graduierungslisteToolStripMenuItem.Size = new System.Drawing.Size(242, 30);
             this.graduierungslisteToolStripMenuItem.Text = "Graduierungsliste";
             this.graduierungslisteToolStripMenuItem.Click += new System.EventHandler(this.Gradierungsliste_Click);
             // 
             // mitgliederbeiträgeToolStripMenuItem
             // 
             this.mitgliederbeiträgeToolStripMenuItem.Name = "mitgliederbeiträgeToolStripMenuItem";
-            this.mitgliederbeiträgeToolStripMenuItem.Size = new System.Drawing.Size(252, 30);
+            this.mitgliederbeiträgeToolStripMenuItem.Size = new System.Drawing.Size(242, 30);
             this.mitgliederbeiträgeToolStripMenuItem.Text = "Mitgliederbeiträge";
             this.mitgliederbeiträgeToolStripMenuItem.Click += new System.EventHandler(this.MemberFees_Click);
             // 

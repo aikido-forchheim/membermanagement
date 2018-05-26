@@ -22,29 +22,11 @@ namespace AVF.MemberManagement.Console
                     oTarget.WriteLine();
                     foreach (var examination in examinations)
                     {
-                        if (examination.P_exam == null)
-                        {
-                            oTarget.Write("Eintritt: ");
-                            oTarget.WriteDatum(examination.P_range.P_datStart);
-                        }
-                        else
-                        {
-                            oTarget.WritePruefung(examination.P_exam);
-                        }
-
-                        if (examination.P_monthsTilNextExam > 0)
-                            oTarget.Write($" {examination.P_monthsTilNextExam,3}({examination.P_waitTimeMonths})");
-                        else
-                            oTarget.Write("        ");
-
-                        if (examination.P_range.P_datEnd < datValidData)
-                            oTarget.Write(" ????");
-                        else
-                        {
-                            oTarget.Write((examination.P_range.P_datStart < datValidData) ? " >" : "  ");
-                            oTarget.Write($"{ examination.P_nrOfTrainingsSinceLastExam, 3 }");
-                        }
-                        oTarget.Write($" ({examination.P_nrOfTrainingsNeeded})");
+                        oTarget.Write(examination.GraduationText());
+                        oTarget.Write(examination.GraduationDate());
+                        oTarget.Write(examination.Examinant());
+                        oTarget.Write(examination.WaitTime());
+                        oTarget.Write(examination.NrOfTrainings());
                         oTarget.WriteLine();
                     }
                     oTarget.WriteLine();

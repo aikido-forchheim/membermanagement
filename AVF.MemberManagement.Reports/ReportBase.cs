@@ -20,25 +20,24 @@ namespace AVF.MemberManagement.Reports
         // constructor
 
         public ReportBase()
-            => Resize += new EventHandler
-               (
-                   delegate(object sender, System.EventArgs e)
-                   {
-                       int extraHeight = 2;   // values found by trial and error, to prevend scroll bars
-                       int extraWidth = 20;   // TODO: find clean solution
-                       int maxWidth = P_dataGridView.Columns.GetColumnsWidth(DataGridViewElementStates.None) + extraWidth;
-                       int maxHeight = P_dataGridView.Rows.GetRowsHeight(DataGridViewElementStates.None) + extraHeight + P_dataGridView.ColumnHeadersHeight;
-                       P_dataGridView.Width  = Math.Min(ClientSize.Width  - P_dataGridView.Location.X, maxWidth);
-                       P_dataGridView.Height = Math.Min(ClientSize.Height - P_dataGridView.Location.Y, maxHeight);
-                   }
-               );
+            => Resize += new EventHandler( delegate(object s, System.EventArgs e) { SizeDataGridView(P_dataGridView); } );
 
         // abstract memeber functions
 
         protected abstract void   ReportFormPopulate(Action<String> tick);    // Fill cells of DataGridView
-        protected abstract string MouseCellEvent(int row, int col, bool action);
+        protected abstract string MouseCellEvent(int row, int col, MouseButtons buttons, bool action);
 
         // member functions
+
+        public void SizeDataGridView( DataGridView dgv )
+        {
+            int extraHeight = 2;   // values found by trial and error, to prevend scroll bars
+            int extraWidth = 20;   // TODO: find clean solution
+            int maxWidth = dgv.Columns.GetColumnsWidth(DataGridViewElementStates.None) + extraWidth;
+            int maxHeight = dgv.Rows.GetRowsHeight(DataGridViewElementStates.None) + extraHeight + dgv.ColumnHeadersHeight;
+            dgv.Width  = Math.Min(ClientSize.Width  - dgv.Location.X, maxWidth);
+            dgv.Height = Math.Min(ClientSize.Height - dgv.Location.Y, maxHeight);
+        }
 
         public void Export2Excel()
             => ExcelExport.Export2Excel( P_dataGridView, 2, 1, GetType().Name );
@@ -77,7 +76,13 @@ namespace AVF.MemberManagement.Reports
             P_dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             P_dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             P_dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            P_dataGridView.CellMouseClick += new DataGridViewCellMouseEventHandler(delegate (object sender, DataGridViewCellMouseEventArgs e) { MouseCellEvent(e.RowIndex, e.ColumnIndex, action: true); } );
+            P_dataGridView.CellMouseClick += new DataGridViewCellMouseEventHandler
+            (
+                delegate (object sender, DataGridViewCellMouseEventArgs e) 
+                {
+                    MouseCellEvent(e.RowIndex, e.ColumnIndex, e.Button, action: true);
+                }
+            );
 
             ((System.ComponentModel.ISupportInitialize)(P_dataGridView)).EndInit();
             Controls.Add(P_dataGridView);

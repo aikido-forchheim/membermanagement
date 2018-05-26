@@ -35,6 +35,9 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         public static string Format(DateTime date)
             => $"{ date:dd.MM.yyyy}";
 
+        public static string Format(DateTime ? date)
+            => (date.HasValue) ? $"{ date:dd.MM.yyyy}" : "";
+
         public static int GetMonth(DateTime date)
             => P_cal.GetMonth( date );
 

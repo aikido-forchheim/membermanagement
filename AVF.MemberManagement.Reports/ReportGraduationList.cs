@@ -8,7 +8,9 @@ namespace AVF.MemberManagement.Reports
 {
     class ReportGraduationList : ReportBase
     {
-        private AxisTypeMember P_axisTypeMember { get; set; }
+        private AxisTypeMember m_axisTypeMember;
+        private Examinations   m_examinations;
+//        private ContextMenu    m_contextMenue;
 
         public ReportGraduationList(Action<String> tick)
         {
@@ -39,7 +41,11 @@ namespace AVF.MemberManagement.Reports
 
             P_dataGridView.DefaultCellStyle.Font = new Font("Comic Sans MS", 11);
 
-            P_axisTypeMember = new AxisTypeMember(new ReportDescriptor());
+            m_axisTypeMember = new AxisTypeMember(new ReportDescriptor());
+            m_examinations = new Examinations();
+//            m_contextMenue = new ContextMenu();
+//            m_contextMenue.MenuItems.Add("Item 1", new EventHandler(delegate (object sender, System.EventArgs e) { }));
+//            m_contextMenue.MenuItems.Add("Item 2", new EventHandler(delegate (object sender, System.EventArgs e) { }));
             ReportFormPopulate(tick);
         }
 
@@ -74,22 +80,22 @@ namespace AVF.MemberManagement.Reports
         protected override void ReportFormPopulate(Action<String> tick)
         {
             DateTime datValidData = Globals.DatabaseWrapper.GetStartValidData();
-            var      gradList     = new Examinations().GetBestGraduationList(tick);
+            var      gradList     = m_examinations.GetBestGraduationList(tick);
+
+            int firstGradWithDefinedWaitingTime = 7;   // index of 6. Kyu is 7
 
             int gradIdLast = 0;
-            foreach (Examination bestGrad in gradList)
+            foreach (Examination exam in gradList)
             {
-                Mitglied member = Globals.DatabaseWrapper.MitgliedFromId(bestGrad.P_memberId);
-                string   sGrad  = DisplayStringGraduation( ref gradIdLast, Globals.DatabaseWrapper.GraduierungFromId(bestGrad.P_gradId));
+                Mitglied member = Globals.DatabaseWrapper.MitgliedFromId(exam.P_memberId);
+                string   sGrad  = DisplayStringGraduation( ref gradIdLast, Globals.DatabaseWrapper.GraduierungFromId(exam.P_gradId));
 
                 string strTrainings = String.Empty;
                 string strDateNext  = String.Empty;
-                if (bestGrad.P_gradId >= 7) // index of 6. Kyu is 7
+                if (exam.P_gradId >= firstGradWithDefinedWaitingTime) 
                 {
-                    strTrainings += (datValidData <= bestGrad.P_range.P_datStart) ? "  " : "> ";
-                    strTrainings += $"{ bestGrad.P_nrOfTrainingsSinceLastExam }";
-                    strTrainings += $" ({bestGrad.P_nrOfTrainingsNeeded})";
-                    strDateNext = Globals.Format(bestGrad.P_datumMinNextGrad);
+                    strTrainings = exam.NrOfTrainings();
+                    strDateNext = Globals.Format(exam.P_datumMinNextGrad);
                 }
 
                 P_dataGridView.Rows.Add
@@ -103,28 +109,37 @@ namespace AVF.MemberManagement.Reports
                     Globals.DatabaseWrapper.BK_Text(member),
                     member.AikidoBeginn,
                     Globals.Format(member.Eintritt.Value),
-                    Globals.Format(bestGrad.P_range.P_datStart),
+                    Globals.Format(exam.P_range.P_datStart),
                     strDateNext,
                     strTrainings
                 );
 
-                ColorizeImportantDates(P_dataGridView.Rows[P_dataGridView.RowCount - 1], bestGrad); 
+                ColorizeImportantDates(P_dataGridView.Rows[P_dataGridView.RowCount - 1], exam); 
             }
         }
 
-        protected override string MouseCellEvent(int row, int col, bool action)
+        protected override string MouseCellEvent(int row, int col, MouseButtons buttons, bool action)
         {
             if (row >= 0)
             {
-                int       idMember     = (int)P_dataGridView.Rows[row].Cells["memberId"].Value;
-                string    strDateGrad  = P_dataGridView.Rows[row].Cells["dateGrad"].Value.ToString();
-                DateTime  dateGrad     = DateTime.Parse(strDateGrad);
-                DateTime  datValidData = Globals.DatabaseWrapper.GetStartValidData();
-                DateTime  dateStart    = (datValidData <= dateGrad) ? dateGrad : datValidData;
-                TimeRange timeRange    = new TimeRange(dateStart, DateTime.Now);
-                return action
-                    ? ReportMain.P_formMain.NewTrainingsParticipationPanel(null, typeof(AxisTypeCourse), typeof(AxisTypeMonth), timeRange, idMember: idMember)
-                    : $"Klicken für Details zu Mitglied\n" + P_axisTypeMember.GetFullDesc(idMember, Globals.TEXT_ORIENTATION.HORIZONTAL);
+                var relativeMousePosition = P_dataGridView.PointToClient(Cursor.Position);
+//                m_contextMenue.Show(P_dataGridView, relativeMousePosition);
+                int idMember = (int)P_dataGridView.Rows[row].Cells["memberId"].Value;
+                if (col < 3)
+                {
+                    return ReportMain.P_formMain.SwitchToPanel(new ReportMember(Globals.DatabaseWrapper.MitgliedFromId(idMember)));
+                }
+                else
+                {
+                    string strDateGrad = P_dataGridView.Rows[row].Cells["dateGrad"].Value.ToString();
+                    DateTime dateGrad = DateTime.Parse(strDateGrad);
+                    DateTime datValidData = Globals.DatabaseWrapper.GetStartValidData();
+                    DateTime dateStart = (datValidData <= dateGrad) ? dateGrad : datValidData;
+                    TimeRange timeRange = new TimeRange(dateStart, DateTime.Now);
+                    return action
+                        ? ReportMain.P_formMain.NewTrainingsParticipationPanel(null, typeof(AxisTypeCourse), typeof(AxisTypeMonth), timeRange, idMember: idMember)
+                        : $"Klicken für Details zu Mitglied\n" + m_axisTypeMember.GetFullDesc(idMember, Globals.TEXT_ORIENTATION.HORIZONTAL);
+                }
             }
             else
             {

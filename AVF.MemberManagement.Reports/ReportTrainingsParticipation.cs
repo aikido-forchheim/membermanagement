@@ -222,7 +222,7 @@ namespace AVF.MemberManagement.Reports
             FillSummaryRow();
         }
 
-        protected override string MouseCellEvent(int row, int col, bool action)
+        protected override string MouseCellEvent(int row, int col, MouseButtons buttons, bool action)
         {
             if (IsHeaderRow(row))
             {

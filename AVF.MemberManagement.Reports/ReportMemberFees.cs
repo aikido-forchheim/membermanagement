@@ -56,7 +56,7 @@ namespace AVF.MemberManagement.Reports
             }
         }
 
-        protected override string MouseCellEvent(int row, int col, bool action)
+        protected override string MouseCellEvent(int row, int col, MouseButtons buttons, bool action)
         {
             if (row >= 0)
             {

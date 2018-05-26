@@ -85,7 +85,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         public DateTime GetStartValidData()
         {
             string strStartValidData = P_settings.Single(s => s.Id == "DateValidData").Value;
-            return DateTime.Parse(strStartValidData);
+            return new DateTime(2013,1,1); // DateTime.Parse(strStartValidData);
         }
 
         public string WeekDay(int id)
@@ -96,7 +96,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 
         public Boolean IstNochMitglied(Mitglied member)
         {
-             DateTime? austritt = member.Austritt;
+            DateTime? austritt = member.Austritt;
 
             if (!austritt.HasValue)
                 return true;
@@ -104,19 +104,14 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             return (austritt.Value.Year == 0);
         }
 
-        public Boolean IstNochMitglied(int? id)
-        {
-            if (!id.HasValue)
-                return false;
-
-            if (id < 0)
-                return false;
-
-            return IstNochMitglied(MitgliedFromId(id.Value));
-        }
+        public Boolean IstAktivesMitglied(Mitglied member)
+            => IstNochMitglied(member) && (member.BeitragsklasseID != 3); // BK III: passiv
 
         public List<Mitglied> CurrentMembers()
             => P_mitglieder.Where(m => IstNochMitglied(m)).ToList();
+
+        public List<Mitglied> ActiveMembers()
+            => P_mitglieder.Where(m => IstAktivesMitglied(m)).ToList();
 
         public int MaxMitgliedsNr()
             => P_mitglieder.Max(t => t.Id);

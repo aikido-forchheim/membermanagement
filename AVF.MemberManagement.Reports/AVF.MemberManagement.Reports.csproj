@@ -88,6 +88,9 @@
     <Compile Include="ReportMemberFees.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ReportMember.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ReportsUndoRedo.cs" />
     <Compile Include="ReportTrainingsParticipation.cs">
       <SubType>Component</SubType>
@@ -98,9 +101,7 @@
     <Compile Include="ReportGraduationList.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ReportTraining.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="ReportTraining.cs" />
     <Compile Include="AxisTypeTraining.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -109,6 +110,7 @@
     <Compile Include="VerticalAxis.cs" />
     <EmbeddedResource Include="ReportMain.resx">
       <DependentUpon>ReportMain.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ReportTrainingsParticipation.resx">
       <DependentUpon>ReportTrainingsParticipation.cs</DependentUpon>

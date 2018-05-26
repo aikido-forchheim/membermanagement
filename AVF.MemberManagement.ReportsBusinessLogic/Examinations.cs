@@ -9,6 +9,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
     {
         public Examination(Pruefung examThis, DateTime dateNextExam)
         {
+            P_exam = examThis;
             P_gradNext = Globals.DatabaseWrapper.GraduierungFromId(examThis.GraduierungID + 1);
             P_range    = new TimeRange(examThis.Datum, dateNextExam);
             P_memberId = examThis.Pruefling;
@@ -17,6 +18,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
 
         public Examination(Mitglied member, DateTime dateEnd, Graduierung gradNext)
         {
+            P_exam = null;
             P_memberId = member.Id;
             P_range = new TimeRange(member.Eintritt.Value, dateEnd);
             P_gradNext = gradNext;
@@ -49,6 +51,49 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
                 return 1;
         }
 
+        public string GraduationText()
+            => (P_exam == null)
+               ? $"Eintritt:"
+               : $"{Globals.DatabaseWrapper.GraduierungFromId(P_exam.GraduierungID).Bezeichnung}";
+
+        public string GraduationDate()
+            => $"{((P_exam == null) ? P_range.P_datStart : P_exam.Datum):dd.MM.yyyy}";
+
+        public string Examinant()
+        {
+            if (P_exam == null)
+                return String.Empty;
+
+            if (P_exam.Pruefer > 0)
+            {
+                Mitglied pruefer = Globals.DatabaseWrapper.MitgliedFromId(P_exam.Pruefer);
+                return $"{ pruefer.Vorname } { pruefer.Nachname }";
+            }
+            else
+                return $"{P_exam.Bemerkung}";
+        }
+
+        public string WaitTime()
+            => (P_monthsTilNextExam > 0)
+               ? $" {P_monthsTilNextExam,3}({P_waitTimeMonths})"
+               : "        ";
+
+        public string NrOfTrainings()
+        {
+            DateTime datValidData = Globals.DatabaseWrapper.GetStartValidData();
+            string sTrainings;
+            if (P_range.P_datEnd < datValidData)
+                sTrainings = " ????";
+            else
+            {
+                sTrainings = (P_range.P_datStart < datValidData) ? " >" : "  ";
+                sTrainings += $"{ P_nrOfTrainingsSinceLastExam,3 }";
+            }
+            sTrainings += $" ({P_nrOfTrainingsNeeded})";
+            return sTrainings;
+        }
+
+        public Pruefung    P_exam                       { get; private set; }
         public int         P_monthsTilNextExam          { get; private set; }
         public int         P_nrOfTrainingsSinceLastExam { get; private set; }
         public int         P_waitTimeMonths             { get; private set; }
@@ -93,7 +138,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
         {
             List<Examination> result = new List<Examination>();
 
-            foreach (Mitglied member in Globals.DatabaseWrapper.CurrentMembers())
+            foreach (Mitglied member in Globals.DatabaseWrapper.ActiveMembers())
             {                
                 tick($"{member.Vorname} {member.Nachname}");
                 result.Add(GetSortedListOfExaminations(member)[0]);

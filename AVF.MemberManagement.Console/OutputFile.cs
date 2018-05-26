@@ -96,16 +96,14 @@ namespace AVF.MemberManagement.Console
             Graduierung grad = Globals.DatabaseWrapper.GraduierungFromId(pruefung.GraduierungID);
             Write($"{grad.Bezeichnung} ");
             WriteDatum(pruefung.Datum);
-            /*
-                        System.Console.Write("Prüfer: ");
-                        if (pruefung.Pruefer > 0)
-                        {
-                            Mitglied pruefer = Globals.DatabaseWrapper.MitgliedFromId(pruefung.Pruefer);
-                            System.Console.Write( $"{ pruefer.Nachname }, { pruefer.Vorname } ({ pruefer.Id }) " );
-                        }
-                        else
-                            System.Console.Write($"{pruefung.Bemerkung}");
-            */
+            System.Console.Write("Prüfer: ");
+            if (pruefung.Pruefer > 0)
+            {
+                Mitglied pruefer = Globals.DatabaseWrapper.MitgliedFromId(pruefung.Pruefer);
+                System.Console.Write( $"{ pruefer.Nachname }, { pruefer.Vorname } ({ pruefer.Id }) " );
+            }
+            else
+                System.Console.Write($"{pruefung.Bemerkung}");
         }
 
         public void WriteMatrix( string [,] matrix )

@@ -51,7 +51,7 @@ namespace AVF.MemberManagement.Reports
             m_UndoRedo.SwitchTo(new ReportTrainingsParticipation(m_descriptor, tick: s => ShowAnimationString(s)));
         }
 
-        private string SwitchToPanel(ReportBase panel)
+        public string SwitchToPanel(ReportBase panel)
         {
             m_UndoRedo.Add(panel);
             return String.Empty;
@@ -138,10 +138,5 @@ namespace AVF.MemberManagement.Reports
 
         public void RedoEnabled(bool state)
             => buttonRedo.Enabled = state;
-
-        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-
-        }
     }
 }
