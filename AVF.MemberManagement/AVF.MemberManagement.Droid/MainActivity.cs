@@ -10,6 +10,8 @@ using AVF.MemberManagement.StandardLibrary.Interfaces;
 using Prism.Unity;
 using Microsoft.Practices.Unity;
 using Debug = System.Diagnostics.Debug;
+using Prism;
+using Prism.Ioc;
 
 namespace AVF.MemberManagement.Droid
 {
@@ -44,6 +46,11 @@ namespace AVF.MemberManagement.Droid
 
             //container.RegisterType<ITokenService, TokenService>(new ContainerControlledLifetimeManager());
             //container.RegisterType<IPhpCrudApiService, PhpCrudApiService>(new ContainerControlledLifetimeManager());
+        }
+
+        public void RegisterTypes(IContainerRegistry containerRegistry)
+        {
+            //throw new NotImplementedException();
         }
     }
 }
