@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using AVF.MemberManagement.StandardLibrary.Enums;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Models;
+using AVF.MemberManagement.StandardLibrary.Services;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Prism.Navigation;
 using Microsoft.Extensions.Logging;
@@ -63,9 +65,10 @@ namespace AVF.MemberManagement.ViewModels
             Participants.Clear();
 
             Training = (TrainingsModel)parameters["SelectedTraining"];
+            
             ChildrenOnly = Training.Training.Kindertraining;
 
-            Title = Training.Description;
+            Title = Globals.Idiom != Idiom.Phone ? $"{Training.Date}, {Training.Description}" : Training.Description;
 
             Mitglieder = await _mitgliederRepository.GetAsync();
             Mitglieder.Sort(CompareMemberNames);
