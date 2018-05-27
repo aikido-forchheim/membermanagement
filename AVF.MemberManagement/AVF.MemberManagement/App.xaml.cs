@@ -9,7 +9,9 @@ using AVF.MemberManagement.StandardLibrary.Services;
 using Prism.Unity;
 using AVF.MemberManagement.Views;
 using Microsoft.Extensions.Logging;
-using Microsoft.Practices.Unity;
+using Prism;
+using Prism.Ioc;
+using Unity.Lifetime;
 using Xamarin.Forms;
 
 namespace AVF.MemberManagement
@@ -39,7 +41,7 @@ namespace AVF.MemberManagement
             await NavigationService.NavigateAsync("MainMasterDetailPage");
         }
 
-        protected override void RegisterTypes()
+        protected override void RegisterTypes(IContainerRegistry Container)
         {
             _repositoryBootstrapper = new RepositoryBootstrapper(Container);
 
@@ -54,27 +56,28 @@ namespace AVF.MemberManagement
             //IAccountService
             if (Globals.UsesXamarinAuth)
             {
-                Container.RegisterType<IAccountService, AccountService>(new ContainerControlledLifetimeManager());
+                Container.RegisterSingleton<IAccountService, AccountService>();
             }
             else
             {
                 Container.RegisterInstance(Globals.AccountService);
             }
-            Container.Resolve<IAccountService>().InitWithAccountStore(AppId);
+
+            this.Container.Resolve<IAccountService>().InitWithAccountStore(AppId);
             
             //ITokenService
-            Container.RegisterType<ITokenService, TokenService>(new ContainerControlledLifetimeManager());
+            Container.RegisterSingleton<ITokenService, TokenService>();
             
             //IPhpCrudApiService
-            Container.RegisterType<IPhpCrudApiService, PhpCrudApiService>(new ContainerControlledLifetimeManager());
+            Container.RegisterSingleton<IPhpCrudApiService, PhpCrudApiService>();
             
             //IPasswordService
-            Container.RegisterType<IPasswordService, PasswordService>(new ContainerControlledLifetimeManager());
+            Container.RegisterSingleton<IPasswordService, PasswordService>();
 
-            Container.RegisterType<IKursModelService, KursModelService>(new ContainerControlledLifetimeManager());
+            Container.RegisterSingleton<IKursModelService, KursModelService>();
 
 
-            Container.RegisterType<IJsonFileFactory, JsonFileFactory>(new ContainerControlledLifetimeManager());
+            Container.RegisterSingleton<IJsonFileFactory, JsonFileFactory>();
 
             //_repositoryBootstrapper.RegisterRepositories(false);
             //Globals.UseFileProxies = false;
@@ -84,21 +87,21 @@ namespace AVF.MemberManagement
             //RefreshCache().Wait();
             //RefreshCache(); //UWP
 
-            Container.RegisterTypeForNavigation<MainMasterDetailPage>();
-            Container.RegisterTypeForNavigation<MenuPage>();
-            Container.RegisterTypeForNavigation<NavigationPage>();
-            Container.RegisterTypeForNavigation<MainPage>();
-            Container.RegisterTypeForNavigation<RestApiSettingsPage>();
-            Container.RegisterTypeForNavigation<AdvancedSettingsPage>();
-            Container.RegisterTypeForNavigation<PasswordPage>();
-            Container.RegisterTypeForNavigation<StartPage>();
-            Container.RegisterTypeForNavigation<DaySelectionPage>();
-            Container.RegisterTypeForNavigation<KursSelectionPage>();
-            Container.RegisterTypeForNavigation<EditTrainingPage>();
-            Container.RegisterTypeForNavigation<EnterParticipantsPage>();
-            Container.RegisterTypeForNavigation<EnterParticipantsTabletPage>();
-            Container.RegisterTypeForNavigation<SaveParticipantsPage>();
-            Container.RegisterTypeForNavigation<SelectTrainerPage>();
+            Container.RegisterForNavigation<MainMasterDetailPage>();
+            Container.RegisterForNavigation<MenuPage>();
+            Container.RegisterForNavigation<NavigationPage>();
+            Container.RegisterForNavigation<MainPage>();
+            Container.RegisterForNavigation<RestApiSettingsPage>();
+            Container.RegisterForNavigation<AdvancedSettingsPage>();
+            Container.RegisterForNavigation<PasswordPage>();
+            Container.RegisterForNavigation<StartPage>();
+            Container.RegisterForNavigation<DaySelectionPage>();
+            Container.RegisterForNavigation<KursSelectionPage>();
+            Container.RegisterForNavigation<EditTrainingPage>();
+            Container.RegisterForNavigation<EnterParticipantsPage>();
+            Container.RegisterForNavigation<EnterParticipantsTabletPage>();
+            Container.RegisterForNavigation<SaveParticipantsPage>();
+            Container.RegisterForNavigation<SelectTrainerPage>();
         }
 
         // ReSharper disable once UnusedMember.Local

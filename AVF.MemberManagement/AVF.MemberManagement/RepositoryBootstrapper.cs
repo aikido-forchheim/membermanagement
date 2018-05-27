@@ -7,15 +7,17 @@ using AVF.MemberManagement.StandardLibrary.Repositories;
 using AVF.MemberManagement.StandardLibrary.Tables;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Microsoft.Extensions.Options;
-using Microsoft.Practices.Unity;
+using Prism.Ioc;
+using Unity;
+using Unity.Lifetime;
 
 namespace AVF.MemberManagement
 {
     public class RepositoryBootstrapper : IRepositoryBootstrapper
     {
-        private readonly IUnityContainer _container;
+        private readonly IContainerRegistry _container;
 
-        public RepositoryBootstrapper(IUnityContainer container)
+        public RepositoryBootstrapper(IContainerRegistry container)
         {
             _container = container;
         }
@@ -31,73 +33,73 @@ namespace AVF.MemberManagement
                 IOptions<FileProxyOptions> fileProxyOptions = new OptionsWrapper<FileProxyOptions>(new FileProxyOptions());
                 fileProxyOptions.Value.ShouldSimulateDelay = false;
                 fileProxyOptions.Value.FileProxyDelayTimes.Add(nameof(User), new FileProxyDelayTimes { GetAsyncFullTableDelay = 1, GetAsyncSingleEntryDelay = 1 });
-                _container.RegisterInstance(fileProxyOptions, new ContainerControlledLifetimeManager());
+                _container.RegisterInstance(fileProxyOptions);
 
                 RegisterFileProxies();
             }
 
-            _container.RegisterType<IRepository<Beitragsklasse>, CachedRepository<Beitragsklasse>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IRepository<Familienrabatt>, Repository<Familienrabatt>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IRepository<Graduierung>, Repository<Graduierung>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IRepository<Kurs>, CachedRepository<Kurs>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IRepository<Mitglied>, CachedRepository<Mitglied>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IRepository<Pruefung>, Repository<Pruefung>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IRepositoryBase<Setting, string>, CachedSettingsRepository>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IRepository<Stundensatz>, Repository<Stundensatz>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IRepository<Test>, Repository<Test>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IRepository<TrainerErnennung>, Repository<TrainerErnennung>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IRepository<TrainerStufe>, Repository<TrainerStufe>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IRepository<Training>, CachedRepository<Training>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IRepository<TrainingsTeilnahme>, CachedRepository<TrainingsTeilnahme>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IRepository<User>, CachedRepository<User>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IRepository<Wochentag>, CachedRepository<Wochentag>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IRepository<Wohnung>, Repository<Wohnung>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IRepository<Wohnungsbezug>, Repository<Wohnungsbezug>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IRepository<ZuschlagKindertraining>, Repository<ZuschlagKindertraining>>(new ContainerControlledLifetimeManager());
+            _container.RegisterSingleton<IRepository<Beitragsklasse>, CachedRepository<Beitragsklasse>>();
+            _container.RegisterSingleton<IRepository<Familienrabatt>, Repository<Familienrabatt>>();
+            _container.RegisterSingleton<IRepository<Graduierung>, Repository<Graduierung>>();
+            _container.RegisterSingleton<IRepository<Kurs>, CachedRepository<Kurs>>();
+            _container.RegisterSingleton<IRepository<Mitglied>, CachedRepository<Mitglied>>();
+            _container.RegisterSingleton<IRepository<Pruefung>, Repository<Pruefung>>();
+            _container.RegisterSingleton<IRepositoryBase<Setting, string>, CachedSettingsRepository>();
+            _container.RegisterSingleton<IRepository<Stundensatz>, Repository<Stundensatz>>();
+            _container.RegisterSingleton<IRepository<Test>, Repository<Test>>();
+            _container.RegisterSingleton<IRepository<TrainerErnennung>, Repository<TrainerErnennung>>();
+            _container.RegisterSingleton<IRepository<TrainerStufe>, Repository<TrainerStufe>>();
+            _container.RegisterSingleton<IRepository<Training>, CachedRepository<Training>>();
+            _container.RegisterSingleton<IRepository<TrainingsTeilnahme>, CachedRepository<TrainingsTeilnahme>>();
+            _container.RegisterSingleton<IRepository<User>, CachedRepository<User>>();
+            _container.RegisterSingleton<IRepository<Wochentag>, CachedRepository<Wochentag>>();
+            _container.RegisterSingleton<IRepository<Wohnung>, Repository<Wohnung>>();
+            _container.RegisterSingleton<IRepository<Wohnungsbezug>, Repository<Wohnungsbezug>>();
+            _container.RegisterSingleton<IRepository<ZuschlagKindertraining>, Repository<ZuschlagKindertraining>>();
         }
 
         private void RegisterWebProxies()
         {
-            _container.RegisterType<IProxy<Beitragsklasse>, Proxy<TblBeitragsklassen, Beitragsklasse>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<Familienrabatt>, Proxy<TblFamilienrabatte, Familienrabatt>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<Graduierung>, Proxy<TblGraduierungen, Graduierung>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<Kurs>, Proxy<TblKurse, Kurs>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<Mitglied>, Proxy<TblMitglieder, Mitglied>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<Pruefung>, Proxy<TblPruefungen, Pruefung>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxyBase<Setting, string>, ProxyBase<TblSettings, Setting, string>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<Stundensatz>, Proxy<TblStundensaetze, Stundensatz>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<Test>, Proxy<TblTests, Test>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<TrainerErnennung>, Proxy<TblTrainerErnennungen, TrainerErnennung>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<TrainerStufe>, Proxy<TblTrainerStufen, TrainerStufe>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<Training>, Proxy<TblTrainings, Training>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<TrainingsTeilnahme>, Proxy<TblTrainingsTeilnahmen, TrainingsTeilnahme>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<User>, Proxy<TblUsers, User>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<Wochentag>, Proxy<TblWochentage, Wochentag>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<Wohnung>, Proxy<TblWohnungen, Wohnung>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<Wohnungsbezug>, Proxy<TblWohnungsbezug, Wohnungsbezug>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<ZuschlagKindertraining>, Proxy<TblZuschlaegeKindertraining, ZuschlagKindertraining>>(new ContainerControlledLifetimeManager());
+            _container.Register<IProxy<Beitragsklasse>, Proxy<TblBeitragsklassen, Beitragsklasse>>();
+            _container.Register<IProxy<Familienrabatt>, Proxy<TblFamilienrabatte, Familienrabatt>>();
+            _container.Register<IProxy<Graduierung>, Proxy<TblGraduierungen, Graduierung>>();
+            _container.Register<IProxy<Kurs>, Proxy<TblKurse, Kurs>>();
+            _container.Register<IProxy<Mitglied>, Proxy<TblMitglieder, Mitglied>>();
+            _container.Register<IProxy<Pruefung>, Proxy<TblPruefungen, Pruefung>>();
+            _container.Register<IProxyBase<Setting, string>, ProxyBase<TblSettings, Setting, string>>();
+            _container.Register<IProxy<Stundensatz>, Proxy<TblStundensaetze, Stundensatz>>();
+            _container.Register<IProxy<Test>, Proxy<TblTests, Test>>();
+            _container.Register<IProxy<TrainerErnennung>, Proxy<TblTrainerErnennungen, TrainerErnennung>>();
+            _container.Register<IProxy<TrainerStufe>, Proxy<TblTrainerStufen, TrainerStufe>>();
+            _container.Register<IProxy<Training>, Proxy<TblTrainings, Training>>();
+            _container.Register<IProxy<TrainingsTeilnahme>, Proxy<TblTrainingsTeilnahmen, TrainingsTeilnahme>>();
+            _container.Register<IProxy<User>, Proxy<TblUsers, User>>();
+            _container.Register<IProxy<Wochentag>, Proxy<TblWochentage, Wochentag>>();
+            _container.Register<IProxy<Wohnung>, Proxy<TblWohnungen, Wohnung>>();
+            _container.Register<IProxy<Wohnungsbezug>, Proxy<TblWohnungsbezug, Wohnungsbezug>>();
+            _container.Register<IProxy<ZuschlagKindertraining>, Proxy<TblZuschlaegeKindertraining, ZuschlagKindertraining>>();
         }
 
         private void RegisterFileProxies()
         {
-            _container.RegisterType<IProxy<Beitragsklasse>, FileProxy<TblBeitragsklassen, Beitragsklasse>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<Familienrabatt>, FileProxy<TblFamilienrabatte, Familienrabatt>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<Graduierung>, FileProxy<TblGraduierungen, Graduierung>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<Kurs>, FileProxy<TblKurse, Kurs>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<Mitglied>, FileProxy<TblMitglieder, Mitglied>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<Pruefung>, FileProxy<TblPruefungen, Pruefung>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxyBase<Setting, string>, FileProxyBase<TblSettings, Setting, string>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<Stundensatz>, FileProxy<TblStundensaetze, Stundensatz>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<Test>, FileProxy<TblTests, Test>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<TrainerErnennung>, FileProxy<TblTrainerErnennungen, TrainerErnennung>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<TrainerStufe>, FileProxy<TblTrainerStufen, TrainerStufe>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<Training>, FileProxy<TblTrainings, Training>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<TrainingsTeilnahme>, FileProxy<TblTrainingsTeilnahmen, TrainingsTeilnahme>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<User>, FileProxy<TblUsers, User>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<Wochentag>, FileProxy<TblWochentage, Wochentag>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<Wohnung>, FileProxy<TblWohnungen, Wohnung>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<Wohnungsbezug>, FileProxy<TblWohnungsbezug, Wohnungsbezug>>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IProxy<ZuschlagKindertraining>, FileProxy<TblZuschlaegeKindertraining, ZuschlagKindertraining>>(new ContainerControlledLifetimeManager());
+            _container.Register<IProxy<Beitragsklasse>, FileProxy<TblBeitragsklassen, Beitragsklasse>>();
+            _container.Register<IProxy<Familienrabatt>, FileProxy<TblFamilienrabatte, Familienrabatt>>();
+            _container.Register<IProxy<Graduierung>, FileProxy<TblGraduierungen, Graduierung>>();
+            _container.Register<IProxy<Kurs>, FileProxy<TblKurse, Kurs>>();
+            _container.Register<IProxy<Mitglied>, FileProxy<TblMitglieder, Mitglied>>();
+            _container.Register<IProxy<Pruefung>, FileProxy<TblPruefungen, Pruefung>>();
+            _container.Register<IProxyBase<Setting, string>, FileProxyBase<TblSettings, Setting, string>>();
+            _container.Register<IProxy<Stundensatz>, FileProxy<TblStundensaetze, Stundensatz>>();
+            _container.Register<IProxy<Test>, FileProxy<TblTests, Test>>();
+            _container.Register<IProxy<TrainerErnennung>, FileProxy<TblTrainerErnennungen, TrainerErnennung>>();
+            _container.Register<IProxy<TrainerStufe>, FileProxy<TblTrainerStufen, TrainerStufe>>();
+            _container.Register<IProxy<Training>, FileProxy<TblTrainings, Training>>();
+            _container.Register<IProxy<TrainingsTeilnahme>, FileProxy<TblTrainingsTeilnahmen, TrainingsTeilnahme>>();
+            _container.Register<IProxy<User>, FileProxy<TblUsers, User>>();
+            _container.Register<IProxy<Wochentag>, FileProxy<TblWochentage, Wochentag>>();
+            _container.Register<IProxy<Wohnung>, FileProxy<TblWohnungen, Wohnung>>();
+            _container.Register<IProxy<Wohnungsbezug>, FileProxy<TblWohnungsbezug, Wohnungsbezug>>();
+            _container.Register<IProxy<ZuschlagKindertraining>, FileProxy<TblZuschlaegeKindertraining, ZuschlagKindertraining>>();
         }
     }
 }

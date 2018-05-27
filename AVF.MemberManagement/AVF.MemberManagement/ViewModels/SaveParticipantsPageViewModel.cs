@@ -69,14 +69,14 @@ namespace AVF.MemberManagement.ViewModels
 
         public override async void OnNavigatedTo(NavigationParameters parameters)
         {
-            PassThroughMode = parameters["__NavigationMode"].ToString() != "Back";
+            PassThroughMode = parameters.InternalParameters["__NavigationMode"].ToString() != "Back";
 
             Inserts.Clear();
             Deletes.Clear();
 
             if (!parameters.Any()) return;
            
-            if (parameters["__NavigationMode"].ToString() != "Back")
+            if (parameters.InternalParameters["__NavigationMode"].ToString() != "Back")
             {
                 var enterParticipantsPageName = Globals.Idiom == Idiom.Phone ? nameof(EnterParticipantsPage) : nameof(EnterParticipantsTabletPage);
                 await NavigationService.NavigateAsync(enterParticipantsPageName, new NavigationParameters { { "SelectedTraining", parameters["SelectedTraining"] }, { "SelectedDateString", parameters["SelectedDateString"] } });
