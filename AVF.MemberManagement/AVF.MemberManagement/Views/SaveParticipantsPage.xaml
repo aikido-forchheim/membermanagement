@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:converters="clr-namespace:DryLib.Xamarin.Converters;assembly=DryLib.Xamarin.Converters" xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms" xmlns:userControls="clr-namespace:AVF.MemberManagement.UserControls;assembly=AVF.MemberManagement" prism:ViewModelLocator.AutowireViewModel="True" x:Class="AVF.MemberManagement.Views.SaveParticipantsPage" Title="{Binding Training.Description}">
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:converters="clr-namespace:DryLib.Xamarin.Converters;assembly=DryLib.Xamarin.Converters" xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms" xmlns:userControls="clr-namespace:AVF.MemberManagement.UserControls;assembly=AVF.MemberManagement" prism:ViewModelLocator.AutowireViewModel="True" x:Class="AVF.MemberManagement.Views.SaveParticipantsPage" Title="{Binding Training.Description}" Appearing="SaveParticipantsPage_OnAppearing">
     <ContentPage.Resources>
         <ResourceDictionary>
             <converters:BooleanNotConverter x:Key="BooleanNotConverter">

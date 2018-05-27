@@ -71,12 +71,17 @@ namespace AVF.MemberManagement.ViewModels
         {
             PassThroughMode = parameters.InternalParameters["__NavigationMode"].ToString() != "Back";
 
+            await OnAppearing(parameters);
+        }
+
+        public async System.Threading.Tasks.Task OnAppearing(NavigationParameters parameters)
+        {
             Inserts.Clear();
             Deletes.Clear();
 
             if (!parameters.Any()) return;
-           
-            if (parameters.InternalParameters["__NavigationMode"].ToString() != "Back")
+
+            if (PassThroughMode)
             {
                 var enterParticipantsPageName = Globals.Idiom == Idiom.Phone ? nameof(EnterParticipantsPage) : nameof(EnterParticipantsTabletPage);
                 await NavigationService.NavigateAsync(enterParticipantsPageName, new NavigationParameters { { "SelectedTraining", parameters["SelectedTraining"] }, { "SelectedDateString", parameters["SelectedDateString"] } });
