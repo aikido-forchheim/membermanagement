@@ -72,11 +72,9 @@ namespace AVF.MemberManagement.ViewModels
         {
             try
             {
-                if (!parameters.ContainsKey("Date")) return;
+                if (parameters.ContainsKey("Date")) SelectedDate = (DateTime)parameters["Date"];
 
                 _trainingsCollection.Clear();
-
-                SelectedDate = (DateTime)parameters["Date"];
                 
                 Wochentag = await Globals.GetWochentagFromDayOfWeek(_wochentageRepository, SelectedDate.DayOfWeek);
 

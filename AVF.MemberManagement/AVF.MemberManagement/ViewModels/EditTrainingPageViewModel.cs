@@ -1,6 +1,7 @@
 ﻿using Prism.Commands;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using AVF.MemberManagement.StandardLibrary.Enums;
@@ -59,6 +60,14 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _cotrainer2, value);
         }
 
+        private int _participations;
+
+        public int Participations
+        {
+            get => _participations;
+            set => SetProperty(ref _participations, value);
+        }
+
         public EditTrainingPageViewModel(INavigationService navigationService, IRepository<Mitglied> mitglieder, IRepository<Training> trainingsRepository, ILogger logger) : base(navigationService, logger)
         {
             _mitglieder = mitglieder;
@@ -92,6 +101,8 @@ namespace AVF.MemberManagement.ViewModels
                     SelectedTraining.Training.Kotrainer1 = cotrainer1?.Id;
                     SelectedTraining.Training.Kotrainer2 = cotrainer2?.Id;
                 }
+
+                Participations = SelectedTraining.Participations.Count();
 
                 Title = Globals.Idiom != Idiom.Phone ? $"{SelectedTraining.Date}, {SelectedTraining.Description}" : SelectedTraining.Description;
 

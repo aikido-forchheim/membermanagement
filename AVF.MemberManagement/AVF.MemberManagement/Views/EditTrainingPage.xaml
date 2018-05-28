@@ -15,6 +15,10 @@
             <Editor Text="{Binding Annotation}" HeightRequest="128">
             </Editor>
         </StackLayout>
+        <StackLayout Orientation="Horizontal">
+            <Label Text="Teilnehmer: "></Label>
+            <Label Text="{Binding Participations}"></Label>
+        </StackLayout>
         <Button x:Name="ButtonEnterParticpants" Text="Weiter" WidthRequest="256" Command="{Binding EnterParticipantsCommand}" Style="{StaticResource Button}">
         </Button>
     </StackLayout>
