@@ -189,9 +189,9 @@ namespace AVF.MemberManagement.ViewModels
                         MitgliedID = memberToInsertToTraining.Id,
                         TrainingID = Training.Training.Id,
                         DatensatzAngelegtAm = DateTime.Now,
-                        DatensatzAngelegtVon = Globals.User.Id,
+                        DatensatzAngelegtVon = Globals.User.Mitgliedsnummer,
                         DatensatzGeaendertAm = DateTime.Now,
-                        DatensatzGeaendertVon = Globals.User.Id
+                        DatensatzGeaendertVon = Globals.User.Mitgliedsnummer
                     };
 
                     await _trainingsTeilnahmenRepository.CreateAsync(trainingsTeilnahme);
