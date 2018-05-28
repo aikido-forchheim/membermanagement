@@ -1,5 +1,6 @@
 ﻿using AVF.MemberManagement.StandardLibrary.Interfaces;
 using Microsoft.Practices.Unity;
+using Prism.Ioc;
 
 namespace AVF.MemberManagement.xUnitIntegrationTests
 {
@@ -14,7 +15,7 @@ namespace AVF.MemberManagement.xUnitIntegrationTests
             Bootstrapper = new Bootstrapper(false);
             Bootstrapper.Run();
 
-            Bootstrapper.Container.RegisterType<ITokenService, UnitTestTokenService>();
+            Bootstrapper.ContainerExtension.Register<ITokenService, UnitTestTokenService>();
         }
     }
 }

@@ -11,15 +11,18 @@ using AVF.MemberManagement.StandardLibrary.Tbo;
 using FakeItEasy;
 using Microsoft.Extensions.Logging;
 using Microsoft.Practices.Unity;
+using Prism.Ioc;
 using Prism.Unity;
+using Unity;
+using Unity.Lifetime;
 
 namespace AVF.MemberManagement.xUnitIntegrationTests
 {
-    public class Bootstrapper : UnityBootstrapper
+    public class Bootstrapper : PrismApplication
     {
         public static bool UseFileProxies { get; private set; }
 
-        private readonly IUnityContainer _container;
+        public IContainerExtension ContainerExtension { get; }
 
         private readonly RepositoryBootstrapper _repositoryBootstrapper;
 
@@ -28,43 +31,41 @@ namespace AVF.MemberManagement.xUnitIntegrationTests
             UseFileProxies = useFileProxies;
             //UseFileProxies = true;
 
-            _container = new UnityContainer();
+            ContainerExtension = new UnityContainerExtension(new UnityContainer());
 
-            Container = _container;
-
-            _repositoryBootstrapper = new RepositoryBootstrapper(_container);
+            _repositoryBootstrapper = new RepositoryBootstrapper(ContainerExtension);
         }
 
-        public override void Run(bool runWithDefaultConfiguration)
+        public void Run(bool runWithDefaultConfiguration = true)
         {
             try
             {
                 //ILogger
                 var fakeLogger = A.Fake<ILogger>();
-                _container.RegisterInstance(fakeLogger);
+                ContainerExtension.RegisterInstance(fakeLogger);
                 
                 //IAccountService
-                _container.RegisterInstance(IntegrationTestSettings.Get());
+                ContainerExtension.RegisterInstance(IntegrationTestSettings.Get());
                 var fakeAccountService = A.Fake<IAccountService>();
-                var restApiAccount = _container.Resolve<IntegrationTestSettings>().RestApiAccount;
+                var restApiAccount = ContainerExtension.Resolve<IntegrationTestSettings>().RestApiAccount;
                 A.CallTo(() => fakeAccountService.RestApiAccount).Returns(restApiAccount);
-                _container.RegisterInstance(fakeAccountService);
+                ContainerExtension.RegisterInstance(fakeAccountService);
                 
                 //ITableObjectGenerator
-                _container.RegisterType<ITableObjectGenerator, TableObjectGenerator>();
+                ContainerExtension.Register<ITableObjectGenerator, TableObjectGenerator>();
                 
                 //ITokenService
-                _container.RegisterType<ITokenService, TokenService>(new ContainerControlledLifetimeManager());
-                _container.Resolve<IAccountService>().Init(_container.Resolve<IntegrationTestSettings>().RestApiAccount);
+                ContainerExtension.RegisterSingleton<ITokenService, TokenService>();
+                ContainerExtension.Resolve<IAccountService>().Init(ContainerExtension.Resolve<IntegrationTestSettings>().RestApiAccount);
                 
                 //IPhpCrudApiService
-                _container.RegisterType<IPhpCrudApiService, PhpCrudApiService>(new ContainerControlledLifetimeManager());
+                ContainerExtension.RegisterSingleton<IPhpCrudApiService, PhpCrudApiService>();
 
                 //IPasswordService
-                _container.RegisterType<IPasswordService, PasswordService>(new ContainerControlledLifetimeManager());
+                ContainerExtension.RegisterSingleton<IPasswordService, PasswordService>();
                 
                 
-                _container.RegisterType<IJsonFileFactory, JsonFileFactory>(new ContainerControlledLifetimeManager());
+                ContainerExtension.RegisterSingleton<IJsonFileFactory, JsonFileFactory>();
                 
                 _repositoryBootstrapper.RegisterRepositories(UseFileProxies); //always set in construtor for notifying unit tests
             }
@@ -73,6 +74,16 @@ namespace AVF.MemberManagement.xUnitIntegrationTests
                 Console.WriteLine(e);
                 throw;
             }
+        }
+
+        protected override void RegisterTypes(IContainerRegistry containerRegistry)
+        {
+            
+        }
+
+        protected override void OnInitialized()
+        {
+            
         }
     }
 }

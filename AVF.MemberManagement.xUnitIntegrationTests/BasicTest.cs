@@ -4,6 +4,7 @@ using AVF.MemberManagement.StandardLibrary.Interfaces;
 using Microsoft.Practices.Unity;
 using Xunit;
 using AVF.MemberManagement.StandardLibrary.Tbo;
+using Prism.Ioc;
 
 namespace AVF.MemberManagement.xUnitIntegrationTests
 {
