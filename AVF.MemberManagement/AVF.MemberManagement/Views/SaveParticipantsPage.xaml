@@ -18,7 +18,7 @@
             </RowDefinition>
             <RowDefinition Height="32">
             </RowDefinition>
-            <RowDefinition Height="1*">
+            <RowDefinition Height="Auto">
             </RowDefinition>
         </Grid.RowDefinitions>
         <Label Text="Einfügen:" Margin="8,14,0,0">
