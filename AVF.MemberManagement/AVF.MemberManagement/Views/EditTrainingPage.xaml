@@ -10,8 +10,11 @@
                 <Button Text="+" Style="{StaticResource Button}" WidthRequest="44" HorizontalOptions="End">
                 </Button>
             </StackLayout>
+            <Label Text="{Binding AdditionalTrainerText}"></Label>
         </StackLayout>
         <StackLayout WidthRequest="384" Margin="0,64,0,64">
+            <Label Text="Notiz:">
+            </Label>
             <Editor Text="{Binding Annotation}" HeightRequest="128">
             </Editor>
         </StackLayout>
@@ -19,7 +22,7 @@
             <Label Text="Teilnehmer: "></Label>
             <Label Text="{Binding Participations}"></Label>
         </StackLayout>
-        <Button x:Name="ButtonEnterParticpants" Text="Weiter" WidthRequest="256" Command="{Binding EnterParticipantsCommand}" Style="{StaticResource Button}">
+        <Button x:Name="ButtonEnterParticpants" Text="Speichern und Weiter" WidthRequest="256" Command="{Binding EnterParticipantsCommand}" Style="{StaticResource Button}">
         </Button>
     </StackLayout>
 </ContentPage>

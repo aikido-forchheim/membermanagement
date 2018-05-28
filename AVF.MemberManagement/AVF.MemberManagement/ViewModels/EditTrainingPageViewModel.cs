@@ -68,6 +68,14 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _participations, value);
         }
 
+        private string _additionalTrainerText;
+
+        public string AdditionalTrainerText
+        {
+            get => _additionalTrainerText;
+            set => SetProperty(ref _additionalTrainerText, value);
+        }
+
         public EditTrainingPageViewModel(INavigationService navigationService, IRepository<Mitglied> mitglieder, IRepository<Training> trainingsRepository, ILogger logger) : base(navigationService, logger)
         {
             _mitglieder = mitglieder;
@@ -100,6 +108,17 @@ namespace AVF.MemberManagement.ViewModels
                     SelectedTraining.Training.Trainer = trainer.Id;
                     SelectedTraining.Training.Kotrainer1 = cotrainer1?.Id;
                     SelectedTraining.Training.Kotrainer2 = cotrainer2?.Id;
+                }
+
+                AdditionalTrainerText = "und 0 weitere...";
+
+                if (SelectedTraining.Training.Kotrainer2 != null && SelectedTraining.Training.Kotrainer2 != -1)
+                {
+                    AdditionalTrainerText = "und 2 weitere...";
+                }
+                else if (SelectedTraining.Training.Kotrainer1 != null && SelectedTraining.Training.Kotrainer1 != -1)
+                {
+                    AdditionalTrainerText = "und 1 weiterer...";
                 }
 
                 Participations = SelectedTraining.Participations.Count();
