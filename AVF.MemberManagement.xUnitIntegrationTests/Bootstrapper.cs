@@ -22,51 +22,51 @@ namespace AVF.MemberManagement.xUnitIntegrationTests
     {
         public static bool UseFileProxies { get; private set; }
 
-        public IContainerExtension ContainerExtension { get; }
+        private RepositoryBootstrapper _repositoryBootstrapper;
 
-        private readonly RepositoryBootstrapper _repositoryBootstrapper;
+        public IContainerRegistry ContainerRegistry { get; private set; }
 
         public Bootstrapper(bool useFileProxies)
         {
             UseFileProxies = useFileProxies;
             //UseFileProxies = true;
-
-            ContainerExtension = new UnityContainerExtension(new UnityContainer());
-
-            _repositoryBootstrapper = new RepositoryBootstrapper(ContainerExtension);
         }
 
-        public void Run(bool runWithDefaultConfiguration = true)
+        protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            ContainerRegistry = containerRegistry;
+
+            _repositoryBootstrapper = new RepositoryBootstrapper(containerRegistry);
+
             try
             {
                 //ILogger
                 var fakeLogger = A.Fake<ILogger>();
-                ContainerExtension.RegisterInstance(fakeLogger);
-                
+                containerRegistry.RegisterInstance(fakeLogger);
+
                 //IAccountService
-                ContainerExtension.RegisterInstance(IntegrationTestSettings.Get());
+                containerRegistry.RegisterInstance(IntegrationTestSettings.Get());
                 var fakeAccountService = A.Fake<IAccountService>();
-                var restApiAccount = ContainerExtension.Resolve<IntegrationTestSettings>().RestApiAccount;
+                var restApiAccount = Container.Resolve<IntegrationTestSettings>().RestApiAccount;
                 A.CallTo(() => fakeAccountService.RestApiAccount).Returns(restApiAccount);
-                ContainerExtension.RegisterInstance(fakeAccountService);
-                
+                containerRegistry.RegisterInstance(fakeAccountService);
+
                 //ITableObjectGenerator
-                ContainerExtension.Register<ITableObjectGenerator, TableObjectGenerator>();
-                
+                containerRegistry.Register<ITableObjectGenerator, TableObjectGenerator>();
+
                 //ITokenService
-                ContainerExtension.RegisterSingleton<ITokenService, TokenService>();
-                ContainerExtension.Resolve<IAccountService>().Init(ContainerExtension.Resolve<IntegrationTestSettings>().RestApiAccount);
-                
+                containerRegistry.RegisterSingleton<ITokenService, TokenService>();
+                Container.Resolve<IAccountService>().Init(Container.Resolve<IntegrationTestSettings>().RestApiAccount);
+
                 //IPhpCrudApiService
-                ContainerExtension.RegisterSingleton<IPhpCrudApiService, PhpCrudApiService>();
+                containerRegistry.RegisterSingleton<IPhpCrudApiService, PhpCrudApiService>();
 
                 //IPasswordService
-                ContainerExtension.RegisterSingleton<IPasswordService, PasswordService>();
-                
-                
-                ContainerExtension.RegisterSingleton<IJsonFileFactory, JsonFileFactory>();
-                
+                containerRegistry.RegisterSingleton<IPasswordService, PasswordService>();
+
+
+                containerRegistry.RegisterSingleton<IJsonFileFactory, JsonFileFactory>();
+
                 _repositoryBootstrapper.RegisterRepositories(UseFileProxies); //always set in construtor for notifying unit tests
             }
             catch (Exception e)
@@ -76,14 +76,9 @@ namespace AVF.MemberManagement.xUnitIntegrationTests
             }
         }
 
-        protected override void RegisterTypes(IContainerRegistry containerRegistry)
-        {
-            
-        }
-
         protected override void OnInitialized()
         {
-            
+
         }
     }
 }
