@@ -53,9 +53,10 @@ namespace AVF.MemberManagement.Reports
 
         public void SwitchTo(ReportBase reportNew)
         {
-            m_formParent.Controls.Remove(P_reportActual);
+            if (P_reportActual != null)
+                m_formParent.Controls.Remove(P_reportActual.P_panel);
             P_reportActual = reportNew;
-            m_formParent.Controls.Add(P_reportActual);
+            m_formParent.Controls.Add(P_reportActual.P_panel);
             RefreshControls();
         }
     }

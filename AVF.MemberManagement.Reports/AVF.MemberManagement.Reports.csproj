@@ -76,31 +76,21 @@
     <Compile Include="HorizontalAxis.cs" />
     <Compile Include="AxisTypeMember.cs" />
     <Compile Include="AxisTypeMonth.cs" />
-    <Compile Include="ReportBase.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="ReportBase.cs" />
     <Compile Include="ReportMain.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ReportMain.Designer.cs">
       <DependentUpon>ReportMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="ReportMemberFees.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="ReportMember.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="ReportMemberFees.cs" />
+    <Compile Include="ReportMember.cs" />
     <Compile Include="ReportsUndoRedo.cs" />
-    <Compile Include="ReportTrainingsParticipation.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="ReportTrainingsParticipation.cs" />
     <Compile Include="ReportTrainingsParticipation.Designer.cs">
       <DependentUpon>ReportTrainingsParticipation.cs</DependentUpon>
     </Compile>
-    <Compile Include="ReportGraduationList.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="ReportGraduationList.cs" />
     <Compile Include="ReportTraining.cs" />
     <Compile Include="AxisTypeTraining.cs" />
     <Compile Include="Program.cs" />
@@ -111,6 +101,9 @@
     <EmbeddedResource Include="ReportMain.resx">
       <DependentUpon>ReportMain.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportMember.resx">
+      <DependentUpon>ReportMember.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ReportTrainingsParticipation.resx">
       <DependentUpon>ReportTrainingsParticipation.cs</DependentUpon>

@@ -28,12 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.Kurse = new System.Windows.Forms.Button();
-            this.Graduierungsliste = new System.Windows.Forms.Button();
-            this.TrainingsteilnahmeKurse = new System.Windows.Forms.Button();
-            this.TrainingsteilnahmeMonate = new System.Windows.Forms.Button();
             this.labelLadeDatenbank = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.dateiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -64,58 +59,6 @@
             this.progressBar1.Size = new System.Drawing.Size(417, 51);
             this.progressBar1.Step = 6;
             this.progressBar1.TabIndex = 0;
-            // 
-            // Kurse
-            // 
-            this.Kurse.Enabled = false;
-            this.Kurse.FlatAppearance.BorderSize = 0;
-            this.Kurse.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.ControlLight;
-            this.Kurse.Location = new System.Drawing.Point(277, 113);
-            this.Kurse.Name = "Kurse";
-            this.Kurse.Size = new System.Drawing.Size(171, 52);
-            this.Kurse.TabIndex = 3;
-            this.Kurse.Text = "Überblick Kurse";
-            this.Kurse.UseVisualStyleBackColor = true;
-            this.Kurse.Click += new System.EventHandler(this.Kurse_Click);
-            // 
-            // Graduierungsliste
-            // 
-            this.Graduierungsliste.Enabled = false;
-            this.Graduierungsliste.FlatAppearance.BorderSize = 0;
-            this.Graduierungsliste.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.ControlLight;
-            this.Graduierungsliste.Location = new System.Drawing.Point(53, 113);
-            this.Graduierungsliste.Name = "Graduierungsliste";
-            this.Graduierungsliste.Size = new System.Drawing.Size(171, 52);
-            this.Graduierungsliste.TabIndex = 4;
-            this.Graduierungsliste.Text = "Graduierungsliste";
-            this.Graduierungsliste.UseVisualStyleBackColor = true;
-            this.Graduierungsliste.Click += new System.EventHandler(this.Gradierungsliste_Click);
-            // 
-            // TrainingsteilnahmeKurse
-            // 
-            this.TrainingsteilnahmeKurse.Enabled = false;
-            this.TrainingsteilnahmeKurse.FlatAppearance.BorderSize = 0;
-            this.TrainingsteilnahmeKurse.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.ControlLight;
-            this.TrainingsteilnahmeKurse.Location = new System.Drawing.Point(53, 33);
-            this.TrainingsteilnahmeKurse.Name = "TrainingsteilnahmeKurse";
-            this.TrainingsteilnahmeKurse.Size = new System.Drawing.Size(171, 52);
-            this.TrainingsteilnahmeKurse.TabIndex = 5;
-            this.TrainingsteilnahmeKurse.Text = "Trainingsteilnahme Kurse";
-            this.TrainingsteilnahmeKurse.UseVisualStyleBackColor = true;
-            this.TrainingsteilnahmeKurse.Click += new System.EventHandler(this.Trainingsteilnahme_Kurse_Click);
-            // 
-            // TrainingsteilnahmeMonate
-            // 
-            this.TrainingsteilnahmeMonate.Enabled = false;
-            this.TrainingsteilnahmeMonate.FlatAppearance.BorderSize = 0;
-            this.TrainingsteilnahmeMonate.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.ControlLight;
-            this.TrainingsteilnahmeMonate.Location = new System.Drawing.Point(277, 33);
-            this.TrainingsteilnahmeMonate.Name = "TrainingsteilnahmeMonate";
-            this.TrainingsteilnahmeMonate.Size = new System.Drawing.Size(171, 52);
-            this.TrainingsteilnahmeMonate.TabIndex = 6;
-            this.TrainingsteilnahmeMonate.Text = "Trainingsteilnahme Monate";
-            this.TrainingsteilnahmeMonate.UseVisualStyleBackColor = true;
-            this.TrainingsteilnahmeMonate.Click += new System.EventHandler(this.Trainingsteilnahme_Monate_Click);
             // 
             // labelLadeDatenbank
             // 
@@ -322,10 +265,6 @@
         #endregion
 
         private System.Windows.Forms.ProgressBar progressBar1;
-        private System.Windows.Forms.Button Kurse;
-        private System.Windows.Forms.Button Graduierungsliste;
-        private System.Windows.Forms.Button TrainingsteilnahmeKurse;
-        private System.Windows.Forms.Button TrainingsteilnahmeMonate;
         private System.Windows.Forms.Label labelLadeDatenbank;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem dateiToolStripMenuItem;

@@ -6,7 +6,7 @@ namespace AVF.MemberManagement.Reports
     {
         protected void InitializeReportTrainingsParticipation()
         {
-            SuspendLayout();
+            P_panel.SuspendLayout();
             InitializeReportBase();
 
             // 
@@ -70,17 +70,17 @@ namespace AVF.MemberManagement.Reports
             // 
             //            AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             //            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(1344, 712);
-            Controls.Add(P_labelTrainer);
-            Controls.Add(P_labelZeitraum);
-            Controls.Add(P_labelBemerkung);
-            Controls.Add(P_labelMember);
-            Controls.Add(P_labelKurs);
-            Controls.Add(P_yearSelector);
-            Name = "ReportForm";
-            Text = "AVF Mitgliederdatenbank";
+            P_panel.ClientSize = new System.Drawing.Size(1344, 712);
+            P_panel.Controls.Add(P_labelTrainer);
+            P_panel.Controls.Add(P_labelZeitraum);
+            P_panel.Controls.Add(P_labelBemerkung);
+            P_panel.Controls.Add(P_labelMember);
+            P_panel.Controls.Add(P_labelKurs);
+            P_panel.Controls.Add(P_yearSelector);
+            P_panel.Name = "ReportForm";
+            P_panel.Text = "AVF Mitgliederdatenbank";
 
-            ResumeLayout();
+            P_panel.ResumeLayout();
         }
 
         protected Label P_labelZeitraum;

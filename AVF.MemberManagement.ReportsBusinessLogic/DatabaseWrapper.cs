@@ -61,7 +61,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
             P_kurs = await Container.Resolve<IRepository<Kurs>>().GetAsync();
             tick("Settings");
             P_settings = await Container.Resolve<IRepositoryBase<Setting, string>>().GetAsync();
-            tick("");
+            tick("** Vorbereitungen **");
             P_mitglieder.RemoveAt(0);   // Mitglied 0 is a dummy
             P_trainings = P_trainings.OrderBy(t => t.Termin).ToList();
 
@@ -79,7 +79,7 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
                     t.KursID = 0;
             }
 
-            tick("Finished ....");
+            tick("");
         }
 
         public DateTime GetStartValidData()
@@ -159,6 +159,13 @@ namespace AVF.MemberManagement.ReportsBusinessLogic
                 return DateTime.Now.Year - member.Eintritt.Value.Year;
             else
                 return 9999;
+        }
+
+        public Wohnung Wohnung(Mitglied member)
+        {
+            List<Wohnungsbezug> list = P_wohnungsbezug.Where(b => b.MitgliedId == member.Id).ToList();
+            Wohnungsbezug bezug = list.OrderByDescending(b => b.Datum).FirstOrDefault();
+            return (bezug == null) ? null : P_wohnung.Single(w => w.Id == bezug.WohnungId);
         }
 
         public Training TrainingFromId(int id)

@@ -5,13 +5,15 @@ using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
-    public abstract class ReportBase : Panel
+    public class ReportBase //: Panel
     {
         // properties
 
-        protected DataGridView P_dataGridView { get; set; }
+        protected DataGridView P_dataGridView    { get; set; }
         protected Label        P_labelReportName { get; set; }
-        protected Font         P_font { get; set; }
+        protected Font         P_font            { get; set; }
+
+        public    Panel        P_panel           { get; set; }
 
         private Color P_ColorCell { get; set; }
 
@@ -20,12 +22,14 @@ namespace AVF.MemberManagement.Reports
         // constructor
 
         public ReportBase()
-            => Resize += new EventHandler( delegate(object s, System.EventArgs e) { SizeDataGridView(P_dataGridView); } );
-
+        {
+            P_panel = new Panel();
+            P_panel.Resize += new EventHandler(delegate (object s, System.EventArgs e) { SizeDataGridView(P_dataGridView); });
+        }
         // abstract memeber functions
 
-        protected abstract void   ReportFormPopulate(Action<String> tick);    // Fill cells of DataGridView
-        protected abstract string MouseCellEvent(int row, int col, MouseButtons buttons, bool action);
+        protected virtual void ReportFormPopulate(Action<String> tick) { }    // Fill cells of DataGridView
+        protected virtual string MouseCellEvent(int row, int col, MouseButtons buttons, bool action) => String.Empty;
 
         // member functions
 
@@ -34,15 +38,18 @@ namespace AVF.MemberManagement.Reports
             int extraHeight = 2;   // values found by trial and error, to prevend scroll bars
             int extraWidth = 20;   // TODO: find clean solution
             int maxWidth = dgv.Columns.GetColumnsWidth(DataGridViewElementStates.None) + extraWidth;
-            int maxHeight = dgv.Rows.GetRowsHeight(DataGridViewElementStates.None) + extraHeight + dgv.ColumnHeadersHeight;
-            dgv.Width  = Math.Min(ClientSize.Width  - dgv.Location.X, maxWidth);
-            dgv.Height = Math.Min(ClientSize.Height - dgv.Location.Y, maxHeight);
+//            int maxHeight = dgv.Rows.GetRowsHeight(DataGridViewElementStates.None) + extraHeight + dgv.ColumnHeadersHeight;
+            int maxHeight = extraHeight + dgv.ColumnHeadersHeight;
+            foreach (DataGridViewRow dr in dgv.Rows)
+                maxHeight += dr.Height;
+            dgv.Width  = Math.Min(P_panel.ClientSize.Width  - dgv.Location.X, maxWidth);
+            dgv.Height = Math.Min(P_panel.ClientSize.Height - dgv.Location.Y, maxHeight);
         }
 
         public void Export2Excel()
             => ExcelExport.Export2Excel( P_dataGridView, 2, 1, GetType().Name );
 
-        protected virtual void InitializeReportBase()
+        public virtual void InitializeReportBase()
         {
             P_font = new Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             P_labelReportName = new Label();
@@ -85,11 +92,11 @@ namespace AVF.MemberManagement.Reports
             );
 
             ((System.ComponentModel.ISupportInitialize)(P_dataGridView)).EndInit();
-            Controls.Add(P_dataGridView);
-            Controls.Add(P_labelReportName);
+            P_panel.Controls.Add(P_dataGridView);
+            P_panel.Controls.Add(P_labelReportName);
 
-            Dock = DockStyle.Fill;
-            BackColor = Color.AliceBlue;
+            P_panel.Dock = DockStyle.Fill;
+            P_panel.BackColor = Color.AliceBlue;
         }
 
         protected bool IsHeaderRow(int iRow)
