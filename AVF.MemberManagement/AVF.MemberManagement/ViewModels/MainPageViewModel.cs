@@ -120,12 +120,15 @@ namespace AVF.MemberManagement.ViewModels
                 }
                 else
                 {
-                    _passwordService.IsValidAsync(Password, ServerUser.Password, App.AppId)
-                        .ContinueWith(isPasswordValidTask =>
-                        {
-                            IsPasswordValid = !isPasswordValidTask.IsFaulted && isPasswordValidTask.Result;
-                            ((DelegateCommand)StartCommand).RaiseCanExecuteChanged();
-                        });
+                    if (ServerUser != null)
+                    {
+                        _passwordService.IsValidAsync(Password, ServerUser.Password, App.AppId)
+                            .ContinueWith(isPasswordValidTask =>
+                            {
+                                IsPasswordValid = !isPasswordValidTask.IsFaulted && isPasswordValidTask.Result;
+                                ((DelegateCommand) StartCommand).RaiseCanExecuteChanged();
+                            });
+                    }
                 }
             }
         }
