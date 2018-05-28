@@ -303,9 +303,10 @@ namespace AVF.MemberManagement.ViewModels
         {
             try
             {
-                if (parameters.ContainsKey("__NavigationMode") && parameters["__NavigationMode"].ToString() == "Back")
+                if (parameters.InternalParameters.ContainsKey("__NavigationMode") && parameters.InternalParameters["__NavigationMode"].ToString() == "Back")
                 {
                     Password = string.Empty;
+                    Username = string.Empty;
                 }
 
                 //Start caching
