@@ -9,6 +9,8 @@ using System.Collections.ObjectModel;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using AVF.MemberManagement.StandardLibrary.Enums;
+using AVF.MemberManagement.StandardLibrary.Services;
 using Prism.Commands;
 
 namespace AVF.MemberManagement.ViewModels
@@ -169,7 +171,7 @@ namespace AVF.MemberManagement.ViewModels
 
                 (SaveCommand as DelegateCommand)?.RaiseCanExecuteChanged();
 
-                Title = $"{SelectedTraining.Class.Time} ({SelectedTraining.Class.Trainer.FirstName})";
+                Title = Globals.Idiom != Idiom.Phone ? $"{SelectedTraining.Date}, {SelectedTraining.Description}" : SelectedTraining.Description;
 
                 await FindPreviousParticipants();
 

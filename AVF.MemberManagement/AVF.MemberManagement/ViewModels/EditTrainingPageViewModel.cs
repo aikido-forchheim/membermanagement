@@ -3,10 +3,12 @@ using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using AVF.MemberManagement.StandardLibrary.Enums;
 using AVF.MemberManagement.StandardLibrary.Models;
 using AVF.MemberManagement.Views;
 using Prism.Navigation;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
+using AVF.MemberManagement.StandardLibrary.Services;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Microsoft.Extensions.Logging;
 
@@ -90,6 +92,9 @@ namespace AVF.MemberManagement.ViewModels
                     SelectedTraining.Training.Kotrainer1 = cotrainer1?.Id;
                     SelectedTraining.Training.Kotrainer2 = cotrainer2?.Id;
                 }
+
+                Title = Globals.Idiom != Idiom.Phone ? $"{SelectedTraining.Date}, {SelectedTraining.Description}" : SelectedTraining.Description;
+
             }
             catch (Exception ex)
             {
