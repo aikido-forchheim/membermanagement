@@ -76,6 +76,14 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _additionalTrainerText, value);
         }
 
+        private bool _isNavigationModeBack;
+
+        public bool IsNavigationModeBack
+        {
+            get => _isNavigationModeBack;
+            set => SetProperty(ref _isNavigationModeBack, value);
+        }
+
         public EditTrainingPageViewModel(INavigationService navigationService, IRepository<Mitglied> mitglieder, IRepository<Training> trainingsRepository, ILogger logger) : base(navigationService, logger)
         {
             _mitglieder = mitglieder;
@@ -83,12 +91,23 @@ namespace AVF.MemberManagement.ViewModels
 
             EnterParticipantsCommand = new DelegateCommand(EnterParticipants, CanEnterParticipants);
             ChangeTrainerCommand = new DelegateCommand(ChangeTrainer, CanChangeTrainer);
+            LogoutCommand = new DelegateCommand(Logout, CanLogout);
         }
 
         public override async void OnNavigatedTo(NavigationParameters parameters)
         {
             try
             {
+                if (parameters.InternalParameters.ContainsKey("__NavigationMode") &&
+                    parameters.InternalParameters["__NavigationMode"].ToString() == "Back")
+                {
+                    IsNavigationModeBack = true;
+                }
+                else
+                {
+                    IsNavigationModeBack = false;
+                }
+
                 if (parameters.ContainsKey("SelectedTraining"))
                 {
                     SelectedTraining = (TrainingsModel)parameters["SelectedTraining"];
@@ -211,6 +230,22 @@ namespace AVF.MemberManagement.ViewModels
         }
 
         private bool CanChangeTrainer()
+        {
+            return true;
+        }
+
+        #endregion
+
+        #region LogoutCommand
+
+        public ICommand LogoutCommand { get; }
+
+        private void Logout()
+        {
+            NavigationService.GoBackToRootAsync();
+        }
+
+        private bool CanLogout()
         {
             return true;
         }
