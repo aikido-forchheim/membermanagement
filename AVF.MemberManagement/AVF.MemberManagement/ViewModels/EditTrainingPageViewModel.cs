@@ -165,6 +165,11 @@ namespace AVF.MemberManagement.ViewModels
             {
                 SelectedTraining.Training.Bemerkung = Annotation;
 
+#pragma warning disable 4014
+                //Really navigate asnyc to avoid button event fired multiple times
+                NavigationService.NavigateAsync(nameof(SaveParticipantsPage), new NavigationParameters { { "SelectedTraining", SelectedTraining } });
+#pragma warning restore 4014
+
                 if (SelectedTraining.Training.Id == 0)
                 {
                     await _trainingsRepository.CreateAsync(SelectedTraining.Training);
@@ -173,8 +178,6 @@ namespace AVF.MemberManagement.ViewModels
                 {
                     await _trainingsRepository.UpdateAsync(SelectedTraining.Training);
                 }
-
-                await NavigationService.NavigateAsync(nameof(SaveParticipantsPage), new NavigationParameters { { "SelectedTraining", SelectedTraining } });
             }
             catch (Exception ex)
             {
