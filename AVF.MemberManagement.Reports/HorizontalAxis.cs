@@ -3,33 +3,18 @@ using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
-    public abstract class HorizontalAxis : Axis
+    public class HorizontalAxis : Axis
     {
-        public bool m_activeColumnsOnly;
-
-        protected HorizontalAxis(DatabaseWrapper db, TrainingParticipationReport coreReport)
-            : base(db, coreReport)
-        { }
-
-        public abstract void FillHeaderRows(DataGridView dgv, int iNrOfColsOnLeftSide);
-
-        public int GetNrOfDgvColumns()
-            => m_activeColumnsOnly ? m_coreReport.GetNrOfActiveCols() : GetNrOfSrcElements();
-        
-        public void FillFooterRow(DataGridView dgv, int iNrOfColsOnLeftSide)
+        public override void FillMainKeyCell(DataGridView dgv, int iDgvCol, int iModelCol, AxisType axisType)
         {
-            int iDgvRow = dgv.RowCount - 1;  // one footer row
+            base.FillMainKeyCell(dgv, iDgvCol, iModelCol, axisType);
 
-            dgv[iNrOfColsOnLeftSide - 1, iDgvRow].Value = "Summe";
+            int id = GetDbIdFromDgvIndex(iDgvCol);
 
-            int iDgvCol = iNrOfColsOnLeftSide;
-            m_coreReport.ForAllColumns
-            (
-                action: iCol => dgv[iDgvCol++, iDgvRow].Value = m_coreReport.GetColSum(iCol),
-                activeColumnsOnly: m_activeColumnsOnly
-            );
-
-            dgv[dgv.ColumnCount - 1, iDgvRow].Value = m_coreReport.GetSumSum();
+            DataGridViewColumn col = dgv.Columns[iDgvCol];
+            col.HeaderText = axisType.GetFullDesc(id, Globals.TEXT_ORIENTATION.VERTICAL);
+            col.SortMode = DataGridViewColumnSortMode.NotSortable;
+            col.HeaderCell.ToolTipText = axisType.MouseAxisEvent(id, false);
         }
     }
 }

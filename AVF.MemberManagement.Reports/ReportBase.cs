@@ -1,69 +1,91 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
-    public abstract class ReportBase
+    public class ReportBase : Form
     {
-        protected DatabaseWrapper m_db;
+        // properties
 
-        protected DateTime m_datStart;
-        protected DateTime m_datEnd;
+        protected DataGridView P_dataGridView    { get; set; }
+        protected Label        P_labelReportName { get; set; }
+        protected Font         P_font            { get; set; }
 
-        public int m_iNrOfColsOnLeftSide  { get; protected set; }
-        public int m_iNrOfColsOnRightSide { get; protected set; }
+        public    Panel        P_panel           { get; set; }
 
-        protected TrainingParticipationReport m_coreReport;
+        private Color P_ColorCell { get; set; }
 
-        protected VerticalAxis   m_yAxis;
-        protected HorizontalAxis m_xAxis;
+        private const int BORDER_TOP = 200;
 
-        public ReportBase
-        (
-            DatabaseWrapper db, 
-            DateTime datStart, 
-            DateTime datEnd
-        )
+        // constructor
+
+        public ReportBase()
         {
-            m_db = db;
-            m_datStart = datStart;
-            m_datEnd = datEnd;
-            m_coreReport = new TrainingParticipationReport(db, datStart, datEnd);
+            P_panel = new Panel();
+            P_panel.Resize += new EventHandler(delegate (object s, System.EventArgs e) { SizeDataGridView(P_dataGridView); });
         }
 
-        protected void FillMainRows(DataGridView dgv)
+        // member functions
+
+        public void SizeDataGridView( DataGridView dgv )
         {
-            int iDgvRow = 0;
-            dgv.Rows[dgv.RowCount - 1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            m_coreReport.ForAllRows
-            (
-                iRow =>
-                {
-                    int iDgvCol = m_iNrOfColsOnLeftSide;
-                    m_coreReport.ForAllColumns
-                    (
-                        iCol => dgv[iDgvCol++, iDgvRow].Value = FormatMatrixElement( m_coreReport.GetCell(iRow, iCol) ),
-                        m_xAxis.m_activeColumnsOnly
-                    );
-                    ++iDgvRow;
-                },
-                m_yAxis.m_activeRowsOnly
-            );
+            int extraHeight = 2;   // values found by trial and error, to prevend scroll bars
+            int extraWidth = 20;   // TODO: find clean solution
+            int maxWidth = dgv.Columns.GetColumnsWidth(DataGridViewElementStates.None) + extraWidth;
+//            int maxHeight = dgv.Rows.GetRowsHeight(DataGridViewElementStates.None) + extraHeight + dgv.ColumnHeadersHeight;
+            int maxHeight = extraHeight + dgv.ColumnHeadersHeight;
+            foreach (DataGridViewRow dr in dgv.Rows)
+                maxHeight += dr.Height;
+            dgv.Width  = Math.Min(P_panel.ClientSize.Width  - dgv.Location.X, maxWidth);
+            dgv.Height = Math.Min(P_panel.ClientSize.Height - dgv.Location.Y, maxHeight);
         }
 
-        public void PopulateGridView(DataGridView dgv)
+        public void Export2Excel()
+            => ExcelExport.Export2Excel( P_dataGridView, 2, 1, GetType().Name );
+
+        public virtual void InitializeReportBase()
         {
-            dgv.RowCount    = m_yAxis.GetNrOfDgvRows() + 1;  // one footer row
-            dgv.ColumnCount = m_xAxis.GetNrOfDgvColumns() + m_iNrOfColsOnLeftSide + m_iNrOfColsOnRightSide;
+            P_font = new Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            P_labelReportName = new Label();
+            P_dataGridView = new DataGridView();
 
-            m_xAxis.FillHeaderRows( dgv, m_yAxis.m_iNrOfColsOnLeftSide );
-            m_xAxis.FillFooterRow ( dgv, m_yAxis.m_iNrOfColsOnLeftSide );
-            m_yAxis.FillRowHeaderColumns( dgv );
-            m_yAxis.FillRowSumColumns   ( dgv );
-            FillMainRows( dgv );
+            // 
+            // P_labelReportName
+            // 
+            P_labelReportName.AutoSize = true;
+            P_labelReportName.Font = P_font;
+            P_labelReportName.Location = new System.Drawing.Point(0, 30);
+            P_labelReportName.Name = "P_labelReportName";
+            P_labelReportName.TabIndex = 1;
+
+            // 
+            // P_dataGridView
+            // 
+            ((System.ComponentModel.ISupportInitialize)(P_dataGridView)).BeginInit();
+            P_dataGridView.AllowUserToAddRows = false;
+            P_dataGridView.AllowUserToDeleteRows = false;
+            P_dataGridView.ClipboardCopyMode = DataGridViewClipboardCopyMode.Disable;
+            P_dataGridView.EnableHeadersVisualStyles = false;
+            P_dataGridView.Location = new Point(0, BORDER_TOP);
+            P_dataGridView.MultiSelect = true;
+            P_dataGridView.Name = "P_dataGridView";
+            P_dataGridView.RowHeadersVisible = false;
+            P_dataGridView.RowHeadersWidth = 20;
+            P_dataGridView.RowTemplate.Height = 28;
+            P_dataGridView.Size = new Size(1345, 712);
+            P_dataGridView.TabIndex = 0;
+            P_dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            P_dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            P_dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+
+            ((System.ComponentModel.ISupportInitialize)(P_dataGridView)).EndInit();
+            P_panel.Controls.Add(P_dataGridView);
+            P_panel.Controls.Add(P_labelReportName);
+
+            P_panel.Dock = DockStyle.Fill;
+            P_panel.BackColor = Color.AliceBlue;
         }
-
-        protected abstract string FormatMatrixElement(int iValue);
     }
 }

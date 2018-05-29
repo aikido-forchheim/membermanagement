@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Tbo;
-using AVF.MemberManagement.BusinessLogic;
+using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Console
 {
     class CheckConsistancy
     {
-        internal async Task Main(DatabaseWrapper db)
+        internal async Task Main()
         {
-            OutputTarget oTarget = new OutputTarget( "Findings.txt", db );
+            OutputTarget oTarget = new OutputTarget( "Findings.txt" );
 
             int iFinding = 0;
 
@@ -17,12 +17,12 @@ namespace AVF.MemberManagement.Console
 
             DateTime dateStart = new DateTime(2017, 1, 1);
 
-            foreach (Training training in db.m_trainings)
+            foreach (Training training in Globals.DatabaseWrapper.P_trainings)
             {
                 int? trainer = training.Trainer;
                 if ( ( training.Termin > dateStart ) && (trainer.HasValue && trainer > 0) )
                 {
-                    if (!db.HatTeilgenommen(training.Trainer, training))
+                    if (!Globals.DatabaseWrapper.HatTeilgenommen(training.Trainer, training))
                     {
                         oTarget.Write($"Finding { ++iFinding }: Trainer hat nicht an Training teilgenommen. ");
                         oTarget.WriteMitglied( trainer.Value );
@@ -37,15 +37,15 @@ namespace AVF.MemberManagement.Console
             // Am Prüfungstag muss ein Training stattgefunden haben
             // Prüfling and Prüfer müssen Teilnehmer sein
 
-            foreach (Pruefung pruefung in db.m_pruefung)
-            {
+            foreach (Pruefung pruefung in Globals.DatabaseWrapper.P_pruefung)
+            {  
                 bool found = false;
-                foreach (Training training in db.m_trainings)
+                foreach (Training training in Globals.DatabaseWrapper.P_trainings)
                 {
-                     if ( 
+                     if (
                           ( training.Termin == pruefung.Datum ) &&
-                          ( db.HatTeilgenommen(pruefung.Pruefling, training )) &&
-                          ( db.HatTeilgenommen(pruefung.Pruefer,   training ))
+                          (Globals.DatabaseWrapper.HatTeilgenommen(pruefung.Pruefling, training )) &&
+                          (Globals.DatabaseWrapper.HatTeilgenommen(pruefung.Pruefer,   training ))
                        )
                     {
                         found = true;

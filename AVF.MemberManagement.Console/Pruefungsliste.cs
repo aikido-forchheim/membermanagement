@@ -1,27 +1,32 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Tbo;
-using AVF.MemberManagement.BusinessLogic;
+using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Console
 {
     class Pruefungsliste
     {
-        internal async Task Main( DatabaseWrapper db )
+        internal async Task Main()
         {
-            OutputTarget oTarget = new OutputTarget("Pruefungsliste.txt", db );
+            OutputTarget oTarget = new OutputTarget("Pruefungsliste.txt");
 
-            foreach ( Mitglied mitglied in db.m_mitglieder)
+            foreach (Mitglied member in Globals.DatabaseWrapper.CurrentMembers())
             {
-                var examinations = Examinations.GetListOfExaminations(db, mitglied);
-                if (examinations.Length > 0)
+                var examinations = new Examinations().GetSortedListOfExaminations(member);
+                if (examinations.Count > 0)
                 {
-                    oTarget.WriteMitglied(mitglied);
+                    DateTime datValidData = Globals.DatabaseWrapper.GetStartValidData();
+                    oTarget.WriteMitglied(member);
                     oTarget.WriteLine();
-                    foreach (Examination examination in examinations)
+                    foreach (var examination in examinations)
                     {
-                        oTarget.WritePruefung(examination.exam);
+                        oTarget.Write(examination.GraduationText());
+                        oTarget.Write(examination.GraduationDate());
+                        oTarget.Write(examination.Examinant());
+                        oTarget.Write(examination.WaitTime());
+                        oTarget.Write(examination.NrOfTrainings());
                         oTarget.WriteLine();
                     }
                     oTarget.WriteLine();

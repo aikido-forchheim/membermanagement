@@ -1,33 +1,32 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Tbo;
-using AVF.MemberManagement.BusinessLogic;
+using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Console
 {
     class Mitgliederbeitraege
     {
-        internal async Task Main( DatabaseWrapper db )
+        internal async Task Main( )
         {
-            OutputTarget oTarget = new OutputTarget( "Mitgliederbeitraege.txt", db );
+            OutputTarget oTarget = new OutputTarget( "Mitgliederbeitraege.txt" );
 
             decimal decHalbjahresSumme = 0;
             int iLfdNr = 0;
 
-            foreach (Mitglied mitglied in db.m_mitglieder)
+            foreach (Mitglied mitglied in Globals.DatabaseWrapper.P_mitglieder)
             {
                 if (mitglied.Faktor > 0)
                 {
-                    int iProzentsatz = db.Familienrabatt(mitglied);
+                    int iProzentsatz = Globals.DatabaseWrapper.Familienrabatt(mitglied);
                     if ( iProzentsatz > 0 )
                     { 
-                        decimal decStdJahresbeitrag  = db.BK(mitglied).Beitrag;
+                        decimal decStdJahresbeitrag  = Globals.DatabaseWrapper.BK(mitglied).Beitrag;
                         decimal decJahresbeitrag     = decStdJahresbeitrag * iProzentsatz / 100;
                         decimal decHalbjahresbeitrag = decJahresbeitrag / 2;
                         decHalbjahresSumme += decHalbjahresbeitrag;
                         oTarget.Write($"{ ++iLfdNr, 3}  ");
                         oTarget.WriteMitglied( mitglied) ;
-                        oTarget.Write($"{ db.BK_Text(mitglied),3} ");
+                        oTarget.Write($"{ Globals.DatabaseWrapper.BK_Text(mitglied),3} ");
                         oTarget.WriteAmount( decJahresbeitrag );
                         oTarget.Write($"{ mitglied.Familienmitglied } ");
                         oTarget.WriteAmount( decHalbjahresbeitrag );

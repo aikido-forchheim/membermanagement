@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AVF.MemberManagement", "AVF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AVF.MemberManagement.xUnitIntegrationTests", "AVF.MemberManagement.xUnitIntegrationTests\AVF.MemberManagement.xUnitIntegrationTests.csproj", "{63F993D0-1578-4C5A-A467-AC0F2150B0D3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AVF.MemberManagement.PortableLibrary", "AVF.MemberManagement.PortableLibrary\AVF.MemberManagement.PortableLibrary.csproj", "{12EBB884-B4BF-4326-B730-46D589C2E069}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{63F993D0-1578-4C5A-A467-AC0F2150B0D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63F993D0-1578-4C5A-A467-AC0F2150B0D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63F993D0-1578-4C5A-A467-AC0F2150B0D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12EBB884-B4BF-4326-B730-46D589C2E069}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12EBB884-B4BF-4326-B730-46D589C2E069}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12EBB884-B4BF-4326-B730-46D589C2E069}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12EBB884-B4BF-4326-B730-46D589C2E069}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

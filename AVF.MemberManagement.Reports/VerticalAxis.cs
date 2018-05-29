@@ -1,36 +1,37 @@
 ﻿using System.Windows.Forms;
+using System.Collections.Generic;
 using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
-    public abstract class VerticalAxis : Axis
+    public class VerticalAxis : Axis
     {
-        public int m_iNrOfColsOnLeftSide;
-
-        public bool m_activeRowsOnly;
-
-        protected VerticalAxis
-        (
-            DatabaseWrapper db,
-            TrainingParticipationReport coreReport
-        )
-            : base(db, coreReport)
-        { }
-
-        public abstract void FillRowHeaderColumns(DataGridView dgv);
-        abstract public void FillRowSumColumns(DataGridView dgv);
-
-        public int GetNrOfDgvRows()
-            => m_activeRowsOnly ? m_coreReport.GetNrOfActiveRows() : GetNrOfSrcElements();
-        
-        protected void FillRowSumColumns(DataGridView dgv, bool activeRowsOnly)
+        public virtual void FillKeyHeaderCells(DataGridView dgv, AxisType axisType)
         {
-            int iDgvRow = 0;
-            m_coreReport.ForAllRows
-            (
-                iRow => dgv[dgv.ColumnCount - 1, iDgvRow++].Value = m_coreReport.GetRowSum(iRow),
-                activeRowsOnly
-            );
+            dgv.Columns[0].HeaderText = "Nr";
+
+            for (int iCol = 1; iCol <= axisType.HeaderStrings.Count; iCol++)
+                dgv.Columns[iCol].HeaderText = axisType.HeaderStrings[iCol - 1];
+
+            for (int iCol = 0; iCol <= axisType.HeaderStrings.Count; iCol++)
+                dgv.Columns[iCol].HeaderCell.ToolTipText = $"Klicken um nach {dgv.Columns[iCol].HeaderText} zu sortieren";
+        }
+
+        public override void FillMainKeyCell(DataGridView dgv, int iDgvRow, int iModelRow, AxisType axisType)
+        {
+            base.FillMainKeyCell(dgv, iDgvRow, iModelRow, axisType);
+
+            int id = GetDbIdFromDgvIndex(iDgvRow);
+
+            dgv[0, iDgvRow].Value = id;  // column 0 is always reserved for key value
+
+            List<string> list = axisType.GetDescription(id, Globals.TEXT_ORIENTATION.SPECIAL);
+            for (int iCol = 1; iCol <= axisType.HeaderStrings.Count; iCol++)
+            {
+                DataGridViewCell cell = dgv[iCol, iDgvRow];
+                cell.Value = list[iCol - 1];
+                cell.ToolTipText = axisType.MouseAxisEvent(id, false);
+            }
         }
     }
 }

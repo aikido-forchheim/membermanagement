@@ -1,29 +1,26 @@
-﻿
+﻿using System;
 using AVF.MemberManagement.StandardLibrary.Tbo;
-using AVF.MemberManagement.BusinessLogic;
+using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Console
 {
     internal class OutputTarget // : System.IO.StreamWriter
     {
-        private DatabaseWrapper m_db;
         private System.IO.StreamWriter m_ofile;
         private System.IO.TextWriter m_ConsoleOut;
 
-        private void initialize(DatabaseWrapper db)
+        private void initialize()
         {
-            m_db = db;
             m_ConsoleOut = System.Console.Out;
         }
 
-        public OutputTarget(DatabaseWrapper db)
+        public OutputTarget()
         {
-            initialize( db );
+            initialize( );
         }
 
-        public OutputTarget(string fileName, DatabaseWrapper db )
+        public OutputTarget(string fileName )
         {
-            m_db = db;
             m_ConsoleOut = System.Console.Out;
             SetOutputFile(fileName);
         }
@@ -76,7 +73,7 @@ namespace AVF.MemberManagement.Console
 
         public void WriteTraining(Training training, int id )
         {
-            WriteTraining(training, m_db.WeekDay(id));
+            WriteTraining(training, Globals.DatabaseWrapper.WeekDay(id));
         }
 
         public void WriteMitglied(Mitglied mitglied)
@@ -84,19 +81,25 @@ namespace AVF.MemberManagement.Console
             System.Console.Write(Utilities.FormatMitglied(mitglied));
         }
 
+        public void WriteDatum(DateTime date)
+        {
+            System.Console.Write($"{date:dd-MM-yyyy}");
+        }
+
         public void WriteMitglied( int id )
         {
-            WriteMitglied(m_db.MitgliedFromId(id));
+            WriteMitglied(Globals.DatabaseWrapper.MitgliedFromId(id));
         }
 
         public void WritePruefung( Pruefung pruefung )
         {
-            Graduierung grad = m_db.GraduierungFromId(pruefung.GraduierungID);
-
-            System.Console.Write($"{grad.Bezeichnung} {pruefung.Datum:dd-MM-yyyy} Prüfer: ");
+            Graduierung grad = Globals.DatabaseWrapper.GraduierungFromId(pruefung.GraduierungID);
+            Write($"{grad.Bezeichnung} ");
+            WriteDatum(pruefung.Datum);
+            System.Console.Write("Prüfer: ");
             if (pruefung.Pruefer > 0)
             {
-                Mitglied pruefer = m_db.MitgliedFromId(pruefung.Pruefer);
+                Mitglied pruefer = Globals.DatabaseWrapper.MitgliedFromId(pruefung.Pruefer);
                 System.Console.Write( $"{ pruefer.Nachname }, { pruefer.Vorname } ({ pruefer.Id }) " );
             }
             else
