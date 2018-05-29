@@ -59,7 +59,7 @@ namespace AVF.MemberManagement.Reports
             ReportFormPopulate(null);
         }
 
-        protected override void ReportFormPopulate(Action<String> tick)
+        private void ReportFormPopulate(Action<String> tick)
         {
             Examinations m_examinations = new Examinations();
             foreach (Examination exam in m_examinations.GetSortedListOfExaminations(m_member))
@@ -73,11 +73,6 @@ namespace AVF.MemberManagement.Reports
                     exam.NrOfTrainings()
                 );
             }
-        }
-
-        protected override string MouseCellEvent(int row, int col, MouseButtons buttons, bool action)
-        {
-            return String.Empty;
         }
 
         private void InitializeComponent()

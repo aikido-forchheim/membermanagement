@@ -49,6 +49,14 @@ namespace AVF.MemberManagement.Reports
 
             P_yearSelector.Visible = desc.P_timeRange.IsOneCalendarYear(); // if time range spans more than one year, do not show year selector only
 
+            P_dataGridView.CellMouseClick += new DataGridViewCellMouseEventHandler
+            (
+                delegate (object sender, DataGridViewCellMouseEventArgs e)
+                {
+                    MouseCellEvent(e.RowIndex, e.ColumnIndex, e.Button, action: true);
+                }
+            );
+
             ReportFormPopulate(tick);
         }
 
@@ -97,7 +105,7 @@ namespace AVF.MemberManagement.Reports
             P_labelMember.Text   = AxisTypeTraining.GetTime(training);
         }
 
-        protected override void ReportFormPopulate(Action<String> tick)    // Fill cells of DataGridView
+        private void ReportFormPopulate(Action<String> tick)    // Fill cells of DataGridView
         {
             P_xAxis.Initialize( P_xAxisType );
             P_yAxis.Initialize( P_yAxisType );
@@ -222,16 +230,16 @@ namespace AVF.MemberManagement.Reports
             FillSummaryRow();
         }
 
-        protected override string MouseCellEvent(int row, int col, MouseButtons buttons, bool action)
+        private string MouseCellEvent(int row, int col, MouseButtons buttons, bool action)
         {
-            if (IsHeaderRow(row))
+            if (row < 0)  // header row?
             {
                 if (ColIsInMainArea(col))
                 {
                     return P_xAxisType.MouseAxisEvent(P_xAxis.GetDbIdFromDgvIndex(col), action);
                 }
             }
-            else if (IsSummaryRow(row))
+            else if (row == P_dataGridView.RowCount - 1)  // summary row?
             {
                 return String.Empty;  // TODO: add some action
             }

@@ -43,9 +43,18 @@ namespace AVF.MemberManagement.Reports
 
             m_axisTypeMember = new AxisTypeMember(new ReportDescriptor());
             m_examinations = new Examinations();
-//            m_contextMenue = new ContextMenu();
-//            m_contextMenue.MenuItems.Add("Item 1", new EventHandler(delegate (object sender, System.EventArgs e) { }));
-//            m_contextMenue.MenuItems.Add("Item 2", new EventHandler(delegate (object sender, System.EventArgs e) { }));
+            //            m_contextMenue = new ContextMenu();
+            //            m_contextMenue.MenuItems.Add("Item 1", new EventHandler(delegate (object sender, System.EventArgs e) { }));
+            //            m_contextMenue.MenuItems.Add("Item 2", new EventHandler(delegate (object sender, System.EventArgs e) { }));
+
+            P_dataGridView.CellMouseClick += new DataGridViewCellMouseEventHandler
+            (
+                delegate (object sender, DataGridViewCellMouseEventArgs e)
+                {
+                    MouseCellEvent(e.RowIndex, e.ColumnIndex, e.Button, action: true);
+                }
+            );
+
             ReportFormPopulate(tick);
         }
 
@@ -77,7 +86,7 @@ namespace AVF.MemberManagement.Reports
             return sGrad;
         }
 
-        protected override void ReportFormPopulate(Action<String> tick)
+        private void ReportFormPopulate(Action<String> tick)
         {
             DateTime datValidData = Globals.DatabaseWrapper.GetStartValidData();
             var      gradList     = m_examinations.GetBestGraduationList(tick);
@@ -118,7 +127,7 @@ namespace AVF.MemberManagement.Reports
             }
         }
 
-        protected override string MouseCellEvent(int row, int col, MouseButtons buttons, bool action)
+        private string MouseCellEvent(int row, int col, MouseButtons buttons, bool action)
         {
             if (row >= 0)
             {

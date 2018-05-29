@@ -32,7 +32,7 @@ namespace AVF.MemberManagement.Reports
             ReportFormPopulate(tick);
         }
 
-        protected override void ReportFormPopulate(Action<String> tick)
+        private void ReportFormPopulate(Action<String> tick)
         {
             foreach (Mitglied member in Globals.DatabaseWrapper.CurrentMembers())
             {
@@ -53,18 +53,6 @@ namespace AVF.MemberManagement.Reports
                     );
                     P_halfYearSum += yearlyFee / 2;
                 }
-            }
-        }
-
-        protected override string MouseCellEvent(int row, int col, MouseButtons buttons, bool action)
-        {
-            if (row >= 0)
-            {
-                return String.Empty;
-            }
-            else
-            {
-                return String.Empty;
             }
         }
     }

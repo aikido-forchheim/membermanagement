@@ -5,7 +5,7 @@ using AVF.MemberManagement.ReportsBusinessLogic;
 
 namespace AVF.MemberManagement.Reports
 {
-    public class ReportBase //: Panel
+    public class ReportBase : Form
     {
         // properties
 
@@ -26,10 +26,6 @@ namespace AVF.MemberManagement.Reports
             P_panel = new Panel();
             P_panel.Resize += new EventHandler(delegate (object s, System.EventArgs e) { SizeDataGridView(P_dataGridView); });
         }
-        // abstract memeber functions
-
-        protected virtual void ReportFormPopulate(Action<String> tick) { }    // Fill cells of DataGridView
-        protected virtual string MouseCellEvent(int row, int col, MouseButtons buttons, bool action) => String.Empty;
 
         // member functions
 
@@ -83,13 +79,6 @@ namespace AVF.MemberManagement.Reports
             P_dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             P_dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             P_dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            P_dataGridView.CellMouseClick += new DataGridViewCellMouseEventHandler
-            (
-                delegate (object sender, DataGridViewCellMouseEventArgs e) 
-                {
-                    MouseCellEvent(e.RowIndex, e.ColumnIndex, e.Button, action: true);
-                }
-            );
 
             ((System.ComponentModel.ISupportInitialize)(P_dataGridView)).EndInit();
             P_panel.Controls.Add(P_dataGridView);
@@ -98,11 +87,5 @@ namespace AVF.MemberManagement.Reports
             P_panel.Dock = DockStyle.Fill;
             P_panel.BackColor = Color.AliceBlue;
         }
-
-        protected bool IsHeaderRow(int iRow)
-           => iRow < 0;
-
-        protected bool IsSummaryRow(int iRow)
-           => iRow == P_dataGridView.RowCount - 1;
     }
 }
