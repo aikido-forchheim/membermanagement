@@ -11,61 +11,62 @@ using AVF.MemberManagement.StandardLibrary.Tbo;
 using FakeItEasy;
 using Microsoft.Extensions.Logging;
 using Microsoft.Practices.Unity;
+using Prism.Ioc;
 using Prism.Unity;
+using Unity;
+using Unity.Lifetime;
 
 namespace AVF.MemberManagement.xUnitIntegrationTests
 {
-    public class Bootstrapper : UnityBootstrapper
+    public class Bootstrapper : PrismApplication
     {
         public static bool UseFileProxies { get; private set; }
 
-        private readonly IUnityContainer _container;
+        private RepositoryBootstrapper _repositoryBootstrapper;
 
-        private readonly RepositoryBootstrapper _repositoryBootstrapper;
+        public IContainerRegistry ContainerRegistry { get; private set; }
 
         public Bootstrapper(bool useFileProxies)
         {
             UseFileProxies = useFileProxies;
             //UseFileProxies = true;
-
-            _container = new UnityContainer();
-
-            Container = _container;
-
-            _repositoryBootstrapper = new RepositoryBootstrapper(_container);
         }
 
-        public override void Run(bool runWithDefaultConfiguration)
+        protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            ContainerRegistry = containerRegistry;
+
+            _repositoryBootstrapper = new RepositoryBootstrapper(containerRegistry);
+
             try
             {
                 //ILogger
                 var fakeLogger = A.Fake<ILogger>();
-                _container.RegisterInstance(fakeLogger);
-                
+                containerRegistry.RegisterInstance(fakeLogger);
+
                 //IAccountService
-                _container.RegisterInstance(IntegrationTestSettings.Get());
+                containerRegistry.RegisterInstance(IntegrationTestSettings.Get());
                 var fakeAccountService = A.Fake<IAccountService>();
-                var restApiAccount = _container.Resolve<IntegrationTestSettings>().RestApiAccount;
+                var restApiAccount = Container.Resolve<IntegrationTestSettings>().RestApiAccount;
                 A.CallTo(() => fakeAccountService.RestApiAccount).Returns(restApiAccount);
-                _container.RegisterInstance(fakeAccountService);
-                
+                containerRegistry.RegisterInstance(fakeAccountService);
+
                 //ITableObjectGenerator
-                _container.RegisterType<ITableObjectGenerator, TableObjectGenerator>();
-                
+                containerRegistry.Register<ITableObjectGenerator, TableObjectGenerator>();
+
                 //ITokenService
-                _container.RegisterType<ITokenService, TokenService>(new ContainerControlledLifetimeManager());
-                _container.Resolve<IAccountService>().Init(_container.Resolve<IntegrationTestSettings>().RestApiAccount);
-                
+                containerRegistry.RegisterSingleton<ITokenService, TokenService>();
+                Container.Resolve<IAccountService>().Init(Container.Resolve<IntegrationTestSettings>().RestApiAccount);
+
                 //IPhpCrudApiService
-                _container.RegisterType<IPhpCrudApiService, PhpCrudApiService>(new ContainerControlledLifetimeManager());
+                containerRegistry.RegisterSingleton<IPhpCrudApiService, PhpCrudApiService>();
 
                 //IPasswordService
-                _container.RegisterType<IPasswordService, PasswordService>(new ContainerControlledLifetimeManager());
-                
-                
-                _container.RegisterType<IJsonFileFactory, JsonFileFactory>(new ContainerControlledLifetimeManager());
-                
+                containerRegistry.RegisterSingleton<IPasswordService, PasswordService>();
+
+
+                containerRegistry.RegisterSingleton<IJsonFileFactory, JsonFileFactory>();
+
                 _repositoryBootstrapper.RegisterRepositories(UseFileProxies); //always set in construtor for notifying unit tests
             }
             catch (Exception e)
@@ -73,6 +74,11 @@ namespace AVF.MemberManagement.xUnitIntegrationTests
                 Console.WriteLine(e);
                 throw;
             }
+        }
+
+        protected override void OnInitialized()
+        {
+
         }
     }
 }

@@ -3,16 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:userControls="clr-namespace:AVF.MemberManagement.UserControls;assembly=AVF.MemberManagement"
              x:Class="AVF.MemberManagement.UserControls.ParticipantsView">
-  <ContentView.Content>
-      <StackLayout Margin="8,8,8,8">
-          <StackLayout>
-              <Label Text="{Binding ParticipantsCountText}" Margin="8,8,8,16">
-              </Label>
-              <ListView x:Name="parent" ItemsSource="{Binding Participants}" SelectedItem="{Binding SelectedParticipant}" Margin="16,0,0,0" ItemSelected="Parent_OnItemSelected">
-                  <ListView.ItemTemplate>
-                      <DataTemplate>
-                          <ViewCell x:Name="child">
-                              <userControls:MemberView 
+    <ContentView.Content>
+        <Grid Margin="8,8,8,8">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="56"></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition Height="108"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Label Text="{Binding ParticipantsCountText}" Margin="8,8,8,16">
+            </Label>
+            <ListView Grid.Row="1" x:Name="parent" ItemsSource="{Binding Participants}" SelectedItem="{Binding SelectedParticipant}" Margin="16,0,0,0" ItemSelected="Parent_OnItemSelected">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell x:Name="child">
+                            <userControls:MemberView 
                                 OriginalBindingContext="{Binding Source={x:Reference child}, Path=BindingContext}" 
                                 BindingContext="{Binding Source={x:Reference parent}, Path=BindingContext}" 
                                 Command="{Binding RemoveParticipantCommand}"
@@ -20,13 +24,25 @@
                                 ButtonTextColor="Red"
                                     >
                             </userControls:MemberView>
-                          </ViewCell>
-                      </DataTemplate>
-                  </ListView.ItemTemplate>
-              </ListView>
-                <Button Text="Entfernen" Margin="16,32,16,32" Command="{Binding RemoveParticipantCommand}">
-              </Button>
-          </StackLayout>
-      </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Grid Grid.Row="2">
+                <Grid.Margin>
+                    <OnIdiom x:TypeArguments="Thickness">
+                        <OnIdiom.Phone>16,8,16,16</OnIdiom.Phone>
+                        <OnIdiom.Tablet>16,8,16,64</OnIdiom.Tablet>
+                        <OnIdiom.Desktop>16,8,16,64</OnIdiom.Desktop>
+                    </OnIdiom>
+                </Grid.Margin>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Button Text="Abbrechen" Command="{Binding CancelCommand}" Style="{StaticResource Button}" VerticalOptions="Center"></Button>
+                <Button Grid.Column="1" Command="{Binding SaveCommand}" Text="Speichern" Style="{StaticResource Button}" VerticalOptions="Center"></Button>
+            </Grid>
+        </Grid>
     </ContentView.Content>
 </ContentView>

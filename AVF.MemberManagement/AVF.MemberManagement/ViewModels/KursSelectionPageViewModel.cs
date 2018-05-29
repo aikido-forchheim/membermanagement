@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
-using AVF.MemberManagement.StandardLibrary.Enums;
+using Microsoft.Extensions.Logging;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Models;
 using AVF.MemberManagement.StandardLibrary.Services;
@@ -23,14 +23,6 @@ namespace AVF.MemberManagement.ViewModels
         private readonly IKursModelService _classModelService;
         private readonly IRepository<Training> _trainings;
         private readonly IRepository<TrainingsTeilnahme> _trainingsTeilnahmen;
-
-        private string _selectedDateString;
-
-        public string SelectedDateString
-        {
-            get => _selectedDateString;
-            private set => SetProperty(ref _selectedDateString, value);
-        }
 
         private Wochentag _wochentag;
 
@@ -60,7 +52,7 @@ namespace AVF.MemberManagement.ViewModels
             }
         }
 
-        public KursSelectionPageViewModel(IRepository<Wochentag> wochentageRepository, IRepository<Kurs> kurseRepository, IKursModelService classModelService, IRepository<Training> trainings, IRepository<TrainingsTeilnahme> trainingsTeilnahmen, INavigationService navigationService) : base(navigationService)
+        public KursSelectionPageViewModel(IRepository<Wochentag> wochentageRepository, IRepository<Kurs> kurseRepository, IKursModelService classModelService, IRepository<Training> trainings, IRepository<TrainingsTeilnahme> trainingsTeilnahmen, INavigationService navigationService, ILogger logger) : base(navigationService, logger)
         {
             _wochentageRepository = wochentageRepository;
             _kurseRepository = kurseRepository;
@@ -80,18 +72,16 @@ namespace AVF.MemberManagement.ViewModels
         {
             try
             {
-                if (!parameters.ContainsKey("Date")) return;
+                if (parameters.ContainsKey("Date")) SelectedDate = (DateTime)parameters["Date"];
 
                 _trainingsCollection.Clear();
-
-                SelectedDate = (DateTime)parameters["Date"];
                 
                 Wochentag = await Globals.GetWochentagFromDayOfWeek(_wochentageRepository, SelectedDate.DayOfWeek);
 
-                SelectedDateString =
+                var selectedDateString =
                     $"{SelectedDate.Day.ToString().PadLeft(2, '0')}.{SelectedDate.Month.ToString().PadLeft(2, '0')}.{SelectedDate.Year} ({Wochentag.Bezeichnung})";
 
-                Title = SelectedDateString;
+                Title = selectedDateString;
 
                 var alleKurse = await _kurseRepository.GetAsync();
                 var trainings = await _trainings.GetAsync();
@@ -121,8 +111,8 @@ namespace AVF.MemberManagement.ViewModels
                             KursID = kurs.Id,
                             DatensatzAngelegtAm = DateTime.Now,
                             DatensatzGeaendertAm = DateTime.Now,
-                            DatensatzAngelegtVon = 1, //TODO: User logged in MemberId
-                            DatensatzGeaendertVon = 1,
+                            DatensatzAngelegtVon = Globals.User.Mitgliedsnummer,
+                            DatensatzGeaendertVon = Globals.User.Mitgliedsnummer,
                             WochentagID = kurs.WochentagID,
                             DauerMinuten = kurs.DauerMinuten,
                             Bemerkung = string.Empty
@@ -133,7 +123,9 @@ namespace AVF.MemberManagement.ViewModels
                     {
                         Class = classModel,
                         Training = training,
-                        Participations = GetParticipantListForTraining(trainingsTeilnahmen, training)
+                        Participations = GetParticipantListForTraining(trainingsTeilnahmen, training),
+                        Date = selectedDateString,
+                        Description = $"{classModel.Time} ({classModel.Trainer.FirstName})"
                     };
 
                     trainigModelsWithoutSort.Add(trainingsModel);
@@ -143,11 +135,22 @@ namespace AVF.MemberManagement.ViewModels
                 {
                     Trainings.Add(trainingsModel);
                 }
+
+                SelectedTraining = Trainings.OrderBy(model =>
+                {
+                    var trainingEndTime = model.Training.Zeit + new TimeSpan(0, model.Training.DauerMinuten, 0);
+                    var trainingEndDateTime = new DateTime(SelectedDate.Year, SelectedDate.Month, SelectedDate.Day, trainingEndTime.Hours, trainingEndTime.Minutes, trainingEndTime.Seconds);
+                    var differenceToNow = trainingEndDateTime - DateTime.Now;
+
+                    var secondsToNow = differenceToNow.TotalSeconds;
+                    var absSecondsToNow = Math.Abs(secondsToNow);
+
+                    return absSecondsToNow;
+                }).First();
             }
             catch (Exception ex)
             {
-                //TODO: write to own logger
-                System.Diagnostics.Debug.WriteLine(ex);
+                Logger.LogError(ex.ToString());
             }
         }
 
@@ -157,7 +160,7 @@ namespace AVF.MemberManagement.ViewModels
 
         private void EnterParticipants()
         {
-            NavigationService.NavigateAsync(nameof(EditTrainingPage), new NavigationParameters { { "SelectedTraining", SelectedTraining }, { "SelectedDateString", SelectedDateString } });
+            NavigationService.NavigateAsync(nameof(EditTrainingPage), new NavigationParameters { { "SelectedTraining", SelectedTraining } });
         }
 
         private bool CanEnterParticipants()
@@ -167,9 +170,9 @@ namespace AVF.MemberManagement.ViewModels
 
         #endregion
 
-        private static List<TrainingsTeilnahme> GetParticipantListForTraining(List<TrainingsTeilnahme> appearances, Training training)
+        public static IEnumerable<TrainingsTeilnahme> GetParticipantListForTraining(IEnumerable<TrainingsTeilnahme> appearances, Training training)
         {
-            List<TrainingsTeilnahme> participations;
+            IEnumerable<TrainingsTeilnahme> participations;
 
             if (training != null && training.Id != new Training().Id) //new Training().Id == 0
             {

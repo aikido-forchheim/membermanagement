@@ -1,26 +1,22 @@
 ﻿using System.Diagnostics;
-using System.Net;
 using System.Threading.Tasks;
 using AVF.MemberManagement.Factories;
 using AVF.MemberManagement.PortableLibrary.Services;
 using AVF.MemberManagement.Services;
-using AVF.MemberManagement.StandardLibrary.Archive;
 using AVF.MemberManagement.StandardLibrary.Enums;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
-using AVF.MemberManagement.StandardLibrary.Proxies;
-using AVF.MemberManagement.StandardLibrary.Repositories;
 using AVF.MemberManagement.StandardLibrary.Services;
-using AVF.MemberManagement.StandardLibrary.Tables;
-using AVF.MemberManagement.StandardLibrary.Tbo;
 using Prism.Unity;
 using AVF.MemberManagement.Views;
 using Microsoft.Extensions.Logging;
-using Microsoft.Practices.Unity;
+using Prism;
+using Prism.Ioc;
+using Unity.Lifetime;
 using Xamarin.Forms;
 
 namespace AVF.MemberManagement
 {
-    public partial class App : PrismApplication
+    public partial class App
     {
         private RepositoryBootstrapper _repositoryBootstrapper;
 
@@ -30,6 +26,11 @@ namespace AVF.MemberManagement
         {
         }
 
+        public App()
+        {
+            
+        }
+
         protected override async void OnInitialized()
         {
             InitializeComponent();
@@ -37,9 +38,10 @@ namespace AVF.MemberManagement
             Globals.Idiom = (Idiom)(int)Device.Idiom;
 
             await NavigationService.NavigateAsync("NavigationPage/MainPage");
+            //await NavigationService.NavigateAsync("MainMasterDetailPage");
         }
 
-        protected override void RegisterTypes()
+        protected override void RegisterTypes(IContainerRegistry Container)
         {
             _repositoryBootstrapper = new RepositoryBootstrapper(Container);
 
@@ -54,27 +56,28 @@ namespace AVF.MemberManagement
             //IAccountService
             if (Globals.UsesXamarinAuth)
             {
-                Container.RegisterType<IAccountService, AccountService>(new ContainerControlledLifetimeManager());
+                Container.RegisterSingleton<IAccountService, AccountService>();
             }
             else
             {
                 Container.RegisterInstance(Globals.AccountService);
             }
-            Container.Resolve<IAccountService>().InitWithAccountStore(AppId);
+
+            this.Container.Resolve<IAccountService>().InitWithAccountStore(AppId);
             
             //ITokenService
-            Container.RegisterType<ITokenService, TokenService>(new ContainerControlledLifetimeManager());
+            Container.RegisterSingleton<ITokenService, TokenService>();
             
             //IPhpCrudApiService
-            Container.RegisterType<IPhpCrudApiService, PhpCrudApiService>(new ContainerControlledLifetimeManager());
+            Container.RegisterSingleton<IPhpCrudApiService, PhpCrudApiService>();
             
             //IPasswordService
-            Container.RegisterType<IPasswordService, PasswordService>(new ContainerControlledLifetimeManager());
+            Container.RegisterSingleton<IPasswordService, PasswordService>();
 
-            Container.RegisterType<IKursModelService, KursModelService>(new ContainerControlledLifetimeManager());
+            Container.RegisterSingleton<IKursModelService, KursModelService>();
 
 
-            Container.RegisterType<IJsonFileFactory, JsonFileFactory>(new ContainerControlledLifetimeManager());
+            Container.RegisterSingleton<IJsonFileFactory, JsonFileFactory>();
 
             //_repositoryBootstrapper.RegisterRepositories(false);
             //Globals.UseFileProxies = false;
@@ -84,20 +87,24 @@ namespace AVF.MemberManagement
             //RefreshCache().Wait();
             //RefreshCache(); //UWP
 
-            Container.RegisterTypeForNavigation<NavigationPage>();
-            Container.RegisterTypeForNavigation<MainPage>();
-            Container.RegisterTypeForNavigation<RestApiSettingsPage>();
-            Container.RegisterTypeForNavigation<AdvancedSettingsPage>();
-            Container.RegisterTypeForNavigation<PasswordPage>();
-            Container.RegisterTypeForNavigation<StartPage>();
-            Container.RegisterTypeForNavigation<DaySelectionPage>();
-            Container.RegisterTypeForNavigation<KursSelectionPage>();
-            Container.RegisterTypeForNavigation<EditTrainingPage>();
-            Container.RegisterTypeForNavigation<EnterParticipantsPage>();
-            Container.RegisterTypeForNavigation<EnterParticipantsTabletPage>();
-            Container.RegisterTypeForNavigation<SaveParticipantsPage>();
+            Container.RegisterForNavigation<MainMasterDetailPage>();
+            Container.RegisterForNavigation<MenuPage>();
+            Container.RegisterForNavigation<NavigationPage>();
+            Container.RegisterForNavigation<MainPage>();
+            Container.RegisterForNavigation<RestApiSettingsPage>();
+            Container.RegisterForNavigation<AdvancedSettingsPage>();
+            Container.RegisterForNavigation<PasswordPage>();
+            Container.RegisterForNavigation<StartPage>();
+            Container.RegisterForNavigation<DaySelectionPage>();
+            Container.RegisterForNavigation<KursSelectionPage>();
+            Container.RegisterForNavigation<EditTrainingPage>();
+            Container.RegisterForNavigation<EnterParticipantsPage>();
+            Container.RegisterForNavigation<EnterParticipantsTabletPage>();
+            Container.RegisterForNavigation<SaveParticipantsPage>();
+            Container.RegisterForNavigation<SelectTrainerPage>();
         }
 
+        // ReSharper disable once UnusedMember.Local
         private async Task RefreshCache()
         {
             var factory = Container.Resolve<IJsonFileFactory>();

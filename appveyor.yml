@@ -1,0 +1,17 @@
+image: Visual Studio 2017
+configuration: Release
+environment:
+  keystore-password:
+    secure: AuYtvfURKiNNrIb/UIAgP/CoHSZQ/pDJcr9g62l7cLg=
+before_build:
+- cmd: nuget restore AVF.Android.sln
+build:
+  project: AVF.Android.sln
+build_script:
+  - msbuild "/t:SignAndroidPackage" "/p:Configuration=Release" "/p:AndroidKeyStore=true" "/p:AndroidSigningKeyAlias=avf.membermanagement" "/p:AndroidSigningKeyPass=%keystore-password%" "/p:AndroidSigningKeyStore=AVF.MemberManagement.keystore" "/p:AndroidSigningStorePass=%keystore-password%" "./AVF.MemberManagement/AVF.MemberManagement.Droid/AVF.MemberManagement.Droid.csproj"
+artifacts:
+  - path: AVF.MemberManagement\AVF.MemberManagement.Droid\bin\Release\AVF.MemberManagement.Droid-Signed.apk
+test: off
+branches:
+  only:
+  - master

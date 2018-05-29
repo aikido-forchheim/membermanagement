@@ -3,5 +3,19 @@
                         xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                         xmlns:prism="clr-namespace:Prism.Unity;assembly=Prism.Unity.Forms"
                         x:Class="AVF.MemberManagement.App">
-
+  <prism:PrismApplication.Resources>
+    <ResourceDictionary>
+      <Style x:Key="Button" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="#DDDDDD"></Setter>
+        <Setter Property="WidthRequest" Value="256" />
+        <Setter Property="HeightRequest">
+          <OnPlatform x:TypeArguments="x:Double">
+            <On Platform="iOS" Value="32"></On>
+            <On Platform="Android" Value="44"></On>
+            <On Platform="UWP" Value="32"></On>
+          </OnPlatform>
+        </Setter>
+      </Style>
+    </ResourceDictionary>
+  </prism:PrismApplication.Resources>
 </prism:PrismApplication>

@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms" xmlns:userControls="clr-namespace:AVF.MemberManagement.UserControls;assembly=AVF.MemberManagement" prism:ViewModelLocator.AutowireViewModel="True" x:Class="AVF.MemberManagement.Views.KursSelectionPage" Title="{Binding Title}">
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms" xmlns:userControls="clr-namespace:AVF.MemberManagement.UserControls;assembly=AVF.MemberManagement" prism:ViewModelLocator.AutowireViewModel="True" x:Class="AVF.MemberManagement.Views.KursSelectionPage" Title="{Binding Title}" Appearing="KursSelectionPage_OnAppearing">
     <ScrollView>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="3*">
                 </RowDefinition>
+                <RowDefinition Height="64">
+                </RowDefinition>
                 <RowDefinition Height="1*">
                 </RowDefinition>
             </Grid.RowDefinitions>
-            <StackLayout Grid.Row="0" VerticalOptions="Center" HorizontalOptions="Center" Margin="16,0,16,0">
+            <StackLayout Grid.Row="0" VerticalOptions="Center" HorizontalOptions="Center" Margin="16,0,16,0" WidthRequest="512">
                 <Grid Margin="8,8,8,8">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*">
@@ -22,29 +24,27 @@
                     <userControls:BigLabel Grid.Column="1" FontAttributes="Bold" HorizontalOptions="Start" Text="Übungsleiter" />
                     <userControls:BigLabel Grid.Column="2" FontAttributes="Bold" HorizontalOptions="End" Text="Teilnehmer" />
                 </Grid>
-                <ListView ItemsSource="{Binding Trainings}" HeightRequest="196" SelectedItem="{Binding SelectedTraining}">
+                <ListView ItemsSource="{Binding Trainings}" HeightRequest="196" SelectedItem="{Binding SelectedTraining}" ItemAppearing="ListView_OnItemAppearing">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <Grid Margin="8,8,8,8">
+                                <Grid Margin="8,8,8,8" VerticalOptions="Center">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*">
+                                        <ColumnDefinition Width="10*">
                                         </ColumnDefinition>
-                                        <ColumnDefinition Width="1*">
+                                        <ColumnDefinition Width="14*">
                                         </ColumnDefinition>
-                                        <ColumnDefinition Width="1*">
+                                        <ColumnDefinition Width="6*">
                                         </ColumnDefinition>
                                     </Grid.ColumnDefinitions>
-                                    <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
+                                    <StackLayout Orientation="Horizontal" VerticalOptions="Center" HorizontalOptions="Start">
                                         <userControls:BigLabel Text="{Binding Class.Time}" />
                                     </StackLayout>
-                                    <StackLayout Orientation="Horizontal" HorizontalOptions="Start" Grid.Column="1">
-                                        <userControls:BigLabel Text="{Binding Class.Trainer.Vorname}">
-                                        </userControls:BigLabel>
-                                        <userControls:BigLabel Text="{Binding Class.Trainer.Nachname}">
+                                    <StackLayout Orientation="Horizontal" VerticalOptions="Center" HorizontalOptions="Start" Grid.Column="1">
+                                        <userControls:BigLabel Text="{Binding Class.Trainer.Name}">
                                         </userControls:BigLabel>
                                     </StackLayout>
-                                    <StackLayout Orientation="Horizontal" HorizontalOptions="End" Grid.Column="2">
+                                    <StackLayout Orientation="Horizontal" VerticalOptions="Center" HorizontalOptions="End" Grid.Column="2">
                                         <userControls:BigLabel Text="(">
                                         </userControls:BigLabel>
                                         <userControls:BigLabel Text="{Binding Participations.Count}">
@@ -58,8 +58,12 @@
                     </ListView.ItemTemplate>
                 </ListView>
             </StackLayout>
-            <StackLayout Grid.Row="1" VerticalOptions="Center" HorizontalOptions="Center">
-                <Button Text="Teilnehmer eintragen" WidthRequest="256" Command="{Binding EnterParticipantsCommand}">
+            <StackLayout Grid.Row="1">
+                <Label Text="Ausgewählter Kurs" HorizontalOptions="Center"></Label>
+                <Label Text="{Binding SelectedTraining.Class.Time}" FontAttributes="Bold" HorizontalOptions="Center"></Label>
+            </StackLayout>
+            <StackLayout Grid.Row="2" VerticalOptions="Center" HorizontalOptions="Center">
+                <Button x:Name="ButtonEnterParticipants" Text="Teilnehmer eintragen" Style="{StaticResource Button}" Command="{Binding EnterParticipantsCommand}">
                 </Button>
             </StackLayout>
         </Grid>

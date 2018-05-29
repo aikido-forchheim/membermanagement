@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 
@@ -17,7 +15,7 @@ namespace AVF.MemberManagement.StandardLibrary.Repositories
 
         public override async Task<int> CreateAsync(T obj)
         {
-            int createResult = await base.CreateAsync(obj);
+            var createResult = await base.CreateAsync(obj);
 
             _cache.Add(obj); //Add only if no error while create
 
@@ -45,7 +43,7 @@ namespace AVF.MemberManagement.StandardLibrary.Repositories
 
         public override async Task<int> DeleteAsync(T obj)
         {
-            int deleteResult = await base.DeleteAsync(obj);
+            var deleteResult = await base.DeleteAsync(obj);
 
             _cache.Remove(obj); //Delete only if no error while delete
 

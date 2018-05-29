@@ -18,8 +18,9 @@ namespace AVF.MemberManagement.StandardLibrary.Services
         public static bool UseFileProxies { get; set; }
 
         public static Idiom Idiom { get; set; }
+        public static string Version { get; set; }
 
-        
+
         public static async Task<Wochentag> GetWochentagFromDayOfWeek(IRepository<Wochentag> wochentageRepository, DayOfWeek dayOfWeek)
         {
             var weekday = (int)dayOfWeek;

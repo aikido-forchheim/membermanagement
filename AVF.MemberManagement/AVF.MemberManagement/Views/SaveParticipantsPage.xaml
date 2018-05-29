@@ -1,43 +1,78 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
-             xmlns:userControls="clr-namespace:AVF.MemberManagement.UserControls;assembly=AVF.MemberManagement"
-             prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="AVF.MemberManagement.Views.SaveParticipantsPage">
-             
-    <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
-
-       <Label Text="Einfügen:"></Label>
-
-        <ListView ItemsSource="{Binding Inserts}">
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:converters="clr-namespace:DryLib.Xamarin.Converters;assembly=DryLib.Xamarin.Converters" xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms" xmlns:userControls="clr-namespace:AVF.MemberManagement.UserControls;assembly=AVF.MemberManagement" prism:ViewModelLocator.AutowireViewModel="True" x:Class="AVF.MemberManagement.Views.SaveParticipantsPage" Title="{Binding Training.Description}" Appearing="SaveParticipantsPage_OnAppearing">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:BooleanNotConverter x:Key="BooleanNotConverter">
+            </converters:BooleanNotConverter>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <Grid VerticalOptions="Center" HorizontalOptions="Center" Margin="8,8,8,8" IsVisible="{Binding PassThroughMode, Converter={StaticResource BooleanNotConverter}}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="36">
+            </RowDefinition>
+            <RowDefinition Height="3*">
+            </RowDefinition>
+            <RowDefinition Height="40">
+            </RowDefinition>
+            <RowDefinition Height="1*">
+            </RowDefinition>
+            <RowDefinition Height="32">
+            </RowDefinition>
+            <RowDefinition Height="Auto">
+            </RowDefinition>
+        </Grid.RowDefinitions>
+        <Label Text="Einfügen:" Margin="8,14,0,0">
+        </Label>
+        <ListView RowHeight="28" Grid.Row="1" ItemsSource="{Binding Inserts}" Margin="32,16,0,16">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                            <Label Text="{Binding Vorname}">
+                            </Label>
+                            <Label Text="{Binding Nachname}">
+                            </Label>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Label Grid.Row="2" Text="Entfernen:" Margin="8,8,0,0">
+        </Label>
+        <ListView Grid.Row="3" ItemsSource="{Binding Deletes}" Margin="32,16,0,16">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
                         <StackLayout Orientation="Horizontal">
-                            <Label Text="Max"></Label>
-                            <Label Text="Mustermann"></Label>
+                            <Label Text="{Binding Vorname}">
+                            </Label>
+                            <Label Text="{Binding Nachname}">
+                            </Label>
                         </StackLayout>
                     </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
 
-        <Label Text="Löschen:"></Label>
 
-        <ListView ItemsSource="{Binding Deletes}">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <StackLayout Orientation="Horizontal">
-                            <Label Text="Max"></Label>
-                            <Label Text="Mustermann"></Label>
-                        </StackLayout>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+        <Label Grid.Row="4" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center" Text="Möchten Sie die Änderungen speichern?"></Label>
 
-    </StackLayout>
-
+        <Grid Grid.Row="5">
+            <Grid.Margin>
+                <OnIdiom x:TypeArguments="Thickness">
+                    <OnIdiom.Phone>16,8,16,16</OnIdiom.Phone>
+                    <OnIdiom.Tablet>16,8,16,32</OnIdiom.Tablet>
+                    <OnIdiom.Desktop>16,8,16,48</OnIdiom.Desktop>
+                </OnIdiom>
+            </Grid.Margin>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition>
+                </ColumnDefinition>
+                <ColumnDefinition>
+                </ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Button Text="Nein" VerticalOptions="Center" Style="{StaticResource Button}" Command="{Binding DontSaveCommand}"></Button>
+            <Button Grid.Column="1" Text="Ja" VerticalOptions="Center" Style="{StaticResource Button}" Command="{Binding SaveCommand}"></Button>
+        </Grid>
+    </Grid>
 </ContentPage>

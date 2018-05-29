@@ -8,6 +8,7 @@ using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.Views;
 using Prism.Commands;
 using Prism.Navigation;
+using Microsoft.Extensions.Logging;
 
 namespace AVF.MemberManagement.ViewModels
 {
@@ -15,6 +16,9 @@ namespace AVF.MemberManagement.ViewModels
     {
         private readonly IAccountService _accountService;
         private readonly IPasswordService _passwordService;
+        private readonly IRepository<TrainingsTeilnahme> _trainingsTeilnahmenRepository;
+        private readonly IRepository<Training> _trainingRepository;
+        private readonly IRepository<Mitglied> _mitgliederRepository;
 
         private string _username;
 
@@ -24,12 +28,15 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _username, value);
         }
 
-        public StartPageViewModel(IAccountService accountService, INavigationService navigationService, IPasswordService passwordService) : base(navigationService)
+        public StartPageViewModel(IAccountService accountService, INavigationService navigationService, IPasswordService passwordService, ILogger logger, IRepository<TrainingsTeilnahme> trainingsTeilnahmenRepository, IRepository<Training> trainingRepository, IRepository<Mitglied> mitgliederRepository) : base(navigationService, logger)
         {
             Title = "Startseite";
 
             _accountService = accountService;
             _passwordService = passwordService;
+            _trainingsTeilnahmenRepository = trainingsTeilnahmenRepository;
+            _trainingRepository = trainingRepository;
+            _mitgliederRepository = mitgliederRepository;
 
             NavigateToDaySelectionPageCommand = new DelegateCommand(NavigateToDaySelectionPage, CanNavigateToDaySelectionPage);
         }
@@ -50,7 +57,7 @@ namespace AVF.MemberManagement.ViewModels
 
         #endregion
 
-        public override void OnNavigatedTo(NavigationParameters parameters)
+        public override async void OnNavigatedTo(NavigationParameters parameters)
         {
             try
             {
@@ -59,6 +66,11 @@ namespace AVF.MemberManagement.ViewModels
 
                 Globals.User = user;
                 Username = user.Username;
+
+                //Start caching
+                //await _mitgliederRepository.GetAsync();
+                await _trainingRepository.GetAsync();
+                //await _trainingsTeilnahmenRepository.GetAsync();
             }
             catch (Exception e)
             {

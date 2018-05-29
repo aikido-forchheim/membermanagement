@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms" xmlns:converters="clr-namespace:DryLib.Xamarin.Converters;assembly=DryLib.Xamarin.Converters" prism:ViewModelLocator.AutowireViewModel="True" Title="MenuPage" x:Class="AVF.MemberManagement.Views.MenuPage">
+    <ContentPage.Content>
+        <StackLayout>
+            <StackLayout.Margin>
+                <OnPlatform x:TypeArguments="Thickness">
+                    <OnPlatform.Platforms>
+                        <On Platform="iOS" Value="0,44,0,0" />
+                    </OnPlatform.Platforms>
+                </OnPlatform>
+            </StackLayout.Margin>
+            <Button Text="Abmelden"></Button>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,28 +1,24 @@
 ﻿using Prism.Commands;
 using System;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using AVF.MemberManagement.StandardLibrary.Enums;
 using AVF.MemberManagement.StandardLibrary.Models;
-using AVF.MemberManagement.StandardLibrary.Services;
 using AVF.MemberManagement.Views;
 using Prism.Navigation;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
+using AVF.MemberManagement.StandardLibrary.Services;
 using AVF.MemberManagement.StandardLibrary.Tbo;
+using Microsoft.Extensions.Logging;
 
 namespace AVF.MemberManagement.ViewModels
 {
     public class EditTrainingPageViewModel : ViewModelBase
     {
+        private readonly IRepository<Mitglied> _mitglieder;
         private readonly IRepository<Training> _trainingsRepository;
-
-        private string _selectedDate;
-
-        public string SelectedDateString
-        {
-            get => _selectedDate;
-            set => SetProperty(ref _selectedDate, value);
-        }
 
         private TrainingsModel _training;
 
@@ -40,29 +36,141 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _annotation, value);
         }
 
-        public EditTrainingPageViewModel(INavigationService navigationService, IRepository<Training> trainingsRepository) : base(navigationService)
+        private Mitglied _trainer;
+
+        public Mitglied Trainer
         {
+            get => _trainer;
+            set => SetProperty(ref _trainer, value);
+        }
+
+        private Mitglied _cotrainer1;
+
+        public Mitglied Cotrainer1
+        {
+            get => _cotrainer1;
+            set => SetProperty(ref _cotrainer1, value);
+        }
+
+        private Mitglied _cotrainer2;
+
+        public Mitglied Cotrainer2
+        {
+            get => _cotrainer2;
+            set => SetProperty(ref _cotrainer2, value);
+        }
+
+        private int _participations;
+
+        public int Participations
+        {
+            get => _participations;
+            set => SetProperty(ref _participations, value);
+        }
+
+        private string _additionalTrainerText;
+
+        public string AdditionalTrainerText
+        {
+            get => _additionalTrainerText;
+            set => SetProperty(ref _additionalTrainerText, value);
+        }
+
+        private bool _isNavigationModeBack;
+
+        public bool IsNavigationModeBack
+        {
+            get => _isNavigationModeBack;
+            set => SetProperty(ref _isNavigationModeBack, value);
+        }
+
+        public EditTrainingPageViewModel(INavigationService navigationService, IRepository<Mitglied> mitglieder, IRepository<Training> trainingsRepository, ILogger logger) : base(navigationService, logger)
+        {
+            _mitglieder = mitglieder;
             _trainingsRepository = trainingsRepository;
 
             EnterParticipantsCommand = new DelegateCommand(EnterParticipants, CanEnterParticipants);
+            ChangeTrainerCommand = new DelegateCommand(ChangeTrainer, CanChangeTrainer);
+            LogoutCommand = new DelegateCommand(Logout, CanLogout);
         }
 
-        public override void OnNavigatedTo(NavigationParameters parameters)
+        public override async void OnNavigatedTo(NavigationParameters parameters)
         {
             try
             {
-                if (!parameters.ContainsKey("SelectedTraining")) return;
+                if (parameters.InternalParameters.ContainsKey("__NavigationMode") &&
+                    parameters.InternalParameters["__NavigationMode"].ToString() == "Back")
+                {
+                    IsNavigationModeBack = true;
+                }
+                else
+                {
+                    IsNavigationModeBack = false;
+                }
 
-                SelectedTraining = (TrainingsModel)parameters["SelectedTraining"];
-                SelectedDateString = (string)parameters["SelectedDateString"];
+                if (parameters.ContainsKey("SelectedTraining"))
+                {
+                    SelectedTraining = (TrainingsModel)parameters["SelectedTraining"];
 
-                Title = $"{SelectedTraining.Class.Time} ({SelectedTraining.Class.Trainer.Vorname})";
+                    Title = SelectedTraining.Description;
 
-                Annotation = SelectedTraining.Training.Bemerkung; //erst beim weiter zurück an die Bemerkung binden
+                    Annotation = SelectedTraining.Training.Bemerkung; //erst beim weiter zurück an die Bemerkung binden
+
+                    await SetTrainerFromIds();
+                }
+                else if (parameters.ContainsKey("Trainer"))
+                {
+                    var trainer = (Mitglied)parameters["Trainer"];
+                    var cotrainer1 = (Mitglied)parameters["Cotrainer1"];
+                    var cotrainer2 = (Mitglied)parameters["Cotrainer2"];
+
+                    SelectedTraining.Training.Trainer = trainer.Id;
+                    SelectedTraining.Training.Kotrainer1 = cotrainer1?.Id;
+                    SelectedTraining.Training.Kotrainer2 = cotrainer2?.Id;
+                }
+
+                AdditionalTrainerText = "und 0 weitere...";
+
+                if (SelectedTraining.Training.Kotrainer2 != null && SelectedTraining.Training.Kotrainer2 != -1)
+                {
+                    AdditionalTrainerText = "und 2 weitere...";
+                }
+                else if (SelectedTraining.Training.Kotrainer1 != null && SelectedTraining.Training.Kotrainer1 != -1)
+                {
+                    AdditionalTrainerText = "und 1 weiterer...";
+                }
+
+                Participations = SelectedTraining.Participations.Count();
+
+                Title = Globals.Idiom != Idiom.Phone ? $"{SelectedTraining.Date}, {SelectedTraining.Description}" : SelectedTraining.Description;
+
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
+            }
+        }
+
+        private async Task SetTrainerFromIds()
+        {
+            Trainer = await _mitglieder.GetAsync(SelectedTraining.Training.Trainer);
+
+            if (SelectedTraining.Training.Kotrainer1 != null && SelectedTraining.Training.Kotrainer1 != -1)
+            {
+                Cotrainer1 = await _mitglieder.GetAsync((int)SelectedTraining.Training.Kotrainer1);
+            }
+            else
+            {
+                Cotrainer1 = null;
+            }
+
+            if (SelectedTraining.Training.Kotrainer2 != null && SelectedTraining.Training.Kotrainer2 != -1)
+            {
+                Cotrainer2 = await _mitglieder.GetAsync((int)SelectedTraining.Training.Kotrainer2);
+            }
+            else
+            {
+                Cotrainer2 = null;
             }
         }
 
@@ -74,24 +182,21 @@ namespace AVF.MemberManagement.ViewModels
         {
             try
             {
-                var updateAnnotation = SelectedTraining.Training.Bemerkung != Annotation;
-
                 SelectedTraining.Training.Bemerkung = Annotation;
+
+#pragma warning disable 4014
+                //Really navigate asnyc to avoid button event fired multiple times
+                NavigationService.NavigateAsync(nameof(SaveParticipantsPage), new NavigationParameters { { "SelectedTraining", SelectedTraining } });
+#pragma warning restore 4014
 
                 if (SelectedTraining.Training.Id == 0)
                 {
-                    //TODO: Training anlegen
                     await _trainingsRepository.CreateAsync(SelectedTraining.Training);
-                    //TODO: Achtung beim zurück von EnterParticipants usw. darf nicht noch mal angelegt werden
                 }
-                else if (updateAnnotation)
+                else
                 {
-                    //TODO: Update Traing on change of Bemerkung
+                    await _trainingsRepository.UpdateAsync(SelectedTraining.Training);
                 }
-
-                //var enterParticipantsPageName = Globals.Idiom == Idiom.Phone ? nameof(EnterParticipantsPage) : nameof(EnterParticipantsTabletPage);
-                //await NavigationService.NavigateAsync(enterParticipantsPageName, new NavigationParameters { { "SelectedTraining", SelectedTraining }, { "SelectedDateString", SelectedDateString } });
-                await NavigationService.NavigateAsync(nameof(SaveParticipantsPage), new NavigationParameters { { "SelectedTraining", SelectedTraining }, { "SelectedDateString", SelectedDateString } });
             }
             catch (Exception ex)
             {
@@ -100,6 +205,47 @@ namespace AVF.MemberManagement.ViewModels
         }
 
         private bool CanEnterParticipants()
+        {
+            return true;
+        }
+
+        #endregion
+
+        #region ChangeTrainerCommand
+
+        public ICommand ChangeTrainerCommand { get; }
+
+        private void ChangeTrainer()
+        {
+            try
+            {
+                var navigationParameters = new NavigationParameters { { "SelectedTraining", SelectedTraining }, { "Trainer", Trainer }, { "Cotrainer1", Cotrainer1 }, { "Cotrainer2", Cotrainer2 } };
+
+                NavigationService.NavigateAsync(nameof(SelectTrainerPage), navigationParameters);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
+        }
+
+        private bool CanChangeTrainer()
+        {
+            return true;
+        }
+
+        #endregion
+
+        #region LogoutCommand
+
+        public ICommand LogoutCommand { get; }
+
+        private void Logout()
+        {
+            NavigationService.GoBackToRootAsync();
+        }
+
+        private bool CanLogout()
         {
             return true;
         }

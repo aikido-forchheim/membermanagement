@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Models;
+using AVF.MemberManagement.StandardLibrary.Services;
 using AVF.MemberManagement.StandardLibrary.Tbo;
+using Microsoft.Extensions.Logging;
 
 namespace AVF.MemberManagement.ViewModels
 {
@@ -20,6 +22,9 @@ namespace AVF.MemberManagement.ViewModels
         private readonly IAccountService _accountService;
         private readonly IRepository<User> _usersProxy;
         private readonly IPasswordService _passwordService;
+        private readonly IRepository<TrainingsTeilnahme> _trainingsTeilnahmenRepository;
+        private readonly IRepository<Training> _trainingRepository;
+        private readonly IRepository<Mitglied> _mitgliederRepository;
 
         private DateTime _latestRequestTime;
 
@@ -115,12 +120,15 @@ namespace AVF.MemberManagement.ViewModels
                 }
                 else
                 {
-                    _passwordService.IsValidAsync(Password, ServerUser.Password, App.AppId)
-                        .ContinueWith(isPasswordValidTask =>
-                        {
-                            IsPasswordValid = !isPasswordValidTask.IsFaulted && isPasswordValidTask.Result;
-                            ((DelegateCommand)StartCommand).RaiseCanExecuteChanged();
-                        });
+                    if (ServerUser != null)
+                    {
+                        _passwordService.IsValidAsync(Password, ServerUser.Password, App.AppId)
+                            .ContinueWith(isPasswordValidTask =>
+                            {
+                                IsPasswordValid = !isPasswordValidTask.IsFaulted && isPasswordValidTask.Result;
+                                ((DelegateCommand) StartCommand).RaiseCanExecuteChanged();
+                            });
+                    }
                 }
             }
         }
@@ -176,17 +184,26 @@ namespace AVF.MemberManagement.ViewModels
 
         #endregion
 
+
+        #region Version
+        public string Version => Globals.Version;
+
+        #endregion
+
         #endregion
 
         #region Ctor
 
-        public MainPageViewModel(IAccountService accountService, INavigationService navigationService, IRepository<User> usersProxy, IPasswordService passwordService) : base(navigationService)
+        public MainPageViewModel(IAccountService accountService, INavigationService navigationService, IRepository<User> usersProxy, IPasswordService passwordService, ILogger logger, IRepository<TrainingsTeilnahme> trainingsTeilnahmenRepository, IRepository<Training> trainingRepository, IRepository<Mitglied> mitgliederRepository) : base(navigationService, logger)
         {
             Title = "Anmeldung";
 
             _accountService = accountService;
             _usersProxy = usersProxy;
             _passwordService = passwordService;
+            _trainingsTeilnahmenRepository = trainingsTeilnahmenRepository;
+            _trainingRepository = trainingRepository;
+            _mitgliederRepository = mitgliederRepository;
 
             SettingsCommand = new DelegateCommand(OnSettings, CanSettings);
             StartCommand = new DelegateCommand(OnStart, CanStart);
@@ -209,9 +226,20 @@ namespace AVF.MemberManagement.ViewModels
 
         private void OnStart()
         {
-            var navigationParametersForPasswordPage = new NavigationParameters { { "User", ServerUser } };
+            if (!CanStart()) return;
 
-            NavigationService.NavigateAsync("StartPage", navigationParametersForPasswordPage);
+            if (!IsInitialPassword)
+            {
+                var navigationParametersForPasswordPage = new NavigationParameters {{"User", ServerUser}};
+
+                NavigationService.NavigateAsync("StartPage", navigationParametersForPasswordPage);
+            }
+            else
+            {
+                var navigationParametersForPasswordPage = new NavigationParameters { { "User", ServerUser } };
+
+                NavigationService.NavigateAsync("PasswordPage", navigationParametersForPasswordPage);
+            }
         }
 
         private bool CanStart()
@@ -221,9 +249,7 @@ namespace AVF.MemberManagement.ViewModels
 
         private void OnNewPassword()
         {
-            var navigationParametersForPasswordPage = new NavigationParameters { { "User", ServerUser } };
-
-            NavigationService.NavigateAsync("PasswordPage", navigationParametersForPasswordPage);
+            
         }
 
         private bool CanNewPassword()
@@ -275,5 +301,26 @@ namespace AVF.MemberManagement.ViewModels
         }
 
         #endregion
+
+        public override async void OnNavigatedTo(NavigationParameters parameters)
+        {
+            try
+            {
+                if (parameters.InternalParameters.ContainsKey("__NavigationMode") && parameters.InternalParameters["__NavigationMode"].ToString() == "Back")
+                {
+                    Password = string.Empty;
+                    Username = string.Empty;
+                }
+
+                //Start caching
+                await _mitgliederRepository.GetAsync();
+                //await _trainingRepository.GetAsync();
+                //await _trainingsTeilnahmenRepository.GetAsync();
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.ToString());
+            }
+        }
     }
 }

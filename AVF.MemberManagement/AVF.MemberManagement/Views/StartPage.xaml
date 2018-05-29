@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms" prism:ViewModelLocator.AutowireViewModel="True" x:Class="AVF.MemberManagement.Views.StartPage" Appearing="StartPage_OnAppearing" Title="{Binding Title}">
     <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
-        <Button Text="Mitgliederverwaltung" IsEnabled="False" WidthRequest="256">
+        <Button Text="Mitgliederverwaltung" IsEnabled="False" Style="{StaticResource Button}">
         </Button>
-        <Button x:Name="BtnDaySelection" Text="Trainingsteilnahme" IsEnabled="False" Command="{Binding NavigateToDaySelectionPageCommand}" WidthRequest="256">
+        <Button x:Name="BtnDaySelection" Text="Trainingsteilnahme" IsEnabled="False" Command="{Binding NavigateToDaySelectionPageCommand}" Style="{StaticResource Button}">
         </Button>
-        <Button Text="Trainingsstatistiken" IsEnabled="False" WidthRequest="256">
+        <Button Text="Trainingsstatistiken" IsEnabled="False" Style="{StaticResource Button}">
         </Button>
-        <Button Text="Prüfungen" IsEnabled="False" WidthRequest="256">
+        <Button Text="Prüfungen" IsEnabled="False" Style="{StaticResource Button}">
         </Button>
-        <Button Text="Nafuda-gake" IsEnabled="False" WidthRequest="256">
+        <Button Text="Nafuda-gake" IsEnabled="False" Style="{StaticResource Button}">
         </Button>
     </StackLayout>
 </ContentPage>

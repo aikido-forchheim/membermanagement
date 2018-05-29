@@ -1,41 +1,29 @@
-﻿using Prism.Mvvm;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using AVF.MemberManagement.StandardLibrary.Enums;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Models;
+using AVF.MemberManagement.StandardLibrary.Services;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Prism.Navigation;
-using System.Windows.Input;
-using AVF.MemberManagement.Views;
-using Prism.Commands;
+using Microsoft.Extensions.Logging;
 
 namespace AVF.MemberManagement.ViewModels
 {
-    public class EnterParticipantsPageViewModel : ViewModelBase
+    public class EnterParticipantsPageViewModel : FindMembersViewModelBase
     {
         private readonly IRepository<Mitglied> _mitgliederRepository;
         private readonly IRepository<Training> _trainingsRepository;
         private readonly IRepository<TrainingsTeilnahme> _trainingsTeilnahmenRepository;
 
-        public string ParticipantsCountText => $"Bereits eingetragene Teilnehmer ({Participants.Count}):";
-        public string PreviousParticipantsCountText => $"Zuletzt anwesend ({PreviousParticipants.Count}):";
-        public string FoundMembersCountText => $"Gefundene Mitglieder ({FoundMembers.Count}):";
+        private readonly ObservableCollection<Mitglied> _originalParticipantsList = new ObservableCollection<Mitglied>();
+        private readonly List<Mitglied> _insertList = new List<Mitglied>();
+        private readonly List<Mitglied> _deletedList = new List<Mitglied>();
 
-
-        #region Mitglieder, aktuelles Datum und Training
-
-        private List<Mitglied> _mitglieder = new List<Mitglied>();
-
-        private string _selectedDate;
-
-        public string SelectedDateString
-        {
-            get => _selectedDate;
-            set => SetProperty(ref _selectedDate, value);
-        }
+        #region TrainingsModel
 
         private TrainingsModel _training;
 
@@ -46,129 +34,27 @@ namespace AVF.MemberManagement.ViewModels
         }
 
         #endregion
-
-        #region Participants
-
-        private ObservableCollection<Mitglied> _originalParticipantsList = new ObservableCollection<Mitglied>();
-
-        private ObservableCollection<Mitglied> _participants = new ObservableCollection<Mitglied>();
-        public ObservableCollection<Mitglied> Participants
-        {
-            get => _participants;
-            set => SetProperty(ref _participants, value);
-        }
-
-        private Mitglied _selectedParticipant;
-        public Mitglied SelectedParticipant
-        {
-            get => _selectedParticipant;
-            set
-            {
-                SetProperty(ref _selectedParticipant, value);
-                ((DelegateCommand)RemoveParticipantCommand).RaiseCanExecuteChanged();
-            }
-        }
-
-        #endregion
-
+        
         #region PreviousParicipants
 
         private ObservableCollection<Mitglied> _previousParticipants = new ObservableCollection<Mitglied>();
 
-        public ObservableCollection<Mitglied> PreviousParticipants
+        public override ObservableCollection<Mitglied> PreviousParticipants
         {
             get => _previousParticipants;
             set => SetProperty(ref _previousParticipants, value);
         }
 
-        private Mitglied _selectedPreviousParticipant;
-
-        public Mitglied SelectedPreviousParticipant
-        {
-            get => _selectedPreviousParticipant;
-            set
-            {
-                SetProperty(ref _selectedPreviousParticipant, value);
-                ((DelegateCommand)AddPreviousParticipantCommand).RaiseCanExecuteChanged();
-            }
-        }
-
         #endregion
 
-        #region FindMembers
-
-        private string _searchText = string.Empty;
-
-        public string SearchText
-        {
-            get => _searchText;
-            set
-            {
-                SetProperty(ref _searchText, value);
-                FindMembers(_searchText);
-                RaisePropertyChanged(nameof(FoundMembersCountText));
-                ((DelegateCommand)ClearSearchTextCommand).RaiseCanExecuteChanged();
-                ((DelegateCommand)AddAndClearSearchTextCommand).RaiseCanExecuteChanged();
-            }
-        }
-
-        private bool _childrenOnly;
-
-        public bool ChildrenOnly
-        {
-            get => _childrenOnly;
-            set
-            {
-                SetProperty(ref _childrenOnly, value);
-                FindMembers(_searchText);
-                RaisePropertyChanged(nameof(FoundMembersCountText));
-            }
-        }
-
-        private ObservableCollection<Mitglied> _foundMembers = new ObservableCollection<Mitglied>();
-
-        public ObservableCollection<Mitglied> FoundMembers
-        {
-            get => _foundMembers;
-            set => SetProperty(ref _foundMembers, value);
-        }
-
-        private Mitglied _selectedMember;
-
-        public Mitglied SelectedMember
-        {
-            get => _selectedMember;
-            set
-            {
-                SetProperty(ref _selectedMember, value);
-                ((DelegateCommand)AddFoundMemberCommand).RaiseCanExecuteChanged();
-            }
-        }
-
-        #endregion
-
-        List<Mitglied> _insertList = new List<Mitglied>();
-        List<Mitglied> _deletedList = new List<Mitglied>();
-
-        public ICommand RemoveParticipantCommand { get; set; }
-        public ICommand AddPreviousParticipantCommand { get; set; }
-        public ICommand AddFoundMemberCommand { get; set; }
-        public ICommand ClearSearchTextCommand { get; set; }
-        public ICommand AddAndClearSearchTextCommand { get; set; }
-
-
-        public EnterParticipantsPageViewModel(IRepository<Mitglied> mitgliederRepository, IRepository<Training> trainingsRepository, IRepository<TrainingsTeilnahme> trainingsTeilnahmenRepository, INavigationService navigationService) : base(navigationService)
+        #region ctor
+        public EnterParticipantsPageViewModel(IRepository<Mitglied> mitgliederRepository, IRepository<Training> trainingsRepository, IRepository<TrainingsTeilnahme> trainingsTeilnahmenRepository, INavigationService navigationService, ILogger logger) : base(navigationService, logger)
         {
             _mitgliederRepository = mitgliederRepository;
             _trainingsRepository = trainingsRepository;
             _trainingsTeilnahmenRepository = trainingsTeilnahmenRepository;
-
-            AddPreviousParticipantCommand = new DelegateCommand(AddPreviousParticipant, CanAddPreviousParticipant);
-            AddFoundMemberCommand = new DelegateCommand(AddFoundMember, CanAddFoundMember);
-            RemoveParticipantCommand = new DelegateCommand(RemoveParticipant, CanRemoveParticipant);
-            ClearSearchTextCommand = new DelegateCommand(ClearSearchText, CanClearSearchText);
-            AddAndClearSearchTextCommand = new DelegateCommand(AddAndClearSearchText, CanAddAndClearSearchText);
         }
+        #endregion
 
         #region INavigatedAware
 
@@ -176,16 +62,16 @@ namespace AVF.MemberManagement.ViewModels
         {
             if (!parameters.ContainsKey("SelectedTraining")) return;
 
-            _participants.Clear();
+            Participants.Clear();
 
-            SelectedDateString = (string)parameters["SelectedDateString"];
             Training = (TrainingsModel)parameters["SelectedTraining"];
+            
             ChildrenOnly = Training.Training.Kindertraining;
 
-            Title = $"{Training.Class.Time} ({Training.Class.Trainer.Vorname})";
+            Title = Globals.Idiom != Idiom.Phone ? $"{Training.Date}, {Training.Description}" : Training.Description;
 
-            _mitglieder = await _mitgliederRepository.GetAsync();
-            _mitglieder.Sort(CompareMemberNames);
+            Mitglieder = await _mitgliederRepository.GetAsync();
+            Mitglieder.Sort(CompareMemberNames);
 
             #region GetExistingParticipants()
             foreach (var existingParticipant in GetExistingParticipants())
@@ -194,14 +80,16 @@ namespace AVF.MemberManagement.ViewModels
             }
             #endregion
             await FindPreviousParticipants();
-            FindMembers(_searchText);
+            FindMembers(SearchText);
 
             RaiseCounterPropertiesChanged();
         }
 
         public override void OnNavigatedFrom(NavigationParameters parameters)
         {
-            IsDirty();
+            if (ShouldCancel) return;
+
+            FillLists();
 
             parameters.Add(NavigationParameter.SelectedTraining, Training);
             parameters.Add("DeletedList", _deletedList);
@@ -210,113 +98,13 @@ namespace AVF.MemberManagement.ViewModels
 
         #endregion
 
-
-        #region RemoveParticipantCommand
-
-        private bool CanRemoveParticipant()
-        {
-            return Participants != null && Participants.Count > 0 && SelectedParticipant != null && Participants.Contains(SelectedParticipant);
-        }
-
-        private async void RemoveParticipant()
-        {
-            Participants.Remove(SelectedParticipant);
-
-            ((DelegateCommand)RemoveParticipantCommand).RaiseCanExecuteChanged();
-
-            await FindPreviousParticipants();
-            FindMembers(_searchText);
-
-            RaiseCounterPropertiesChanged();
-        }
-
-        #endregion
-
-        #region AddPreviousParticipantCommand
-
-        private bool CanAddPreviousParticipant()
-        {
-            return PreviousParticipants != null && PreviousParticipants.Count > 0 && SelectedPreviousParticipant != null && PreviousParticipants.Contains(SelectedPreviousParticipant);
-        }
-
-        private void AddPreviousParticipant()
-        {
-            Participants.Add(SelectedPreviousParticipant);
-
-            FoundMembers.Remove(SelectedPreviousParticipant);
-            PreviousParticipants.Remove(SelectedPreviousParticipant);
-
-            ((DelegateCommand)AddPreviousParticipantCommand).RaiseCanExecuteChanged();
-
-            RaiseCounterPropertiesChanged();
-        }
-
-        #endregion
-
-        #region AddFoundMemberCommand
-
-        private bool CanAddFoundMember()
-        {
-            return FoundMembers != null && FoundMembers.Count > 0 && SelectedMember != null && FoundMembers.Contains(SelectedMember);
-        }
-
-        private void AddFoundMember()
-        {
-            Participants.Add(SelectedMember);
-
-            PreviousParticipants.Remove(SelectedMember);
-            FoundMembers.Remove(SelectedMember);
-
-            ((DelegateCommand)AddFoundMemberCommand).RaiseCanExecuteChanged();
-
-            RaiseCounterPropertiesChanged();
-
-            if (FoundMembers.Count == 0) ClearSearchText();
-        }
-
-        #endregion
-
-        #region ClearSearchTextCommand
-
-        private void ClearSearchText()
-        {
-            SearchText = string.Empty;
-        }
-
-        private bool CanClearSearchText()
-        {
-            return !string.IsNullOrEmpty(SearchText);
-        }
-
-        #endregion
-
-        #region AddAndClearSearchTextCommand
-
-        private void AddAndClearSearchText()
-        {
-            if (FoundMembers != null && FoundMembers.Count == 1)
-            {
-                SelectedMember = FoundMembers[0];
-
-                AddFoundMember();
-
-                SearchText = string.Empty;
-            }
-        }
-
-        private bool CanAddAndClearSearchText()
-        {
-            return FoundMembers != null && FoundMembers.Count == 1;
-        }
-
-        #endregion
-
+        #region Helper
 
         private ObservableCollection<Mitglied> GetExistingParticipants()
         {
             foreach (var trainingParticipation in Training.Participations)
             {
-                var member = _mitglieder.Single(m => m.Id == trainingParticipation.MitgliedID);
+                var member = Mitglieder.Single(m => m.Id == trainingParticipation.MitgliedID);
 
                 Participants.Add(member);
             }
@@ -324,7 +112,7 @@ namespace AVF.MemberManagement.ViewModels
             return Participants;
         }
 
-        private async Task FindPreviousParticipants()
+        public override async Task FindPreviousParticipants()
         {
             try
             {
@@ -362,7 +150,7 @@ namespace AVF.MemberManagement.ViewModels
                     if (Participants.Any(p => p.Id == memberMapping.Key))
                         continue;
 
-                    PreviousParticipants.Add(_mitglieder.Single(m => m.Id == memberMapping.Key));
+                    PreviousParticipants.Add(Mitglieder.Single(m => m.Id == memberMapping.Key));
                 }
             }
 
@@ -372,93 +160,12 @@ namespace AVF.MemberManagement.ViewModels
             }
         }
 
-        private void FindMembers(string searchText)
-        {
-            FoundMembers.Clear();
-
-            searchText = searchText ?? "";
-
-            var searchStrings = searchText.Split(' ');
-
-            var foundMembers = _mitglieder.Where(m =>
-            {
-                var argVorname = m.Vorname ?? string.Empty;
-                var argNachname = m.Nachname ?? string.Empty;
-
-                if (m.Vorname == null && m.Nachname == null) return false;
-
-                var allSearchStringsMatch = true;
-                foreach (var searchString in searchStrings)
-                {
-                    var containsNamePart = DoesNamePartsContain(searchString, argVorname, argNachname);
-                    if (!containsNamePart) allSearchStringsMatch = false;
-                }
-
-                return allSearchStringsMatch
-                &&     !Participants.Contains(m) 
-                &&     !HasResigned(m) 
-                &&     (
-                           !ChildrenOnly && m.Geburtsdatum <= DateTime.Now - TimeSpan.FromDays(365 * 18)
-                           ||
-                           ChildrenOnly && m.Geburtsdatum > DateTime.Now - TimeSpan.FromDays(365 * 18)
-                       )
-                ;
-            });
-
-            foreach (var foundMember in foundMembers)
-            {
-                FoundMembers.Add(foundMember);
-            }
-        }
-        
-
-        #region Helper
-
-        private static int CompareMemberNames(Mitglied x, Mitglied y)
-        {
-            var argVornameX = x.Vorname ?? string.Empty;
-            var argNachnameX = x.Nachname ?? string.Empty;
-
-            var argVornameY = y.Vorname ?? string.Empty;
-            var argNachnameY = y.Nachname ?? string.Empty;
-
-            var namex = argVornameX + argNachnameX;
-            var namey = argVornameY + argNachnameY;
-
-            var compareResult = string.Compare(namex, namey, StringComparison.Ordinal);
-
-            return compareResult;
-        }
-
-        private static bool DoesNamePartsContain(string searchText, string argVorname, string argNachname)
-        {
-            return argVorname.ToLower().Contains(searchText.ToLower()) ||
-                                   argNachname.ToLower().Contains(searchText.ToLower());
-        }
-
-        private void RaiseCounterPropertiesChanged()
-        {
-            RaisePropertyChanged(nameof(ParticipantsCountText));
-            RaisePropertyChanged(nameof(PreviousParticipantsCountText));
-            RaisePropertyChanged(nameof(FoundMembersCountText));
-        }
-
-        private static bool HasResigned(Mitglied mitglied)
-        {
-            if (mitglied.Austritt == null)
-                return false;
-
-            var resignDate = (DateTime)mitglied.Austritt;
-
-            return resignDate < DateTime.Now;
-        }
-
-        public bool IsDirty()
+        public bool FillLists()
         {
             _insertList.Clear();
             _deletedList.Clear();
 
-            foreach (var participant in _participants)
+            foreach (var participant in Participants)
             {
                 if (!_originalParticipantsList.Contains(participant))
                 {
@@ -468,7 +175,7 @@ namespace AVF.MemberManagement.ViewModels
 
             foreach (var participant in _originalParticipantsList)
             {
-                if (!_participants.Contains(participant))
+                if (!Participants.Contains(participant))
                 {
                     _deletedList.Add(participant);
                 }

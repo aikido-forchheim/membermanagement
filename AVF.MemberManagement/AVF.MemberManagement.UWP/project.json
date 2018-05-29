@@ -8,12 +8,12 @@
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.3.3",
     "Newtonsoft.Json": "10.0.2",
     "PCLCrypto": "2.0.147",
-    "Prism.Core": "6.3.0",
-    "Prism.Forms": "6.3.0",
-    "Prism.Unity.Forms": "6.3.0",
-    "Unity": "4.0.1",
+    "Prism.Core": "7.0.0.396",
+    "Prism.Forms": "7.0.0.396",
+    "Prism.Unity.Forms": "7.0.0.396",
+    "Unity": "5.8.6",
     "Xamarin.Auth": "1.5.0",
-    "Xamarin.Forms": "2.5.0.121934"
+    "Xamarin.Forms": "2.5.0.122203"
   },
   "frameworks": {
     "uap10.0.10586": {}

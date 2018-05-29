@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 
 namespace AVF.MemberManagement.StandardLibrary.Models
@@ -11,6 +9,10 @@ namespace AVF.MemberManagement.StandardLibrary.Models
 
         public Training Training { get; set; }
 
-        public List<TrainingsTeilnahme> Participations { get; set; }
+        public IEnumerable<TrainingsTeilnahme> Participations { get; set; }
+
+        public string Date { get; set; }
+
+        public string Description { get; set; }
     }
 }

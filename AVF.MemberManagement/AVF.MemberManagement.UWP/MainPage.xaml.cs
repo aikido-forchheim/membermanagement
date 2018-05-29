@@ -1,6 +1,8 @@
 ﻿using Windows.UI.Core;
 using Prism.Unity;
-using Microsoft.Practices.Unity;
+using Prism;
+using Prism.Ioc;
+using Unity;
 
 namespace AVF.MemberManagement.UWP
 {
@@ -19,9 +21,9 @@ namespace AVF.MemberManagement.UWP
 
     public class UwpInitializer : IPlatformInitializer
     {
-        public void RegisterTypes(IUnityContainer container)
+        public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-
+            
         }
     }
 

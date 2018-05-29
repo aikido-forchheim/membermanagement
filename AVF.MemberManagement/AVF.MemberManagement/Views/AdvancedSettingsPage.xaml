@@ -5,7 +5,7 @@
         </Label>
         <Switch IsToggled="{Binding UseFileProxies}">
         </Switch>
-        <Button Text="Refresh Cache" Command="{Binding RefreshCacheCommand}">
+        <Button Text="Refresh Cache" Command="{Binding RefreshCacheCommand}" Style="{StaticResource Button}">
         </Button>
         <Label Text="{Binding CacheMessage}">
         </Label>

@@ -9,12 +9,16 @@ using AVF.MemberManagement.StandardLibrary.Services;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.Views;
 using Prism.Navigation;
+using Microsoft.Extensions.Logging;
 
 namespace AVF.MemberManagement.ViewModels
 {
     public class DaySelectionPageViewModel : ViewModelBase
     {
         private readonly IRepository<Wochentag> _wochentageRepository;
+        private readonly IRepository<TrainingsTeilnahme> _trainingsTeilnahmenRepository;
+        private readonly IRepository<Training> _trainingRepository;
+        private readonly IRepository<Mitglied> _mitgliederRepository;
         private DateTime _selectedDate = DateTime.Now;
 
         public DateTime SelectedDate
@@ -57,14 +61,23 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _buttonText, value);
         }
 
-        public DaySelectionPageViewModel(INavigationService navigationService, IRepository<Wochentag> wochentageRepository) : base(navigationService)
+        public DaySelectionPageViewModel(INavigationService navigationService, IRepository<Wochentag> wochentageRepository, ILogger logger, IRepository<TrainingsTeilnahme> trainingsTeilnahmenRepository, IRepository<Training> trainingRepository, IRepository<Mitglied> mitgliederRepository) : base(navigationService, logger)
         {
             _wochentageRepository = wochentageRepository;
+            _trainingsTeilnahmenRepository = trainingsTeilnahmenRepository;
+            _trainingRepository = trainingRepository;
+            _mitgliederRepository = mitgliederRepository;
 
             Title = "Trainingsteilnahme";
 
-            MinDate = DateTime.Now - new TimeSpan(64, 0, 0, 0);
+            MinDate = DateTime.Now - new TimeSpan(365, 0, 0, 0);
             MaxDate = DateTime.Now;
+
+            //Samstag ist kein Training, Workaround um am Samstag beim Debuggen nicht ständig Datum wechseln zu müssen
+            if (SelectedDate.DayOfWeek == DayOfWeek.Saturday)
+            {
+                SelectedDate = SelectedDate - TimeSpan.FromDays(1);
+            }
 
             NavigateToKursSelectionPageCommand = new DelegateCommand(NavigateToKursSelectionPage, CanNavigateToKursSelectionPage);
         }
@@ -85,5 +98,13 @@ namespace AVF.MemberManagement.ViewModels
         }
 
         #endregion
+
+        public override async void OnNavigatedTo(NavigationParameters parameters)
+        {
+            //Start caching
+            //await _mitgliederRepository.GetAsync();
+            //await _trainingRepository.GetAsync();
+            await _trainingsTeilnahmenRepository.GetAsync();
+        }
     }
 }

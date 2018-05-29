@@ -14,5 +14,10 @@ namespace AVF.MemberManagement.Views
         {
             BtnToday.Focus();
         }
+
+        private void DatePicker_OnDateSelected(object sender, DateChangedEventArgs e)
+        {
+            BtnToday.Focus();
+        }
     }
 }

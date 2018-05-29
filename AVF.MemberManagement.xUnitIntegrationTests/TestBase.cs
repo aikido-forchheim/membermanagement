@@ -1,5 +1,7 @@
 ﻿using AVF.MemberManagement.StandardLibrary.Interfaces;
 using Microsoft.Practices.Unity;
+using Prism.Ioc;
+using Xamarin.Forms;
 
 namespace AVF.MemberManagement.xUnitIntegrationTests
 {
@@ -11,10 +13,11 @@ namespace AVF.MemberManagement.xUnitIntegrationTests
 
         public TestBase()
         {
-            Bootstrapper = new Bootstrapper(false);
-            Bootstrapper.Run();
+            Forms.Init();
 
-            Bootstrapper.Container.RegisterType<ITokenService, UnitTestTokenService>();
+            Bootstrapper = new Bootstrapper(false);
+
+            Bootstrapper.ContainerRegistry.Register<ITokenService, UnitTestTokenService>();
         }
     }
 }

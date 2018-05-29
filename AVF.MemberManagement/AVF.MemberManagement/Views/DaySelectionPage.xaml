@@ -4,8 +4,25 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="AVF.MemberManagement.Views.DaySelectionPage" Appearing="DaySelectionPage_OnAppearing" Title="{Binding Title}">
-    <StackLayout Grid.Row="1" VerticalOptions="Center" HorizontalOptions="Center">
-        <DatePicker Date="{Binding SelectedDate}" MinimumDate="{Binding MinDate}" MaximumDate="{Binding MaxDate}"></DatePicker>
-        <Button x:Name="BtnToday" Text="{Binding ButtonText}" Command="{Binding NavigateToKursSelectionPageCommand}" WidthRequest="256"></Button>
+    <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+        
+
+        <DatePicker Margin="0,64,0,8" DateSelected="DatePicker_OnDateSelected" Date="{Binding SelectedDate}" MinimumDate="{Binding MinDate}" MaximumDate="{Binding MaxDate}"></DatePicker>
+
+        <StackLayout Orientation="Horizontal" Margin="0,0,0,32">
+            <Label Text="Bitte wählen Sie ein Datum" HorizontalOptions="Center"></Label>
+            <Label Text="zwischen" HorizontalOptions="Center"></Label>
+            <Label Text="{Binding MinDate, StringFormat='{0:dd. MMMM yyyy}'}" HorizontalOptions="Center"></Label>
+            <Label Text="und" HorizontalOptions="Center"></Label>
+            <Label Text="{Binding MaxDate, StringFormat='{0:dd. MMMM yyyy}'}" HorizontalOptions="Center"></Label>
+        </StackLayout>
+
+        <Label HorizontalOptions="Center" Text="Gewähltes Datum:" FontAttributes="Bold" Margin="0,0,0,8"></Label>
+        <StackLayout HorizontalOptions="Center" Orientation="Horizontal" Margin="0,0,0,32">
+            <Label x:Name="LblToday" Text="{Binding ButtonText}"></Label>
+            <Label Text=", "></Label>
+            <Label Text="{Binding SelectedDate, StringFormat='{0:dd. MMMM yyyy}'}"></Label>
+        </StackLayout>
+        <Button x:Name="BtnToday" Text="Weiter" Command="{Binding NavigateToKursSelectionPageCommand}" Style="{StaticResource Button}"></Button>
     </StackLayout>
 </ContentPage>

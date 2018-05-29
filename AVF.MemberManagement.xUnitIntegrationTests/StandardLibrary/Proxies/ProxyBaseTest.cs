@@ -9,6 +9,7 @@ using FakeItEasy;
 using Microsoft.Extensions.Logging;
 using Microsoft.Practices.Unity;
 using System.Threading.Tasks;
+using Prism.Ioc;
 using Xunit;
 
 namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary.Proxies

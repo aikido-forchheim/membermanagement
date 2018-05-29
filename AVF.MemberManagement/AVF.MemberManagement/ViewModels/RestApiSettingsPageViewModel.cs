@@ -47,7 +47,7 @@ namespace AVF.MemberManagement.ViewModels
 
         public ICommand BackCommand { get; }
 
-        public RestApiSettingsPageViewModel(ILogger logger, IAccountService accountService, INavigationService navigationService, IProxyBase<Setting, string> settingsProxy) : base(navigationService)
+        public RestApiSettingsPageViewModel(ILogger logger, IAccountService accountService, INavigationService navigationService, IProxyBase<Setting, string> settingsProxy) : base(navigationService, logger)
         {
             Title = "Einstellungen";
 
