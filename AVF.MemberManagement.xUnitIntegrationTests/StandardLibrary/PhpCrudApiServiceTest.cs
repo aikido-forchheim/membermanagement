@@ -7,6 +7,7 @@ using Microsoft.Practices.Unity;
 using System.Threading.Tasks;
 using Xunit;
 using System.Text.RegularExpressions;
+using Prism.Ioc;
 
 namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary
 {

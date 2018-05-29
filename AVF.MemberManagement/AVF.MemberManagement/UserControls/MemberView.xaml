@@ -38,7 +38,7 @@
                         </OnPlatform.Platforms>
                     </OnPlatform>
                 </StackLayout.Margin>
-                <Label BindingContext="{Binding Source={x:Reference This}, Path=OriginalBindingContext}" Text="{Binding Vorname}" VerticalOptions="Center">
+                <Label BindingContext="{Binding Source={x:Reference This}, Path=OriginalBindingContext}" Text="{Binding FirstName}" VerticalOptions="Center">
                 </Label>
                 <Label BindingContext="{Binding Source={x:Reference This}, Path=OriginalBindingContext}" Text="{Binding Nachname}" VerticalOptions="Center">
                 </Label>

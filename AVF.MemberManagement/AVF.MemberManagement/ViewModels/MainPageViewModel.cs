@@ -120,12 +120,15 @@ namespace AVF.MemberManagement.ViewModels
                 }
                 else
                 {
-                    _passwordService.IsValidAsync(Password, ServerUser.Password, App.AppId)
-                        .ContinueWith(isPasswordValidTask =>
-                        {
-                            IsPasswordValid = !isPasswordValidTask.IsFaulted && isPasswordValidTask.Result;
-                            ((DelegateCommand)StartCommand).RaiseCanExecuteChanged();
-                        });
+                    if (ServerUser != null)
+                    {
+                        _passwordService.IsValidAsync(Password, ServerUser.Password, App.AppId)
+                            .ContinueWith(isPasswordValidTask =>
+                            {
+                                IsPasswordValid = !isPasswordValidTask.IsFaulted && isPasswordValidTask.Result;
+                                ((DelegateCommand) StartCommand).RaiseCanExecuteChanged();
+                            });
+                    }
                 }
             }
         }
@@ -303,9 +306,10 @@ namespace AVF.MemberManagement.ViewModels
         {
             try
             {
-                if (parameters.ContainsKey("__NavigationMode") && parameters["__NavigationMode"].ToString() == "Back")
+                if (parameters.InternalParameters.ContainsKey("__NavigationMode") && parameters.InternalParameters["__NavigationMode"].ToString() == "Back")
                 {
                     Password = string.Empty;
+                    Username = string.Empty;
                 }
 
                 //Start caching

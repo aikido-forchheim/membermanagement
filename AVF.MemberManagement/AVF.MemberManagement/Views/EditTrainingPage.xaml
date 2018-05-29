@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ContentPage Appearing="EditTrainingPage_OnAppearing" xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms" prism:ViewModelLocator.AutowireViewModel="True" x:Class="AVF.MemberManagement.Views.EditTrainingPage" Title="{Binding Title}">
+<ContentPage Appearing="EditTrainingPage_OnAppearing" xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             xmlns:converters="clr-namespace:DryLib.Xamarin.Converters;assembly=DryLib.Xamarin.Converters"
+             prism:ViewModelLocator.AutowireViewModel="True" x:Class="AVF.MemberManagement.Views.EditTrainingPage" Title="{Binding Title}">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:BooleanNotConverter x:Key="BooleanNotConverter">
+            </converters:BooleanNotConverter>
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
         <StackLayout WidthRequest="256" Margin="0,0,0,0">
             <Label Text="Übungsleiter:">
@@ -10,12 +18,22 @@
                 <Button Text="+" Style="{StaticResource Button}" WidthRequest="44" HorizontalOptions="End">
                 </Button>
             </StackLayout>
+            <Label Text="{Binding AdditionalTrainerText}"></Label>
         </StackLayout>
         <StackLayout WidthRequest="384" Margin="0,64,0,64">
+            <Label Text="Notiz:">
+            </Label>
             <Editor Text="{Binding Annotation}" HeightRequest="128">
             </Editor>
         </StackLayout>
-        <Button x:Name="ButtonEnterParticpants" Text="Weiter" WidthRequest="256" Command="{Binding EnterParticipantsCommand}" Style="{StaticResource Button}">
+        <StackLayout Orientation="Horizontal">
+            <Label Text="Teilnehmer: "></Label>
+            <Label Text="{Binding Participations}"></Label>
+        </StackLayout>
+        <Button x:Name="ButtonEnterParticpants" Text="Speichern und Weiter" WidthRequest="256" Command="{Binding EnterParticipantsCommand}" Style="{StaticResource Button}">
         </Button>
+        <Label Margin="0,32,0,0" IsVisible="{Binding IsNavigationModeBack, Converter={StaticResource BooleanNotConverter}}" Text="Bitte vergessen Sie nicht, sich nach der Trainingserfassung abzumelden:" TextColor="White"></Label>
+        <Label Margin="0,32,0,0" IsVisible="{Binding IsNavigationModeBack}" Text="Bitte vergessen Sie nicht, sich nach der Trainingserfassung abzumelden:" TextColor="DarkRed"></Label>
+        <Button IsVisible="{Binding IsNavigationModeBack}" Command="{Binding LogoutCommand}" Text="Abmelden" Style="{StaticResource Button}"></Button>
     </StackLayout>
 </ContentPage>

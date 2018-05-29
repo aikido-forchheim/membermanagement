@@ -7,6 +7,7 @@ using AVF.MemberManagement.StandardLibrary.Tbo;
 using FakeItEasy;
 using Microsoft.Extensions.Logging;
 using Microsoft.Practices.Unity;
+using Prism.Ioc;
 using Xunit;
 
 namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary.Proxies

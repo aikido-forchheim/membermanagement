@@ -1,12 +1,15 @@
 ﻿using Prism.Commands;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using AVF.MemberManagement.StandardLibrary.Enums;
 using AVF.MemberManagement.StandardLibrary.Models;
 using AVF.MemberManagement.Views;
 using Prism.Navigation;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
+using AVF.MemberManagement.StandardLibrary.Services;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Microsoft.Extensions.Logging;
 
@@ -57,6 +60,30 @@ namespace AVF.MemberManagement.ViewModels
             set => SetProperty(ref _cotrainer2, value);
         }
 
+        private int _participations;
+
+        public int Participations
+        {
+            get => _participations;
+            set => SetProperty(ref _participations, value);
+        }
+
+        private string _additionalTrainerText;
+
+        public string AdditionalTrainerText
+        {
+            get => _additionalTrainerText;
+            set => SetProperty(ref _additionalTrainerText, value);
+        }
+
+        private bool _isNavigationModeBack;
+
+        public bool IsNavigationModeBack
+        {
+            get => _isNavigationModeBack;
+            set => SetProperty(ref _isNavigationModeBack, value);
+        }
+
         public EditTrainingPageViewModel(INavigationService navigationService, IRepository<Mitglied> mitglieder, IRepository<Training> trainingsRepository, ILogger logger) : base(navigationService, logger)
         {
             _mitglieder = mitglieder;
@@ -64,12 +91,23 @@ namespace AVF.MemberManagement.ViewModels
 
             EnterParticipantsCommand = new DelegateCommand(EnterParticipants, CanEnterParticipants);
             ChangeTrainerCommand = new DelegateCommand(ChangeTrainer, CanChangeTrainer);
+            LogoutCommand = new DelegateCommand(Logout, CanLogout);
         }
 
         public override async void OnNavigatedTo(NavigationParameters parameters)
         {
             try
             {
+                if (parameters.InternalParameters.ContainsKey("__NavigationMode") &&
+                    parameters.InternalParameters["__NavigationMode"].ToString() == "Back")
+                {
+                    IsNavigationModeBack = true;
+                }
+                else
+                {
+                    IsNavigationModeBack = false;
+                }
+
                 if (parameters.ContainsKey("SelectedTraining"))
                 {
                     SelectedTraining = (TrainingsModel)parameters["SelectedTraining"];
@@ -90,6 +128,22 @@ namespace AVF.MemberManagement.ViewModels
                     SelectedTraining.Training.Kotrainer1 = cotrainer1?.Id;
                     SelectedTraining.Training.Kotrainer2 = cotrainer2?.Id;
                 }
+
+                AdditionalTrainerText = "und 0 weitere...";
+
+                if (SelectedTraining.Training.Kotrainer2 != null && SelectedTraining.Training.Kotrainer2 != -1)
+                {
+                    AdditionalTrainerText = "und 2 weitere...";
+                }
+                else if (SelectedTraining.Training.Kotrainer1 != null && SelectedTraining.Training.Kotrainer1 != -1)
+                {
+                    AdditionalTrainerText = "und 1 weiterer...";
+                }
+
+                Participations = SelectedTraining.Participations.Count();
+
+                Title = Globals.Idiom != Idiom.Phone ? $"{SelectedTraining.Date}, {SelectedTraining.Description}" : SelectedTraining.Description;
+
             }
             catch (Exception ex)
             {
@@ -130,6 +184,11 @@ namespace AVF.MemberManagement.ViewModels
             {
                 SelectedTraining.Training.Bemerkung = Annotation;
 
+#pragma warning disable 4014
+                //Really navigate asnyc to avoid button event fired multiple times
+                NavigationService.NavigateAsync(nameof(SaveParticipantsPage), new NavigationParameters { { "SelectedTraining", SelectedTraining } });
+#pragma warning restore 4014
+
                 if (SelectedTraining.Training.Id == 0)
                 {
                     await _trainingsRepository.CreateAsync(SelectedTraining.Training);
@@ -138,8 +197,6 @@ namespace AVF.MemberManagement.ViewModels
                 {
                     await _trainingsRepository.UpdateAsync(SelectedTraining.Training);
                 }
-
-                await NavigationService.NavigateAsync(nameof(SaveParticipantsPage), new NavigationParameters { { "SelectedTraining", SelectedTraining } });
             }
             catch (Exception ex)
             {
@@ -173,6 +230,22 @@ namespace AVF.MemberManagement.ViewModels
         }
 
         private bool CanChangeTrainer()
+        {
+            return true;
+        }
+
+        #endregion
+
+        #region LogoutCommand
+
+        public ICommand LogoutCommand { get; }
+
+        private void Logout()
+        {
+            NavigationService.GoBackToRootAsync();
+        }
+
+        private bool CanLogout()
         {
             return true;
         }

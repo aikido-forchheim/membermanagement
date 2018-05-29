@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Microsoft.Practices.Unity;
+using Prism.Ioc;
 using Xunit;
 
 namespace AVF.MemberManagement.xUnitIntegrationTests.StandardLibrary

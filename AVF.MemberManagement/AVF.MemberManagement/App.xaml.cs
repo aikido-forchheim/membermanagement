@@ -37,8 +37,8 @@ namespace AVF.MemberManagement
 
             Globals.Idiom = (Idiom)(int)Device.Idiom;
 
-            //await NavigationService.NavigateAsync("NavigationPage/MainPage");
-            await NavigationService.NavigateAsync("MainMasterDetailPage");
+            await NavigationService.NavigateAsync("NavigationPage/MainPage");
+            //await NavigationService.NavigateAsync("MainMasterDetailPage");
         }
 
         protected override void RegisterTypes(IContainerRegistry Container)

@@ -95,6 +95,8 @@ namespace AVF.MemberManagement.ViewModels
                 var deletedList = parameters["DeletedList"] as List<Mitglied>;
                 var insertList = parameters["InsertList"] as List<Mitglied>;
 
+                Title = Globals.Idiom != Idiom.Phone ? $"{Training?.Date}, {Training?.Description}" : Training?.Description;
+
                 if ((deletedList == null || deletedList.Count == 0) && (insertList == null || insertList.Count == 0))
                 {
                     await NavigationService.GoBackAsync();
@@ -187,9 +189,9 @@ namespace AVF.MemberManagement.ViewModels
                         MitgliedID = memberToInsertToTraining.Id,
                         TrainingID = Training.Training.Id,
                         DatensatzAngelegtAm = DateTime.Now,
-                        DatensatzAngelegtVon = Globals.User.Id,
+                        DatensatzAngelegtVon = Globals.User.Mitgliedsnummer,
                         DatensatzGeaendertAm = DateTime.Now,
-                        DatensatzGeaendertVon = Globals.User.Id
+                        DatensatzGeaendertVon = Globals.User.Mitgliedsnummer
                     };
 
                     await _trainingsTeilnahmenRepository.CreateAsync(trainingsTeilnahme);

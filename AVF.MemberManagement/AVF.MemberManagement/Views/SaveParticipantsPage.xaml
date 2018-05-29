@@ -18,7 +18,7 @@
             </RowDefinition>
             <RowDefinition Height="32">
             </RowDefinition>
-            <RowDefinition Height="1*">
+            <RowDefinition Height="Auto">
             </RowDefinition>
         </Grid.RowDefinitions>
         <Label Text="Einfügen:" Margin="8,14,0,0">
@@ -62,7 +62,7 @@
                 <OnIdiom x:TypeArguments="Thickness">
                     <OnIdiom.Phone>16,8,16,16</OnIdiom.Phone>
                     <OnIdiom.Tablet>16,8,16,32</OnIdiom.Tablet>
-                    <OnIdiom.Desktop>16,8,16,64</OnIdiom.Desktop>
+                    <OnIdiom.Desktop>16,8,16,48</OnIdiom.Desktop>
                 </OnIdiom>
             </Grid.Margin>
             <Grid.ColumnDefinitions>
