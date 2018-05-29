@@ -18,6 +18,8 @@ namespace AVF.MemberManagement.Reports
 
         public ReportMain()
         {
+            Xamarin.Forms.Forms.Init();
+
             P_formMain = this;
             InitializeComponent();
             InitDatabase();
@@ -31,25 +33,32 @@ namespace AVF.MemberManagement.Reports
 
         private async Task InitDatabase()
         {
-            IContainerProvider P_container;
-            var bootstrapper = new Bootstrapper(false);
-            
-            P_container = bootstrapper.Container;
-            await Globals.Initialize
-            (
-                P_container, 
-                tick: s => { progressBar1.PerformStep(); ShowAnimationString(s); }
-            );
-            panelLoadDb.Dispose();
-            m_UndoRedo = new ReportsUndoRedo(P_formMain);
+            try
+            {
+                IContainerProvider P_container;
+                var bootstrapper = new Bootstrapper(false);
 
-            m_descriptor = new ReportDescriptor
-                            (
-                                xAxisType: typeof(AxisTypeCourse),
-                                yAxisType: typeof(AxisTypeMember),
-                                timeRange: new TimeRange(DateTime.Now.Year - 1)
-                            );
-            m_UndoRedo.SwitchTo(new ReportTrainingsParticipation(m_descriptor, tick: s => ShowAnimationString(s)));
+                P_container = bootstrapper.Container;
+                await Globals.Initialize
+                (
+                    P_container,
+                    tick: s => { progressBar1.PerformStep(); ShowAnimationString(s); }
+                );
+                panelLoadDb.Dispose();
+                m_UndoRedo = new ReportsUndoRedo(P_formMain);
+
+                m_descriptor = new ReportDescriptor
+                                (
+                                    xAxisType: typeof(AxisTypeCourse),
+                                    yAxisType: typeof(AxisTypeMember),
+                                    timeRange: new TimeRange(DateTime.Now.Year - 1)
+                                );
+                m_UndoRedo.SwitchTo(new ReportTrainingsParticipation(m_descriptor, tick: s => ShowAnimationString(s)));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
 
         public string SwitchToPanel(ReportBase panel)
