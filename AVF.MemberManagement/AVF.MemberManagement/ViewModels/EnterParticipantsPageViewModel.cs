@@ -143,7 +143,7 @@ namespace AVF.MemberManagement.ViewModels
                 //now order dict by counter (second int)
                 var myList = mitgliederCount.ToList();
 
-                myList.Sort((pair1, pair2) => pair1.Value.CompareTo(pair2.Value)); //order descending
+                myList.Sort((pair1, pair2) => pair2.Value.CompareTo(pair1.Value)); //order descending
 
                 foreach (var memberMapping in myList)
                 {
