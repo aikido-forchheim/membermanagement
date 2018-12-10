@@ -4,5 +4,22 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="AVF.CourseParticipation.Views.LoginPage">
-  
+    <StackLayout>
+        <Image x:Name="Logo" WidthRequest="128" VerticalOptions="FillAndExpand" HorizontalOptions="Center" >
+            <Image.Source>
+                <UriImageSource CacheValidity="1" CachingEnabled="True" Uri="https://raw.githubusercontent.com/aikido-forchheim/assets/master/logo1024.jpg">
+                </UriImageSource>
+            </Image.Source>
+        </Image>
+
+        <StackLayout HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="200">
+            <Label>Benutzername:</Label>
+            <Entry x:Name="Benutzername"></Entry>
+            <Label>Passwort:</Label>
+            <Entry x:Name="Passwort"></Entry>
+            <Button Text="Anmelden"></Button>
+        </StackLayout>
+
+        <Label x:Name="Version" VerticalOptions="EndAndExpand" HorizontalTextAlignment="End">2.0.0</Label>
+    </StackLayout>
 </ContentPage>
