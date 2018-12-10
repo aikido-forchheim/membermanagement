@@ -10,7 +10,7 @@ build:
 build_script:
   - msbuild "/t:SignAndroidPackage" "/p:Configuration=Release" "/p:AndroidKeyStore=true" "/p:AndroidSigningKeyAlias=AVF.MemberManagement" "/p:AndroidSigningKeyPass=%keystore-password%" "/p:AndroidSigningKeyStore=AVF.CourseParticipation.keystore" "/p:AndroidSigningStorePass=%keystore-password%" "./AVF.CourseParticipation/AVF.CourseParticipation.Android/AVF.CourseParticipation.Android.csproj"
 artifacts:
-  - path: AVF.CourseParticipation\AVF.CourseParticipation.Android\bin\Release\AVF.CourseParticipation.Android-Signed.apk
+  - path: AVF.CourseParticipation\AVF.CourseParticipation.Android\bin\Release\de.aikido-forchheim.courseparticipation.apk
 test: off
 branches:
   only:
