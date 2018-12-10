@@ -15,10 +15,10 @@
 
         <StackLayout HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="200">
             <Label>Benutzername:</Label>
-            <Entry x:Name="Benutzername"></Entry>
+            <Entry x:Name="Benutzername" Keyboard="Email"></Entry>
             <Label>Passwort:</Label>
-            <Entry x:Name="Passwort"></Entry>
-            <Button Text="Anmelden"></Button>
+            <Entry x:Name="Passwort" IsPassword="True"></Entry>
+            <Button Text="Anmelden" Command="{Binding LoginCommand}"></Button>
         </StackLayout>
 
         <StackLayout Orientation="Horizontal" VerticalOptions="EndAndExpand">
