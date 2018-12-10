@@ -4,9 +4,9 @@ environment:
   keystore-password:
     secure: AuYtvfURKiNNrIb/UIAgP/CoHSZQ/pDJcr9g62l7cLg=
 before_build:
-- cmd: nuget restore AVF.CourseParticipation.sln
+- cmd: nuget restore AVF.Android.sln
 build:
-  project: AVF.CourseParticipation.sln
+  project: AVF.Android.sln
 build_script:
   - msbuild "/t:SignAndroidPackage" "/p:Configuration=Release" "/p:AndroidKeyStore=true" "/p:AndroidSigningKeyAlias=AVF.CourseParticipation" "/p:AndroidSigningKeyPass=%keystore-password%" "/p:AndroidSigningKeyStore=AVF.CourseParticipation.keystore" "/p:AndroidSigningStorePass=%keystore-password%" "./AVF.CourseParticipation/AVF.CourseParticipation.Android/AVF.CourseParticipation.Android.csproj"
 artifacts:
