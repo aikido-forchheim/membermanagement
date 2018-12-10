@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AVF.CourseParticipation.iOS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AVF.CourseParticipation.UWP", "AVF.CourseParticipation\AVF.CourseParticipation.UWP\AVF.CourseParticipation.UWP.csproj", "{402EF3A3-2F9C-47FD-93F9-234096BCBD72}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AVF.MemberManagement.StandardLibrary", "..\AVF.MemberManagement.StandardLibrary\AVF.MemberManagement.StandardLibrary.csproj", "{89887671-CB19-44A5-9221-20428E550B8E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AVF.MemberManagement.StandardLibrary", "AVF.MemberManagement.StandardLibrary\AVF.MemberManagement.StandardLibrary.csproj", "{89887671-CB19-44A5-9221-20428E550B8E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
