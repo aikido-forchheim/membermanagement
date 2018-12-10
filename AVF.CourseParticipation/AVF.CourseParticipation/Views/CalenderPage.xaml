@@ -3,11 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="AVF.CourseParticipation.Views.CalenderPage">
+             x:Class="AVF.CourseParticipation.Views.CalenderPage" Title="Kalender">
     <StackLayout>
         <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="Center">
             <DatePicker></DatePicker>
-            <Button Text="Weiter" Margin="0,16,0,0"></Button>
+            <Button Text="Weiter" Margin="0,16,0,0" Command="{Binding SelectCourseCommand}" ></Button>
         </StackLayout>
     </StackLayout>
 </ContentPage>
