@@ -4,13 +4,13 @@ environment:
   keystore-password:
     secure: AuYtvfURKiNNrIb/UIAgP/CoHSZQ/pDJcr9g62l7cLg=
 before_build:
-- cmd: nuget restore AVF.Android.sln
+- cmd: nuget restore AVF.CourseParticipation\AVF.CourseParticipation.sln
 build:
-  project: AVF.Android.sln
+  project: AVF.CourseParticipation\AVF.CourseParticipation.sln
 build_script:
-  - msbuild "/t:SignAndroidPackage" "/p:Configuration=Release" "/p:AndroidKeyStore=true" "/p:AndroidSigningKeyAlias=AVF.CourseParticipation" "/p:AndroidSigningKeyPass=%keystore-password%" "/p:AndroidSigningKeyStore=AVF.CourseParticipation.keystore" "/p:AndroidSigningStorePass=%keystore-password%" "./AVF.CourseParticipation/AVF.CourseParticipation.Android/AVF.CourseParticipation.Android.csproj"
+  - msbuild "/t:SignAndroidPackage" "/p:Configuration=Release" "/p:AndroidKeyStore=true" "/p:AndroidSigningKeyAlias=AVF.CourseParticipation" "/p:AndroidSigningKeyPass=%keystore-password%" "/p:AndroidSigningKeyStore=AVF.CourseParticipation.keystore" "/p:AndroidSigningStorePass=%keystore-password%" "./AVF.CourseParticipation\AVF.CourseParticipation\AVF.CourseParticipation.Android/AVF.CourseParticipation.Android.csproj"
 artifacts:
-  - path: AVF.CourseParticipation\AVF.CourseParticipation.Android\bin\Release\AVF.CourseParticipation.Android-Signed.apk
+  - path: AVF.CourseParticipation\AVF.CourseParticipation\AVF.CourseParticipation.Android\bin\Release\AVF.CourseParticipation.Android-Signed.apk
 test: off
 branches:
   only:
