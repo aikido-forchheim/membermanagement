@@ -12,6 +12,14 @@ namespace AVF.CourseParticipation.ViewModels
 	{
 	    public ICommand SelectCourseCommand { get; }
 
+	    private DateTime _selectedDate = DateTime.Today;
+
+	    public DateTime SelectedDate
+	    {
+	        get => _selectedDate;
+	        set => SetProperty(ref _selectedDate, value);
+	    }
+
         public CalenderPageViewModel(INavigationService navigationService) : base(navigationService)
         {
             SelectCourseCommand = new DelegateCommand(SelectCourse, CanSelectCourse);

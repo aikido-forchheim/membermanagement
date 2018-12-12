@@ -2,11 +2,12 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             xmlns:cal="clr-namespace:XamForms.Controls;assembly=XamForms.Controls.Calendar"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="AVF.CourseParticipation.Views.CalenderPage" Title="Kalender">
     <StackLayout>
         <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="Center">
-            <DatePicker></DatePicker>
+            <cal:Calendar SelectedDate="{Binding SelectedDate}" WidthRequest="340"></cal:Calendar>
             <Button Text="Weiter" Margin="0,16,0,0" Command="{Binding SelectCourseCommand}" ></Button>
         </StackLayout>
     </StackLayout>
