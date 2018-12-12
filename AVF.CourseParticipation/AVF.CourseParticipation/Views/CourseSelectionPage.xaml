@@ -6,7 +6,10 @@
              x:Class="AVF.CourseParticipation.Views.CourseSelectionPage" Title="Kursauswahl">
     <StackLayout>
         <StackLayout HorizontalOptions="Center">
-            <Label HorizontalOptions="Center" Text="{Binding SelectedDate, StringFormat='{0:d. MMMM yyyy}'}" VerticalOptions="StartAndExpand" FontSize="Large" Margin="32"></Label>
+            <StackLayout VerticalOptions="StartAndExpand" HorizontalOptions="Center" Margin="32">
+                <Label HorizontalOptions="Center" Text="{Binding SelectedDate, StringFormat='{0:d. MMMM yyyy}'}" FontSize="Large"></Label>
+                <Label HorizontalOptions="Center" Text="(Heute)"></Label>
+            </StackLayout>
             <ListView HasUnevenRows="True" ItemsSource="{Binding CourseSelectionInfos}" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="320">
                 <ListView.ItemTemplate>
                     <DataTemplate>
