@@ -36,6 +36,7 @@ namespace AVF.CourseParticipation
             containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();
             containerRegistry.RegisterForNavigation<CalenderPage, CalenderPageViewModel>();
             containerRegistry.RegisterForNavigation<CourseSelectionPage, CourseSelectionPageViewModel>();
+            containerRegistry.RegisterForNavigation<SelectParticipantsPage, SelectParticipantsPageViewModel>();
         }
     }
 }
