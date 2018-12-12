@@ -5,33 +5,32 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="AVF.CourseParticipation.Views.CourseSelectionPage" Title="Kursauswahl">
     <StackLayout>
-        <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="Center">
-            <Button Text="10:15-11:30   Hermann Kirsch    (07)" Margin="6">
-                <Button.FontFamily>
-                    <OnPlatform x:TypeArguments="x:String">
-                        <On Platform="UWP">Consolas</On>
-                        <On Platform="iOS">Courier New</On>
-                        <On Platform="Android">monospace</On>
-                    </OnPlatform>
-                </Button.FontFamily>
-            </Button>
-            <Button Text="17:00-19:00   Günther Reich     (00)" Margin="6">
-                <Button.FontFamily>
-                    <OnPlatform x:TypeArguments="x:String">
-                        <On Platform="UWP">Consolas</On>
-                        <On Platform="iOS">Courier New</On>
-                        <On Platform="Android">monospace</On>
-                    </OnPlatform>
-                </Button.FontFamily></Button>
-            <Button Text="19:00-21:00   Klaus Schmoranz   (00)" Margin="6">
-                <Button.FontFamily>
-                    <OnPlatform x:TypeArguments="x:String">
-                        <On Platform="UWP">Consolas</On>
-                        <On Platform="iOS">Courier New</On>
-                        <On Platform="Android">monospace</On>
-                    </OnPlatform>
-                </Button.FontFamily></Button>
-            <!--          Uhrzeit    3  Längster Name  3  (größter Teilnehmerzahl) -->
+        <StackLayout HorizontalOptions="Center">
+            <Label HorizontalOptions="Center" Text="{Binding SelectedDate, StringFormat='{0:d. MMMM yyyy}'}" VerticalOptions="StartAndExpand" FontSize="Large" Margin="32"></Label>
+            <ListView HasUnevenRows="True" ItemsSource="{Binding CourseSelectionInfos}" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="320">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Margin="8" Padding="8" Spacing="8">
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="{Binding From, StringFormat='{}{0:hh\\:mm}'}" FontAttributes="Bold" />
+                                    <Label Text="-" FontAttributes="Bold" />
+                                    <Label Text="{Binding To, StringFormat='{}{0:hh\\:mm}'}" FontAttributes="Bold" />
+                                </StackLayout>
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="{Binding FirstName}" />
+                                    <Label Text="{Binding LastName}" />
+                                </StackLayout>
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="Teilnehmer:" />
+                                    <Label Text="{Binding Participants}" />
+                                </StackLayout>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Button Text="Weiter" HorizontalOptions="Fill" VerticalOptions="EndAndExpand" Margin="32"></Button>
         </StackLayout>
     </StackLayout>
 </ContentPage>

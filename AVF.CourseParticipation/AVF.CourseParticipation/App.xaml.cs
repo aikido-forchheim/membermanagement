@@ -1,4 +1,6 @@
-﻿using Prism;
+﻿using System.Globalization;
+using System.Threading;
+using Prism;
 using Prism.Ioc;
 using AVF.CourseParticipation.ViewModels;
 using AVF.CourseParticipation.Views;
@@ -21,6 +23,8 @@ namespace AVF.CourseParticipation
 
         protected override async void OnInitialized()
         {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("de-DE");
+
             InitializeComponent();
 
             await NavigationService.NavigateAsync("NavigationPage/LoginPage");

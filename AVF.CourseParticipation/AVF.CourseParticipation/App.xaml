@@ -4,8 +4,12 @@
              xmlns:prism="clr-namespace:Prism.Unity;assembly=Prism.Unity.Forms"
              x:Class="AVF.CourseParticipation.App">
 	<Application.Resources>
-
-		<!-- Application resource dictionary -->
-
+        <!-- Application resource dictionary -->
+        <ResourceDictionary>
+            <Color x:Key="Night">#000000</Color>
+            <Color x:Key="Sun">#FE0000</Color>
+            <Color x:Key="Roof">#FE9900</Color>
+            <Color x:Key="Torii">#FECC00</Color>
+        </ResourceDictionary>
 	</Application.Resources>
 </prism:PrismApplication>
