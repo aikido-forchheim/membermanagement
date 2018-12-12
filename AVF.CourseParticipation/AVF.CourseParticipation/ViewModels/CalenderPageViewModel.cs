@@ -11,8 +11,9 @@ namespace AVF.CourseParticipation.ViewModels
 	public class CalenderPageViewModel : ViewModelBase
 	{
 	    public ICommand SelectCourseCommand { get; }
+	    public ICommand SetTodayCommand { get; }
 
-	    private DateTime _selectedDate = DateTime.Today;
+        private DateTime _selectedDate = DateTime.Today;
 
 	    public DateTime SelectedDate
 	    {
@@ -23,6 +24,17 @@ namespace AVF.CourseParticipation.ViewModels
         public CalenderPageViewModel(INavigationService navigationService) : base(navigationService)
         {
             SelectCourseCommand = new DelegateCommand(SelectCourse, CanSelectCourse);
+            SetTodayCommand = new DelegateCommand(SetToday, CanSetToday);
+        }
+
+        private bool CanSetToday()
+        {
+            return true;
+        }
+
+        private void SetToday()
+        {
+            SelectedDate = DateTime.Today;
         }
 
         private bool CanSelectCourse()
