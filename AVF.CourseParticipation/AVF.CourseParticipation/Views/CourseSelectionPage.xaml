@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="AVF.CourseParticipation.Views.CourseSelectionPage" Title="Kursauswahl">
+             x:Class="AVF.CourseParticipation.Views.CourseSelectionPage" Style="{StaticResource ContentPageStyle}" Title="Kursauswahl">
     <StackLayout>
         <StackLayout HorizontalOptions="Center">
             <StackLayout VerticalOptions="StartAndExpand" HorizontalOptions="Center" Margin="32">
@@ -33,7 +33,7 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <Button Text="Weiter" Command="{Binding EnterPartipantsCommand}" HorizontalOptions="Fill" VerticalOptions="EndAndExpand" Margin="32"></Button>
+            <Button Text="Weiter" Command="{Binding EnterParticipantsCommand}" HorizontalOptions="Fill" VerticalOptions="EndAndExpand" Margin="32"></Button>
         </StackLayout>
     </StackLayout>
 </ContentPage>

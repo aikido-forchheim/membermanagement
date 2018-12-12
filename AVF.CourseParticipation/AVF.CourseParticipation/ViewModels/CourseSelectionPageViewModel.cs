@@ -3,6 +3,7 @@ using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
 using AVF.CourseParticipation.Models;
@@ -78,6 +79,14 @@ namespace AVF.CourseParticipation.ViewModels
 
         private void EnterParticipants()
         {
+            try
+            {
+                NavigationService.NavigateAsync("SelectParticipantsPage");
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception);
+            }
         }
 
         private bool CanEnterParticipants()

@@ -4,7 +4,7 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              xmlns:cal="clr-namespace:XamForms.Controls;assembly=XamForms.Controls.Calendar"
              prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="AVF.CourseParticipation.Views.CalenderPage" Title="Kalender" Padding="6">
+             x:Class="AVF.CourseParticipation.Views.CalenderPage" Title="Kalender" Style="{StaticResource ContentPageStyle}">
     <StackLayout>
         <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="Center">
             <cal:Calendar SelectedDate="{Binding SelectedDate}" WidthRequest="340" SelectedBackgroundColor="{StaticResource Sun}" SelectedBorderColor="{StaticResource Torii}"></cal:Calendar>
