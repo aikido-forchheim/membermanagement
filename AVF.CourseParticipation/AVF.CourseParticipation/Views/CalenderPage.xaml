@@ -7,8 +7,13 @@
              x:Class="AVF.CourseParticipation.Views.CalenderPage" Title="Kalender" Style="{StaticResource ContentPageStyle}">
     <StackLayout>
         <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="Center">
-            <cal:Calendar SelectedDate="{Binding SelectedDate}" WidthRequest="340" SelectedBackgroundColor="{StaticResource Sun}" SelectedBorderColor="{StaticResource Torii}"></cal:Calendar>
-            <Button Text="Heute" Margin="0,0,0,0" Command="{Binding SetTodayCommand}" ></Button>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Fill">
+                <Button Text="&lt;" x:Name="PreviousMonthButton" Clicked="PreviousMonthButton_OnClicked" HorizontalOptions="Start"></Button>
+                <Button Text="&gt;" x:Name="NextMonthButton" Clicked="NextMonthButton_OnClicked" HorizontalOptions="EndAndExpand"></Button>
+            </StackLayout>
+            <cal:Calendar x:Name="Calendar" TitleLeftArrowIsVisible="False" TitleRightArrowIsVisible="False" SelectedDate="{Binding SelectedDate}" WidthRequest="340" SelectedBackgroundColor="{StaticResource Sun}" SelectedBorderColor="{StaticResource Torii}"></cal:Calendar>
+            <Button Text="Heute" x:Name="TodayButton" Margin="0,0,0,0" Command="{Binding SetTodayCommand}" Clicked="TodayButton_OnClicked"></Button>
+            <Label Text="{Binding SelectedDate, StringFormat='{0:dddd, d. MMMM yyyy}'}" HorizontalOptions="Center"></Label>
             <Button Text="Weiter" Margin="0,16,0,0" Command="{Binding SelectCourseCommand}" ></Button>
         </StackLayout>
     </StackLayout>
