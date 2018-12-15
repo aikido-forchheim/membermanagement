@@ -5,35 +5,35 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="AVF.CourseParticipation.Views.CourseSelectionPage" Style="{StaticResource ContentPageStyle}" Title="Kursauswahl">
     <StackLayout>
-            <StackLayout VerticalOptions="StartAndExpand" HorizontalOptions="Center" Margin="32">
-                <Label HorizontalOptions="Center" Text="{Binding SelectedDate, StringFormat='{0:d. MMMM yyyy}'}" FontSize="Large"></Label>
-                <Label HorizontalOptions="Center" Text="(Heute)" FontSize="Medium"></Label>
-            </StackLayout>
-        <ListView VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="340" HasUnevenRows="True" ItemsSource="{Binding CourseSelectionInfos}" SelectedItem="{Binding CourseSelectionInfo, Mode=TwoWay}">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <StackLayout Margin="8" Padding="8" Spacing="8">
-                                <StackLayout Orientation="Horizontal">
-                                    <Label Text="{Binding From, StringFormat='{}{0:hh\\:mm}'}" FontSize="Medium" />
-                                    <Label Text="-" FontSize="Medium" />
-                                    <Label Text="{Binding To, StringFormat='{}{0:hh\\:mm}'}" FontSize="Medium" />
-                                </StackLayout>
-                                <StackLayout Orientation="Horizontal">
-                                    <Label Text="{Binding FirstName}" FontAttributes="Bold" />
-                                    <Label Text="{Binding LastName}" FontAttributes="Bold" />
-                                </StackLayout>
-                                <StackLayout Orientation="Horizontal">
-                                    <Label Text="Teilnehmer:" />
-                                    <Label Text="{Binding Participants}" />
-                                </StackLayout>
-                            </StackLayout>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-            <StackLayout VerticalOptions="EndAndExpand" Margin="8" Padding="8">
-                <Button Text="Weiter" Command="{Binding EnterParticipantsCommand}" HorizontalOptions="Center" Style="{StaticResource MainButton}"></Button>
-            </StackLayout>
+        <StackLayout Style="{StaticResource StartStackLayoutStyle}">
+            <Label Style="{StaticResource Title1Style}" Text="{Binding SelectedDate, StringFormat='{0:d. MMMM yyyy}'}"></Label>
+            <Label Style="{StaticResource Title2Style}" Text="(Heute)"></Label>
         </StackLayout>
+        <ListView Style="{StaticResource CenterStackLayoutStyle}" HasUnevenRows="True" ItemsSource="{Binding CourseSelectionInfos}" SelectedItem="{Binding CourseSelectionInfo, Mode=TwoWay}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Margin="8" Padding="8" Spacing="8">
+                            <StackLayout Orientation="Horizontal">
+                                <Label Style="{StaticResource Title2Style}" Text="{Binding From, StringFormat='{}{0:hh\\:mm}'}" />
+                                <Label Style="{StaticResource Title2Style}" Text="-" />
+                                <Label Style="{StaticResource Title2Style}" Text="{Binding To, StringFormat='{}{0:hh\\:mm}'}" />
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Style="{StaticResource Title3Style}" Text="{Binding FirstName}" />
+                                <Label Style="{StaticResource Title3Style}" Text="{Binding LastName}" />
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="Teilnehmer:" FontAttributes="Italic" />
+                                <Label Text="{Binding Participants}" FontAttributes="Italic" />
+                            </StackLayout>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <StackLayout Style="{StaticResource EndStackLayoutStyle}">
+            <Button Style="{StaticResource MainButtonStyle}" Text="Weiter" Command="{Binding EnterParticipantsCommand}"></Button>
+        </StackLayout>
+    </StackLayout>
 </ContentPage>

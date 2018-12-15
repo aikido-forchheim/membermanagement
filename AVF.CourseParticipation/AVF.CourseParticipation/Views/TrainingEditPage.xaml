@@ -12,20 +12,20 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <StackLayout>
-        <StackLayout VerticalOptions="StartAndExpand" HorizontalOptions="Center" Margin="32">
-            <Label HorizontalOptions="Center" Text="{Binding SelectedDate, StringFormat='{0:d. MMMM yyyy}'}" FontSize="Large"></Label>
-            <Label HorizontalOptions="Center" Text="17:30-19:00" FontSize="Medium"></Label>
+        <StackLayout Style="{StaticResource StartStackLayoutStyle}">
+            <Label Style="{StaticResource Title1Style}" Text="{Binding SelectedDate, StringFormat='{0:d. MMMM yyyy}'}"></Label>
+            <Label Style="{StaticResource Title2Style}" Text="17:30-19:00"></Label>
             <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-                <Label Text="Julia Vilkova" FontAttributes="Bold" Margin="8"></Label>
-                <Label Text="Markus Malz" FontAttributes="Bold" Margin="8"></Label>
+                <Label Style="{StaticResource Title3Style}" Text="Julia Vilkova" Margin="8"></Label>
+                <Label Style="{StaticResource Title3Style}" Text="Markus Malz" Margin="8"></Label>
             </StackLayout>
             <Button HorizontalOptions="Center" Text="Trainer ändern" Style="{StaticResource EditButtonStyle}"></Button>
         </StackLayout>
-        <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Margin="0,0,0,32">
+        <StackLayout Style="{StaticResource CenterStackLayoutStyle}" Margin="0,0,0,32">
             <Button Text="Notiz hinzufügen" Style="{StaticResource EditButtonStyle}"></Button>
         </StackLayout>
-        <StackLayout VerticalOptions="EndAndExpand" Margin="8" Padding="8">
-            <Button Text="Weiter" Command="{Binding SelectCourseCommand}" HorizontalOptions="Center" Style="{StaticResource MainButton}"></Button>
+        <StackLayout Style="{StaticResource EndStackLayoutStyle}">
+            <Button Style="{StaticResource MainButtonStyle}" Text="Weiter" Command="{Binding SelectCourseCommand}"></Button>
         </StackLayout>
     </StackLayout>
 </ContentPage>
