@@ -39,5 +39,15 @@ namespace AVF.CourseParticipation
             containerRegistry.RegisterForNavigation<TrainingEditPage, TrainingEditPageViewModel>();
             containerRegistry.RegisterForNavigation<ParticipantsSelectionPage, ParticipantsSelectionPageViewModel>();
         }
+        protected override void OnResume()
+        {
+            base.OnResume();
+        }
+
+        protected override async void OnSleep()
+        {
+            base.OnSleep();
+            await Current.SavePropertiesAsync();
+        }
     }
 }
