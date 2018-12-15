@@ -10,6 +10,10 @@
             <Color x:Key="Sun">#FE0000</Color>
             <Color x:Key="Roof">#FE9900</Color>
             <Color x:Key="Torii">#FECC00</Color>
+            <Style TargetType="NavigationPage">
+                <Setter Property="BarBackgroundColor" Value="Black"/>
+                <Setter Property="BarTextColor" Value="White"/>
+            </Style>
             <Style x:Key="ContentPageStyle" TargetType="ContentPage">
                 <Setter Property="Padding" Value="6" />
             </Style>
