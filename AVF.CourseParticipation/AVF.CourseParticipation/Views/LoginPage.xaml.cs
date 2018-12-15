@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using System;
+using Xamarin.Forms;
 
 namespace AVF.CourseParticipation.Views
 {
@@ -7,6 +8,18 @@ namespace AVF.CourseParticipation.Views
         public LoginPage()
         {
             InitializeComponent();
+        }
+
+        private void LoginPage_OnAppearing(object sender, EventArgs e)
+        {
+            if (UsernameEntry.Text.Length > 0)
+            {
+                PasswordEntry.Focus();
+            }
+            else
+            {
+                UsernameEntry.Focus();
+            }
         }
     }
 }

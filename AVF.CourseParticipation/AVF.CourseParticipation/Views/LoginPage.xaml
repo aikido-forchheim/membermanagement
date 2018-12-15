@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="AVF.CourseParticipation.Views.LoginPage" Style="{StaticResource ContentPageStyle}" Title="Anmeldung">
+             x:Class="AVF.CourseParticipation.Views.LoginPage" Style="{StaticResource ContentPageStyle}" Title="Anmeldung"
+             Appearing="LoginPage_OnAppearing"
+             >
     <StackLayout>
         
         <Image x:Name="Logo" WidthRequest="128" VerticalOptions="FillAndExpand" HorizontalOptions="Center" >
@@ -15,9 +17,9 @@
 
         <StackLayout Style="{StaticResource CenterStackLayoutStyle}" WidthRequest="200">
             <Label>Benutzername:</Label>
-            <Entry x:Name="Benutzername" Keyboard="Email" Text="{Binding Username}"></Entry>
+            <Entry x:Name="UsernameEntry" Keyboard="Email" Text="{Binding Username}"></Entry>
             <Label>Passwort:</Label>
-            <Entry x:Name="Passwort" IsPassword="True"></Entry>
+            <Entry x:Name="PasswordEntry" IsPassword="True"></Entry>
             <Button Style="{StaticResource MainButtonStyle}" Text="Anmelden" Command="{Binding LoginCommand}" Margin="0,32,0,0"></Button>
         </StackLayout>
 
