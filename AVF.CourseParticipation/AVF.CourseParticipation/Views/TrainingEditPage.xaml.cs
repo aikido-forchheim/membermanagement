@@ -2,9 +2,9 @@
 
 namespace AVF.CourseParticipation.Views
 {
-    public partial class SelectParticipantsPage : TabbedPage
+    public partial class TrainingEditPage : ContentPage
     {
-        public SelectParticipantsPage()
+        public TrainingEditPage()
         {
             InitializeComponent();
         }

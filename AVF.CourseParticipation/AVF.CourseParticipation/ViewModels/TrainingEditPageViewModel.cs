@@ -6,9 +6,9 @@ using System.Linq;
 
 namespace AVF.CourseParticipation.ViewModels
 {
-	public class SelectParticipantsPageViewModel : BindableBase
+	public class TrainingEditPageViewModel : BindableBase
 	{
-        public SelectParticipantsPageViewModel()
+        public TrainingEditPageViewModel()
         {
 
         }

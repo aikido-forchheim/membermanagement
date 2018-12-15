@@ -81,7 +81,7 @@ namespace AVF.CourseParticipation.ViewModels
         {
             try
             {
-                NavigationService.NavigateAsync("SelectParticipantsPage");
+                NavigationService.NavigateAsync("TrainingEditPage");
             }
             catch (Exception exception)
             {
