@@ -12,20 +12,20 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <StackLayout>
-            <StackLayout VerticalOptions="StartAndExpand" HorizontalOptions="Center" Margin="32">
-                <Label HorizontalOptions="Center" Text="{Binding SelectedDate, StringFormat='{0:d. MMMM yyyy}'}" FontSize="Large"></Label>
-                <Label HorizontalOptions="Center" Text="17:30-19:00" FontSize="Medium"></Label>
-                <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-                    <Label Text="Julia Vilkova" FontAttributes="Bold" Margin="8"></Label>
-                    <Label Text="Markus Malz" FontAttributes="Bold" Margin="8"></Label>
-                </StackLayout>
+        <StackLayout VerticalOptions="StartAndExpand" HorizontalOptions="Center" Margin="32">
+            <Label HorizontalOptions="Center" Text="{Binding SelectedDate, StringFormat='{0:d. MMMM yyyy}'}" FontSize="Large"></Label>
+            <Label HorizontalOptions="Center" Text="17:30-19:00" FontSize="Medium"></Label>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                <Label Text="Julia Vilkova" FontAttributes="Bold" Margin="8"></Label>
+                <Label Text="Markus Malz" FontAttributes="Bold" Margin="8"></Label>
             </StackLayout>
-            <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
-                <Button Text="Trainer ändern" Style="{StaticResource EditButtonStyle}"></Button>
-                <Button Text="Notiz hinzufügen" Style="{StaticResource EditButtonStyle}"></Button>
-            </StackLayout>
-            <StackLayout VerticalOptions="EndAndExpand" Margin="8" Padding="8">
-                <Button Text="Weiter" Command="{Binding SelectCourseCommand}" HorizontalOptions="Center" Style="{StaticResource MainButton}"></Button>
-            </StackLayout>
+            <Button HorizontalOptions="Center" Text="Trainer ändern" Style="{StaticResource EditButtonStyle}"></Button>
+        </StackLayout>
+        <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Margin="0,0,0,32">
+            <Button Text="Notiz hinzufügen" Style="{StaticResource EditButtonStyle}"></Button>
+        </StackLayout>
+        <StackLayout VerticalOptions="EndAndExpand" Margin="8" Padding="8">
+            <Button Text="Weiter" Command="{Binding SelectCourseCommand}" HorizontalOptions="Center" Style="{StaticResource MainButton}"></Button>
+        </StackLayout>
     </StackLayout>
 </ContentPage>

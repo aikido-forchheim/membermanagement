@@ -5,12 +5,11 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="AVF.CourseParticipation.Views.CourseSelectionPage" Style="{StaticResource ContentPageStyle}" Title="Kursauswahl">
     <StackLayout>
-        <StackLayout HorizontalOptions="Center">
             <StackLayout VerticalOptions="StartAndExpand" HorizontalOptions="Center" Margin="32">
                 <Label HorizontalOptions="Center" Text="{Binding SelectedDate, StringFormat='{0:d. MMMM yyyy}'}" FontSize="Large"></Label>
                 <Label HorizontalOptions="Center" Text="(Heute)" FontSize="Medium"></Label>
             </StackLayout>
-            <ListView VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="340" HasUnevenRows="True" ItemsSource="{Binding CourseSelectionInfos}" SelectedItem="{Binding CourseSelectionInfo, Mode=TwoWay}">
+        <ListView VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="340" HasUnevenRows="True" ItemsSource="{Binding CourseSelectionInfos}" SelectedItem="{Binding CourseSelectionInfo, Mode=TwoWay}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -37,5 +36,4 @@
                 <Button Text="Weiter" Command="{Binding EnterParticipantsCommand}" HorizontalOptions="Center" Style="{StaticResource MainButton}"></Button>
             </StackLayout>
         </StackLayout>
-    </StackLayout>
 </ContentPage>
