@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="AVF.CourseParticipation.Views.TrainingEditPage" Title="Training editieren">
+             x:Class="AVF.CourseParticipation.Views.TrainingEditPage" Style="{StaticResource ContentPageStyle}" Title="Training editieren">
     <ContentPage.Resources>
         <ResourceDictionary>
             <Style x:Key="EditButtonStyle" TargetType="View">
@@ -12,13 +12,14 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <StackLayout>
-        <StackLayout HorizontalOptions="Center" Margin="8">
-            <Label Text="11. Dezember 2018" FontSize="Large" HorizontalOptions="Center"></Label>
-            <Label Text="17:30-19:00" FontSize="Medium" HorizontalOptions="Center"></Label>
-            <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-                <Label Text="Trainer:" FontAttributes="Bold"></Label>
-                <Label Text="Julia Vilkova"></Label>
-                <Label Text="Markus Malz"></Label>
+        <StackLayout HorizontalOptions="Center">
+            <StackLayout VerticalOptions="StartAndExpand" HorizontalOptions="Center" Margin="32">
+                <Label HorizontalOptions="Center" Text="{Binding SelectedDate, StringFormat='{0:d. MMMM yyyy}'}" FontSize="Large"></Label>
+                <Label HorizontalOptions="Center" Text="17:30-19:00" FontSize="Medium"></Label>
+                <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                    <Label Text="Julia Vilkova" FontAttributes="Bold" Margin="8"></Label>
+                    <Label Text="Markus Malz" FontAttributes="Bold" Margin="8"></Label>
+                </StackLayout>
             </StackLayout>
             <Button Text="Trainer ändern" Style="{StaticResource EditButtonStyle}"></Button>
             <Button Text="Notiz hinzufügen" Style="{StaticResource EditButtonStyle}"></Button>
