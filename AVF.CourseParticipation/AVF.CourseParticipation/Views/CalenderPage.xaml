@@ -11,15 +11,15 @@
             <Label HorizontalOptions="Center" Text="(Heute)" FontSize="Medium"></Label>
         </StackLayout>
         <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+            <cal:Calendar x:Name="Calendar" TitleLeftArrowIsVisible="False" TitleRightArrowIsVisible="False" SelectedDate="{Binding SelectedDate}" WidthRequest="340" SelectedBackgroundColor="{StaticResource Sun}" SelectedBorderColor="{StaticResource Torii}"></cal:Calendar>
             <StackLayout Orientation="Horizontal" HorizontalOptions="Fill">
                 <Button Text="&lt;" x:Name="PreviousMonthButton" Clicked="PreviousMonthButton_OnClicked" HorizontalOptions="Start"></Button>
-                <Button Text="&gt;" x:Name="NextMonthButton" Clicked="NextMonthButton_OnClicked" HorizontalOptions="EndAndExpand"></Button>
+                <Button Text="Heute" x:Name="TodayButton" Clicked="TodayButton_OnClicked" Command="{Binding SetTodayCommand}" HorizontalOptions="CenterAndExpand"></Button>
+                <Button Text="&gt;" x:Name="NextMonthButton" Clicked="NextMonthButton_OnClicked" HorizontalOptions="End"></Button>
             </StackLayout>
-            <cal:Calendar x:Name="Calendar" TitleLeftArrowIsVisible="False" TitleRightArrowIsVisible="False" SelectedDate="{Binding SelectedDate}" WidthRequest="340" SelectedBackgroundColor="{StaticResource Sun}" SelectedBorderColor="{StaticResource Torii}"></cal:Calendar>
-            <Button Text="Heute" x:Name="TodayButton" Margin="0,0,0,0" Command="{Binding SetTodayCommand}" Clicked="TodayButton_OnClicked"></Button>
         </StackLayout>
         <StackLayout VerticalOptions="EndAndExpand" Margin="8" Padding="8">
-            <Button Text="Weiter" Command="{Binding SelectCourseCommand}" HorizontalOptions="Center" Margin="8" Padding="8"></Button>
+            <Button Text="Weiter" Command="{Binding SelectCourseCommand}" HorizontalOptions="Center" Style="{StaticResource MainButton}"></Button>
         </StackLayout>
     </StackLayout>
 </ContentPage>

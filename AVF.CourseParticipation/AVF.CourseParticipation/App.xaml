@@ -13,6 +13,9 @@
             <Style x:Key="ContentPageStyle" TargetType="ContentPage">
                 <Setter Property="Padding" Value="6" />
             </Style>
+            <Style x:Key="MainButton" TargetType="Button">
+                <Setter Property="Padding" Value="24,10,24,10"></Setter>
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>

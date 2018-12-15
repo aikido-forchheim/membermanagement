@@ -10,7 +10,7 @@
                 <Label HorizontalOptions="Center" Text="{Binding SelectedDate, StringFormat='{0:d. MMMM yyyy}'}" FontSize="Large"></Label>
                 <Label HorizontalOptions="Center" Text="(Heute)" FontSize="Medium"></Label>
             </StackLayout>
-            <ListView HasUnevenRows="True" ItemsSource="{Binding CourseSelectionInfos}" SelectedItem="{Binding CourseSelectionInfo, Mode=TwoWay}" VerticalOptions="Center" HorizontalOptions="Center" HeightRequest="480" WidthRequest="320">
+            <ListView VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="340" HasUnevenRows="True" ItemsSource="{Binding CourseSelectionInfos}" SelectedItem="{Binding CourseSelectionInfo, Mode=TwoWay}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -34,7 +34,7 @@
                 </ListView.ItemTemplate>
             </ListView>
             <StackLayout VerticalOptions="EndAndExpand" Margin="8" Padding="8">
-                <Button Text="Weiter" Command="{Binding EnterParticipantsCommand}" HorizontalOptions="Center" Margin="8" Padding="8"></Button>
+                <Button Text="Weiter" Command="{Binding EnterParticipantsCommand}" HorizontalOptions="Center" Style="{StaticResource MainButton}"></Button>
             </StackLayout>
         </StackLayout>
     </StackLayout>

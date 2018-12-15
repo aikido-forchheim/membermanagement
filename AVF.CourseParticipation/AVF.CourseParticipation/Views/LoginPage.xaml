@@ -18,7 +18,7 @@
             <Entry x:Name="Benutzername" Keyboard="Email"></Entry>
             <Label>Passwort:</Label>
             <Entry x:Name="Passwort" IsPassword="True"></Entry>
-            <Button Text="Anmelden" Command="{Binding LoginCommand}" Margin="0,16,0,0"></Button>
+            <Button Text="Anmelden" Command="{Binding LoginCommand}" Style="{StaticResource MainButton}" Margin="0,16,0,0" HorizontalOptions="Center"></Button>
         </StackLayout>
 
         <StackLayout Orientation="Horizontal" VerticalOptions="EndAndExpand">
