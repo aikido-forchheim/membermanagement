@@ -25,7 +25,7 @@
             <Button Text="Notiz hinzufügen" Style="{StaticResource EditButtonStyle}"></Button>
         </StackLayout>
         <StackLayout Style="{StaticResource EndStackLayoutStyle}">
-            <Button Style="{StaticResource MainButtonStyle}" Text="Weiter" Command="{Binding SelectCourseCommand}"></Button>
+            <Button Style="{StaticResource MainButtonStyle}" Text="Weiter" Command="{Binding SelectParticipantsCommand}"></Button>
         </StackLayout>
     </StackLayout>
 </ContentPage>
