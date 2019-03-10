@@ -1,4 +1,5 @@
 ﻿using System;
+using AVF.CourseParticipation.ViewModels;
 using Xamarin.Forms;
 
 namespace AVF.CourseParticipation.Views
@@ -45,6 +46,12 @@ namespace AVF.CourseParticipation.Views
 
                 _monthsNavigated = 0;
             }
+        }
+
+        protected override bool OnBackButtonPressed()
+        {
+            ((CalenderPageViewModel) BindingContext).Logout();
+            return true; // Disable back button
         }
     }
 }

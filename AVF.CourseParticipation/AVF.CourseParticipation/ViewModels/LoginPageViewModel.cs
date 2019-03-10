@@ -39,7 +39,7 @@ namespace AVF.CourseParticipation.ViewModels
             EnsurePropertyLastLoggedInUsername();
             Prism.PrismApplicationBase.Current.Properties[LastLoggedInUsernameKey] = Username;
 
-            await NavigationService.NavigateAsync("CalenderPage");
+            await NavigationService.NavigateAsync("NavigationPage/CalenderPage", null, true);
         }
 
 	    public override void OnNavigatingTo(INavigationParameters parameters)
