@@ -8,4 +8,8 @@
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="2.2.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\AVF.MemberManagement.StandardLibrary\AVF.MemberManagement.StandardLibrary.csproj" />
+  </ItemGroup>
+
 </Project>
