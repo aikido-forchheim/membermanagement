@@ -16,6 +16,7 @@ namespace AVF.CourseParticipation.ViewModels
 
 	    public ICommand SelectCourseCommand { get; }
 	    public ICommand SetTodayCommand { get; }
+        public ICommand LogoutCommand { get; }
 
         private DateTime _selectedDate = DateTime.Today;
 
@@ -30,6 +31,7 @@ namespace AVF.CourseParticipation.ViewModels
             _pageDialogService = pageDialogService;
             SelectCourseCommand = new DelegateCommand(SelectCourse, CanSelectCourse);
             SetTodayCommand = new DelegateCommand(SetToday, CanSetToday);
+            LogoutCommand = new DelegateCommand(Logout, CanLogout);
         }
 
         private bool CanSetToday()
@@ -60,5 +62,9 @@ namespace AVF.CourseParticipation.ViewModels
 	            await NavigationService.NavigateAsync("/LoginPage");
 	        }
 	    }
-	}
+        private bool CanLogout()
+        {
+            return true;
+        }
+    }
 }
