@@ -12,7 +12,7 @@ namespace AVF.CourseParticipation.Views
 
         private void LoginPage_OnAppearing(object sender, EventArgs e)
         {
-            if (UsernameEntry.Text.Length > 0)
+            if (UsernameEntry?.Text != null && UsernameEntry.Text.Length > 0)
             {
                 PasswordEntry.Focus();
             }

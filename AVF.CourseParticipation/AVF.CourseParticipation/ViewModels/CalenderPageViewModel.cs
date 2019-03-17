@@ -57,7 +57,7 @@ namespace AVF.CourseParticipation.ViewModels
 	        if (await _pageDialogService.DisplayAlertAsync("Abmelden?", "Möchten Sie sich wirklich abmelden?", "OK",
 	            "Abbrechen"))
 	        {
-	            await NavigationService.NavigateAsync("../LoginPage");
+	            await NavigationService.NavigateAsync("/LoginPage");
 	        }
 	    }
 	}
