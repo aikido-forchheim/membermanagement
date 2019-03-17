@@ -5,6 +5,8 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="AVF.CourseParticipation.Views.ParticipantsSelectionPage" Style="{StaticResource ContentPageStyle}" Title="Teilnehmer auswählen">
     <ContentPage Title="Zuletzt anwesend">
-        <Button Text="Speichern und zurück" Command="{Binding SaveCommand}"></Button>
+        <StackLayout>
+            <Button Text="Speichern und zurück" Command="{Binding SaveCommand}"></Button>
+        </StackLayout>
     </ContentPage>
 </TabbedPage>

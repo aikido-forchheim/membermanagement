@@ -31,7 +31,7 @@ namespace AVF.CourseParticipation.ViewModels
 
 	    private async void SelectParticipants()
 	    {
-            await NavigationService.NavigateAsync("/ParticipantsSelectionPage");
+            await NavigationService.NavigateAsync("/NavigationPage/ParticipantsSelectionPage");
 	    }
 
 	    private bool CanSelectParticipants()

@@ -21,8 +21,7 @@ namespace AVF.CourseParticipation.ViewModels
 
         private async void Save()
         {
-            //await NavigationService.NavigateAsync("CalendarPage", null, true);
-            await NavigationService.NavigateAsync("/NavigationPage/CalenderPage");
+            await NavigationService.NavigateAsync("SaveParticipantsPage");
         }
 
         private bool CanSave()
