@@ -3,12 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="AVF.CourseParticipation.Views.SaveParticipantsPage">
+             x:Class="AVF.CourseParticipation.Views.SaveStatusPage">
     <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
-        <Label Text="Neue Teilnehmer: "></Label>
-        <Label Text="Gelöschte Teilnehmer: "></Label>
-        <Button Text="Save" Command="{Binding SaveCommand}"></Button>
-        <Button Text="Cancel" Command="{Binding CancelCommand}"></Button>
+        <Label Text="Erfolgreich gespeichert!"></Label>
+        <Label Text="Es ist ein Fehler aufgetreten!"></Label>
+        <Button Text="Zurück zum Kalender" Command="{Binding BackCommand}"></Button>
     </StackLayout>
 </ContentPage>
-    

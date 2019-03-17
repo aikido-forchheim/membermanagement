@@ -20,7 +20,7 @@ namespace AVF.CourseParticipation.ViewModels
             //Do the save stuff, and if an error occurs do not navigate to NavigationPage/CalenderPage but to an errorpage instead
             //Schreibe auf alle Fälle alle Namen und das Datum ins Log
 
-            await NavigationService.NavigateAsync("/NavigationPage/CalenderPage");
+            await NavigationService.NavigateAsync("/SaveStatusPage");
         }
 
         private bool CanSave()
