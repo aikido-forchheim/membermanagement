@@ -1,6 +1,7 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
+using Prism.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,16 +11,19 @@ namespace AVF.CourseParticipation.ViewModels
 {
 	public class SaveStatusPageViewModel : ViewModelBase
 	{
-        public SaveStatusPageViewModel(INavigationService navigationService) : base(navigationService)
+        private readonly IPageDialogService _dialogService;
+
+        public SaveStatusPageViewModel(INavigationService navigationService, IPageDialogService dialogService) : base(navigationService)
         {
             BackCommand = new DelegateCommand(GoBack, CanGoBack);
+            _dialogService = dialogService;
         }
 
         #region SaveCommand
 
         public ICommand BackCommand { get; }
 
-        private async void GoBack()
+        internal async void GoBack()
         {
             await NavigationService.NavigateAsync("/NavigationPage/CalenderPage");
         }
