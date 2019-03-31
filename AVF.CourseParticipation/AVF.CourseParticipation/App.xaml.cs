@@ -6,6 +6,11 @@ using AVF.CourseParticipation.ViewModels;
 using AVF.CourseParticipation.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using AVF.MemberManagement.StandardLibrary.Interfaces;
+using AVF.MemberManagement.StandardLibrary.Tbo;
+using AVF.MemberManagement.StandardLibrary.Proxies;
+using AVF.MemberManagement.StandardLibrary.Tables;
+using AVF.MemberManagement.StandardLibrary.Repositories;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace AVF.CourseParticipation
@@ -32,6 +37,9 @@ namespace AVF.CourseParticipation
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.Register<IProxy<User>, Proxy<TblUsers, User>>();
+            containerRegistry.RegisterSingleton<IRepository<User>, Repository<User>>();
+
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();
             containerRegistry.RegisterForNavigation<CalenderPage, CalenderPageViewModel>();
