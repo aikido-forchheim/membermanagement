@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Input;
 using AVF.CourseParticipation.Views;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
+using AVF.MemberManagement.StandardLibrary.Tbo;
 using Prism.AppModel;
 using Prism.Navigation;
 
@@ -13,6 +14,8 @@ namespace AVF.CourseParticipation.ViewModels
 {
 	public class LoginPageViewModel : ViewModelBase
     {
+        private readonly IAccountService _accountService;
+        private readonly IRepository<User> _usersRepository;
         public ICommand LoginCommand { get; }
         public ICommand OpenSettingsCommand { get; }
 
@@ -27,9 +30,12 @@ namespace AVF.CourseParticipation.ViewModels
 	        set => SetProperty(ref _username, value);
 	    }
 
-        public LoginPageViewModel(INavigationService navigationService, IAccountService accountService) : base(navigationService)
+        public LoginPageViewModel(INavigationService navigationService, IAccountService accountService, IRepository<User> usersRepository) : base(navigationService)
         {
-            accountService.InitWithAccountStore(App.AppId);
+            _accountService = accountService;
+            _usersRepository = usersRepository;
+
+            _accountService.InitWithAccountStore(App.AppId);
 
             LoginCommand = new DelegateCommand(Login, CanLogin);
             OpenSettingsCommand = new DelegateCommand(OpenSettings, CanOpenSettings);
@@ -47,7 +53,8 @@ namespace AVF.CourseParticipation.ViewModels
 
         private bool CanLogin()
         {
-            return true;
+            bool isRestApiAccountSet = _accountService.IsRestApiAccountSet;
+            return isRestApiAccountSet;
         }
 
         private async void Login()

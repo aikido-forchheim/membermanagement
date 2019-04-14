@@ -74,7 +74,12 @@ namespace AVF.CourseParticipation.ViewModels
             SaveCommand = new DelegateCommand(Save, CanSave);
         }
 
-	    private bool CanSave()
+	    public override async void OnNavigatedTo(INavigationParameters parameters)
+	    {
+	        await RunConnectionTest();
+	    }
+
+        private bool CanSave()
 	    {
 	        var canSave = _settings != null && _settings.Any();
 	        return canSave;
@@ -86,7 +91,6 @@ namespace AVF.CourseParticipation.ViewModels
 	        {
 	            await RunConnectionTest().ContinueWith(task =>
 	            {
-
 	                if (CanSave())
 	                {
 	                    _accountService.StoreRestApiAccount(_accountService.RestApiAccount.ApiUrl,
@@ -125,21 +129,13 @@ namespace AVF.CourseParticipation.ViewModels
 
 	            await RunConnectionTest().ContinueWith(task =>
 	            {
-	                if (CanSave())
-	                {
-	                    _accountService.StoreRestApiAccount(_accountService.RestApiAccount.ApiUrl,
-	                        _accountService.RestApiAccount.Username, _accountService.RestApiAccount.Password);
+	                if (!CanTest()) return;
 
-	                    Message = "Account-Informationen erfolgreich gespeichert...";
-	                }
-	                else
-	                {
-	                    Message = "Account-Informationen temporär verändert, aber nicht gespeichert... Verbindungstest war nicht erfolgreich!";
-	                }
+	                Message = "Test der Account-Informationen erfolgreich...";
 
 	                _logger.LogInformation(Message);
 	            });
-	        }
+            }
 	        catch (Exception ex)
 	        {
 	            Message = ex.ToString();
@@ -161,11 +157,6 @@ namespace AVF.CourseParticipation.ViewModels
 	        }
 
 	        ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
-	    }
-
-	    public override void OnNavigatedTo(INavigationParameters parameters)
-	    {
-	        base.OnNavigatedTo(parameters);
 	    }
     }
 }
