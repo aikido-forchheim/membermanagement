@@ -89,7 +89,7 @@ namespace AVF.CourseParticipation.ViewModels
 	    {
 	        try
 	        {
-	            await RunConnectionTest().ContinueWith(task =>
+	            await RunTestWithEnteredCredentials().ContinueWith(task =>
 	            {
 	                if (CanSave())
 	                {
@@ -121,6 +121,11 @@ namespace AVF.CourseParticipation.ViewModels
 
 	    private async void Test()
 	    {
+	        await RunTestWithEnteredCredentials();
+	    }
+
+	    private async Task RunTestWithEnteredCredentials()
+	    {
 	        try
 	        {
 	            _restApiAccount.ApiUrl = _apiUrl;
@@ -129,20 +134,25 @@ namespace AVF.CourseParticipation.ViewModels
 
 	            await RunConnectionTest().ContinueWith(task =>
 	            {
-	                if (!CanTest()) return;
-
-	                Message = "Test der Account-Informationen erfolgreich...";
+	                if (CanSave())
+	                {
+	                    Message = "Test der Account-Informationen erfolgreich...";
+	                }
+	                else
+	                {
+	                    Message = "Test der Account-Informationen NICHT erfolgreich...";
+	                }
 
 	                _logger.LogInformation(Message);
 	            });
-            }
+	        }
 	        catch (Exception ex)
 	        {
 	            Message = ex.ToString();
 
 	            _logger.LogError(ex.ToString());
 	        }
-        }
+	    }
 
 	    private async Task RunConnectionTest()
 	    {

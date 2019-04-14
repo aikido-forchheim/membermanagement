@@ -38,7 +38,7 @@ namespace AVF.CourseParticipation
 
             InitializeComponent();
 
-            await NavigationService.NavigateAsync("LoginPage");
+            await NavigationService.NavigateAsync("/NavigationPage/LoginPage");
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)

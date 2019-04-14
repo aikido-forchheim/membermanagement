@@ -41,6 +41,11 @@ namespace AVF.CourseParticipation.ViewModels
             OpenSettingsCommand = new DelegateCommand(OpenSettings, CanOpenSettings);
         }
 
+        public override void OnNavigatedTo(INavigationParameters parameters)
+        {
+            ((DelegateCommand)LoginCommand).RaiseCanExecuteChanged();
+        }
+
         private bool CanOpenSettings()
         {
             return true;
@@ -62,7 +67,6 @@ namespace AVF.CourseParticipation.ViewModels
             EnsurePropertyLastLoggedInUsername();
             Prism.PrismApplicationBase.Current.Properties[LastLoggedInUsernameKey] = Username;
 
-            //await NavigationService.NavigateAsync("NavigationPage/CalenderPage", null, true);
             await NavigationService.NavigateAsync("/NavigationPage/CalenderPage");
         }
 
