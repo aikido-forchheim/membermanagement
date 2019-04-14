@@ -3,19 +3,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="AVF.CourseParticipation.Views.SettingsPage">
-    <StackLayout VerticalOptions="Center">
+             x:Class="AVF.CourseParticipation.Views.SettingsPage"
+             Title="Einstellungen"
+             >
+    <StackLayout VerticalOptions="Center" HorizontalOptions="FillAndExpand" Margin="64">
         <StackLayout Orientation="Horizontal">
-            <Label>URL:</Label>
-            <Entry Placeholder="https://api.homepage.com/controller" Keyboard="Url" Text="{Binding ApiUrl}"></Entry>
+            <Label VerticalOptions="Center">URL:</Label>
+            <Entry VerticalOptions="Center" HorizontalOptions="FillAndExpand" Placeholder="https://api.homepage.com/controller" Keyboard="Url" Text="{Binding ApiUrl}"></Entry>
         </StackLayout>
         <StackLayout Orientation="Horizontal">
-            <Label>Benutzer:</Label>
-            <Entry Placeholder="Benutername" Keyboard="Email" Text="{Binding Username}"></Entry>
+            <Label VerticalOptions="Center">Benutzer:</Label>
+            <Entry VerticalOptions="Center" HorizontalOptions="FillAndExpand" Placeholder="Benutername" Keyboard="Email" Text="{Binding Username}"></Entry>
         </StackLayout>
         <StackLayout Orientation="Horizontal">
-            <Label>Passwort:</Label>
-            <Entry Placeholder="Passwort" IsPassword="true" Keyboard="Text" Text="{Binding Password}"></Entry>
+            <Label VerticalOptions="Center">Passwort:</Label>
+            <Entry VerticalOptions="Center" HorizontalOptions="FillAndExpand" Placeholder="Passwort" IsPassword="true" Keyboard="Text" Text="{Binding Password}"></Entry>
         </StackLayout>
         <Button Text="Einstellungen prüfen" Command="{Binding TestCommand}"></Button>
         <Button Text="Speichern" Command="{Binding SaveCommand}"></Button>

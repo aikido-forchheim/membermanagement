@@ -27,8 +27,24 @@ namespace AVF.CourseParticipation.ViewModels
 	    public string Username
 	    {
 	        get => _username;
-	        set => SetProperty(ref _username, value);
+	        set
+	        {
+	            SetProperty(ref _username, value);
+                ((DelegateCommand)OpenSettingsCommand).RaiseCanExecuteChanged();
+	        }
 	    }
+
+        private string _password;
+
+        public string Password
+        {
+            get => _password;
+            set
+            {
+                SetProperty(ref _password, value);
+                ((DelegateCommand)OpenSettingsCommand).RaiseCanExecuteChanged();
+            }
+        }
 
         public LoginPageViewModel(INavigationService navigationService, IAccountService accountService, IRepository<User> usersRepository) : base(navigationService)
         {
@@ -48,7 +64,15 @@ namespace AVF.CourseParticipation.ViewModels
 
         private bool CanOpenSettings()
         {
-            return true;
+            if (!_accountService.IsRestApiAccountSet)
+            {
+                return true;
+            }
+            else
+            {
+                return Username == _accountService.RestApiAccount.Username &&
+                       Password == _accountService.RestApiAccount.Password;
+            }
         }
 
         private void OpenSettings()
@@ -73,7 +97,7 @@ namespace AVF.CourseParticipation.ViewModels
 	    public override void OnNavigatingTo(INavigationParameters parameters)
         {
             EnsurePropertyLastLoggedInUsername();
-            Username = Prism.PrismApplicationBase.Current.Properties[LastLoggedInUsernameKey].ToString();
+            //Username = Prism.PrismApplicationBase.Current.Properties[LastLoggedInUsernameKey].ToString();
         }
 
         private static void EnsurePropertyLastLoggedInUsername()
