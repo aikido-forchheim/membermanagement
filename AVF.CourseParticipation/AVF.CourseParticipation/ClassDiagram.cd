@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="AVF.CourseParticipation.ViewModels.LoginPageViewModel" Collapsed="true">
+    <Position X="3.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACABAAIAAAIAAAQAAAAAQEBAAAAACBAIQAACAAAA=</HashCode>
+      <FileName>ViewModels\LoginPageViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AVF.CourseParticipation.ViewModels.SettingsPageViewModel" Collapsed="true">
+    <Position X="3.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABQAgIAAAAAAAAAAgRAAAAQCJAEAACACEEIAKAAEAAA=</HashCode>
+      <FileName>ViewModels\SettingsPageViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AVF.CourseParticipation.ViewModels.CalenderPageViewModel" Collapsed="true">
+    <Position X="5.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABEAAAAQACEIAAAAAgAAgCAAAAAAggIA=</HashCode>
+      <FileName>ViewModels\CalenderPageViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AVF.CourseParticipation.ViewModels.CourseSelectionPageViewModel" Collapsed="true">
+    <Position X="7" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEAAAAQAACQAAAAAACAAAEAAMACAAAA=</HashCode>
+      <FileName>ViewModels\CourseSelectionPageViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AVF.CourseParticipation.ViewModels.ParticipantsSelectionPageViewModel" Collapsed="true">
+    <Position X="10.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAQAAAAAAAAAAAAAACAAAAAAQAAAAAAAAEAAA=</HashCode>
+      <FileName>ViewModels\ParticipantsSelectionPageViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AVF.CourseParticipation.ViewModels.SaveParticipantsPageViewModel" Collapsed="true">
+    <Position X="11.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAIAAQAAAAAAAAAAAAAACAAAAAAQAAAAAAAAEAAQ=</HashCode>
+      <FileName>ViewModels\SaveParticipantsPageViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AVF.CourseParticipation.ViewModels.SaveStatusPageViewModel" Collapsed="true">
+    <Position X="11.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAAAAAAAAAAUAAAAAAAABAAA=</HashCode>
+      <FileName>ViewModels\SaveStatusPageViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AVF.CourseParticipation.ViewModels.TrainingEditPageViewModel" Collapsed="true">
+    <Position X="8.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAEAAAAQACAAAAAAAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\TrainingEditPageViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
