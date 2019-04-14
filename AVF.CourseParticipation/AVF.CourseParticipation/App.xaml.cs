@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Threading;
+using AVF.CourseParticipation.Services;
 using Prism;
 using Prism.Ioc;
 using AVF.CourseParticipation.ViewModels;
@@ -12,6 +13,7 @@ using AVF.MemberManagement.StandardLibrary.Proxies;
 using AVF.MemberManagement.StandardLibrary.Tables;
 using AVF.MemberManagement.StandardLibrary.Repositories;
 using AVF.MemberManagement.StandardLibrary.Services;
+using Microsoft.Extensions.Logging;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace AVF.CourseParticipation
@@ -27,6 +29,8 @@ namespace AVF.CourseParticipation
 
         public App(IPlatformInitializer initializer) : base(initializer) { }
 
+        public const string AppId = "10bc9068-17ac-4f0f-a596-7fdfe20bc9f4";
+
         protected override async void OnInitialized()
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("de-DE");
@@ -38,8 +42,24 @@ namespace AVF.CourseParticipation
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterInstance(Globals.AccountService);
+            //containerRegistry.RegisterInstance(Globals.AccountService);
 
+            //ILogger
+            ILoggerFactory loggerFactory = new LoggerFactory();
+
+#pragma warning disable 618
+            loggerFactory.AddConsole();
+#pragma warning restore 618
+
+            //loggerFactory.AddSentry();
+
+            ILogger logger = loggerFactory.CreateLogger<App>();
+            containerRegistry.RegisterInstance(loggerFactory);
+            containerRegistry.RegisterInstance(logger);
+
+            containerRegistry.Register<ITokenService, TokenService>();
+            containerRegistry.Register<IAccountService, AccountService>();
+            containerRegistry.Register<IPhpCrudApiService, PhpCrudApiService>();
             containerRegistry.Register<IProxy<User>, Proxy<TblUsers, User>>();
             containerRegistry.RegisterSingleton<IRepository<User>, Repository<User>>();
 
