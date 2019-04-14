@@ -7,17 +7,18 @@
     <StackLayout VerticalOptions="Center">
         <StackLayout Orientation="Horizontal">
             <Label>URL:</Label>
-            <Entry Placeholder="https://api.homepage.com/controller"></Entry>
+            <Entry Placeholder="https://api.homepage.com/controller" Keyboard="Url" Text="{Binding ApiUrl}"></Entry>
         </StackLayout>
         <StackLayout Orientation="Horizontal">
             <Label>Benutzer:</Label>
-            <Entry Placeholder="Benutername"></Entry>
+            <Entry Placeholder="Benutername" Keyboard="Email" Text="{Binding Username}"></Entry>
         </StackLayout>
         <StackLayout Orientation="Horizontal">
             <Label>Passwort:</Label>
-            <Entry Placeholder="Passwort"></Entry>
+            <Entry Placeholder="Passwort" IsPassword="true" Keyboard="Text" Text="{Binding Password}"></Entry>
         </StackLayout>
-        <Button Text="Einstellungen prüfen"></Button>
-        <Button Text="Speichern" IsEnabled="False"></Button>
+        <Button Text="Einstellungen prüfen" Command="{Binding TestCommand}"></Button>
+        <Button Text="Speichern" Command="{Binding SaveCommand}"></Button>
+        <Label Text="{Binding Message}"></Label>
     </StackLayout>
 </ContentPage>

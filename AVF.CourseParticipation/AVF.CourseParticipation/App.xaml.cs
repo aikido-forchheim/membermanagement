@@ -14,6 +14,7 @@ using AVF.MemberManagement.StandardLibrary.Tables;
 using AVF.MemberManagement.StandardLibrary.Repositories;
 using AVF.MemberManagement.StandardLibrary.Services;
 using Microsoft.Extensions.Logging;
+using Prism.Unity;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace AVF.CourseParticipation
@@ -58,9 +59,12 @@ namespace AVF.CourseParticipation
             containerRegistry.RegisterInstance(logger);
 
             containerRegistry.Register<ITokenService, TokenService>();
-            containerRegistry.Register<IAccountService, AccountService>();
+            containerRegistry.RegisterSingleton<IAccountService, AccountService>();
             containerRegistry.Register<IPhpCrudApiService, PhpCrudApiService>();
+
+            containerRegistry.Register<IProxyBase<Setting, string>, ProxyBase<TblSettings, Setting, string>>();
             containerRegistry.Register<IProxy<User>, Proxy<TblUsers, User>>();
+
             containerRegistry.RegisterSingleton<IRepository<User>, Repository<User>>();
 
             containerRegistry.RegisterForNavigation<NavigationPage>();
