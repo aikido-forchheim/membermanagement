@@ -24,7 +24,7 @@
         </StackLayout>
 
         <StackLayout Orientation="Horizontal" VerticalOptions="EndAndExpand">
-            <Button Text="Einstellungen" HorizontalOptions="Start" VerticalOptions="End"></Button>
+            <Button Text="Einstellungen" Command="{Binding OpenSettingsCommand}" HorizontalOptions="Start" VerticalOptions="End"></Button>
             <Label x:Name="Version" HorizontalOptions="EndAndExpand" VerticalOptions="End">2.0.0</Label>
         </StackLayout>
         

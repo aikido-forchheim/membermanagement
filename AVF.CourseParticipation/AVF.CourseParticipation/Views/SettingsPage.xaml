@@ -4,5 +4,20 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="AVF.CourseParticipation.Views.SettingsPage">
-  
+    <StackLayout VerticalOptions="Center">
+        <StackLayout Orientation="Horizontal">
+            <Label>URL:</Label>
+            <Entry Placeholder="https://api.homepage.com/controller"></Entry>
+        </StackLayout>
+        <StackLayout Orientation="Horizontal">
+            <Label>Benutzer:</Label>
+            <Entry Placeholder="Benutername"></Entry>
+        </StackLayout>
+        <StackLayout Orientation="Horizontal">
+            <Label>Passwort:</Label>
+            <Entry Placeholder="Passwort"></Entry>
+        </StackLayout>
+        <Button Text="Einstellungen prüfen"></Button>
+        <Button Text="Speichern" IsEnabled="False"></Button>
+    </StackLayout>
 </ContentPage>
