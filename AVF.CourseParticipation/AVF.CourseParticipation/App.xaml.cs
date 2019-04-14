@@ -11,6 +11,7 @@ using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.MemberManagement.StandardLibrary.Proxies;
 using AVF.MemberManagement.StandardLibrary.Tables;
 using AVF.MemberManagement.StandardLibrary.Repositories;
+using AVF.MemberManagement.StandardLibrary.Services;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace AVF.CourseParticipation
@@ -37,6 +38,8 @@ namespace AVF.CourseParticipation
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.RegisterInstance(Globals.AccountService);
+
             containerRegistry.Register<IProxy<User>, Proxy<TblUsers, User>>();
             containerRegistry.RegisterSingleton<IRepository<User>, Repository<User>>();
 
@@ -48,6 +51,7 @@ namespace AVF.CourseParticipation
             containerRegistry.RegisterForNavigation<ParticipantsSelectionPage, ParticipantsSelectionPageViewModel>();
             containerRegistry.RegisterForNavigation<SaveParticipantsPage, SaveParticipantsPageViewModel>();
             containerRegistry.RegisterForNavigation<SaveStatusPage, SaveStatusPageViewModel>();
+            containerRegistry.RegisterForNavigation<SettingsPage, SettingsPageViewModel>();
         }
         protected override void OnResume()
         {
