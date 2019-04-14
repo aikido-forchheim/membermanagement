@@ -18,8 +18,8 @@ namespace AVF.CourseParticipation.ViewModels
 	    private readonly ILogger _logger;
 	    private readonly IAccountService _accountService;
 	    private readonly IProxyBase<Setting, string> _settingsProxy;
+	    private readonly RestApiAccount _restApiAccount;
 
-	    private RestApiAccount _restApiAccount;
         private List<Setting> _settings;
 
         private string _message;
@@ -55,7 +55,6 @@ namespace AVF.CourseParticipation.ViewModels
 	    }
 
 	    public ICommand TestCommand { get; }
-
         public ICommand SaveCommand { get; }
 
         public SettingsPageViewModel(ILogger logger, INavigationService navigationService, IAccountService accountService, IProxyBase<Setting, string> settingsProxy)
@@ -78,7 +77,6 @@ namespace AVF.CourseParticipation.ViewModels
 	    private bool CanSave()
 	    {
 	        var canSave = _settings != null && _settings.Any();
-
 	        return canSave;
 	    }
 
@@ -150,11 +148,6 @@ namespace AVF.CourseParticipation.ViewModels
 	        }
         }
 
-	    public override void OnNavigatedTo(INavigationParameters parameters)
-        {
-            base.OnNavigatedTo(parameters);
-        }
-
 	    private async Task RunConnectionTest()
 	    {
 	        try
@@ -168,6 +161,11 @@ namespace AVF.CourseParticipation.ViewModels
 	        }
 
 	        ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+	    }
+
+	    public override void OnNavigatedTo(INavigationParameters parameters)
+	    {
+	        base.OnNavigatedTo(parameters);
 	    }
     }
 }
