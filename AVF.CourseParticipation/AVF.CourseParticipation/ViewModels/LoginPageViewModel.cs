@@ -115,6 +115,7 @@ namespace AVF.CourseParticipation.ViewModels
                     {
                         await _dialogService.DisplayAlertAsync("Initialpasswort gefunden", "Bitte vergeben Sie jetzt Ihr persönliches Kennwort!", "OK");
                         //TODO: New page for entering personal password
+                        await NavigationService.NavigateAsync("NewPasswordPage");
                         return;
                     }
 
