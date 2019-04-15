@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Threading;
+using AVF.CourseParticipation.Models;
 using AVF.CourseParticipation.Services;
 using Prism;
 using Prism.Ioc;
@@ -15,6 +16,7 @@ using AVF.MemberManagement.StandardLibrary.Repositories;
 using AVF.MemberManagement.StandardLibrary.Services;
 using AVF.StandardLibrary;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Prism.Unity;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
@@ -59,6 +61,9 @@ namespace AVF.CourseParticipation
             containerRegistry.RegisterInstance(loggerFactory);
             containerRegistry.RegisterInstance(logger);
 
+            IOptions<AppOptions> appOptions = new OptionsWrapper<AppOptions>(new AppOptions());
+            containerRegistry.RegisterInstance(appOptions);
+
             containerRegistry.Register<ITokenService, TokenService>();
             containerRegistry.RegisterSingleton<IAccountService, AccountService>();
             containerRegistry.Register<IPhpCrudApiService, PhpCrudApiService>();
@@ -66,8 +71,10 @@ namespace AVF.CourseParticipation
 
             containerRegistry.Register<IProxyBase<Setting, string>, ProxyBase<TblSettings, Setting, string>>();
             containerRegistry.Register<IProxy<User>, Proxy<TblUsers, User>>();
+            containerRegistry.Register<IProxy<Mitglied>, Proxy<TblMitglieder, Mitglied>>();
 
             containerRegistry.RegisterSingleton<IRepository<User>, Repository<User>>();
+            containerRegistry.RegisterSingleton<IRepository<Mitglied>, Repository<Mitglied>>();
 
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();

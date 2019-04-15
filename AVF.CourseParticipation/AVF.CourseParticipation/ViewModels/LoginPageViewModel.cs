@@ -4,10 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+using AVF.CourseParticipation.Models;
 using AVF.CourseParticipation.Views;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Prism.AppModel;
 using Prism.Navigation;
 using Prism.Services;
@@ -21,6 +23,8 @@ namespace AVF.CourseParticipation.ViewModels
         private readonly ILogger _logger;
         private readonly IPasswordService _passwordService;
         private readonly IPageDialogService _dialogService;
+        private readonly IOptions<AppOptions> _appOptions;
+        private readonly IRepository<Mitglied> _memberRepository;
         public ICommand LoginCommand { get; }
         public ICommand OpenSettingsCommand { get; }
 
@@ -51,13 +55,15 @@ namespace AVF.CourseParticipation.ViewModels
             }
         }
 
-        public LoginPageViewModel(INavigationService navigationService, IAccountService accountService, IRepository<User> usersRepository, ILogger logger, IPasswordService passwordService, IPageDialogService dialogService) : base(navigationService)
+        public LoginPageViewModel(INavigationService navigationService, IAccountService accountService, IRepository<User> usersRepository, ILogger logger, IPasswordService passwordService, IPageDialogService dialogService, IOptions<AppOptions> appOptions, IRepository<Mitglied> memberRepository) : base(navigationService)
         {
             _accountService = accountService;
             _usersRepository = usersRepository;
             _logger = logger;
             _passwordService = passwordService;
             _dialogService = dialogService;
+            _appOptions = appOptions;
+            _memberRepository = memberRepository;
 
             _accountService.InitWithAccountStore(App.AppId);
 
@@ -108,6 +114,9 @@ namespace AVF.CourseParticipation.ViewModels
                     var username = Username ?? string.Empty;
 
                     var user = users.Single(u => u.Username == username);
+
+                    _appOptions.Value.User = user;
+                    _appOptions.Value.UserMember = await _memberRepository.GetAsync(user.Mitgliedsnummer);
 
                     var password = Password ?? string.Empty;
 
