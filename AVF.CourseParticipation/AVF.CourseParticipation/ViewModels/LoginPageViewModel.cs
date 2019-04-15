@@ -107,19 +107,21 @@ namespace AVF.CourseParticipation.ViewModels
                 {
                     var username = Username ?? string.Empty;
 
-                    var userFromUserName = users.Single(user => user.Username == username);
+                    var user = users.Single(u => u.Username == username);
 
                     var password = Password ?? string.Empty;
 
-                    if (userFromUserName.Password.Length < 20 && password == userFromUserName.Password)
+                    if (user.Password.Length < 20 && password == user.Password)
                     {
                         await _dialogService.DisplayAlertAsync("Initialpasswort gefunden", "Bitte vergeben Sie jetzt Ihr persönliches Kennwort!", "OK");
-                        //TODO: New page for entering personal password
-                        await NavigationService.NavigateAsync("NewPasswordPage");
+
+                        var navigationParameters = new NavigationParameters {{"UserId", user.Id}};
+                        await NavigationService.NavigateAsync("NewPasswordPage", navigationParameters);
+
                         return;
                     }
 
-                    var isValid = await _passwordService.IsValidAsync(password, userFromUserName.Password, null);
+                    var isValid = await _passwordService.IsValidAsync(password, user.Password, null);
 
                     if (isValid)
                     {
