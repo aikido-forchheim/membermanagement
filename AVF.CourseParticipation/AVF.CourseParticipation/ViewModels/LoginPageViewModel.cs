@@ -7,8 +7,10 @@ using System.Windows.Input;
 using AVF.CourseParticipation.Views;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
+using Microsoft.Extensions.Logging;
 using Prism.AppModel;
 using Prism.Navigation;
+using Prism.Services;
 
 namespace AVF.CourseParticipation.ViewModels
 {
@@ -16,6 +18,9 @@ namespace AVF.CourseParticipation.ViewModels
     {
         private readonly IAccountService _accountService;
         private readonly IRepository<User> _usersRepository;
+        private readonly ILogger _logger;
+        private readonly IPasswordService _passwordService;
+        private readonly IPageDialogService _dialogService;
         public ICommand LoginCommand { get; }
         public ICommand OpenSettingsCommand { get; }
 
@@ -46,10 +51,13 @@ namespace AVF.CourseParticipation.ViewModels
             }
         }
 
-        public LoginPageViewModel(INavigationService navigationService, IAccountService accountService, IRepository<User> usersRepository) : base(navigationService)
+        public LoginPageViewModel(INavigationService navigationService, IAccountService accountService, IRepository<User> usersRepository, ILogger logger, IPasswordService passwordService, IPageDialogService dialogService) : base(navigationService)
         {
             _accountService = accountService;
             _usersRepository = usersRepository;
+            _logger = logger;
+            _passwordService = passwordService;
+            _dialogService = dialogService;
 
             _accountService.InitWithAccountStore(App.AppId);
 
@@ -91,7 +99,40 @@ namespace AVF.CourseParticipation.ViewModels
             EnsurePropertyLastLoggedInUsername();
             Prism.PrismApplicationBase.Current.Properties[LastLoggedInUsernameKey] = Username;
 
-            await NavigationService.NavigateAsync("/NavigationPage/CalenderPage");
+            try
+            {
+                var users = await _usersRepository.GetAsync();
+
+                if (users.Any(user => user.Username == Username))
+                {
+                    var username = Username ?? string.Empty;
+
+                    var userFromUserName = users.Single(user => user.Username == username);
+
+                    var password = Password ?? string.Empty;
+
+                    if (userFromUserName.Password.Length < 20 && password == userFromUserName.Password)
+                    {
+                        await _dialogService.DisplayAlertAsync("Initialpasswort gefunden", "Bitte vergeben Sie jetzt Ihr persönliches Kennwort!", "OK");
+                        //TODO: New page for entering personal password
+                        return;
+                    }
+
+                    var isValid = await _passwordService.IsValidAsync(password, userFromUserName.Password, null);
+
+                    if (isValid)
+                    {
+                        await NavigationService.NavigateAsync("/NavigationPage/CalenderPage");
+                        return;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogTrace(e.ToString());
+            }
+
+            await _dialogService.DisplayAlertAsync("Fehler bei der Anmeldung", "Benutzername oder Passwort falsch!", "OK");
         }
 
 	    public override void OnNavigatingTo(INavigationParameters parameters)

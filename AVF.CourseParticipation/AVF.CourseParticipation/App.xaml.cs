@@ -13,6 +13,7 @@ using AVF.MemberManagement.StandardLibrary.Proxies;
 using AVF.MemberManagement.StandardLibrary.Tables;
 using AVF.MemberManagement.StandardLibrary.Repositories;
 using AVF.MemberManagement.StandardLibrary.Services;
+using AVF.StandardLibrary;
 using Microsoft.Extensions.Logging;
 using Prism.Unity;
 
@@ -61,6 +62,7 @@ namespace AVF.CourseParticipation
             containerRegistry.Register<ITokenService, TokenService>();
             containerRegistry.RegisterSingleton<IAccountService, AccountService>();
             containerRegistry.Register<IPhpCrudApiService, PhpCrudApiService>();
+            containerRegistry.Register<IPasswordService, PasswordService>();
 
             containerRegistry.Register<IProxyBase<Setting, string>, ProxyBase<TblSettings, Setting, string>>();
             containerRegistry.Register<IProxy<User>, Proxy<TblUsers, User>>();

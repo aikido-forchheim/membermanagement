@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\AVF.MemberManagement.StandardLibrary\AVF.MemberManagement.StandardLibrary.csproj" />
+    <ProjectReference Include="..\AVF.StandardLibrary\AVF.StandardLibrary.csproj" />
   </ItemGroup>
 
   <ItemGroup>
