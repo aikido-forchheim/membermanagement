@@ -7,12 +7,14 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
 using AVF.CourseParticipation.Models;
+using Microsoft.Extensions.Logging;
 using Prism.Navigation;
 
 namespace AVF.CourseParticipation.ViewModels
 {
     public class CourseSelectionPageViewModel : ViewModelBase
     {
+        private readonly ILogger _logger;
         public ObservableCollection<CourseSelectionInfo> CourseSelectionInfos { get; set; }
 
         private DateTime _selectedDate = DateTime.Today;
@@ -31,8 +33,9 @@ namespace AVF.CourseParticipation.ViewModels
             set => SetProperty(ref _selectedDate, value);
         }
 
-        public CourseSelectionPageViewModel(INavigationService navigationService) : base(navigationService)
+        public CourseSelectionPageViewModel(INavigationService navigationService, ILogger logger) : base(navigationService)
         {
+            _logger = logger;
             EnterParticipantsCommand = new DelegateCommand(EnterParticipants, CanEnterParticipants);
 
             CourseSelectionInfos
@@ -69,6 +72,20 @@ namespace AVF.CourseParticipation.ViewModels
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
+
+            if (parameters.ContainsKey("SelectedDate"))
+            {
+                try
+                {
+                    var selectedDate = parameters["SelectedDate"].ToString();
+                    DateTime.TryParse(selectedDate, out var parsedDate);
+                    SelectedDate = parsedDate;
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e.ToString());
+                }
+            }
 
             CourseSelectionInfo = CourseSelectionInfos.Last();
         }

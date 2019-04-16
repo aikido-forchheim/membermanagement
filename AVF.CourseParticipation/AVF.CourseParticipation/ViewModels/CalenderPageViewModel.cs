@@ -51,7 +51,8 @@ namespace AVF.CourseParticipation.ViewModels
 
         private void SelectCourse()
         {
-            NavigationService.NavigateAsync("CourseSelectionPage");
+            var navigationParameters = new NavigationParameters {{"SelectedDate", SelectedDate}};
+            NavigationService.NavigateAsync("CourseSelectionPage", navigationParameters);
         }
 
 	    public async void Logout()

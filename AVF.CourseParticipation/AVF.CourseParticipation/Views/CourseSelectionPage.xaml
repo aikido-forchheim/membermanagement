@@ -7,7 +7,7 @@
     <StackLayout>
         <StackLayout Style="{StaticResource StartStackLayoutStyle}">
             <Label Style="{StaticResource Title1Style}" Text="{Binding SelectedDate, StringFormat='{0:d. MMMM yyyy}'}"></Label>
-            <Label Style="{StaticResource Title2Style}" Text="(Heute)"></Label>
+            <!--<Label Style="{StaticResource Title2Style}" Text="(Heute)"></Label>-->
         </StackLayout>
         <ListView Style="{StaticResource CenterStackLayoutStyle}" HasUnevenRows="True" ItemsSource="{Binding CourseSelectionInfos}" SelectedItem="{Binding CourseSelectionInfo, Mode=TwoWay}">
             <ListView.ItemTemplate>

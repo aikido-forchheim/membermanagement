@@ -11,7 +11,7 @@
     <StackLayout>
         <StackLayout Style="{StaticResource StartStackLayoutStyle}">
             <Label Style="{StaticResource Title1Style}" Text="{Binding SelectedDate, StringFormat='{0:d. MMMM yyyy}'}"></Label>
-            <Label Style="{StaticResource Title2Style}" HorizontalOptions="Center" Text="(Heute)"></Label>
+            <!--<Label Style="{StaticResource Title2Style}" HorizontalOptions="Center" Text="(Heute)"></Label>-->
         </StackLayout>
         <StackLayout Style="{StaticResource CenterStackLayoutStyle}" Margin="0,0,0,8">
             <cal:Calendar x:Name="Calendar" TitleLeftArrowIsVisible="False" TitleRightArrowIsVisible="False" SelectedDate="{Binding SelectedDate}" WidthRequest="340" SelectedBackgroundColor="{StaticResource Roof}" SelectedBorderColor="{StaticResource Roof}"></cal:Calendar>
