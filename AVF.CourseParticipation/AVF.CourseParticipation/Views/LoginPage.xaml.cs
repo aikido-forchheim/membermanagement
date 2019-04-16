@@ -21,5 +21,15 @@ namespace AVF.CourseParticipation.Views
                 UsernameEntry.Focus();
             }
         }
+
+        private void UsernameEntry_OnCompleted(object sender, EventArgs e)
+        {
+            PasswordEntry.Focus();
+        }
+
+        private void PasswordEntry_OnCompleted(object sender, EventArgs e)
+        {
+            ButtonLogin.Command.Execute(null);
+        }
     }
 }

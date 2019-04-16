@@ -55,6 +55,14 @@ namespace AVF.CourseParticipation.ViewModels
             }
         }
 
+        private bool _isRunning;
+
+        public bool IsRunning
+        {
+            get => _isRunning;
+            set => SetProperty(ref _isRunning, value);
+        }
+
         public LoginPageViewModel(INavigationService navigationService, IAccountService accountService, IRepository<User> usersRepository, ILogger logger, IPasswordService passwordService, IPageDialogService dialogService, IOptions<AppOptions> appOptions, IRepository<Mitglied> memberRepository) : base(navigationService)
         {
             _accountService = accountService;
@@ -67,7 +75,7 @@ namespace AVF.CourseParticipation.ViewModels
 
             _accountService.InitWithAccountStore(App.AppId);
 
-            LoginCommand = new DelegateCommand(Login, CanLogin);
+            LoginCommand = new DelegateCommand(Login, CanLogin).ObservesProperty(() => IsRunning); ;
             OpenSettingsCommand = new DelegateCommand(OpenSettings, CanOpenSettings);
         }
 
@@ -96,12 +104,16 @@ namespace AVF.CourseParticipation.ViewModels
 
         private bool CanLogin()
         {
+            if (IsRunning) return false;
+
             bool isRestApiAccountSet = _accountService.IsRestApiAccountSet;
             return isRestApiAccountSet;
         }
 
         private async void Login()
         {
+            IsRunning = true;
+
             EnsurePropertyLastLoggedInUsername();
             Prism.PrismApplicationBase.Current.Properties[LastLoggedInUsernameKey] = Username;
 
@@ -117,6 +129,8 @@ namespace AVF.CourseParticipation.ViewModels
 
                     _appOptions.Value.User = user;
                     _appOptions.Value.UserMember = await _memberRepository.GetAsync(user.Mitgliedsnummer);
+
+                    IsRunning = false;
 
                     var password = Password ?? string.Empty;
 
@@ -145,6 +159,8 @@ namespace AVF.CourseParticipation.ViewModels
             }
 
             await _dialogService.DisplayAlertAsync("Fehler bei der Anmeldung", "Benutzername oder Passwort falsch!", "OK");
+
+            IsRunning = false;
         }
 
 	    public override void OnNavigatingTo(INavigationParameters parameters)
