@@ -11,9 +11,9 @@
     <StackLayout Orientation="Horizontal" Margin="16">
         <StackLayout>
             <StackLayout>
-                <expandable:ExpandableView>
+                <expandable:ExpandableView x:Name="ExpandableViewFilters">
                     <expandable:ExpandableView.PrimaryView>
-                        <Button Text="Filter anzeigen"></Button>
+                        <views:LabeledSwitch x:Name="LabeledSwitchShowFilters" Text="Filter anzeigen" PropertyChanged="LabeledSwitchShowFilters_OnPropertyChanged"></views:LabeledSwitch>
                     </expandable:ExpandableView.PrimaryView>
                     <expandable:ExpandableView.SecondaryViewTemplate>
                         <DataTemplate>

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using AVF.CourseParticipation.Models;
 using Xamarin.Forms;
@@ -58,6 +59,11 @@ namespace AVF.CourseParticipation.Views
                 _tappedListViewSelectedMembersObjects.Clear();
                 _tappedListViewSelectedMembersObjects.Add(e.Item);
             }
+        }
+
+        private void LabeledSwitchShowFilters_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            ExpandableViewFilters.IsExpanded = LabeledSwitchShowFilters.IsToggled;
         }
     }
 }
