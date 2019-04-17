@@ -22,6 +22,11 @@ namespace AVF.CourseParticipation.Views
             {
                 ListViewCourses.Focus();
             }
+
+            if (keyEventArgs.Key == "Back")
+            {
+                Navigation.PopAsync();
+            }
         }
     }
 }
