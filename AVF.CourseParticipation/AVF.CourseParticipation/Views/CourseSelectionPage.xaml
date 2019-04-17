@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="AVF.CourseParticipation.Views.CourseSelectionPage" Style="{StaticResource ContentPageStyle}" Title="Kursauswahl">
+             x:Class="AVF.CourseParticipation.Views.CourseSelectionPage" Style="{StaticResource ContentPageStyle}" Title="Kursauswahl" Appearing="CourseSelectionPage_OnAppearing">
     <StackLayout>
         <StackLayout Style="{StaticResource StartStackLayoutStyle}">
             <Label Style="{StaticResource Title1Style}" Text="{Binding SelectedDate, StringFormat='{0:d. MMMM yyyy}'}"></Label>
@@ -14,12 +14,12 @@
                 <DataTemplate>
                     <ViewCell>
                         <StackLayout Margin="8" Padding="8" Spacing="8">
-                            <StackLayout Orientation="Horizontal">
+                            <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
                                 <Label Style="{StaticResource Title2Style}" Text="{Binding From, StringFormat='{}{0:hh\\:mm}'}" />
                                 <Label Style="{StaticResource Title2Style}" Text="-" />
                                 <Label Style="{StaticResource Title2Style}" Text="{Binding To, StringFormat='{}{0:hh\\:mm}'}" />
                             </StackLayout>
-                            <StackLayout Orientation="Horizontal">
+                            <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
                                 <Label Style="{StaticResource Title3Style}" Text="{Binding FirstName}" />
                                 <Label Style="{StaticResource Title3Style}" Text="{Binding LastName}" />
                             </StackLayout>
@@ -33,7 +33,7 @@
             </ListView.ItemTemplate>
         </ListView>
         <StackLayout Style="{StaticResource EndStackLayoutStyle}">
-            <Button Style="{StaticResource MainButtonStyle}" Text="Weiter" Command="{Binding EnterParticipantsCommand}"></Button>
+            <Button x:Name="ButtonEnterParticipants" Style="{StaticResource MainButtonStyle}" Text="Weiter" Command="{Binding EnterParticipantsCommand}"></Button>
         </StackLayout>
     </StackLayout>
 </ContentPage>

@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using System;
+using Xamarin.Forms;
 
 namespace AVF.CourseParticipation.Views
 {
@@ -7,6 +8,11 @@ namespace AVF.CourseParticipation.Views
         public CourseSelectionPage()
         {
             InitializeComponent();
+        }
+
+        private void CourseSelectionPage_OnAppearing(object sender, EventArgs e)
+        {
+            ButtonEnterParticipants.Focus();
         }
     }
 }

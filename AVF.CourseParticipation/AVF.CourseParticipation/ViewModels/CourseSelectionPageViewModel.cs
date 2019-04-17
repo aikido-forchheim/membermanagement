@@ -96,6 +96,8 @@ namespace AVF.CourseParticipation.ViewModels
                                 return;
                             }
                         }
+
+                        SelectedCourseSelectionInfo = CourseSelectionInfos.First();
                     }
                 }
                 catch (Exception e)

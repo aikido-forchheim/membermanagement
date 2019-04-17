@@ -53,5 +53,10 @@ namespace AVF.CourseParticipation.Views
             ((CalenderPageViewModel) BindingContext).Logout();
             return true; // Disable back button
         }
+
+        private void CalenderPage_OnAppearing(object sender, EventArgs e)
+        {
+            ButtonSelectCourse.Focus();
+        }
     }
 }
