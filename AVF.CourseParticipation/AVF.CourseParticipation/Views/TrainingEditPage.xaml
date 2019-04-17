@@ -15,7 +15,11 @@
     <StackLayout>
         <StackLayout Style="{StaticResource StartStackLayoutStyle}">
             <Label Style="{StaticResource Title1Style}" Text="{Binding SelectedDate, StringFormat='{0:d. MMMM yyyy}'}"></Label>
-            <Label Style="{StaticResource Title2Style}" Text="17:30-19:00"></Label>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                <Label Style="{StaticResource Title2Style}" Text="{Binding SelectedCourseSelectionInfo.From, StringFormat='{}{0:hh\\:mm}'}" />
+                <Label Style="{StaticResource Title2Style}" Text="-" />
+                <Label Style="{StaticResource Title2Style}" Text="{Binding SelectedCourseSelectionInfo.To, StringFormat='{}{0:hh\\:mm}'}" />
+            </StackLayout>
             <!--<Button Text="Notiz hinzufügen" Style="{StaticResource EditButtonStyle}"></Button>-->
         </StackLayout>
         <StackLayout Style="{StaticResource CenterStackLayoutStyle}" Margin="0,0,0,32">

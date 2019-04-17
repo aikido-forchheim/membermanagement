@@ -8,6 +8,8 @@ using System.Windows.Input;
 using AVF.CourseParticipation.Models;
 using AVF.CourseParticipation.ViewModels.Models;
 using AVF.CourseParticipation.Views;
+using AVF.MemberManagement.StandardLibrary.Interfaces;
+using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.StandardLibrary.Extensions;
 using Microsoft.Extensions.Logging;
 using Prism.Navigation;
@@ -18,6 +20,7 @@ namespace AVF.CourseParticipation.ViewModels
 	public class TrainingEditPageViewModel : ViewModelBase
 	{
 	    private readonly ILogger _logger;
+	    private readonly IRepository<Mitglied> _memberRepository;
 	    private DateTime _selectedDate = DateTime.Now;
 
 	    public DateTime SelectedDate
@@ -42,10 +45,27 @@ namespace AVF.CourseParticipation.ViewModels
 	        set => SetProperty(ref _selectedCourseSelectionInfo, value);
 	    }
 
-        public TrainingEditPageViewModel(INavigationService navigationService, ILogger logger) : base(navigationService)
+        public ICommand EditTrainerCommand { get; }
+
+        public TrainingEditPageViewModel(INavigationService navigationService, ILogger logger, IRepository<Mitglied> memberRepository) : base(navigationService)
         {
             _logger = logger;
+            _memberRepository = memberRepository;
             SelectParticipantsCommand = new DelegateCommand(SelectParticipants, CanSelectParticipants);
+            EditTrainerCommand = new DelegateCommand(EditTrainer, CanEditTrainer);
+        }
+
+	    private bool CanEditTrainer()
+	    {
+	        return true;
+	    }
+
+	    private async void EditTrainer()
+	    {
+	        NavigationParameters parameters = new NavigationParameters();
+            parameters.Add(nameof(SelectedDate), SelectedDate);
+
+	        await NavigationService.NavigateAsync("TrainerSelectionPage", parameters);
         }
 
 	    public override async void OnNavigatedTo(INavigationParameters parameters)
@@ -70,7 +90,16 @@ namespace AVF.CourseParticipation.ViewModels
 	                    parameters[nameof(SelectedCourseSelectionInfo)].ToString().Deserialize<CourseSelectionInfo>();
 
                     TrainerInfos.Add(new TrainerInfo { FullName = SelectedCourseSelectionInfo.FirstName + " " + SelectedCourseSelectionInfo.LastName });
-	                //TrainerInfos.Add(new TrainerInfo {FullName = "Markus Malz"});
+
+	                foreach (var contrainerMemberId in SelectedCourseSelectionInfo.ContrainerMemberIds)
+	                {
+	                    if (contrainerMemberId != null && contrainerMemberId != -1)
+	                    {
+	                        var member = await _memberRepository.GetAsync((int) contrainerMemberId);
+
+	                        TrainerInfos.Add(new TrainerInfo { FullName = member.Name });
+                        }
+	                }
 	            }
             }
 	        catch (Exception e)
