@@ -4,8 +4,8 @@
              x:Class="AVF.CourseParticipation.Views.LabeledSwitch">
   <ContentView.Content>
       <StackLayout Orientation="Horizontal">
-          <Label Text="{Binding Text}" VerticalOptions="Center"></Label>
-          <Switch IsToggled="{Binding IsToggled}"></Switch>
+          <Label Text="{Binding Text}" VerticalOptions="Center" WidthRequest="128"></Label>
+          <Switch IsToggled="{Binding IsToggled}" Margin="0"></Switch>
       </StackLayout>
     </ContentView.Content>
 </ContentView>

@@ -74,7 +74,10 @@ namespace AVF.CourseParticipation.ViewModels
 	    {
 	        if (SelectedMember != null)
 	        {
-	            SelectedMembers.Add(SelectedMember);
+	            if (!SelectedMembers.Contains(SelectedMember))
+	            {
+	                SelectedMembers.Add(SelectedMember);
+	            }
 	        }
 
 	        if (Members.Contains(SelectedMember))
@@ -92,7 +95,10 @@ namespace AVF.CourseParticipation.ViewModels
 	    {
 	        if (SelectedMemberToRemove != null)
 	        {
-	            Members.Add(SelectedMemberToRemove);
+	            if (!Members.Contains(SelectedMemberToRemove))
+	            {
+	                Members.Add(SelectedMemberToRemove);
+	            }
 	        }
 
 	        if (SelectedMembers.Contains(SelectedMemberToRemove))

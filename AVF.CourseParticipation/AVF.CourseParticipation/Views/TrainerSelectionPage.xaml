@@ -7,10 +7,18 @@
              xmlns:forms="clr-namespace:Xamarin.Forms;assembly=Xamarin.Forms.WrapLayout"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="AVF.CourseParticipation.Views.TrainerSelectionPage" Title="Trainer auswählen">
-    <StackLayout Orientation="Horizontal">
+    <StackLayout Orientation="Horizontal" Margin="16">
         <StackLayout>
             <StackLayout>
                 <views:LabeledSwitch Text="Aktive Mitglieder" IsToggled="True"></views:LabeledSwitch>
+                <views:LabeledSwitch Text="Nur Trainer" IsToggled="True"></views:LabeledSwitch>
+                <StackLayout Orientation="Horizontal">
+                    <views:LabeledSwitch Text="Zuletzt anwesend" IsToggled="True"></views:LabeledSwitch>
+                    <Label Text="in den letzten" VerticalOptions="Center"></Label>
+                    <Label Text="4" FontAttributes="Bold" VerticalOptions="Center"></Label>
+                    <Label Text="Wochen" VerticalOptions="Center"></Label>
+                    <Stepper Value="4"></Stepper>
+                </StackLayout>
                 <views:LabeledSwitch Text="Kinder"></views:LabeledSwitch>
                 <views:LabeledSwitch Text="Jugendliche" IsToggled="False"></views:LabeledSwitch>
                 <views:LabeledSwitch Text="Erwachsene" IsToggled="True"></views:LabeledSwitch>
