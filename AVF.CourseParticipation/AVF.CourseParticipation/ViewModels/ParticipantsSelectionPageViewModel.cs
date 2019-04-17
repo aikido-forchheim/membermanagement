@@ -1,15 +1,18 @@
-﻿using Prism.Commands;
+﻿using AVF.MemberManagement.StandardLibrary.Interfaces;
+using AVF.MemberManagement.StandardLibrary.Tbo;
+using Microsoft.Extensions.Logging;
+using Prism.Commands;
 using Prism.Navigation;
 using Prism.Services;
 using System.Windows.Input;
 
 namespace AVF.CourseParticipation.ViewModels
 {
-    public class ParticipantsSelectionPageViewModel : ViewModelBase
+    public class ParticipantsSelectionPageViewModel : MemberSelectionPageViewModel
 	{
         private readonly IPageDialogService _dialogService;
 
-        public ParticipantsSelectionPageViewModel(INavigationService navigationService, IPageDialogService dialogService) : base(navigationService)
+        public ParticipantsSelectionPageViewModel(INavigationService navigationService, IRepository<Mitglied> memberRepository, ILogger logger, IPageDialogService dialogService) : base(navigationService, memberRepository, logger)
         {
             SaveCommand = new DelegateCommand(Save, CanSave);
             _dialogService = dialogService;
