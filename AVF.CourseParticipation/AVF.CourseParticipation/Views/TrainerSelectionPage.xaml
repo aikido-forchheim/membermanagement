@@ -3,7 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              xmlns:courseParticipation="clr-namespace:AVF.CourseParticipation;assembly=AVF.CourseParticipation"
+             xmlns:views="clr-namespace:AVF.CourseParticipation.Views;assembly=AVF.CourseParticipation"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="AVF.CourseParticipation.Views.TrainerSelectionPage" Title="Trainer auswählen">
-  
+  <StackLayout>
+      <ListView ItemsSource="{Binding Members}">
+          <ListView.ItemTemplate>
+              <DataTemplate>
+                    <views:MemberViewCell></views:MemberViewCell>
+              </DataTemplate>
+          </ListView.ItemTemplate>
+      </ListView>
+  </StackLayout>
 </courseParticipation:KeyContentPage>

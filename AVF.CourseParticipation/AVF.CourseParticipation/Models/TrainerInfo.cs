@@ -1,7 +1,6 @@
-﻿namespace AVF.CourseParticipation.ViewModels.Models
+﻿namespace AVF.CourseParticipation.Models
 {
-    public class TrainerInfo
+    public class TrainerInfo : MemberInfo
     {
-        public string FullName { get; set; }    
     }
 }

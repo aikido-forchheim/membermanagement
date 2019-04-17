@@ -6,7 +6,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using AVF.CourseParticipation.Models;
-using AVF.CourseParticipation.ViewModels.Models;
 using AVF.CourseParticipation.Views;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
@@ -89,7 +88,7 @@ namespace AVF.CourseParticipation.ViewModels
 	                SelectedCourseSelectionInfo =
 	                    parameters[nameof(SelectedCourseSelectionInfo)].ToString().Deserialize<CourseSelectionInfo>();
 
-                    TrainerInfos.Add(new TrainerInfo { FullName = SelectedCourseSelectionInfo.FirstName + " " + SelectedCourseSelectionInfo.LastName });
+                    TrainerInfos.Add(new TrainerInfo { FirstName = SelectedCourseSelectionInfo.FirstName, LastName = SelectedCourseSelectionInfo.LastName });
 
 	                foreach (var contrainerMemberId in SelectedCourseSelectionInfo.ContrainerMemberIds)
 	                {
@@ -97,7 +96,7 @@ namespace AVF.CourseParticipation.ViewModels
 	                    {
 	                        var member = await _memberRepository.GetAsync((int) contrainerMemberId);
 
-	                        TrainerInfos.Add(new TrainerInfo { FullName = member.Name });
+	                        TrainerInfos.Add(new TrainerInfo { FirstName = member.FirstName, LastName = member.Nachname});
                         }
 	                }
 	            }
