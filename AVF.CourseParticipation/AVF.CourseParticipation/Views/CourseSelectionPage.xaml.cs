@@ -1,4 +1,5 @@
 ﻿using System;
+using AVF.CourseParticipation.Models;
 using Xamarin.Forms;
 
 namespace AVF.CourseParticipation.Views
@@ -12,7 +13,12 @@ namespace AVF.CourseParticipation.Views
 
         private void CourseSelectionPage_OnAppearing(object sender, EventArgs e)
         {
-            ButtonEnterParticipants.Focus();
+            ListViewCourses.Focus();
+        }
+
+        public void KeyPressed(Page element, KeyEventArgs keyEventArgs)
+        {
+            
         }
     }
 }

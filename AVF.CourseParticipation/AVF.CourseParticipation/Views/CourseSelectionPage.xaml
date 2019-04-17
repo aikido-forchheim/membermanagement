@@ -9,7 +9,7 @@
             <Label Style="{StaticResource Title1Style}" Text="{Binding SelectedDate, StringFormat='{0:d. MMMM yyyy}'}"></Label>
             <!--<Label Style="{StaticResource Title2Style}" Text="(Heute)"></Label>-->
         </StackLayout>
-        <ListView Style="{StaticResource CenterStackLayoutStyle}" HasUnevenRows="True" ItemsSource="{Binding CourseSelectionInfos}" SelectedItem="{Binding SelectedCourseSelectionInfo, Mode=TwoWay}">
+        <ListView x:Name="ListViewCourses"  Style="{StaticResource CenterStackLayoutStyle}" HasUnevenRows="True" ItemsSource="{Binding CourseSelectionInfos}" SelectedItem="{Binding SelectedCourseSelectionInfo, Mode=TwoWay}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
