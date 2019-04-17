@@ -9,7 +9,7 @@
             <Label Style="{StaticResource Title1Style}" Text="{Binding SelectedDate, StringFormat='{0:d. MMMM yyyy}'}"></Label>
             <!--<Label Style="{StaticResource Title2Style}" Text="(Heute)"></Label>-->
         </StackLayout>
-        <ListView Style="{StaticResource CenterStackLayoutStyle}" HasUnevenRows="True" ItemsSource="{Binding CourseSelectionInfos}" SelectedItem="{Binding CourseSelectionInfo, Mode=TwoWay}">
+        <ListView Style="{StaticResource CenterStackLayoutStyle}" HasUnevenRows="True" ItemsSource="{Binding CourseSelectionInfos}" SelectedItem="{Binding SelectedCourseSelectionInfo, Mode=TwoWay}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
@@ -23,10 +23,10 @@
                                 <Label Style="{StaticResource Title3Style}" Text="{Binding FirstName}" />
                                 <Label Style="{StaticResource Title3Style}" Text="{Binding LastName}" />
                             </StackLayout>
-                            <StackLayout Orientation="Horizontal">
+                            <!--<StackLayout Orientation="Horizontal">
                                 <Label Text="Teilnehmer:" FontAttributes="Italic" />
                                 <Label Text="{Binding Participants}" FontAttributes="Italic" />
-                            </StackLayout>
+                            </StackLayout>-->
                         </StackLayout>
                     </ViewCell>
                 </DataTemplate>

@@ -7,6 +7,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
 using AVF.CourseParticipation.Models;
+using AVF.MemberManagement.StandardLibrary.Interfaces;
+using AVF.MemberManagement.StandardLibrary.Tbo;
+using AVF.StandardLibrary.Extensions;
 using Microsoft.Extensions.Logging;
 using Prism.Navigation;
 
@@ -15,16 +18,18 @@ namespace AVF.CourseParticipation.ViewModels
     public class CourseSelectionPageViewModel : ViewModelBase
     {
         private readonly ILogger _logger;
-        public ObservableCollection<CourseSelectionInfo> CourseSelectionInfos { get; set; }
+        private readonly IRepository<Kurs> _courseRepository;
+        private readonly IRepository<Mitglied> _memberRepository;
+        public ObservableCollection<CourseSelectionInfo> CourseSelectionInfos { get; set; } = new ObservableCollection<CourseSelectionInfo>();
 
         private DateTime _selectedDate = DateTime.Today;
 
-        private CourseSelectionInfo _courseSelectionInfo;
+        private CourseSelectionInfo _selectedCourseSelectionInfo;
 
-        public CourseSelectionInfo CourseSelectionInfo
+        public CourseSelectionInfo SelectedCourseSelectionInfo
         {
-            get => _courseSelectionInfo;
-            set => SetProperty(ref _courseSelectionInfo, value);
+            get => _selectedCourseSelectionInfo;
+            set => SetProperty(ref _selectedCourseSelectionInfo, value);
         }
 
         public DateTime SelectedDate
@@ -33,43 +38,16 @@ namespace AVF.CourseParticipation.ViewModels
             set => SetProperty(ref _selectedDate, value);
         }
 
-        public CourseSelectionPageViewModel(INavigationService navigationService, ILogger logger) : base(navigationService)
+        public CourseSelectionPageViewModel(INavigationService navigationService, ILogger logger, IRepository<Kurs> courseRepository, IRepository<Mitglied> memberRepository) : base(navigationService)
         {
             _logger = logger;
-            EnterParticipantsCommand = new DelegateCommand(EnterParticipants, CanEnterParticipants);
+            _courseRepository = courseRepository;
+            _memberRepository = memberRepository;
 
-            CourseSelectionInfos
-
-            = new ObservableCollection<CourseSelectionInfo>
-            {
-                new CourseSelectionInfo
-                {
-                    From = new TimeSpan(0, 10, 15, 0),
-                    To = new TimeSpan(0, 11, 30, 0),
-                    FirstName = "Hermann",
-                    LastName = "Kirsch",
-                    Participants = 9
-                },
-                new CourseSelectionInfo
-                {
-                    From = new TimeSpan(0, 17, 0, 0),
-                    To = new TimeSpan(0, 19, 0, 0),
-                    FirstName = "Günther",
-                    LastName = "Reich",
-                    Participants = 12
-                },
-                new CourseSelectionInfo
-                {
-                    From = new TimeSpan(0, 19, 0, 0),
-                    To = new TimeSpan(0, 21, 0, 0),
-                    FirstName = "Klaus",
-                    LastName = "Schmoranz",
-                    Participants = 7
-                },
-            };
+            EnterParticipantsCommand = new DelegateCommand(EnterParticipants, CanEnterParticipants).ObservesProperty(() => SelectedCourseSelectionInfo);
         }
 
-        public override void OnNavigatedTo(INavigationParameters parameters)
+        public override async void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
 
@@ -80,14 +58,51 @@ namespace AVF.CourseParticipation.ViewModels
                     var selectedDate = parameters["SelectedDate"].ToString();
                     DateTime.TryParse(selectedDate, out var parsedDate);
                     SelectedDate = parsedDate;
+
+                    var courses = await _courseRepository.GetAsync();
+                    var relevantCourses = courses.Where(c => c.WochentagID == (int) SelectedDate.DayOfWeek).OrderBy(c => c.Zeit);
+
+                    CourseSelectionInfos.Clear();
+
+                    foreach (var course in relevantCourses)
+                    {
+                        var courseSelectionInfo = new CourseSelectionInfo
+                        {
+                            MemberId = course.Trainer,
+                            From = course.Zeit
+                        };
+
+                        courseSelectionInfo.To = courseSelectionInfo.From + new TimeSpan(0, 0, course.DauerMinuten, 0);
+
+                        var member = await _memberRepository.GetAsync(courseSelectionInfo.MemberId);
+
+                        courseSelectionInfo.LastName = member.Nachname;
+                        courseSelectionInfo.FirstName = member.Vorname;
+
+                        CourseSelectionInfos.Add(courseSelectionInfo);
+                    }
+
+                    if (SelectedDate.IsToday())
+                    {
+                        for (var i = CourseSelectionInfos.Count - 1; i >= 0; i--)
+                        {
+                            var courseSelectionInfo = CourseSelectionInfos[i];
+
+                            var now = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+
+                            if (courseSelectionInfo.From < now)
+                            {
+                                SelectedCourseSelectionInfo = courseSelectionInfo;
+                                return;
+                            }
+                        }
+                    }
                 }
                 catch (Exception e)
                 {
                     _logger.LogError(e.ToString());
                 }
             }
-
-            CourseSelectionInfo = CourseSelectionInfos.Last();
         }
 
         #region EnterPartipantsCommand
@@ -108,7 +123,7 @@ namespace AVF.CourseParticipation.ViewModels
 
         private bool CanEnterParticipants()
         {
-            return true;
+            return SelectedCourseSelectionInfo != null;
         }
 
         #endregion  

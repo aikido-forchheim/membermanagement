@@ -10,6 +10,8 @@ namespace AVF.CourseParticipation.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
+        public int MemberId { get; set; }
+
         public int Participants { get; set; }
     }
 }

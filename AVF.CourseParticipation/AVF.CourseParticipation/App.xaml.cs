@@ -72,9 +72,11 @@ namespace AVF.CourseParticipation
             containerRegistry.Register<IProxyBase<Setting, string>, ProxyBase<TblSettings, Setting, string>>();
             containerRegistry.Register<IProxy<User>, Proxy<TblUsers, User>>();
             containerRegistry.Register<IProxy<Mitglied>, Proxy<TblMitglieder, Mitglied>>();
+            containerRegistry.Register<IProxy<Kurs>, Proxy<TblKurse, Kurs>>();
 
             containerRegistry.RegisterSingleton<IRepository<User>, Repository<User>>();
             containerRegistry.RegisterSingleton<IRepository<Mitglied>, Repository<Mitglied>>();
+            containerRegistry.RegisterSingleton<IRepository<Kurs>, Repository<Kurs>>();
 
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();
