@@ -7,6 +7,7 @@
              xmlns:expandable="clr-namespace:Expandable;assembly=ExpandableView"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="AVF.CourseParticipation.Views.MemberSelectionPage" Title="Mitglieder auswählen">
+    <StackLayout>
     <StackLayout Orientation="Horizontal" Margin="16">
         <StackLayout>
             <StackLayout>
@@ -58,6 +59,11 @@
                 </ListView.ItemTemplate>
             </ListView>
             <Button x:Name="ButtonRemoveSelectedMember" Text="Entfernen" Command="{Binding RemoveSelectedMemberCommand}"></Button>
+        </StackLayout>
+        </StackLayout>
+        <StackLayout Orientation="Horizontal">
+            <Button Text="Abbrechen" Command="{Binding CancelCommand}"></Button>
+            <Button Text="Speichern" Command="{Binding SaveCommand}"></Button>
         </StackLayout>
     </StackLayout>
 </courseParticipation:KeyContentPage>

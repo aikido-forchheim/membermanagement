@@ -13,6 +13,8 @@ namespace AVF.CourseParticipation.ViewModels
         {
             SaveCommand = new DelegateCommand(Save, CanSave);
             CancelCommand = new DelegateCommand(Cancel, CanCancel);
+            BackCommand = new DelegateCommand(Back, CanBack);
+
             _dialogService = dialogService;
         }
 
@@ -58,5 +60,21 @@ namespace AVF.CourseParticipation.ViewModels
         }
 
         #endregion
+
+	    #region BackCommand
+
+	    public ICommand BackCommand { get; }
+
+	    private async void Back()
+	    {
+	        await NavigationService.GoBackAsync();
+	    }
+
+	    private bool CanBack()
+	    {
+	        return true;
+	    }
+
+	    #endregion
     }
 }

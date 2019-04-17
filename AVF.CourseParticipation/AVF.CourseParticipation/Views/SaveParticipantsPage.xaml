@@ -7,8 +7,9 @@
     <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
         <Label Text="Neue Teilnehmer: "></Label>
         <Label Text="Gelöschte Teilnehmer: "></Label>
-        <Button Text="Save" Command="{Binding SaveCommand}"></Button>
-        <Button Text="Cancel" Command="{Binding CancelCommand}"></Button>
+        <Button Text="Speichern" Command="{Binding SaveCommand}"></Button>
+        <Button Text="Änderungen verwerfen" Command="{Binding CancelCommand}"></Button>
+        <Button Text="Zurück zum Bearbeiten" Command="{Binding BackCommand}"></Button>
     </StackLayout>
 </ContentPage>
     
