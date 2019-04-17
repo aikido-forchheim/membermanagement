@@ -5,7 +5,7 @@
   <ContentView.Content>
       <StackLayout Orientation="Horizontal">
           <Label Text="{Binding Text}" VerticalOptions="Center" WidthRequest="128"></Label>
-          <Switch IsToggled="{Binding IsToggled}" Margin="0"></Switch>
+          <Switch IsToggled="{Binding IsToggled}" Scale="0.5"></Switch>
       </StackLayout>
     </ContentView.Content>
 </ContentView>

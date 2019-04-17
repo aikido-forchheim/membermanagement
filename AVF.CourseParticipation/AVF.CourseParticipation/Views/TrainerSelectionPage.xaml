@@ -5,23 +5,41 @@
              xmlns:courseParticipation="clr-namespace:AVF.CourseParticipation;assembly=AVF.CourseParticipation"
              xmlns:views="clr-namespace:AVF.CourseParticipation.Views;assembly=AVF.CourseParticipation"
              xmlns:forms="clr-namespace:Xamarin.Forms;assembly=Xamarin.Forms.WrapLayout"
+             xmlns:expandable="clr-namespace:Expandable;assembly=ExpandableView"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="AVF.CourseParticipation.Views.TrainerSelectionPage" Title="Trainer auswählen">
     <StackLayout Orientation="Horizontal" Margin="16">
         <StackLayout>
             <StackLayout>
-                <views:LabeledSwitch Text="Aktive Mitglieder" IsToggled="True"></views:LabeledSwitch>
-                <views:LabeledSwitch Text="Nur Trainer" IsToggled="True"></views:LabeledSwitch>
-                <StackLayout Orientation="Horizontal">
-                    <views:LabeledSwitch Text="Zuletzt anwesend" IsToggled="True"></views:LabeledSwitch>
-                    <Label Text="in den letzten" VerticalOptions="Center"></Label>
-                    <Label Text="4" FontAttributes="Bold" VerticalOptions="Center"></Label>
-                    <Label Text="Wochen" VerticalOptions="Center"></Label>
-                    <Stepper Value="4"></Stepper>
-                </StackLayout>
-                <views:LabeledSwitch Text="Kinder"></views:LabeledSwitch>
-                <views:LabeledSwitch Text="Jugendliche" IsToggled="False"></views:LabeledSwitch>
-                <views:LabeledSwitch Text="Erwachsene" IsToggled="True"></views:LabeledSwitch>
+                <expandable:ExpandableView>
+                    <expandable:ExpandableView.PrimaryView>
+                        <Button Text="Filter anzeigen"></Button>
+                    </expandable:ExpandableView.PrimaryView>
+                    <expandable:ExpandableView.SecondaryViewTemplate>
+                        <DataTemplate>
+                        <StackLayout>
+                            <views:LabeledSwitch Text="Aktive Mitglieder" IsToggled="True"></views:LabeledSwitch>
+                            <views:LabeledSwitch Text="Nur Trainer" IsToggled="True"></views:LabeledSwitch>
+                            <StackLayout Orientation="Horizontal">
+                                <views:LabeledSwitch Text="Zuletzt anwesend" IsToggled="True"></views:LabeledSwitch>
+
+                                <Label Margin="16,0,0,0" Text="innerhalb von" VerticalOptions="Center"></Label>
+                                <Label Text="1" FontAttributes="Bold" VerticalOptions="Center"></Label>
+                                <Label Text="Monat(en)" VerticalOptions="Center"></Label>
+                                <Stepper Value="4"></Stepper>
+                            </StackLayout>
+                            <views:LabeledSwitch Text="Kinder"></views:LabeledSwitch>
+                            <views:LabeledSwitch Text="Jugendliche" IsToggled="False"></views:LabeledSwitch>
+                                <views:LabeledSwitch Text="Erwachsene" IsToggled="True"></views:LabeledSwitch>
+                            <BoxView 
+                                HeightRequest="2" 
+                                BackgroundColor="Black" 
+                                HorizontalOptions="FillAndExpand" />
+                            <Label />
+                            </StackLayout>
+                        </DataTemplate>
+                    </expandable:ExpandableView.SecondaryViewTemplate>
+                </expandable:ExpandableView>
             </StackLayout>
             <ListView x:Name="ListViewMembers" ItemsSource="{Binding Members}" SelectedItem="{Binding SelectedMember}" ItemTapped="ListViewMembers_OnItemTapped">
                 <ListView.ItemTemplate>
