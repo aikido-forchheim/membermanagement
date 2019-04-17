@@ -4,15 +4,35 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              xmlns:courseParticipation="clr-namespace:AVF.CourseParticipation;assembly=AVF.CourseParticipation"
              xmlns:views="clr-namespace:AVF.CourseParticipation.Views;assembly=AVF.CourseParticipation"
+             xmlns:forms="clr-namespace:Xamarin.Forms;assembly=Xamarin.Forms.WrapLayout"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="AVF.CourseParticipation.Views.TrainerSelectionPage" Title="Trainer auswählen">
-  <StackLayout>
-      <ListView ItemsSource="{Binding Members}">
-          <ListView.ItemTemplate>
-              <DataTemplate>
-                    <views:MemberViewCell></views:MemberViewCell>
-              </DataTemplate>
-          </ListView.ItemTemplate>
-      </ListView>
-  </StackLayout>
+    <StackLayout Orientation="Horizontal">
+        <StackLayout>
+            <StackLayout>
+                <views:LabeledSwitch Text="Aktive Mitglieder" IsToggled="True"></views:LabeledSwitch>
+                <views:LabeledSwitch Text="Kinder"></views:LabeledSwitch>
+                <views:LabeledSwitch Text="Jugendliche" IsToggled="False"></views:LabeledSwitch>
+                <views:LabeledSwitch Text="Erwachsene" IsToggled="True"></views:LabeledSwitch>
+            </StackLayout>
+            <ListView x:Name="ListViewMembers" ItemsSource="{Binding Members}" SelectedItem="{Binding SelectedMember}" ItemTapped="ListViewMembers_OnItemTapped">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <views:MemberViewCell></views:MemberViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Button x:Name="ButtonAddSelectedMember" Text="Hinzufügen" Command="{Binding AddSelectedMemberCommand}"></Button>
+        </StackLayout>
+        <StackLayout>
+            <ListView x:Name="ListViewSelectedMembers" ItemsSource="{Binding SelectedMembers}" SelectedItem="{Binding SelectedMemberToRemove}" ItemTapped="ListViewSelectedMembers_OnItemTapped">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <views:MemberViewCell></views:MemberViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Button x:Name="ButtonRemoveSelectedMember" Text="Entfernen" Command="{Binding RemoveSelectedMemberCommand}"></Button>
+        </StackLayout>
+    </StackLayout>
 </courseParticipation:KeyContentPage>

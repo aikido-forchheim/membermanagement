@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Input;
+using AVF.CourseParticipation.Extensions;
 using AVF.CourseParticipation.Models;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
@@ -17,7 +19,9 @@ namespace AVF.CourseParticipation.ViewModels
 	    private readonly IRepository<Mitglied> _memberRepository;
 	    private readonly ILogger _logger;
 
-	    private ObservableCollection<MemberInfo> _members = new ObservableCollection<MemberInfo>();
+	    private static List<Mitglied> _allMembers = new List<Mitglied>();
+
+        private ObservableCollection<MemberInfo> _members = new ObservableCollection<MemberInfo>();
 
 	    public ObservableCollection<MemberInfo> Members
 	    {
@@ -25,20 +29,92 @@ namespace AVF.CourseParticipation.ViewModels
 	        set => SetProperty(ref _members, value);
 	    }
 
-	    public TrainerSelectionPageViewModel(INavigationService navigationService, IRepository<Mitglied> memberRepository, ILogger logger) : base(navigationService)
+	    private MemberInfo _selectedMember;
+
+	    public MemberInfo SelectedMember
+	    {
+	        get => _selectedMember;
+	        set => SetProperty(ref _selectedMember, value);
+	    }
+
+	    private ObservableCollection<MemberInfo> _selectedMembers = new ObservableCollection<MemberInfo>();
+
+	    public ObservableCollection<MemberInfo> SelectedMembers
+	    {
+	        get => _selectedMembers;
+	        set => SetProperty(ref _selectedMembers, value);
+	    }
+
+	    private MemberInfo _selectedMemberToRemove;
+
+	    public MemberInfo SelectedMemberToRemove
+	    {
+	        get => _selectedMemberToRemove;
+	        set => SetProperty(ref _selectedMemberToRemove, value);
+	    }
+
+        public ICommand AddSelectedMemberCommand { get; }
+	    public ICommand RemoveSelectedMemberCommand { get; }
+
+        public TrainerSelectionPageViewModel(INavigationService navigationService, IRepository<Mitglied> memberRepository, ILogger logger) : base(navigationService)
 	    {
 	        _memberRepository = memberRepository;
 	        _logger = logger;
+
+            AddSelectedMemberCommand = new DelegateCommand(AddSelectedMember, CanAddSelectedMember).ObservesProperty(() => SelectedMember);
+	        RemoveSelectedMemberCommand = new DelegateCommand(RemoveSelectedMember, CanRemoveSelectedMember).ObservesProperty(() => SelectedMemberToRemove);
+        }
+
+        private bool CanAddSelectedMember()
+        {
+            return SelectedMember != null;
+        }
+
+	    private void AddSelectedMember()
+	    {
+	        if (SelectedMember != null)
+	        {
+	            SelectedMembers.Add(SelectedMember);
+	        }
+
+	        if (Members.Contains(SelectedMember))
+	        {
+	            Members.Remove(SelectedMember);
+	        }
+        }
+
+	    private bool CanRemoveSelectedMember()
+	    {
+	        return SelectedMemberToRemove != null;
 	    }
 
-	    public override async void OnNavigatedTo(INavigationParameters parameters)
+	    private void RemoveSelectedMember()
+	    {
+	        if (SelectedMemberToRemove != null)
+	        {
+	            Members.Add(SelectedMemberToRemove);
+	        }
+
+	        if (SelectedMembers.Contains(SelectedMemberToRemove))
+	        {
+	            SelectedMembers.Remove(SelectedMemberToRemove);
+	        }
+        }
+
+        public override async void OnNavigatedTo(INavigationParameters parameters)
 	    {
 	        try
 	        {
                 Members.Clear();
 
-	            var members = await _memberRepository.GetAsync();
-	            var orderedMembers = members.Where(m => m.Austritt == null || m.Austritt > DateTime.Now).OrderBy(m => m.Name);
+	            if (_allMembers.Count == 0)
+	            {
+	                _allMembers = await _memberRepository.GetAsync();
+	            }
+
+	            Func<Mitglied, string> firstNameOrder = m => m.Name;
+
+	            var orderedMembers = _allMembers.Where(m => m.IsActive()).OrderBy(firstNameOrder);
 	            foreach (var member in orderedMembers)
 	            {
 	                var memberInfo = new MemberInfo {FirstName = member.FirstName, LastName = member.Nachname};
