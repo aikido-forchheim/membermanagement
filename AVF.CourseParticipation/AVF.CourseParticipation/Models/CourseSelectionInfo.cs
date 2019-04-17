@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace AVF.CourseParticipation.Models
 {
@@ -11,6 +12,8 @@ namespace AVF.CourseParticipation.Models
         public string LastName { get; set; }
 
         public int MemberId { get; set; }
+
+        public List<int?> ContrainerMemberIds { get; set; } = new List<int?>();
 
         public int Participants { get; set; }
     }

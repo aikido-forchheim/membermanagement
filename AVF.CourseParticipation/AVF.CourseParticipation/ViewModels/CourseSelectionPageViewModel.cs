@@ -74,6 +74,9 @@ namespace AVF.CourseParticipation.ViewModels
 
                         courseSelectionInfo.To = courseSelectionInfo.From + new TimeSpan(0, 0, course.DauerMinuten, 0);
 
+                        if (course.Kotrainer1 != null && course.Kotrainer1 != -1) courseSelectionInfo.ContrainerMemberIds.Add(course.Kotrainer1);
+                        if (course.Kotrainer2 != null && course.Kotrainer2 != -1) courseSelectionInfo.ContrainerMemberIds.Add(course.Kotrainer2);
+
                         var member = await _memberRepository.GetAsync(courseSelectionInfo.MemberId);
 
                         courseSelectionInfo.LastName = member.Nachname;
@@ -115,11 +118,16 @@ namespace AVF.CourseParticipation.ViewModels
         {
             try
             {
-                NavigationService.NavigateAsync("TrainingEditPage");
+                var parameters = new NavigationParameters
+                {
+                    {nameof(SelectedDate), SelectedDate},
+                    {nameof(SelectedCourseSelectionInfo), SelectedCourseSelectionInfo.Serialize()}
+                };
+                NavigationService.NavigateAsync("TrainingEditPage", parameters);
             }
             catch (Exception exception)
             {
-                Debug.WriteLine(exception);
+                _logger.LogError(exception.ToString());
             }
         }
 

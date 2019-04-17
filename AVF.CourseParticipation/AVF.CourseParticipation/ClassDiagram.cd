@@ -3,7 +3,7 @@
   <Class Name="AVF.CourseParticipation.ViewModels.LoginPageViewModel" Collapsed="true">
     <Position X="3.75" Y="2" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAQAiABAAIAAAIAAAQAAAAQQMBAAAAQCBAIQAACAAAA=</HashCode>
+      <HashCode>AAQAiABAAIAAAIAAAYAAQAQQMBAAAAQCBAIRCACAAAA=</HashCode>
       <FileName>ViewModels\LoginPageViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -24,7 +24,7 @@
   <Class Name="AVF.CourseParticipation.ViewModels.CourseSelectionPageViewModel" Collapsed="true">
     <Position X="7" Y="2" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAEAAAAQAACQAAAAAACAAAEAAMACAAAA=</HashCode>
+      <HashCode>AAgAAAAAAAAAAEAAAAQAAAQAIQAACCAAAEABEACAAAA=</HashCode>
       <FileName>ViewModels\CourseSelectionPageViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -52,15 +52,22 @@
   <Class Name="AVF.CourseParticipation.ViewModels.TrainingEditPageViewModel" Collapsed="true">
     <Position X="8.5" Y="2" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAACAEAAAAQACAAAAAAAAAAAgAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAACAEAAAAQACAYAAAAAAAAAgAAAAgAAAAA=</HashCode>
       <FileName>ViewModels\TrainingEditPageViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="AVF.CourseParticipation.ViewModels.NewPasswordPageViewModel" Collapsed="true">
     <Position X="3.75" Y="0.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>IAVAAAAAAABAAAAAAAAAAAAAAAAAAAQKBAAAAAAABAA=</HashCode>
       <FileName>ViewModels\NewPasswordPageViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AVF.CourseParticipation.ViewModels.TrainerSelectionPageViewModel" Collapsed="true">
+    <Position X="8.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\TrainerSelectionPageViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />

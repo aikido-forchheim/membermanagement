@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<courseParticipation:KeyContentPage  xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             xmlns:courseParticipation="clr-namespace:AVF.CourseParticipation;assembly=AVF.CourseParticipation"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="AVF.CourseParticipation.Views.TrainerSelectionPage" Title="Trainer auswählen">
+  
+</courseParticipation:KeyContentPage>

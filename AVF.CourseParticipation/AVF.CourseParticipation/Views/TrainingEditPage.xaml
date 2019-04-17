@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<courseParticipation:KeyContentPage  xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             xmlns:courseParticipation="clr-namespace:AVF.CourseParticipation;assembly=AVF.CourseParticipation"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="AVF.CourseParticipation.Views.TrainingEditPage" Style="{StaticResource ContentPageStyle}" Title="Training editieren">
     <ContentPage.Resources>
@@ -15,17 +16,24 @@
         <StackLayout Style="{StaticResource StartStackLayoutStyle}">
             <Label Style="{StaticResource Title1Style}" Text="{Binding SelectedDate, StringFormat='{0:d. MMMM yyyy}'}"></Label>
             <Label Style="{StaticResource Title2Style}" Text="17:30-19:00"></Label>
-            <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-                <Label Style="{StaticResource Title3Style}" Text="Julia Vilkova" Margin="8"></Label>
-                <Label Style="{StaticResource Title3Style}" Text="Markus Malz" Margin="8"></Label>
-            </StackLayout>
-            <Button HorizontalOptions="Center" Text="Trainer ändern" Style="{StaticResource EditButtonStyle}"></Button>
+            <!--<Button Text="Notiz hinzufügen" Style="{StaticResource EditButtonStyle}"></Button>-->
         </StackLayout>
         <StackLayout Style="{StaticResource CenterStackLayoutStyle}" Margin="0,0,0,32">
-            <Button Text="Notiz hinzufügen" Style="{StaticResource EditButtonStyle}"></Button>
+            <ListView x:Name="ListViewTrainers" Style="{StaticResource CenterStackLayoutStyle}" HasUnevenRows="True" ItemsSource="{Binding TrainerInfos}" IsEnabled="False">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout>
+                                <Label HorizontalTextAlignment="Center" HorizontalOptions="Center" Style="{StaticResource Title3Style}" Text="{Binding FullName}" Margin="8"></Label>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Button x:Name="ButtonEditTrainer" Command="{Binding EditTrainerCommand}" HorizontalOptions="Center" Text="Trainer ändern (T)" Style="{StaticResource EditButtonStyle}"></Button>
         </StackLayout>
         <StackLayout Style="{StaticResource EndStackLayoutStyle}">
-            <Button Style="{StaticResource MainButtonStyle}" Text="Weiter" Command="{Binding SelectParticipantsCommand}"></Button>
+            <Button x:Name="ButtonSelectParticipants" Style="{StaticResource MainButtonStyle}" Text="Weiter" Command="{Binding SelectParticipantsCommand}"></Button>
         </StackLayout>
     </StackLayout>
-</ContentPage>
+</courseParticipation:KeyContentPage>
