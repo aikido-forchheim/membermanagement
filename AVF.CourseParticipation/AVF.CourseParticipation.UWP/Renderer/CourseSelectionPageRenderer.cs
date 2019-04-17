@@ -1,18 +1,19 @@
 ﻿using Windows.UI.Xaml;
+using AVF.CourseParticipation;
 using AVF.CourseParticipation.Models;
 using AVF.CourseParticipation.UWP.Renderer;
 using AVF.CourseParticipation.Views;
 using Xamarin.Forms.Platform.UWP;
 
-[assembly: ExportRenderer(typeof(CourseSelectionPage), typeof(CourseSelectionPageRenderer))]
+[assembly: ExportRenderer(typeof(KeyContentPage), typeof(KeyContentPageRenderer))]
 namespace AVF.CourseParticipation.UWP.Renderer
 {
-    public class CourseSelectionPageRenderer : PageRenderer
+    public class KeyContentPageRenderer : PageRenderer
     {
         /// <summary>
         /// Monitor windows core ui keypress when ExplorePage is showing
         /// </summary>
-        public CourseSelectionPageRenderer() : base()
+        public KeyContentPageRenderer() : base()
         {
             // When ExplorePage appears then attach to the ui core keydown event
             Loaded += (object sender, RoutedEventArgs e) =>
@@ -32,7 +33,7 @@ namespace AVF.CourseParticipation.UWP.Renderer
         /// <param name="e"></param>
         public void HandleKeyDown(Windows.UI.Core.CoreWindow window, Windows.UI.Core.KeyEventArgs e)
         {
-            (Element as CourseSelectionPage).KeyPressed(Element, new KeyEventArgs { Key = e.VirtualKey.ToString() });
+            (Element as KeyContentPage).KeyPressed(new KeyEventArgs { Key = e.VirtualKey.ToString() });
         }
     }
 }

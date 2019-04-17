@@ -4,21 +4,24 @@ using Xamarin.Forms;
 
 namespace AVF.CourseParticipation.Views
 {
-    public partial class CourseSelectionPage : ContentPage
+    public partial class CourseSelectionPage
     {
         public CourseSelectionPage()
         {
             InitializeComponent();
         }
 
-        private void CourseSelectionPage_OnAppearing(object sender, EventArgs e)
+        public override void KeyPressed(KeyEventArgs keyEventArgs)
         {
-            ListViewCourses.Focus();
-        }
+            if (keyEventArgs.Key == "Enter")
+            {
+                ButtonEnterParticipants.Focus();
+            }
 
-        public void KeyPressed(Page element, KeyEventArgs keyEventArgs)
-        {
-            
+            if (keyEventArgs.Key == "Up" || keyEventArgs.Key == "Down")
+            {
+                ListViewCourses.Focus();
+            }
         }
     }
 }
