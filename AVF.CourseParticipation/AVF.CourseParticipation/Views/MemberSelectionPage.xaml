@@ -4,10 +4,9 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              xmlns:courseParticipation="clr-namespace:AVF.CourseParticipation;assembly=AVF.CourseParticipation"
              xmlns:views="clr-namespace:AVF.CourseParticipation.Views;assembly=AVF.CourseParticipation"
-             xmlns:forms="clr-namespace:Xamarin.Forms;assembly=Xamarin.Forms.WrapLayout"
              xmlns:expandable="clr-namespace:Expandable;assembly=ExpandableView"
              prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="AVF.CourseParticipation.Views.TrainerSelectionPage" Title="Trainer auswählen">
+             x:Class="AVF.CourseParticipation.Views.MemberSelectionPage" Title="Mitglieder auswählen">
     <StackLayout Orientation="Horizontal" Margin="16">
         <StackLayout>
             <StackLayout>

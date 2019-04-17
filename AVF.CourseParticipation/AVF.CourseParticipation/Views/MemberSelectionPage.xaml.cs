@@ -5,12 +5,12 @@ using Xamarin.Forms;
 
 namespace AVF.CourseParticipation.Views
 {
-    public partial class TrainerSelectionPage
+    public partial class MemberSelectionPage
     {
         private List<object> _tappedListViewMembersObjects = new List<object>();
         private List<object> _tappedListViewSelectedMembersObjects = new List<object>();
 
-        public TrainerSelectionPage()
+        public MemberSelectionPage()
         {
             InitializeComponent();
         }
