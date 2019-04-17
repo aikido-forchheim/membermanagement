@@ -15,7 +15,14 @@ namespace AVF.CourseParticipation.Views
         {
             if (keyEventArgs.Key == "Enter")
             {
-                ButtonEnterParticipants.Focus();
+                if (ButtonEnterParticipants.IsEnabled)
+                {
+                    ButtonEnterParticipants.Focus();
+                }
+                else
+                {
+                    ListViewCourses.Focus();
+                }
             }
 
             if (keyEventArgs.Key == "Up" || keyEventArgs.Key == "Down")
