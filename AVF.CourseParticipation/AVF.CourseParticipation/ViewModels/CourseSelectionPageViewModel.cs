@@ -80,7 +80,7 @@ namespace AVF.CourseParticipation.ViewModels
                         var member = await _memberRepository.GetAsync(courseSelectionInfo.MemberId);
 
                         courseSelectionInfo.LastName = member.Nachname;
-                        courseSelectionInfo.FirstName = member.Vorname;
+                        courseSelectionInfo.FirstName = member.FirstName;
 
                         CourseSelectionInfos.Add(courseSelectionInfo);
                     }
