@@ -28,9 +28,9 @@
                                         <Label Text="Monat(en)" VerticalOptions="Center"></Label>
                                         <Stepper Value="4"></Stepper>
                                     </StackLayout>
-                                    <views:LabeledSwitch Text="Kinder"></views:LabeledSwitch>
-                                    <views:LabeledSwitch Text="Jugendliche" IsToggled="False"></views:LabeledSwitch>
-                                    <views:LabeledSwitch Text="Erwachsene" IsToggled="True"></views:LabeledSwitch>
+                                    <views:LabeledSwitch Text="Kinder" IsToggled="{Binding WithChildren}"></views:LabeledSwitch>
+                                    <views:LabeledSwitch Text="Jugendliche" IsToggled="{Binding WithTeenagers}"></views:LabeledSwitch>
+                                    <views:LabeledSwitch Text="Erwachsene" IsToggled="{Binding WithAdults}"></views:LabeledSwitch>
                                     <BoxView 
                                 HeightRequest="2" 
                                 BackgroundColor="Black" 

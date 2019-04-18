@@ -79,7 +79,44 @@ namespace AVF.CourseParticipation.ViewModels
             }
 	    }
 
-	    public ICommand AddSelectedMemberCommand { get; }
+	    private bool _withChildren = true;
+
+	    public bool WithChildren
+	    {
+	        get => _withChildren;
+	        set
+	        {
+	            SetProperty(ref _withChildren, value);
+	            Filter().IgnoreResult();
+	        }
+	    }
+
+	    private bool _withTeenagers = true;
+
+	    public bool WithTeenagers
+        {
+	        get => _withTeenagers;
+	        set
+	        {
+	            SetProperty(ref _withTeenagers, value);
+	            Filter().IgnoreResult();
+	        }
+	    }
+
+	    private bool _withAdults = true;
+
+	    public bool WithAdults
+	    {
+	        get => _withAdults;
+	        set
+	        {
+	            SetProperty(ref _withAdults, value);
+	            Filter().IgnoreResult();
+	        }
+	    }
+
+
+        public ICommand AddSelectedMemberCommand { get; }
 	    public ICommand RemoveSelectedMemberCommand { get; }
 
         public MemberSelectionPageViewModel(INavigationService navigationService, IRepository<Mitglied> memberRepository, ILogger logger, IRepository<TrainerErnennung> trainerAppointmentsRepository) : base(navigationService)
@@ -180,6 +217,28 @@ namespace AVF.CourseParticipation.ViewModels
                     Func<Mitglied, bool> onlyTrainersExpression = m => trainerMemberIds.Contains(m.Id);
 
                     filteredMembers = filteredMembers.Where(onlyTrainersExpression);
+                }
+
+                var withoutChildren = !WithChildren;
+                var withoutTeeangers = !WithTeenagers;
+                var withoutAdults = !WithAdults;
+
+                if (withoutChildren)
+                {
+                    //filteredMembers = filteredMembers.Where(m=>m.GetAge() < 14);
+                    filteredMembers = filteredMembers.Where(m => m.GetAge() > 13);
+                }
+
+                if (withoutTeeangers)
+                {
+                    //filteredMembers = filteredMembers.Where(m => m.GetAge() > 13 && m.GetAge() < 18);
+                    filteredMembers = filteredMembers.Where(m => m.GetAge() < 14 || m.GetAge() > 17);
+                }
+
+                if (withoutAdults)
+                {
+                    //filteredMembers = filteredMembers.Where(m => m.GetAge() > 17);
+                    filteredMembers = filteredMembers.Where(m => m.GetAge() < 18);
                 }
 
                 var orderedMembers = filteredMembers.OrderBy(orderFirstname);
