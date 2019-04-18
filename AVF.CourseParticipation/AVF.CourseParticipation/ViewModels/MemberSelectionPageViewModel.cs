@@ -18,8 +18,10 @@ namespace AVF.CourseParticipation.ViewModels
 	{
 	    private readonly IRepository<Mitglied> _memberRepository;
 	    private readonly ILogger _logger;
+	    private readonly IRepository<TrainerErnennung> _trainerAppointmentsRepository;
 
 	    private static List<Mitglied> _allMembers = new List<Mitglied>();
+	    private static List<TrainerErnennung> _trainerAppointments = new List<TrainerErnennung>();
 
         private ObservableCollection<MemberInfo> _members = new ObservableCollection<MemberInfo>();
 
@@ -65,15 +67,28 @@ namespace AVF.CourseParticipation.ViewModels
 	        }
 	    }
 
+	    private bool _onlyTrainers;
+
+	    public bool OnlyTrainers
+	    {
+	        get => _onlyTrainers;
+	        set
+	        {
+	            SetProperty(ref _onlyTrainers, value);
+	            Filter().IgnoreResult();
+            }
+	    }
+
 	    public ICommand AddSelectedMemberCommand { get; }
 	    public ICommand RemoveSelectedMemberCommand { get; }
 
-        public MemberSelectionPageViewModel(INavigationService navigationService, IRepository<Mitglied> memberRepository, ILogger logger) : base(navigationService)
+        public MemberSelectionPageViewModel(INavigationService navigationService, IRepository<Mitglied> memberRepository, ILogger logger, IRepository<TrainerErnennung> trainerAppointmentsRepository) : base(navigationService)
 	    {
 	        _memberRepository = memberRepository;
 	        _logger = logger;
+	        _trainerAppointmentsRepository = trainerAppointmentsRepository;
 
-            AddSelectedMemberCommand = new DelegateCommand(AddSelectedMember, CanAddSelectedMember).ObservesProperty(() => SelectedMember);
+	        AddSelectedMemberCommand = new DelegateCommand(AddSelectedMember, CanAddSelectedMember).ObservesProperty(() => SelectedMember);
 	        RemoveSelectedMemberCommand = new DelegateCommand(RemoveSelectedMember, CanRemoveSelectedMember).ObservesProperty(() => SelectedMemberToRemove);
         }
 
@@ -151,6 +166,20 @@ namespace AVF.CourseParticipation.ViewModels
                 if (OnlyActiveMembers)
                 {
                     filteredMembers = filteredMembers.Where(onlyActiveMembersExpression);
+                }
+
+                if (OnlyTrainers)
+                {
+                    if (_trainerAppointments.Count == 0)
+                    {
+                        _trainerAppointments = await _trainerAppointmentsRepository.GetAsync();
+                    }
+
+                    var trainerMemberIds = _trainerAppointments.Select(t => t.MitgliedID).Distinct();
+
+                    Func<Mitglied, bool> onlyTrainersExpression = m => trainerMemberIds.Contains(m.Id);
+
+                    filteredMembers = filteredMembers.Where(onlyTrainersExpression);
                 }
 
                 var orderedMembers = filteredMembers.OrderBy(orderFirstname);

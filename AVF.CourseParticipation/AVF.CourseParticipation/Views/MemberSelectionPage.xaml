@@ -19,7 +19,7 @@
                             <DataTemplate>
                                 <StackLayout>
                                     <views:LabeledSwitch Text="Aktive Mitglieder" IsToggled="{Binding OnlyActiveMembers, Mode=TwoWay}"></views:LabeledSwitch>
-                                    <views:LabeledSwitch Text="Nur Trainer" IsToggled="True"></views:LabeledSwitch>
+                                    <views:LabeledSwitch Text="Nur Trainer" IsToggled="{Binding OnlyTrainers, Mode=TwoWay}"></views:LabeledSwitch>
                                     <StackLayout Orientation="Horizontal">
                                         <views:LabeledSwitch Text="Zuletzt anwesend" IsToggled="True"></views:LabeledSwitch>
 

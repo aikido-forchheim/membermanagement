@@ -12,7 +12,7 @@ namespace AVF.CourseParticipation.ViewModels
 	{
         private readonly IPageDialogService _dialogService;
 
-        public ParticipantsSelectionPageViewModel(INavigationService navigationService, IRepository<Mitglied> memberRepository, ILogger logger, IPageDialogService dialogService) : base(navigationService, memberRepository, logger)
+        public ParticipantsSelectionPageViewModel(INavigationService navigationService, IRepository<Mitglied> memberRepository, ILogger logger, IPageDialogService dialogService, IRepository<TrainerErnennung> trainerAppointmentsRepository) : base(navigationService, memberRepository, logger, trainerAppointmentsRepository)
         {
             SaveCommand = new DelegateCommand(Save, CanSave);
             _dialogService = dialogService;
