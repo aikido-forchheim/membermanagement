@@ -21,7 +21,7 @@ namespace AVF.CourseParticipation.Views
 	    }
         
 	    public static readonly BindableProperty IsToggledProperty =
-	        BindableProperty.Create(nameof(IsToggled), typeof(bool), typeof(LabeledSwitch), defaultValue: false);
+	        BindableProperty.Create(nameof(IsToggled), typeof(bool), typeof(LabeledSwitch), defaultValue: false, defaultBindingMode: BindingMode.TwoWay);
 	    public bool IsToggled
         {
 	        get => (bool)GetValue(IsToggledProperty);
@@ -30,8 +30,6 @@ namespace AVF.CourseParticipation.Views
 
         public LabeledSwitch()
         {
-            BindingContext = this;
-
 			InitializeComponent ();
 		}
 	}

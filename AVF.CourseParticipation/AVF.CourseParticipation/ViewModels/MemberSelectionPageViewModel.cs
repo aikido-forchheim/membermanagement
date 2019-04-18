@@ -53,7 +53,19 @@ namespace AVF.CourseParticipation.ViewModels
 	        set => SetProperty(ref _selectedMemberToRemove, value);
 	    }
 
-        public ICommand AddSelectedMemberCommand { get; }
+	    private bool _onlyActiveMembers = true;
+
+	    public bool OnlyActiveMembers
+	    {
+	        get => _onlyActiveMembers;
+	        set
+	        {
+	            SetProperty(ref _onlyActiveMembers, value);
+	            Filter().IgnoreResult();
+	        }
+	    }
+
+	    public ICommand AddSelectedMemberCommand { get; }
 	    public ICommand RemoveSelectedMemberCommand { get; }
 
         public MemberSelectionPageViewModel(INavigationService navigationService, IRepository<Mitglied> memberRepository, ILogger logger) : base(navigationService)
@@ -110,27 +122,49 @@ namespace AVF.CourseParticipation.ViewModels
         public override async void OnNavigatedTo(INavigationParameters parameters)
 	    {
 	        try
-	        {
-                Members.Clear();
-
-	            if (_allMembers.Count == 0)
-	            {
-	                _allMembers = await _memberRepository.GetAsync();
-	            }
-
-	            Func<Mitglied, string> firstNameOrder = m => m.Name;
-
-	            var orderedMembers = _allMembers.Where(m => m.IsActive()).OrderBy(firstNameOrder);
-	            foreach (var member in orderedMembers)
-	            {
-	                var memberInfo = new MemberInfo {FirstName = member.FirstName, LastName = member.Nachname};
-	                Members.Add(memberInfo);
-	            }
-	        }
-	        catch (Exception e)
+            {
+                await Filter();
+            }
+            catch (Exception e)
 	        {
 	            _logger.LogError(e.ToString());
 	        }
 	    }
-	}
+
+        private async System.Threading.Tasks.Task Filter()
+        {
+            try
+            {
+                Members.Clear();
+
+                if (_allMembers.Count == 0)
+                {
+                    _allMembers = await _memberRepository.GetAsync();
+                }
+
+                Func<Mitglied, string> orderFirstname = m => m.Name;
+
+                Func<Mitglied, bool> onlyActiveMembersExpression = m => m.IsActive();
+
+                IEnumerable<Mitglied> filteredMembers = _allMembers;
+
+                if (OnlyActiveMembers)
+                {
+                    filteredMembers = filteredMembers.Where(onlyActiveMembersExpression);
+                }
+
+                var orderedMembers = filteredMembers.OrderBy(orderFirstname);
+
+                foreach (var member in orderedMembers)
+                {
+                    var memberInfo = new MemberInfo { FirstName = member.FirstName, LastName = member.Nachname };
+                    Members.Add(memberInfo);
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.ToString());
+            }
+        }
+    }
 }

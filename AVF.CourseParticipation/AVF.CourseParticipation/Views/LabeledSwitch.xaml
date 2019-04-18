@@ -1,11 +1,13 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="AVF.CourseParticipation.Views.LabeledSwitch">
+             x:Class="AVF.CourseParticipation.Views.LabeledSwitch"
+             x:Name="This"
+             >
   <ContentView.Content>
       <StackLayout Orientation="Horizontal">
-          <Label Text="{Binding Text}" VerticalOptions="Center" WidthRequest="128"></Label>
-          <Switch IsToggled="{Binding IsToggled}" Scale="0.5"></Switch>
+            <Label Text="{Binding Text, Source={x:Reference This}}" VerticalOptions="Center" WidthRequest="128"></Label>
+            <Switch IsToggled="{Binding IsToggled, Source={x:Reference This}}" Scale="0.5"></Switch>
       </StackLayout>
     </ContentView.Content>
 </ContentView>
