@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
+using AVF.MemberManagement.StandardLibrary.Proxies;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Microsoft.Extensions.Logging;
 
@@ -91,6 +92,11 @@ namespace AVF.MemberManagement.StandardLibrary.Repositories
 
                 throw;
             }
+        }
+
+        public Task<List<Setting>> GetAsync(List<Filter> filters)
+        {
+            throw new NotImplementedException();
         }
 
         public Task<int> UpdateAsync(Setting s)

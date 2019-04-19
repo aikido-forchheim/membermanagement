@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using AVF.MemberManagement.StandardLibrary.Proxies;
 
 namespace AVF.MemberManagement.StandardLibrary.Interfaces
 {
@@ -10,6 +11,8 @@ namespace AVF.MemberManagement.StandardLibrary.Interfaces
         Task<List<T>> GetAsync();
 
         Task<T> GetAsync(TId id);
+
+        Task<List<T>> GetAsync(List<Filter> filters);
 
         Task<int> UpdateAsync(T obj);
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
+using AVF.MemberManagement.StandardLibrary.Proxies;
 
 namespace AVF.MemberManagement.StandardLibrary.Repositories
 {
@@ -33,6 +34,11 @@ namespace AVF.MemberManagement.StandardLibrary.Repositories
         public virtual async Task<T> GetAsync(int id)
         {
             return await _proxy.GetAsync(id);
+        }
+
+        public virtual async Task<List<T>> GetAsync(List<Filter> filters)
+        {
+            return await _proxy.FilterAsync(filters);
         }
 
         public virtual async Task<int> UpdateAsync(T obj)

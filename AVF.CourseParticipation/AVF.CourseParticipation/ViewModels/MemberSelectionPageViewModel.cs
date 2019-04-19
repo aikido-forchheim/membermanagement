@@ -9,6 +9,7 @@ using System.Windows.Input;
 using AVF.CourseParticipation.Extensions;
 using AVF.CourseParticipation.Models;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
+using AVF.MemberManagement.StandardLibrary.Proxies;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Microsoft.Extensions.Logging;
 
@@ -19,6 +20,7 @@ namespace AVF.CourseParticipation.ViewModels
 	    private readonly IRepository<Mitglied> _memberRepository;
 	    private readonly ILogger _logger;
 	    private readonly IRepository<TrainerErnennung> _trainerAppointmentsRepository;
+	    private readonly IRepository<Training> _trainingsRepository;
 
 	    private static List<Mitglied> _allMembers = new List<Mitglied>();
 	    private static List<TrainerErnennung> _trainerAppointments = new List<TrainerErnennung>();
@@ -119,11 +121,12 @@ namespace AVF.CourseParticipation.ViewModels
         public ICommand AddSelectedMemberCommand { get; }
 	    public ICommand RemoveSelectedMemberCommand { get; }
 
-        public MemberSelectionPageViewModel(INavigationService navigationService, IRepository<Mitglied> memberRepository, ILogger logger, IRepository<TrainerErnennung> trainerAppointmentsRepository) : base(navigationService)
+        public MemberSelectionPageViewModel(INavigationService navigationService, IRepository<Mitglied> memberRepository, ILogger logger, IRepository<TrainerErnennung> trainerAppointmentsRepository, IRepository<Training> trainingsRepository) : base(navigationService)
 	    {
 	        _memberRepository = memberRepository;
 	        _logger = logger;
 	        _trainerAppointmentsRepository = trainerAppointmentsRepository;
+	        _trainingsRepository = trainingsRepository;
 
 	        AddSelectedMemberCommand = new DelegateCommand(AddSelectedMember, CanAddSelectedMember).ObservesProperty(() => SelectedMember);
 	        RemoveSelectedMemberCommand = new DelegateCommand(RemoveSelectedMember, CanRemoveSelectedMember).ObservesProperty(() => SelectedMemberToRemove);
@@ -239,6 +242,23 @@ namespace AVF.CourseParticipation.ViewModels
                 {
                     //filteredMembers = filteredMembers.Where(m => m.GetAge() > 17);
                     filteredMembers = filteredMembers.Where(m => m.GetAge() < 18);
+                }
+
+                bool onlyLastAttendees = true;
+
+                if (onlyLastAttendees)
+                {
+                    var filter = new Filter
+                    {
+                        ColumnName = nameof(Training.KursID),
+                        MatchType = "eq",
+                        Value = "1"
+                    };
+
+                    var filters = new List<Filter> {filter};
+
+                    var trainings = await _trainingsRepository.GetAsync(filters);
+                    _logger.LogTrace(trainings.Count.ToString());
                 }
 
                 var orderedMembers = filteredMembers.OrderBy(orderFirstname);

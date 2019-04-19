@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Models;
@@ -73,6 +74,30 @@ namespace AVF.MemberManagement.StandardLibrary.Proxies
             var deleteResult = await _phpCrudApiService.DeleteDataAsync($"{_uri}/{id}"); //mysql has no guid or uuid type, so we use id without .ToString()
 
             return int.Parse(deleteResult);
+        }
+
+        #endregion
+
+        #region Filter
+
+        public async Task<List<T>> FilterAsync(List<Filter> filters)
+        {
+            var filterUriStringBuilder = new StringBuilder();
+            filterUriStringBuilder.Append(_uri);
+
+            for (var i = 0; i < filters.Count; i++)
+            {
+                var filter = filters[i];
+
+                filterUriStringBuilder.Append(i == 0 ? "?" : "&");
+                filterUriStringBuilder.Append(filter);
+            }
+
+            var uri = filterUriStringBuilder.ToString();
+
+            var table = await _phpCrudApiService.GetDataAsync<TTbl>(uri);
+
+            return table.Rows;
         }
 
         #endregion
