@@ -69,7 +69,8 @@ namespace AVF.CourseParticipation.ViewModels
                         var courseSelectionInfo = new CourseSelectionInfo
                         {
                             MemberId = course.Trainer,
-                            From = course.Zeit
+                            From = course.Zeit,
+                            CourseId = course.Id
                         };
 
                         courseSelectionInfo.To = courseSelectionInfo.From + new TimeSpan(0, 0, course.DauerMinuten, 0);

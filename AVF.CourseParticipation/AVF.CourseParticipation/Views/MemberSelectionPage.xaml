@@ -21,12 +21,12 @@
                                     <views:LabeledSwitch Text="Aktive Mitglieder" IsToggled="{Binding OnlyActiveMembers, Mode=TwoWay}"></views:LabeledSwitch>
                                     <views:LabeledSwitch Text="Nur Trainer" IsToggled="{Binding OnlyTrainers, Mode=TwoWay}"></views:LabeledSwitch>
                                     <StackLayout Orientation="Horizontal">
-                                        <views:LabeledSwitch Text="Zuletzt anwesend" IsToggled="True"></views:LabeledSwitch>
+                                        <views:LabeledSwitch Text="Zuletzt anwesend" IsToggled="{Binding OnlyLastAttendees}"></views:LabeledSwitch>
 
                                         <Label Margin="16,0,0,0" Text="innerhalb von" VerticalOptions="Center"></Label>
-                                        <Label Text="1" FontAttributes="Bold" VerticalOptions="Center"></Label>
+                                        <Label Text="{Binding OnlyLastAttendeesMonths}" FontAttributes="Bold" VerticalOptions="Center"></Label>
                                         <Label Text="Monat(en)" VerticalOptions="Center"></Label>
-                                        <Stepper Value="4"></Stepper>
+                                        <Stepper Value="{Binding OnlyLastAttendeesMonths}"></Stepper>
                                     </StackLayout>
                                     <views:LabeledSwitch Text="Kinder" IsToggled="{Binding WithChildren}"></views:LabeledSwitch>
                                     <views:LabeledSwitch Text="Jugendliche" IsToggled="{Binding WithTeenagers}"></views:LabeledSwitch>

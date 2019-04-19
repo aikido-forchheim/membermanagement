@@ -11,6 +11,7 @@ using AVF.CourseParticipation.Models;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Proxies;
 using AVF.MemberManagement.StandardLibrary.Tbo;
+using AVF.StandardLibrary.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace AVF.CourseParticipation.ViewModels
@@ -81,7 +82,29 @@ namespace AVF.CourseParticipation.ViewModels
             }
 	    }
 
-	    private bool _withChildren = true;
+	    private bool _onlyLastAttendees = true;
+	    public bool OnlyLastAttendees
+        {
+	        get => _onlyLastAttendees;
+	        set
+	        {
+	            SetProperty(ref _onlyLastAttendees, value);
+	            Filter().IgnoreResult();
+	        }
+	    }
+
+	    private int _onlyLastAttendeesMonths = 3;
+	    public int OnlyLastAttendeesMonths
+        {
+	        get => _onlyLastAttendeesMonths;
+	        set
+	        {
+	            SetProperty(ref _onlyLastAttendeesMonths, value);
+	            Filter().IgnoreResult();
+	        }
+	    }
+
+        private bool _withChildren = true;
 
 	    public bool WithChildren
 	    {
@@ -117,6 +140,13 @@ namespace AVF.CourseParticipation.ViewModels
 	        }
 	    }
 
+	    private CourseSelectionInfo _selectedCourseSelectionInfo;
+
+	    public CourseSelectionInfo SelectedCourseSelectionInfo
+	    {
+	        get => _selectedCourseSelectionInfo;
+	        set => SetProperty(ref _selectedCourseSelectionInfo, value);
+	    }
 
         public ICommand AddSelectedMemberCommand { get; }
 	    public ICommand RemoveSelectedMemberCommand { get; }
@@ -178,6 +208,12 @@ namespace AVF.CourseParticipation.ViewModels
 	    {
 	        try
             {
+                if (parameters.ContainsKey(nameof(SelectedCourseSelectionInfo)))
+                {
+                    SelectedCourseSelectionInfo = parameters[nameof(SelectedCourseSelectionInfo)].ToString()
+                        .Deserialize<CourseSelectionInfo>();
+                }
+
                 await Filter();
             }
             catch (Exception e)
@@ -244,18 +280,24 @@ namespace AVF.CourseParticipation.ViewModels
                     filteredMembers = filteredMembers.Where(m => m.GetAge() < 18);
                 }
 
-                bool onlyLastAttendees = true;
-
-                if (onlyLastAttendees)
+                if (_onlyLastAttendees)
                 {
                     var filter = new Filter
                     {
                         ColumnName = nameof(Training.KursID),
                         MatchType = "eq",
-                        Value = "1"
+                        Value = SelectedCourseSelectionInfo.CourseId.ToString()
                     };
 
-                    var filters = new List<Filter> {filter};
+                    var trainingTerminStart = (DateTime.Now -TimeSpan.FromDays(31*OnlyLastAttendeesMonths)).ToString("s");
+                    var filter2 = new Filter
+                    {
+                        ColumnName = nameof(Training.Termin),
+                        MatchType = "ge",
+                        Value = trainingTerminStart
+                    };
+
+                    var filters = new List<Filter> {filter, filter2};
 
                     var trainings = await _trainingsRepository.GetAsync(filters);
                     _logger.LogTrace(trainings.Count.ToString());

@@ -61,8 +61,11 @@ namespace AVF.CourseParticipation.ViewModels
 
 	    private async void EditTrainer()
 	    {
-	        NavigationParameters parameters = new NavigationParameters();
-            parameters.Add(nameof(SelectedDate), SelectedDate);
+	        var parameters = new NavigationParameters
+	        {
+	            {nameof(SelectedDate), SelectedDate},
+	            { nameof(SelectedCourseSelectionInfo), SelectedCourseSelectionInfo.Serialize() }
+	        };
 
 	        await NavigationService.NavigateAsync("TrainerSelectionPage", parameters);
         }
@@ -113,7 +116,11 @@ namespace AVF.CourseParticipation.ViewModels
 
 	    private async void SelectParticipants()
 	    {
-            await NavigationService.NavigateAsync("/NavigationPage/ParticipantsSelectionPage");
+	        var parameters = new NavigationParameters
+	        {
+	            {nameof(SelectedCourseSelectionInfo), SelectedCourseSelectionInfo.Serialize()}
+	        };
+	        await NavigationService.NavigateAsync("/NavigationPage/ParticipantsSelectionPage",parameters);
 	    }
 
 	    private bool CanSelectParticipants()

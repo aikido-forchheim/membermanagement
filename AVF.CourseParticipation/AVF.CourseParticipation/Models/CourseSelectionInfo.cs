@@ -16,5 +16,6 @@ namespace AVF.CourseParticipation.Models
         public List<int?> ContrainerMemberIds { get; set; } = new List<int?>();
 
         public int Participants { get; set; }
+        public int CourseId { get; set; }
     }
 }
