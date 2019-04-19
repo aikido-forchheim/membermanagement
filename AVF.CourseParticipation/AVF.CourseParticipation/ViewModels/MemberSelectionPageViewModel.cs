@@ -150,7 +150,19 @@ namespace AVF.CourseParticipation.ViewModels
 	        set => SetProperty(ref _selectedCourseSelectionInfo, value);
 	    }
 
-        public ICommand AddSelectedMemberCommand { get; }
+	    private string _searchText;
+
+	    public string SearchText
+	    {
+	        get => _searchText;
+	        set
+	        {
+	            SetProperty(ref _searchText, value);
+	            Filter().IgnoreResult();
+            }
+	    }
+
+	    public ICommand AddSelectedMemberCommand { get; }
 	    public ICommand RemoveSelectedMemberCommand { get; }
 
         public MemberSelectionPageViewModel(INavigationService navigationService, IRepository<Mitglied> memberRepository, ILogger logger, IRepository<TrainerErnennung> trainerAppointmentsRepository, IRepository<Training> trainingsRepository) : base(navigationService)
@@ -289,7 +301,7 @@ namespace AVF.CourseParticipation.ViewModels
                     filteredMembers = filteredMembers.Where(m => m.GetAge() < 18);
                 }
 
-                if (_onlyLastAttendees)
+                if (_onlyLastAttendees && string.IsNullOrWhiteSpace(SearchText))
                 {
                     var filter = new Filter
                     {
@@ -310,6 +322,25 @@ namespace AVF.CourseParticipation.ViewModels
 
                     var trainings = await _trainingsRepository.GetAsync(filters);
                     _logger.LogTrace(trainings.Count.ToString());
+
+
+                }
+
+                if (!string.IsNullOrWhiteSpace(SearchText) && SearchText.Length > 1)
+                {
+                    var foundMemberyByName = new List<Mitglied>();
+                    foreach (var member in _allMembers)
+                    {
+                        if (member.FirstName.ToLower().Contains(SearchText.ToLower()) || member.Nachname.ToLower().Contains(SearchText.ToLower()) || member.Vorname.ToLower().Contains(SearchText.ToLower()))
+                        {
+                            if (!foundMemberyByName.Contains(member))
+                            {
+                                foundMemberyByName.Add(member);
+                            }
+                        }
+                    }
+
+                    filteredMembers = filteredMembers.Where(m => foundMemberyByName.Contains(m));
                 }
 
                 var orderedMembers = filteredMembers.OrderBy(orderFirstname);

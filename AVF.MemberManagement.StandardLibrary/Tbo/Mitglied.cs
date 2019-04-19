@@ -8,6 +8,9 @@ namespace AVF.MemberManagement.StandardLibrary.Tbo
     public class Mitglied : IIntId
     {
         public const string PrimaryKey = "Mitgliedsnummer";
+        private string _nachname;
+        private string _vorname;
+        private string _rufname;
 
         [JsonIgnore]
         public string PrimaryKeyName { get; set; } = PrimaryKey;
@@ -21,20 +24,20 @@ namespace AVF.MemberManagement.StandardLibrary.Tbo
 
         public string Nachname
         {
-            get;
-            set;
+            get => _nachname ?? (_nachname = string.Empty);
+            set => _nachname = value;
         }
 
         public string Vorname
         {
-            get;
-            set;
+            get => _vorname ?? (_vorname = string.Empty);
+            set => _vorname = value;
         }
 
         public string Rufname
         {
-            get;
-            set;
+            get => _rufname ?? (_rufname = string.Empty);
+            set => _rufname = value;
         }
 
         [JsonIgnore]
