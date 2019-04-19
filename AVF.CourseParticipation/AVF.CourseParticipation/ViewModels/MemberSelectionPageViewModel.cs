@@ -13,6 +13,7 @@ using AVF.MemberManagement.StandardLibrary.Proxies;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.StandardLibrary.Extensions;
 using Microsoft.Extensions.Logging;
+using Xamarin.Forms;
 
 namespace AVF.CourseParticipation.ViewModels
 {
@@ -141,6 +142,7 @@ namespace AVF.CourseParticipation.ViewModels
 	    }
 
 	    private CourseSelectionInfo _selectedCourseSelectionInfo;
+	    private bool _onlyLastAttendeesByDefault;
 
 	    public CourseSelectionInfo SelectedCourseSelectionInfo
 	    {
@@ -213,6 +215,13 @@ namespace AVF.CourseParticipation.ViewModels
                     SelectedCourseSelectionInfo = parameters[nameof(SelectedCourseSelectionInfo)].ToString()
                         .Deserialize<CourseSelectionInfo>();
                 }
+
+                if (Application.Current.Properties.ContainsKey("OnlyLastAttendeesByDefault")) //need to use string, only private
+                {
+                    _onlyLastAttendeesByDefault = (bool)Application.Current.Properties["OnlyLastAttendeesByDefault"];
+                }
+
+                OnlyLastAttendees = _onlyLastAttendeesByDefault;
 
                 await Filter();
             }

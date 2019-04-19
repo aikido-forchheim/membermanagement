@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using AVF.MemberManagement.StandardLibrary.Models;
 using Microsoft.Extensions.Logging;
+using Xamarin.Forms;
 
 namespace AVF.CourseParticipation.ViewModels
 {
@@ -54,6 +55,14 @@ namespace AVF.CourseParticipation.ViewModels
 	        set => SetProperty(ref _password, value);
 	    }
 
+	    private bool _onlyLastAttendeesByDefault;
+
+	    public bool OnlyLastAttendeesByDefault
+        {
+	        get => _onlyLastAttendeesByDefault;
+	        set => SetProperty(ref _onlyLastAttendeesByDefault, value);
+	    }
+
 	    public ICommand TestCommand { get; }
         public ICommand SaveCommand { get; }
 
@@ -76,7 +85,22 @@ namespace AVF.CourseParticipation.ViewModels
 
 	    public override async void OnNavigatedTo(INavigationParameters parameters)
 	    {
-	        await RunConnectionTest();
+	        if (Application.Current.Properties.ContainsKey(nameof(OnlyLastAttendeesByDefault)))
+	        {
+	            OnlyLastAttendeesByDefault = (bool) Application.Current.Properties[nameof(OnlyLastAttendeesByDefault)];
+	        }
+
+            await RunConnectionTest();
+	    }
+
+	    public override void OnNavigatedFrom(INavigationParameters parameters)
+	    {
+	        if (!Application.Current.Properties.ContainsKey(nameof(OnlyLastAttendeesByDefault)))
+	        {
+                Application.Current.Properties.Add(nameof(OnlyLastAttendeesByDefault), false);
+	        }
+
+	        Application.Current.Properties[nameof(OnlyLastAttendeesByDefault)] = OnlyLastAttendeesByDefault;
 	    }
 
         private bool CanSave()

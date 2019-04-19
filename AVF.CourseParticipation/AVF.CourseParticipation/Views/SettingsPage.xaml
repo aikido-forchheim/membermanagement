@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             xmlns:views="clr-namespace:AVF.CourseParticipation.Views;assembly=AVF.CourseParticipation"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="AVF.CourseParticipation.Views.SettingsPage"
              Title="Einstellungen"
@@ -22,5 +23,8 @@
         <Button Text="Einstellungen prüfen" Command="{Binding TestCommand}"></Button>
         <Button Text="Speichern" Command="{Binding SaveCommand}"></Button>
         <Label Text="{Binding Message}"></Label>
+        <StackLayout x:Name="StackLayoutAdditionalOptions" Margin="0,64,0,0">
+            <views:LabeledSwitch Text="Nur zuletzt anwesende Mitglieder standardmäßig" IsToggled="{Binding OnlyLastAttendeesByDefault}"></views:LabeledSwitch>
+        </StackLayout>
     </StackLayout>
 </ContentPage>
