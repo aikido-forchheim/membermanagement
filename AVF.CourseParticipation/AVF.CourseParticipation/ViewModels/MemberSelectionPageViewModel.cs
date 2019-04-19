@@ -23,6 +23,7 @@ namespace AVF.CourseParticipation.ViewModels
 	    private readonly ILogger _logger;
 	    private readonly IRepository<TrainerErnennung> _trainerAppointmentsRepository;
 	    private readonly IRepository<Training> _trainingsRepository;
+	    private readonly IRepository<TrainingsTeilnahme> _trainingParticipationsRepository;
 
 	    private static List<Mitglied> _allMembers = new List<Mitglied>();
 	    private static List<TrainerErnennung> _trainerAppointments = new List<TrainerErnennung>();
@@ -165,12 +166,13 @@ namespace AVF.CourseParticipation.ViewModels
 	    public ICommand AddSelectedMemberCommand { get; }
 	    public ICommand RemoveSelectedMemberCommand { get; }
 
-        public MemberSelectionPageViewModel(INavigationService navigationService, IRepository<Mitglied> memberRepository, ILogger logger, IRepository<TrainerErnennung> trainerAppointmentsRepository, IRepository<Training> trainingsRepository) : base(navigationService)
+        public MemberSelectionPageViewModel(INavigationService navigationService, IRepository<Mitglied> memberRepository, ILogger logger, IRepository<TrainerErnennung> trainerAppointmentsRepository, IRepository<Training> trainingsRepository, IRepository<TrainingsTeilnahme> trainingParticipationsRepository) : base(navigationService)
 	    {
 	        _memberRepository = memberRepository;
 	        _logger = logger;
 	        _trainerAppointmentsRepository = trainerAppointmentsRepository;
 	        _trainingsRepository = trainingsRepository;
+	        _trainingParticipationsRepository = trainingParticipationsRepository;
 
 	        AddSelectedMemberCommand = new DelegateCommand(AddSelectedMember, CanAddSelectedMember).ObservesProperty(() => SelectedMember);
 	        RemoveSelectedMemberCommand = new DelegateCommand(RemoveSelectedMember, CanRemoveSelectedMember).ObservesProperty(() => SelectedMemberToRemove);
@@ -303,7 +305,7 @@ namespace AVF.CourseParticipation.ViewModels
 
                 if (_onlyLastAttendees && string.IsNullOrWhiteSpace(SearchText))
                 {
-                    var filter = new Filter
+                    var filterTrainingByCourseId = new Filter
                     {
                         ColumnName = nameof(Training.KursID),
                         MatchType = "eq",
@@ -311,19 +313,38 @@ namespace AVF.CourseParticipation.ViewModels
                     };
 
                     var trainingTerminStart = (DateTime.Now -TimeSpan.FromDays(31*OnlyLastAttendeesMonths)).ToString("s");
-                    var filter2 = new Filter
+                    var filterTrainingByDate = new Filter
                     {
                         ColumnName = nameof(Training.Termin),
                         MatchType = "ge",
                         Value = trainingTerminStart
                     };
 
-                    var filters = new List<Filter> {filter, filter2};
-
-                    var trainings = await _trainingsRepository.GetAsync(filters);
+                    var trainings = await _trainingsRepository.GetAsync(new List<Filter> { filterTrainingByCourseId, filterTrainingByDate });
                     _logger.LogTrace(trainings.Count.ToString());
 
+                    var foundTrainingParticipationsMemberIds = new List<int>();
+                    foreach (var training in trainings)
+                    {
+                        var filterTrainingsTeilnahmeByTrainingId = new Filter
+                        {
+                            ColumnName = nameof(TrainingsTeilnahme.TrainingID),
+                            MatchType = "eq",
+                            Value = training.Id.ToString()
+                        };
 
+                        var trainingParticipations = (await _trainingParticipationsRepository.GetAsync(new List<Filter> { filterTrainingsTeilnahmeByTrainingId })).ToList();
+
+                        foreach (var trainingParticipation in trainingParticipations)
+                        {
+                            if (!foundTrainingParticipationsMemberIds.Contains(trainingParticipation.MitgliedID))
+                            {
+                                foundTrainingParticipationsMemberIds.Add(trainingParticipation.MitgliedID);
+                            }
+                        }
+                    }
+
+                    filteredMembers = filteredMembers.Where(m=>foundTrainingParticipationsMemberIds.Contains(m.Id));
                 }
 
                 if (!string.IsNullOrWhiteSpace(SearchText) && SearchText.Length > 1)

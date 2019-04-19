@@ -10,8 +10,8 @@ namespace AVF.CourseParticipation.ViewModels
 {
     public class TrainerSelectionPageViewModel : MemberSelectionPageViewModel
     {
-        public TrainerSelectionPageViewModel(INavigationService navigationService, IRepository<Mitglied> memberRepository, ILogger logger, IRepository<TrainerErnennung> trainerAppointmentsRepository, IRepository<Training> trainingsRepository) 
-            : base(navigationService, memberRepository, logger, trainerAppointmentsRepository, trainingsRepository)
+        public TrainerSelectionPageViewModel(INavigationService navigationService, IRepository<Mitglied> memberRepository, ILogger logger, IRepository<TrainerErnennung> trainerAppointmentsRepository, IRepository<Training> trainingsRepository, IRepository<TrainingsTeilnahme> trainingParticipationsRepository) 
+            : base(navigationService, memberRepository, logger, trainerAppointmentsRepository, trainingsRepository, trainingParticipationsRepository)
         {
         }
     }
