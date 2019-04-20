@@ -23,10 +23,16 @@ namespace AVF.CourseParticipation.ViewModels
 	    public DateTime SelectedDate
 	    {
 	        get => _selectedDate;
-	        set => SetProperty(ref _selectedDate, value);
+	        set
+	        {
+	            if (value.Year != 1)
+	            {
+	                SetProperty(ref _selectedDate, value);
+	            }
+	        }
 	    }
 
-        public CalenderPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService)
+	    public CalenderPageViewModel(INavigationService navigationService, IPageDialogService pageDialogService) : base(navigationService)
         {
             _pageDialogService = pageDialogService;
             SelectCourseCommand = new DelegateCommand(SelectCourse, CanSelectCourse);

@@ -60,7 +60,12 @@ namespace AVF.CourseParticipation.ViewModels
                     SelectedDate = parsedDate;
 
                     var courses = await _courseRepository.GetAsync();
-                    var relevantCourses = courses.Where(c => c.WochentagID == (int) SelectedDate.DayOfWeek).OrderBy(c => c.Zeit);
+                    var relevantCourses = courses.Where(c =>
+                    {
+                        var selectedDateDayOfWeek = (int) SelectedDate.DayOfWeek;
+                        if (selectedDateDayOfWeek == 0) selectedDateDayOfWeek = 7;
+                        return c.WochentagID == selectedDateDayOfWeek;
+                    }).OrderBy(c => c.Zeit);
 
                     CourseSelectionInfos.Clear();
 

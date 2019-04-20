@@ -69,6 +69,11 @@ namespace AVF.CourseParticipation.Views
 
         public override void KeyPressed(KeyEventArgs keyEventArgs)
         {
+            if (keyEventArgs.Key == "Enter")
+            {
+                ButtonSelectCourse.Command.Execute(null);
+            }
+
             var previousDate = Calendar.SelectedDate ?? DateTime.Now;
 
             if (keyEventArgs.Key == "Down")
