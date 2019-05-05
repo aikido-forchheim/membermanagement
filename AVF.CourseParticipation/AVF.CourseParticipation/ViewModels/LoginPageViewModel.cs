@@ -114,6 +114,7 @@ namespace AVF.CourseParticipation.ViewModels
         private async void Login()
         {
             IsRunning = true;
+            ClearLoggedInMemberId();
 
             EnsurePropertyLastLoggedInUsername();
             Prism.PrismApplicationBase.Current.Properties[LastLoggedInUsernameKey] = Username;
@@ -164,6 +165,11 @@ namespace AVF.CourseParticipation.ViewModels
             await _dialogService.DisplayAlertAsync("Fehler bei der Anmeldung", "Benutzername oder Passwort falsch!", "OK");
 
             IsRunning = false;
+        }
+
+        public static void ClearLoggedInMemberId()
+        {
+            ViewModelBaseLoggedIn.LoggedInMemberId = null;
         }
 
         public static void SetLoggedInMemberId(UserBase user)

@@ -61,6 +61,8 @@ namespace AVF.CourseParticipation.ViewModels
 
 	    private async void SaveAndContinue()
 	    {
+            LoginPageViewModel.ClearLoggedInMemberId();
+
 	        if (Password1 != Password2)
 	        {
 	            await _dialogService.DisplayAlertAsync("Fehler", "Passwörter sind nicht identisch!", "OK");

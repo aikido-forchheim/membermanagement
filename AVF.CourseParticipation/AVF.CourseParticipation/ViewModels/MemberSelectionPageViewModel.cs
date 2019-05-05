@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Windows.Input;
 using AVF.CourseParticipation.Extensions;
 using AVF.CourseParticipation.Models;
@@ -20,7 +21,9 @@ namespace AVF.CourseParticipation.ViewModels
 {
 	public class MemberSelectionPageViewModel : ViewModelBaseLoggedIn
 	{
-	    protected readonly IRepository<Mitglied> MemberRepository;
+	    private static readonly SemaphoreSlim FilterSemaphoreSlim = new SemaphoreSlim(1, 1);
+
+        protected readonly IRepository<Mitglied> MemberRepository;
 	    protected readonly IRepository<Training> TrainingsRepository;
 
         private readonly ILogger _logger;
@@ -268,9 +271,9 @@ namespace AVF.CourseParticipation.ViewModels
                     _onlyLastAttendeesByDefault = (bool)Application.Current.Properties["OnlyLastAttendeesByDefault"];
                 }
 
-                OnlyLastAttendees = _onlyLastAttendeesByDefault; //ATTENTION: This alread triggers the filter, be careful when adding more parameters like this
+                OnlyLastAttendees = _onlyLastAttendeesByDefault; //ATTENTION: This already triggers the filter, be careful when adding more parameters like this
 
-                //await Filter();
+                await Filter();
             }
             catch (Exception e)
             {
@@ -280,6 +283,8 @@ namespace AVF.CourseParticipation.ViewModels
 
         private async System.Threading.Tasks.Task Filter()
         {
+            await FilterSemaphoreSlim.WaitAsync();
+
             try
             {
                 Members.Clear();
@@ -345,7 +350,8 @@ namespace AVF.CourseParticipation.ViewModels
                         Value = SelectedCourseSelectionInfo.CourseId.ToString()
                     };
 
-                    var trainingTerminStart = (DateTime.Now -TimeSpan.FromDays(31*OnlyLastAttendeesMonths)).ToString("s");
+                    var trainingTerminStart =
+                        (DateTime.Now - TimeSpan.FromDays(31 * OnlyLastAttendeesMonths)).ToString("s");
                     var filterTrainingByDate = new Filter
                     {
                         ColumnName = nameof(Training.Termin),
@@ -353,7 +359,12 @@ namespace AVF.CourseParticipation.ViewModels
                         Value = trainingTerminStart
                     };
 
-                    var trainings = await TrainingsRepository.GetAsync(new List<Filter> { filterTrainingByCourseId, filterTrainingByDate });
+                    var trainings =
+                        await TrainingsRepository.GetAsync(new List<Filter>
+                        {
+                            filterTrainingByCourseId,
+                            filterTrainingByDate
+                        });
                     _logger.LogTrace(trainings.Count.ToString());
 
                     var foundTrainingParticipationsMemberIds = new List<int>();
@@ -366,7 +377,11 @@ namespace AVF.CourseParticipation.ViewModels
                             Value = training.Id.ToString()
                         };
 
-                        var trainingParticipations = (await _trainingParticipationsRepository.GetAsync(new List<Filter> { filterTrainingsTeilnahmeByTrainingId })).ToList();
+                        var trainingParticipations =
+                            (await _trainingParticipationsRepository.GetAsync(new List<Filter>
+                            {
+                                filterTrainingsTeilnahmeByTrainingId
+                            })).ToList();
 
                         foreach (var trainingParticipation in trainingParticipations)
                         {
@@ -377,7 +392,7 @@ namespace AVF.CourseParticipation.ViewModels
                         }
                     }
 
-                    filteredMembers = filteredMembers.Where(m=>foundTrainingParticipationsMemberIds.Contains(m.Id));
+                    filteredMembers = filteredMembers.Where(m => foundTrainingParticipationsMemberIds.Contains(m.Id));
                 }
 
                 if (!string.IsNullOrWhiteSpace(SearchText) && SearchText.Length > 1)
@@ -385,7 +400,9 @@ namespace AVF.CourseParticipation.ViewModels
                     var foundMemberyByName = new List<Mitglied>();
                     foreach (var member in _allMembers)
                     {
-                        if (member.FirstName.ToLower().Contains(SearchText.ToLower()) || member.Nachname.ToLower().Contains(SearchText.ToLower()) || member.Vorname.ToLower().Contains(SearchText.ToLower()))
+                        if (member.FirstName.ToLower().Contains(SearchText.ToLower()) ||
+                            member.Nachname.ToLower().Contains(SearchText.ToLower()) ||
+                            member.Vorname.ToLower().Contains(SearchText.ToLower()))
                         {
                             if (!foundMemberyByName.Contains(member))
                             {
@@ -401,13 +418,22 @@ namespace AVF.CourseParticipation.ViewModels
 
                 foreach (var member in orderedMembers)
                 {
-                    var memberInfo = new MemberInfo { MemberId = member.Id, FirstName = member.FirstName, LastName = member.Nachname };
+                    var memberInfo = new MemberInfo
+                    {
+                        MemberId = member.Id,
+                        FirstName = member.FirstName,
+                        LastName = member.Nachname
+                    };
                     Members.Add(memberInfo);
                 }
             }
             catch (Exception e)
             {
                 _logger.LogError(e.ToString());
+            }
+            finally
+            {
+                FilterSemaphoreSlim.Release();
             }
         }
     }
