@@ -13,6 +13,7 @@ using AVF.MemberManagement.StandardLibrary.Proxies;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using AVF.StandardLibrary.Extensions;
 using Microsoft.Extensions.Logging;
+using Prism.Services;
 using Xamarin.Forms;
 
 namespace AVF.CourseParticipation.ViewModels
@@ -24,6 +25,7 @@ namespace AVF.CourseParticipation.ViewModels
 	    private readonly IRepository<TrainerErnennung> _trainerAppointmentsRepository;
 	    private readonly IRepository<Training> _trainingsRepository;
 	    private readonly IRepository<TrainingsTeilnahme> _trainingParticipationsRepository;
+	    private readonly IPageDialogService _dialogService;
 
 	    private static List<Mitglied> _allMembers = new List<Mitglied>();
 	    private static List<TrainerErnennung> _trainerAppointments = new List<TrainerErnennung>();
@@ -166,13 +168,14 @@ namespace AVF.CourseParticipation.ViewModels
 	    public ICommand AddSelectedMemberCommand { get; }
 	    public ICommand RemoveSelectedMemberCommand { get; }
 
-        public MemberSelectionPageViewModel(INavigationService navigationService, IRepository<Mitglied> memberRepository, ILogger logger, IRepository<TrainerErnennung> trainerAppointmentsRepository, IRepository<Training> trainingsRepository, IRepository<TrainingsTeilnahme> trainingParticipationsRepository) : base(navigationService)
+        public MemberSelectionPageViewModel(INavigationService navigationService, IRepository<Mitglied> memberRepository, ILogger logger, IRepository<TrainerErnennung> trainerAppointmentsRepository, IRepository<Training> trainingsRepository, IRepository<TrainingsTeilnahme> trainingParticipationsRepository, IPageDialogService dialogService) : base(navigationService)
 	    {
 	        _memberRepository = memberRepository;
 	        _logger = logger;
 	        _trainerAppointmentsRepository = trainerAppointmentsRepository;
 	        _trainingsRepository = trainingsRepository;
 	        _trainingParticipationsRepository = trainingParticipationsRepository;
+	        _dialogService = dialogService;
 
 	        AddSelectedMemberCommand = new DelegateCommand(AddSelectedMember, CanAddSelectedMember).ObservesProperty(() => SelectedMember);
 	        RemoveSelectedMemberCommand = new DelegateCommand(RemoveSelectedMember, CanRemoveSelectedMember).ObservesProperty(() => SelectedMemberToRemove);
