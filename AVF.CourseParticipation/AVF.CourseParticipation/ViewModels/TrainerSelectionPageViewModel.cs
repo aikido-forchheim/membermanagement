@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Input;
 using AVF.CourseParticipation.Models;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
+using AVF.MemberManagement.StandardLibrary.Proxies;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Microsoft.Extensions.Logging;
 using Prism.Commands;
@@ -74,7 +75,77 @@ namespace AVF.CourseParticipation.ViewModels
 
         private async void Save()
         {
+            var filterTrainingByCourseId = new Filter
+            {
+                ColumnName = nameof(Training.KursID),
+                MatchType = "eq",
+                Value = SelectedCourseSelectionInfo.CourseId.ToString()
+            };
+
+            var selectedDate = SelectedDate.ToString("s");
+            var filterTrainingByDate = new Filter
+            {
+                ColumnName = nameof(Training.Termin),
+                MatchType = "eq",
+                Value = selectedDate
+            };
+
+            var trainings = await TrainingsRepository.GetAsync(new List<Filter> { filterTrainingByCourseId, filterTrainingByDate });
+
+            Training training;
+
+            if (trainings == null || trainings.Count == 0)
+            {
+                training = CreateNewTraining(SelectedCourseSelectionInfo.CourseId, SelectedDate);
+            }
+            else
+            {
+                training = trainings.Single();
+            }
+
+            var i = 0;
+            foreach (var selectedMember in SelectedMembers)
+            {
+                switch (i)
+                {
+                    case 0:
+                        training.Trainer = selectedMember.MemberId;
+                        break;
+                    case 1:
+                        training.Kotrainer1 = selectedMember.MemberId;
+                        break;
+                    case 2:
+                        training.Kotrainer2 = selectedMember.MemberId;
+                        break;
+                }
+
+                i++;
+            }
+
             await NavigationService.GoBackAsync();
+        }
+
+        private Training CreateNewTraining(int courseId, DateTime selectedDate)
+        {
+            Training newTraining = new Training();
+
+            newTraining.Id = 0;
+            newTraining.Bemerkung = string.Empty;
+            newTraining.DatensatzAngelegtAm = DateTime.Now;
+            //newTraining.DatensatzAngelegtVon = 
+            newTraining.Kotrainer1 = null;
+            newTraining.Kotrainer2 = null;
+            newTraining.Trainer = 0;
+            //newTraining.DatensatzGeaendertAm //muss oben in training.Single
+            //newTraining.DatensatzGeaendertVon = //muss oben in training.Single
+            //newTraining.DauerMinuten = 
+            //newTraining.Kindertraining =
+            newTraining.KursID = courseId;
+            newTraining.Termin = DateTime.Now;
+            //newTraining.VHS = false;
+            //newTraining.Zeit = 
+
+            return newTraining;
         }
 
         private bool CanSave()

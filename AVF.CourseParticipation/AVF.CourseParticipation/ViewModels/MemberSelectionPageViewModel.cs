@@ -21,10 +21,10 @@ namespace AVF.CourseParticipation.ViewModels
 	public class MemberSelectionPageViewModel : ViewModelBase
 	{
 	    protected readonly IRepository<Mitglied> MemberRepository;
+	    protected readonly IRepository<Training> TrainingsRepository;
 
-	    private readonly ILogger _logger;
+        private readonly ILogger _logger;
 	    private readonly IRepository<TrainerErnennung> _trainerAppointmentsRepository;
-	    private readonly IRepository<Training> _trainingsRepository;
 	    private readonly IRepository<TrainingsTeilnahme> _trainingParticipationsRepository;
 	    private readonly IPageDialogService _dialogService;
 
@@ -154,7 +154,15 @@ namespace AVF.CourseParticipation.ViewModels
 	        set => SetProperty(ref _selectedCourseSelectionInfo, value);
 	    }
 
-	    private string _searchText;
+	    private DateTime _selectedDate = DateTime.Today;
+
+	    public DateTime SelectedDate
+	    {
+	        get => _selectedDate;
+	        set => SetProperty(ref _selectedDate, value);
+	    }
+
+        private string _searchText;
 
 	    public string SearchText
 	    {
@@ -174,7 +182,7 @@ namespace AVF.CourseParticipation.ViewModels
 	        MemberRepository = memberRepository;
 	        _logger = logger;
 	        _trainerAppointmentsRepository = trainerAppointmentsRepository;
-	        _trainingsRepository = trainingsRepository;
+	        TrainingsRepository = trainingsRepository;
 	        _trainingParticipationsRepository = trainingParticipationsRepository;
 	        _dialogService = dialogService;
 
@@ -240,6 +248,14 @@ namespace AVF.CourseParticipation.ViewModels
         {
             try
             {
+                if (parameters.ContainsKey(nameof(SelectedDate)))
+                {
+                    if (DateTime.TryParse(parameters[nameof(SelectedDate)].ToString(), out var parsedDate))
+                    {
+                        SelectedDate = parsedDate;
+                    }
+                }
+
                 if (parameters.ContainsKey(nameof(SelectedCourseSelectionInfo)))
                 {
                     SelectedCourseSelectionInfo = (CourseSelectionInfo)parameters[nameof(SelectedCourseSelectionInfo)];
@@ -335,7 +351,7 @@ namespace AVF.CourseParticipation.ViewModels
                         Value = trainingTerminStart
                     };
 
-                    var trainings = await _trainingsRepository.GetAsync(new List<Filter> { filterTrainingByCourseId, filterTrainingByDate });
+                    var trainings = await TrainingsRepository.GetAsync(new List<Filter> { filterTrainingByCourseId, filterTrainingByDate });
                     _logger.LogTrace(trainings.Count.ToString());
 
                     var foundTrainingParticipationsMemberIds = new List<int>();

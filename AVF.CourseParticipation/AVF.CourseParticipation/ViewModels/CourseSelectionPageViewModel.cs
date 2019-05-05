@@ -44,7 +44,7 @@ namespace AVF.CourseParticipation.ViewModels
             _courseRepository = courseRepository;
             _memberRepository = memberRepository;
 
-            EnterParticipantsCommand = new DelegateCommand(EnterParticipants, CanEnterParticipants).ObservesProperty(() => SelectedCourseSelectionInfo);
+            EnterParticipantsCommand = new DelegateCommand(TrainingEditPage, CanEnterParticipants).ObservesProperty(() => SelectedCourseSelectionInfo);
         }
 
         public override async void OnNavigatedTo(INavigationParameters parameters)
@@ -120,7 +120,7 @@ namespace AVF.CourseParticipation.ViewModels
 
         public ICommand EnterParticipantsCommand { get; }
 
-        private void EnterParticipants()
+        private void TrainingEditPage()
         {
             try
             {
