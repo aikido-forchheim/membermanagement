@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Windows.Input;
-using AVF.CourseParticipation.Models;
-using AVF.MemberManagement.StandardLibrary.Interfaces;
-using AVF.MemberManagement.StandardLibrary.Proxies;
+﻿using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
+using AVF.StandardLibrary.Extensions;
 using Microsoft.Extensions.Logging;
 using Prism.Commands;
 using Prism.Navigation;
 using Prism.Services;
+using System;
+using System.Linq;
+using System.Windows.Input;
 
 namespace AVF.CourseParticipation.ViewModels
 {
@@ -75,22 +71,11 @@ namespace AVF.CourseParticipation.ViewModels
 
         private async void Save()
         {
-            var filterTrainingByCourseId = new Filter
-            {
-                ColumnName = nameof(Training.KursID),
-                MatchType = "eq",
-                Value = SelectedCourseSelectionInfo.CourseId.ToString()
-            };
+            var trainingsRepository = TrainingsRepository;
+            var selectedDate = SelectedDate;
+            var courseId = SelectedCourseSelectionInfo.CourseId;
 
-            var selectedDate = SelectedDate.ToString("s");
-            var filterTrainingByDate = new Filter
-            {
-                ColumnName = nameof(Training.Termin),
-                MatchType = "eq",
-                Value = selectedDate
-            };
-
-            var trainings = await TrainingsRepository.GetAsync(new List<Filter> { filterTrainingByCourseId, filterTrainingByDate });
+            var trainings = await trainingsRepository.GetAsync(courseId, selectedDate);
 
             Training training;
 
@@ -101,9 +86,9 @@ namespace AVF.CourseParticipation.ViewModels
             else
             {
                 training = trainings.Single();
-                //training.Save();
             }
 
+            //TODO: only update if really something changes
             training.DatensatzGeaendertAm = DateTime.Now;
             training.DatensatzGeaendertVon = (int)LoggedInMemberId;
 
@@ -130,7 +115,7 @@ namespace AVF.CourseParticipation.ViewModels
 
                 i++;
             }
-            
+
             if (training.Id == 0)
             {
                 training.Id = await TrainingsRepository.CreateAsync(training);
@@ -141,7 +126,7 @@ namespace AVF.CourseParticipation.ViewModels
             }
 
             var parameters
-                = new NavigationParameters {{nameof(Training), training}};
+                = new NavigationParameters { { nameof(Training), training } };
             await NavigationService.GoBackAsync(parameters);
         }
 

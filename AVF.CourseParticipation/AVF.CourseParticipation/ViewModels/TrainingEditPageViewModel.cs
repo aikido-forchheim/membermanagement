@@ -20,6 +20,7 @@ namespace AVF.CourseParticipation.ViewModels
 	{
 	    private readonly ILogger _logger;
 	    private readonly IRepository<Mitglied> _memberRepository;
+	    private readonly IRepository<Training> _trainingsRepository;
 	    private DateTime _selectedDate = DateTime.Now;
 
 	    public DateTime SelectedDate
@@ -54,11 +55,12 @@ namespace AVF.CourseParticipation.ViewModels
 
         public ICommand EditTrainerCommand { get; }
 
-        public TrainingEditPageViewModel(INavigationService navigationService, ILogger logger, IRepository<Mitglied> memberRepository) : base(navigationService)
+        public TrainingEditPageViewModel(INavigationService navigationService, ILogger logger, IRepository<Mitglied> memberRepository, IRepository<Training> trainingsRepository) : base(navigationService)
         {
             _logger = logger;
             _memberRepository = memberRepository;
-            SelectParticipantsCommand = new DelegateCommand(SelectParticipants, CanSelectParticipants);
+            _trainingsRepository = trainingsRepository;
+            SelectParticipantsCommand = new DelegateCommand(SelectParticipants, CanSelectParticipants).ObservesProperty(() => Training);
             EditTrainerCommand = new DelegateCommand(EditTrainer, CanEditTrainer);
         }
 
@@ -85,43 +87,83 @@ namespace AVF.CourseParticipation.ViewModels
 	            base.OnNavigatedTo(parameters);
 
 	            if (parameters.ContainsKey(nameof(Training)))
-	            {
-	                Training = (Training) parameters[nameof(Training)];
-	            }
+                {
+                    Training = (Training)parameters[nameof(Training)];
 
-	            if (parameters.ContainsKey(nameof(SelectedDate)))
+                    TrainerInfos.Clear();
+
+                    await FillTrainerInfosFromTraining();
+                }
+                else
 	            {
-	                if (DateTime.TryParse(parameters[nameof(SelectedDate)].ToString(), out var parsedDate))
+	                if (parameters.ContainsKey(nameof(SelectedDate)))
 	                {
-	                    SelectedDate = parsedDate;
-	                }
-	            }
-
-	            if (parameters.ContainsKey(nameof(SelectedCourseSelectionInfo)))
-	            {
-	                TrainerInfos.Clear();
-
-	                SelectedCourseSelectionInfo = (CourseSelectionInfo)
-	                    parameters[nameof(SelectedCourseSelectionInfo)];
-
-                    TrainerInfos.Add(new TrainerInfo { FirstName = SelectedCourseSelectionInfo.FirstName, LastName = SelectedCourseSelectionInfo.LastName });
-
-	                foreach (var contrainerMemberId in SelectedCourseSelectionInfo.ContrainerMemberIds)
-	                {
-	                    if (contrainerMemberId != null && contrainerMemberId != -1)
+	                    if (DateTime.TryParse(parameters[nameof(SelectedDate)].ToString(), out var parsedDate))
 	                    {
-	                        var member = await _memberRepository.GetAsync((int) contrainerMemberId);
+	                        SelectedDate = parsedDate;
+	                    }
+	                }
 
-	                        TrainerInfos.Add(new TrainerInfo { FirstName = member.FirstName, LastName = member.Nachname});
+	                if (parameters.ContainsKey(nameof(SelectedCourseSelectionInfo)))
+	                {
+	                    TrainerInfos.Clear();
+
+	                    SelectedCourseSelectionInfo = (CourseSelectionInfo)
+	                        parameters[nameof(SelectedCourseSelectionInfo)];
+
+	                    var existingTrainings = await _trainingsRepository.GetAsync(SelectedCourseSelectionInfo.CourseId, SelectedDate);
+
+	                    if (existingTrainings.Any())
+	                    {
+	                        Training = existingTrainings.Single();
+	                        await FillTrainerInfosFromTraining();
                         }
+	                    else
+	                    {
+	                        TrainerInfos.Add(new TrainerInfo
+	                        {
+	                            FirstName = SelectedCourseSelectionInfo.FirstName,
+	                            LastName = SelectedCourseSelectionInfo.LastName
+	                        });
+
+	                        foreach (var contrainerMemberId in SelectedCourseSelectionInfo.ContrainerMemberIds)
+	                        {
+	                            if (contrainerMemberId != null && contrainerMemberId != -1)
+	                            {
+	                                var member = await _memberRepository.GetAsync((int) contrainerMemberId);
+
+	                                AddTrainerInfo(member);
+	                            }
+	                        }
+	                    }
 	                }
 	            }
-            }
+	        }
 	        catch (Exception e)
 	        {
 	            _logger.LogError(e.ToString());
 	        }
 	    }
+
+        private async System.Threading.Tasks.Task FillTrainerInfosFromTraining()
+        {
+            AddTrainerInfo(await _memberRepository.GetAsync(Training.Trainer));
+            await AddContrainer(Training.Kotrainer1);
+            await AddContrainer(Training.Kotrainer2);
+        }
+
+        private async System.Threading.Tasks.Task AddContrainer(int? contrainer)
+        {
+            if (contrainer != null && contrainer > 0)
+            {
+                AddTrainerInfo(await _memberRepository.GetAsync((int)contrainer));
+            }
+        }
+
+        private void AddTrainerInfo(Mitglied member)
+        {
+            TrainerInfos.Add(new TrainerInfo { FirstName = member.FirstName, LastName = member.Nachname });
+        }
 
         #region SelectParticipantsCommand
 
@@ -138,7 +180,7 @@ namespace AVF.CourseParticipation.ViewModels
 
 	    private bool CanSelectParticipants()
 	    {
-	        return true;
+	        return Training != null;
 	    }
 
 	    #endregion
