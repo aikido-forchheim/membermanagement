@@ -101,12 +101,11 @@ namespace AVF.CourseParticipation.ViewModels
             else
             {
                 training = trainings.Single();
-
-                training.DatensatzGeaendertAm = DateTime.Now;
-                training.DatensatzGeaendertVon = (int) LoggedInMemberId;
-
                 //training.Save();
             }
+
+            training.DatensatzGeaendertAm = DateTime.Now;
+            training.DatensatzGeaendertVon = (int)LoggedInMemberId;
 
             //Reset always and than apply new selected values
             training.Trainer = -1;
@@ -131,15 +130,26 @@ namespace AVF.CourseParticipation.ViewModels
 
                 i++;
             }
+            
+            if (training.Id == 0)
+            {
+                training.Id = await TrainingsRepository.CreateAsync(training);
+            }
+            else
+            {
+                await TrainingsRepository.UpdateAsync(training);
+            }
 
-            await NavigationService.GoBackAsync();
+            var parameters
+                = new NavigationParameters {{nameof(Training), training}};
+            await NavigationService.GoBackAsync(parameters);
         }
 
         private Training CreateNewTraining(int courseId, DateTime selectedDate)
         {
             Training newTraining = new Training();
 
-            newTraining.Id = 0;
+            newTraining.Id = 0; //0 is the identifier for the proxy for auto generating an id, because -1 is an allowed value (for example if we want to use the negative ids later for some purposes)
             newTraining.Bemerkung = string.Empty;
             newTraining.DatensatzAngelegtAm = DateTime.Now;
             newTraining.DatensatzAngelegtVon = (int) LoggedInMemberId;
@@ -152,8 +162,9 @@ namespace AVF.CourseParticipation.ViewModels
             newTraining.Kindertraining = SelectedCourseSelectionInfo.ChildrensTraining;
             newTraining.KursID = courseId;
             newTraining.Termin = SelectedDate;
-            //newTraining.VHS = false;
-            newTraining.Zeit = SelectedCourseSelectionInfo.From; 
+            //newTraining.VHS = false; //ignore until later update
+            newTraining.Zeit = SelectedCourseSelectionInfo.From;
+            newTraining.WochentagID = SelectedCourseSelectionInfo.DayOfWeekId;
 
             return newTraining;
         }

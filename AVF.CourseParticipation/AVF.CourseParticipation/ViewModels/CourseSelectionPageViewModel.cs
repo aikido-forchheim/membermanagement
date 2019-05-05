@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using AVF.CourseParticipation.Models;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
@@ -101,7 +102,7 @@ namespace AVF.CourseParticipation.ViewModels
             }
         }
 
-        private async System.Threading.Tasks.Task<CourseSelectionInfo> FillCourseSelectionInfo(Kurs course)
+        private async Task<CourseSelectionInfo> FillCourseSelectionInfo(Kurs course)
         {
             var courseSelectionInfo = new CourseSelectionInfo
             {
@@ -121,6 +122,8 @@ namespace AVF.CourseParticipation.ViewModels
             courseSelectionInfo.FirstName = member.FirstName;
 
             courseSelectionInfo.ChildrensTraining = course.Kindertraining;
+
+            courseSelectionInfo.DayOfWeekId = course.WochentagID;
 
             courseSelectionInfo.Duration = new TimeSpan(0, course.DauerMinuten, 0);
 

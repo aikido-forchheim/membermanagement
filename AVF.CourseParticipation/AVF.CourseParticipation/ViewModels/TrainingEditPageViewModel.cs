@@ -44,6 +44,14 @@ namespace AVF.CourseParticipation.ViewModels
 	        set => SetProperty(ref _selectedCourseSelectionInfo, value);
 	    }
 
+	    private Training _training;
+
+	    public Training Training
+	    {
+	        get => _training;
+	        set => SetProperty(ref _training, value);
+	    }
+
         public ICommand EditTrainerCommand { get; }
 
         public TrainingEditPageViewModel(INavigationService navigationService, ILogger logger, IRepository<Mitglied> memberRepository) : base(navigationService)
@@ -75,6 +83,11 @@ namespace AVF.CourseParticipation.ViewModels
 	        try
 	        {
 	            base.OnNavigatedTo(parameters);
+
+	            if (parameters.ContainsKey(nameof(Training)))
+	            {
+	                Training = (Training) parameters[nameof(Training)];
+	            }
 
 	            if (parameters.ContainsKey(nameof(SelectedDate)))
 	            {

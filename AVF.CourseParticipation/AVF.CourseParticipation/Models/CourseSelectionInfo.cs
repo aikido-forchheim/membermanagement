@@ -19,5 +19,6 @@ namespace AVF.CourseParticipation.Models
         public int CourseId { get; set; }
         public bool ChildrensTraining { get; set; }
         public TimeSpan Duration { get; set; }
+        public int DayOfWeekId { get; internal set; }
     }
 }
