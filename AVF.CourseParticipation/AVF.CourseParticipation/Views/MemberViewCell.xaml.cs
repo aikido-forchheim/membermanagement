@@ -12,6 +12,15 @@ namespace AVF.CourseParticipation.Views
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class MemberViewCell : ViewCell
 	{
+	    public static readonly BindableProperty FontAttributesProperty =
+	        BindablePropertyHelper.Create<MemberViewCell, FontAttributes>(nameof(FontAttributes));
+
+	    public FontAttributes FontAttributes
+	    {
+	        get => (FontAttributes) GetValue(FontAttributesProperty);
+	        set => SetValue(FontAttributesProperty, value);
+	    }   
+
 		public MemberViewCell ()
 		{
 			InitializeComponent ();

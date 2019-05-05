@@ -8,8 +8,18 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="AVF.CourseParticipation.Views.MemberSelectionPage" Title="Mitglieder auswählen">
     <StackLayout>
-        <StackLayout Orientation="Horizontal" Margin="16">
-            <StackLayout>
+        <StackLayout x:Name="StackLayoutContent" Orientation="Horizontal" Margin="16">
+            <StackLayout x:Name="StackLayoutSelectedMembers" Margin="64">
+                <ListView x:Name="ListViewSelectedMembers" ItemsSource="{Binding SelectedMembers}" SelectedItem="{Binding SelectedMemberToRemove}" ItemTapped="ListViewSelectedMembers_OnItemTapped">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <views:MemberViewCell FontAttributes="Bold"></views:MemberViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <Button x:Name="ButtonRemoveSelectedMember" Text="Entfernen" Command="{Binding RemoveSelectedMemberCommand}"></Button>
+            </StackLayout>
+            <StackLayout x:Name="StackLayoutMembers">
                 <StackLayout>
                     <StackLayout Orientation="Horizontal">
                         <Label Text="Suche nach Name: " WidthRequest="128" VerticalOptions="Center"></Label>
@@ -58,18 +68,8 @@
                 </ListView>
                 <Button x:Name="ButtonAddSelectedMember" Text="Hinzufügen" Command="{Binding AddSelectedMemberCommand}"></Button>
             </StackLayout>
-            <StackLayout>
-                <ListView x:Name="ListViewSelectedMembers" ItemsSource="{Binding SelectedMembers}" SelectedItem="{Binding SelectedMemberToRemove}" ItemTapped="ListViewSelectedMembers_OnItemTapped">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <views:MemberViewCell></views:MemberViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-                <Button x:Name="ButtonRemoveSelectedMember" Text="Entfernen" Command="{Binding RemoveSelectedMemberCommand}"></Button>
-            </StackLayout>
         </StackLayout>
-        <StackLayout Orientation="Horizontal">
+        <StackLayout x:Name="StackLayoutSaveCancel" Orientation="Horizontal">
             <Button Text="Abbrechen" Command="{Binding CancelCommand}"></Button>
             <Button Text="Speichern" Command="{Binding SaveCommand}"></Button>
         </StackLayout>
