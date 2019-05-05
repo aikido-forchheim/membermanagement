@@ -26,39 +26,6 @@ namespace AVF.CourseParticipation.ViewModels
             _dialogService = dialogService;
         }
 
-        private bool CanCancel()
-        {
-            return true;
-        }
-
-        public ICommand CancelCommand { get; }
-
-        internal async void Cancel()
-        {
-            var shouldCancel = await _dialogService.DisplayAlertAsync("Abbrechen", "Möchten Sie verlassen OHNE zu speichern?", "Ja", "Nein");
-
-            if (shouldCancel)
-            {
-                await NavigationService.GoBackAsync();
-            }
-        }
-
-        #region SaveCommand
-
-        public ICommand SaveCommand { get; }
-
-        private async void Save()
-        {
-            await NavigationService.GoBackAsync();
-        }
-
-        private bool CanSave()
-        {
-            return true;
-        }
-
-        #endregion
-
         public override async void OnNavigatedTo(INavigationParameters parameters)
         {
             await OnNavigatedToAsync(parameters);
@@ -79,5 +46,42 @@ namespace AVF.CourseParticipation.ViewModels
             var member = Members.Single(m => m.MemberId == memberId);
             AddSelectedMember(member);
         }
+
+        #region CancelCommand
+
+        public ICommand CancelCommand { get; }
+
+        internal async void Cancel()
+        {
+            var shouldCancel = await _dialogService.DisplayAlertAsync("Abbrechen", "Möchten Sie verlassen OHNE zu speichern?", "Ja", "Nein");
+
+            if (shouldCancel)
+            {
+                await NavigationService.GoBackAsync();
+            }
+        }
+
+        private bool CanCancel()
+        {
+            return true;
+        }
+
+        #endregion
+
+        #region SaveCommand
+
+        public ICommand SaveCommand { get; }
+
+        private async void Save()
+        {
+            await NavigationService.GoBackAsync();
+        }
+
+        private bool CanSave()
+        {
+            return true;
+        }
+
+        #endregion
     }
 }
