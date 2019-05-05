@@ -83,7 +83,8 @@ namespace AVF.CourseParticipation.ViewModels
 
 	        await _usersRepository.UpdateAsync(user);
 
-            await NavigationService.NavigateAsync("/NavigationPage/CalenderPage");
+	        LoginPageViewModel.SetLoggedInMemberId(user);
+	        await NavigationService.NavigateAsync("/NavigationPage/CalenderPage");
         }
 
 	    public override void OnNavigatingTo(INavigationParameters parameters)

@@ -18,7 +18,7 @@ using Xamarin.Forms;
 
 namespace AVF.CourseParticipation.ViewModels
 {
-	public class MemberSelectionPageViewModel : ViewModelBase
+	public class MemberSelectionPageViewModel : ViewModelBaseLoggedIn
 	{
 	    protected readonly IRepository<Mitglied> MemberRepository;
 	    protected readonly IRepository<Training> TrainingsRepository;
@@ -241,6 +241,8 @@ namespace AVF.CourseParticipation.ViewModels
 
         public override async void OnNavigatedTo(INavigationParameters parameters)
         {
+            base.OnNavigatedTo(parameters);
+
             await OnNavigatedToAsync(parameters);
         }
 
@@ -266,9 +268,9 @@ namespace AVF.CourseParticipation.ViewModels
                     _onlyLastAttendeesByDefault = (bool)Application.Current.Properties["OnlyLastAttendeesByDefault"];
                 }
 
-                OnlyLastAttendees = _onlyLastAttendeesByDefault;
+                OnlyLastAttendees = _onlyLastAttendeesByDefault; //ATTENTION: This alread triggers the filter, be careful when adding more parameters like this
 
-                await Filter();
+                //await Filter();
             }
             catch (Exception e)
             {

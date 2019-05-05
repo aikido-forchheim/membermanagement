@@ -7,6 +7,7 @@ using System.Windows.Input;
 using AVF.CourseParticipation.Models;
 using AVF.CourseParticipation.Views;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
+using AVF.MemberManagement.StandardLibrary.Models;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -148,7 +149,9 @@ namespace AVF.CourseParticipation.ViewModels
 
                     if (isValid)
                     {
+                        SetLoggedInMemberId(user);
                         await NavigationService.NavigateAsync("/NavigationPage/CalenderPage");
+
                         return;
                     }
                 }
@@ -163,7 +166,13 @@ namespace AVF.CourseParticipation.ViewModels
             IsRunning = false;
         }
 
-	    public override void OnNavigatingTo(INavigationParameters parameters)
+        public static void SetLoggedInMemberId(UserBase user)
+        {
+            var loggedInMemberId = user.Mitgliedsnummer;
+            ViewModelBaseLoggedIn.LoggedInMemberId = loggedInMemberId;
+        }
+
+        public override void OnNavigatingTo(INavigationParameters parameters)
         {
             EnsurePropertyLastLoggedInUsername();
             //Username = Prism.PrismApplicationBase.Current.Properties[LastLoggedInUsernameKey].ToString();

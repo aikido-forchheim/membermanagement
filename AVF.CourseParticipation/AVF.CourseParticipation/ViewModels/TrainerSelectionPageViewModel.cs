@@ -101,6 +101,11 @@ namespace AVF.CourseParticipation.ViewModels
             else
             {
                 training = trainings.Single();
+
+                training.DatensatzGeaendertAm = DateTime.Now;
+                training.DatensatzGeaendertVon = LoggedInMemberId;
+
+                //training.Save();
             }
 
             var i = 0;
@@ -132,7 +137,7 @@ namespace AVF.CourseParticipation.ViewModels
             newTraining.Id = 0;
             newTraining.Bemerkung = string.Empty;
             newTraining.DatensatzAngelegtAm = DateTime.Now;
-            //newTraining.DatensatzAngelegtVon = 
+            newTraining.DatensatzAngelegtVon = LoggedInMemberId;
             newTraining.Kotrainer1 = null;
             newTraining.Kotrainer2 = null;
             newTraining.Trainer = 0;
