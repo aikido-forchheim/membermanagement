@@ -7,5 +7,9 @@ namespace AVF.CourseParticipation.Views
 {
     public class TrainerSelectionPage : MemberSelectionPage
     {
+        public TrainerSelectionPage()
+        {
+            Title = "Trainer auswählen";
+        }
     }
 }
