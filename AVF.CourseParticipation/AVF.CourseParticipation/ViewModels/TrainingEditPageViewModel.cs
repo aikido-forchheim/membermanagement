@@ -63,8 +63,8 @@ namespace AVF.CourseParticipation.ViewModels
 	    {
 	        var parameters = new NavigationParameters
 	        {
-	            {nameof(SelectedDate), SelectedDate},
-	            { nameof(SelectedCourseSelectionInfo), SelectedCourseSelectionInfo.Serialize() }
+	            { nameof(SelectedDate), SelectedDate},
+	            { nameof(SelectedCourseSelectionInfo), SelectedCourseSelectionInfo }
 	        };
 
 	        await NavigationService.NavigateAsync("TrainerSelectionPage", parameters);
@@ -88,8 +88,8 @@ namespace AVF.CourseParticipation.ViewModels
 	            {
 	                TrainerInfos.Clear();
 
-	                SelectedCourseSelectionInfo =
-	                    parameters[nameof(SelectedCourseSelectionInfo)].ToString().Deserialize<CourseSelectionInfo>();
+	                SelectedCourseSelectionInfo = (CourseSelectionInfo)
+	                    parameters[nameof(SelectedCourseSelectionInfo)];
 
                     TrainerInfos.Add(new TrainerInfo { FirstName = SelectedCourseSelectionInfo.FirstName, LastName = SelectedCourseSelectionInfo.LastName });
 
@@ -118,7 +118,7 @@ namespace AVF.CourseParticipation.ViewModels
 	    {
 	        var parameters = new NavigationParameters
 	        {
-	            {nameof(SelectedCourseSelectionInfo), SelectedCourseSelectionInfo.Serialize()}
+	            {nameof(SelectedCourseSelectionInfo), SelectedCourseSelectionInfo}
 	        };
 	        await NavigationService.NavigateAsync("/NavigationPage/ParticipantsSelectionPage",parameters);
 	    }

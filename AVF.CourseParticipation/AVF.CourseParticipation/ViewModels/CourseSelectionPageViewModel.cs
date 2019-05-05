@@ -127,7 +127,7 @@ namespace AVF.CourseParticipation.ViewModels
                 var parameters = new NavigationParameters
                 {
                     {nameof(SelectedDate), SelectedDate},
-                    {nameof(SelectedCourseSelectionInfo), SelectedCourseSelectionInfo.Serialize()}
+                    {nameof(SelectedCourseSelectionInfo), SelectedCourseSelectionInfo}
                 };
                 NavigationService.NavigateAsync("TrainingEditPage", parameters);
             }

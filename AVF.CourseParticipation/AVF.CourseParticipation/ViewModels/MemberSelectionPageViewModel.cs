@@ -20,7 +20,8 @@ namespace AVF.CourseParticipation.ViewModels
 {
 	public class MemberSelectionPageViewModel : ViewModelBase
 	{
-	    private readonly IRepository<Mitglied> _memberRepository;
+	    protected readonly IRepository<Mitglied> MemberRepository;
+
 	    private readonly ILogger _logger;
 	    private readonly IRepository<TrainerErnennung> _trainerAppointmentsRepository;
 	    private readonly IRepository<Training> _trainingsRepository;
@@ -170,7 +171,7 @@ namespace AVF.CourseParticipation.ViewModels
 
         public MemberSelectionPageViewModel(INavigationService navigationService, IRepository<Mitglied> memberRepository, ILogger logger, IRepository<TrainerErnennung> trainerAppointmentsRepository, IRepository<Training> trainingsRepository, IRepository<TrainingsTeilnahme> trainingParticipationsRepository, IPageDialogService dialogService) : base(navigationService)
 	    {
-	        _memberRepository = memberRepository;
+	        MemberRepository = memberRepository;
 	        _logger = logger;
 	        _trainerAppointmentsRepository = trainerAppointmentsRepository;
 	        _trainingsRepository = trainingsRepository;
@@ -187,22 +188,29 @@ namespace AVF.CourseParticipation.ViewModels
         }
 
 	    private void AddSelectedMember()
-	    {
-	        if (SelectedMember != null)
-	        {
-	            if (!SelectedMembers.Contains(SelectedMember))
-	            {
-	                SelectedMembers.Add(SelectedMember);
-	            }
-	        }
+        {
+            var member = SelectedMember;
 
-	        if (Members.Contains(SelectedMember))
-	        {
-	            Members.Remove(SelectedMember);
-	        }
+            AddSelectedMember(member);
         }
 
-	    private bool CanRemoveSelectedMember()
+        protected void AddSelectedMember(MemberInfo member)
+        {
+            if (member != null)
+            {
+                if (!SelectedMembers.Contains(member))
+                {
+                    SelectedMembers.Add(member);
+                }
+            }
+
+            if (Members.Contains(member))
+            {
+                Members.Remove(member);
+            }
+        }
+
+        private bool CanRemoveSelectedMember()
 	    {
 	        return SelectedMemberToRemove != null;
 	    }
@@ -224,13 +232,17 @@ namespace AVF.CourseParticipation.ViewModels
         }
 
         public override async void OnNavigatedTo(INavigationParameters parameters)
-	    {
-	        try
+        {
+            await OnNavigatedToAsync(parameters);
+        }
+
+        protected async System.Threading.Tasks.Task OnNavigatedToAsync(INavigationParameters parameters)
+        {
+            try
             {
                 if (parameters.ContainsKey(nameof(SelectedCourseSelectionInfo)))
                 {
-                    SelectedCourseSelectionInfo = parameters[nameof(SelectedCourseSelectionInfo)].ToString()
-                        .Deserialize<CourseSelectionInfo>();
+                    SelectedCourseSelectionInfo = (CourseSelectionInfo)parameters[nameof(SelectedCourseSelectionInfo)];
                 }
 
                 if (Application.Current.Properties.ContainsKey("OnlyLastAttendeesByDefault")) //need to use string, only private
@@ -243,10 +255,10 @@ namespace AVF.CourseParticipation.ViewModels
                 await Filter();
             }
             catch (Exception e)
-	        {
-	            _logger.LogError(e.ToString());
-	        }
-	    }
+            {
+                _logger.LogError(e.ToString());
+            }
+        }
 
         private async System.Threading.Tasks.Task Filter()
         {
@@ -256,7 +268,7 @@ namespace AVF.CourseParticipation.ViewModels
 
                 if (_allMembers.Count == 0)
                 {
-                    _allMembers = await _memberRepository.GetAsync();
+                    _allMembers = await MemberRepository.GetAsync();
                 }
 
                 Func<Mitglied, string> orderFirstname = m => m.Name;
@@ -371,7 +383,7 @@ namespace AVF.CourseParticipation.ViewModels
 
                 foreach (var member in orderedMembers)
                 {
-                    var memberInfo = new MemberInfo { FirstName = member.FirstName, LastName = member.Nachname };
+                    var memberInfo = new MemberInfo { MemberId = member.Id, FirstName = member.FirstName, LastName = member.Nachname };
                     Members.Add(memberInfo);
                 }
             }

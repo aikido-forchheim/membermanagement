@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 using System.Windows.Input;
+using AVF.CourseParticipation.Models;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Tbo;
 using Microsoft.Extensions.Logging;
@@ -55,5 +58,26 @@ namespace AVF.CourseParticipation.ViewModels
         }
 
         #endregion
+
+        public override async void OnNavigatedTo(INavigationParameters parameters)
+        {
+            await OnNavigatedToAsync(parameters);
+
+            AddSelectedMember(SelectedCourseSelectionInfo.MemberId);
+
+            foreach (var contrainerMemberId in SelectedCourseSelectionInfo.ContrainerMemberIds)
+            {
+                if (contrainerMemberId == null || !(contrainerMemberId > 0)) continue;
+
+                var memberId = (int)contrainerMemberId;
+                AddSelectedMember(memberId);
+            }
+        }
+
+        private void AddSelectedMember(int memberId)
+        {
+            var member = Members.Single(m => m.MemberId == memberId);
+            AddSelectedMember(member);
+        }
     }
 }
