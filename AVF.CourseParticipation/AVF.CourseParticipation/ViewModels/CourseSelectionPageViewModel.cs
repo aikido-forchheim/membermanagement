@@ -71,22 +71,7 @@ namespace AVF.CourseParticipation.ViewModels
 
                     foreach (var course in relevantCourses)
                     {
-                        var courseSelectionInfo = new CourseSelectionInfo
-                        {
-                            MemberId = course.Trainer,
-                            From = course.Zeit,
-                            CourseId = course.Id
-                        };
-
-                        courseSelectionInfo.To = courseSelectionInfo.From + new TimeSpan(0, 0, course.DauerMinuten, 0);
-
-                        if (course.Kotrainer1 != null && course.Kotrainer1 != -1) courseSelectionInfo.ContrainerMemberIds.Add(course.Kotrainer1);
-                        if (course.Kotrainer2 != null && course.Kotrainer2 != -1) courseSelectionInfo.ContrainerMemberIds.Add(course.Kotrainer2);
-
-                        var member = await _memberRepository.GetAsync(courseSelectionInfo.MemberId);
-
-                        courseSelectionInfo.LastName = member.Nachname;
-                        courseSelectionInfo.FirstName = member.FirstName;
+                        CourseSelectionInfo courseSelectionInfo = await FillCourseSelectionInfo(course);
 
                         CourseSelectionInfos.Add(courseSelectionInfo);
                     }
@@ -114,6 +99,32 @@ namespace AVF.CourseParticipation.ViewModels
                     _logger.LogError(e.ToString());
                 }
             }
+        }
+
+        private async System.Threading.Tasks.Task<CourseSelectionInfo> FillCourseSelectionInfo(Kurs course)
+        {
+            var courseSelectionInfo = new CourseSelectionInfo
+            {
+                MemberId = course.Trainer,
+                From = course.Zeit,
+                CourseId = course.Id
+            };
+
+            courseSelectionInfo.To = courseSelectionInfo.From + new TimeSpan(0, 0, course.DauerMinuten, 0);
+
+            if (course.Kotrainer1 != null && course.Kotrainer1 != -1) courseSelectionInfo.ContrainerMemberIds.Add(course.Kotrainer1);
+            if (course.Kotrainer2 != null && course.Kotrainer2 != -1) courseSelectionInfo.ContrainerMemberIds.Add(course.Kotrainer2);
+
+            var member = await _memberRepository.GetAsync(courseSelectionInfo.MemberId);
+
+            courseSelectionInfo.LastName = member.Nachname;
+            courseSelectionInfo.FirstName = member.FirstName;
+
+            courseSelectionInfo.ChildrensTraining = course.Kindertraining;
+
+            courseSelectionInfo.Duration = new TimeSpan(0, course.DauerMinuten, 0);
+
+            return courseSelectionInfo;
         }
 
         #region EnterPartipantsCommand

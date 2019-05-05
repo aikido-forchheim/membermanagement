@@ -108,6 +108,11 @@ namespace AVF.CourseParticipation.ViewModels
                 //training.Save();
             }
 
+            //Reset always and than apply new selected values
+            training.Trainer = -1;
+            training.Kotrainer1 = -1;
+            training.Kotrainer2 = -1;
+
             var i = 0;
             foreach (var selectedMember in SelectedMembers)
             {
@@ -138,17 +143,17 @@ namespace AVF.CourseParticipation.ViewModels
             newTraining.Bemerkung = string.Empty;
             newTraining.DatensatzAngelegtAm = DateTime.Now;
             newTraining.DatensatzAngelegtVon = (int) LoggedInMemberId;
-            newTraining.Kotrainer1 = null;
-            newTraining.Kotrainer2 = null;
-            newTraining.Trainer = 0;
-            //newTraining.DatensatzGeaendertAm //muss oben in training.Single
-            //newTraining.DatensatzGeaendertVon = //muss oben in training.Single
-            //newTraining.DauerMinuten = 
-            //newTraining.Kindertraining =
+            newTraining.Kotrainer1 = -1; //erledigt, siehe oben
+            newTraining.Kotrainer2 = -1; //erledigt, siehe oben
+            newTraining.Trainer = -1; //erledigt, siehe oben
+            //newTraining.DatensatzGeaendertAm //erledigt, siehe oben in training.Single
+            //newTraining.DatensatzGeaendertVon = //erledigt, siehe oben in training.Single
+            newTraining.DauerMinuten = Convert.ToInt32(SelectedCourseSelectionInfo.Duration.TotalMinutes);
+            newTraining.Kindertraining = SelectedCourseSelectionInfo.ChildrensTraining;
             newTraining.KursID = courseId;
-            newTraining.Termin = DateTime.Now;
+            newTraining.Termin = SelectedDate;
             //newTraining.VHS = false;
-            //newTraining.Zeit = 
+            newTraining.Zeit = SelectedCourseSelectionInfo.From; 
 
             return newTraining;
         }

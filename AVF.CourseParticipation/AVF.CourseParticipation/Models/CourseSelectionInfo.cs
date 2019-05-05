@@ -17,5 +17,7 @@ namespace AVF.CourseParticipation.Models
 
         public int Participants { get; set; }
         public int CourseId { get; set; }
+        public bool ChildrensTraining { get; set; }
+        public TimeSpan Duration { get; set; }
     }
 }
