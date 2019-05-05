@@ -16,8 +16,16 @@ namespace AVF.CourseParticipation.ViewModels
             : base(navigationService, memberRepository, logger, trainerAppointmentsRepository, trainingsRepository, trainingParticipationsRepository, dialogService)
         {
             SaveCommand = new DelegateCommand(Save, CanSave);
-            _dialogService = dialogService;
-        }
+	        CancelCommand = new DelegateCommand(Cancel, CanCancel);
+	        _dialogService = dialogService;
+	    }
+
+	    private bool CanCancel()
+	    {
+	        return true;
+	    }
+
+	    public ICommand CancelCommand { get; }
 
         internal async void Cancel()
         {
