@@ -24,7 +24,7 @@ namespace AVF.CourseParticipation.Views
 
             if (keyEventArgs.Key == "Back")
             {
-                Navigation.PopAsync();
+                //Navigation.PopAsync();
             }
 
             if (keyEventArgs.Key == "C")
