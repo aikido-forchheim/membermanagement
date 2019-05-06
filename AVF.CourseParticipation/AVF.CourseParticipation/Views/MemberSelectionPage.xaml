@@ -34,11 +34,11 @@
                         HeightRequest="128">
                 </Button>
             </StackLayout>
-            <StackLayout x:Name="StackLayoutMembers" Margin="36">
+            <StackLayout x:Name="StackLayoutMembers" Margin="36,30,36,26">
                 <StackLayout x:Name="StackLayoutFilters">
-                    <expandable:ExpandableView x:Name="ExpandableViewFilters">
+                    <expandable:ExpandableView x:Name="ExpandableViewFilters" Margin="0">
                         <expandable:ExpandableView.PrimaryView>
-                            <StackLayout></StackLayout>
+                            <StackLayout Margin="0"></StackLayout>
                         </expandable:ExpandableView.PrimaryView>
                         <expandable:ExpandableView.SecondaryViewTemplate>
                             <DataTemplate>
@@ -78,7 +78,7 @@
                         </expandable:ExpandableView.SecondaryViewTemplate>
                     </expandable:ExpandableView>
                 </StackLayout>
-                <ListView x:Name="ListViewMembers" ItemsSource="{Binding Members}"
+                <ListView x:Name="ListViewMembers" ItemsSource="{Binding Members}" Margin="0,0,0,5"
                           SelectedItem="{Binding SelectedMember}" ItemTapped="ListViewMembers_OnItemTapped">
                     <ListView.ItemTemplate>
                         <DataTemplate>
