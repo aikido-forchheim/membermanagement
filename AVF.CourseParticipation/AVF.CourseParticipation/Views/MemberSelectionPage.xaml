@@ -1,77 +1,102 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<courseParticipation:KeyContentPage  xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
-             xmlns:courseParticipation="clr-namespace:AVF.CourseParticipation;assembly=AVF.CourseParticipation"
-             xmlns:views="clr-namespace:AVF.CourseParticipation.Views;assembly=AVF.CourseParticipation"
-             xmlns:expandable="clr-namespace:Expandable;assembly=ExpandableView"
-             prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="AVF.CourseParticipation.Views.MemberSelectionPage" Title="Mitglieder auswählen">
-    <StackLayout>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<courseParticipation:KeyContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+                                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                                    xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+                                    xmlns:courseParticipation="clr-namespace:AVF.CourseParticipation;assembly=AVF.CourseParticipation"
+                                    xmlns:views="clr-namespace:AVF.CourseParticipation.Views;assembly=AVF.CourseParticipation"
+                                    xmlns:expandable="clr-namespace:Expandable;assembly=ExpandableView"
+                                    prism:ViewModelLocator.AutowireViewModel="True"
+                                    x:Class="AVF.CourseParticipation.Views.MemberSelectionPage"
+                                    Title="Mitglieder auswählen">
+    <StackLayout Margin="16">
         <StackLayout x:Name="StackLayoutContent" Orientation="Horizontal" Margin="16">
-            <StackLayout x:Name="StackLayoutSelectedMembers" Margin="64">
-                <ListView x:Name="ListViewSelectedMembers" ItemsSource="{Binding SelectedMembers}" SelectedItem="{Binding SelectedMemberToRemove}" ItemTapped="ListViewSelectedMembers_OnItemTapped">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <views:MemberViewCell FontAttributes="Bold"></views:MemberViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-                <Button x:Name="ButtonRemoveSelectedMember" Text="Entfernen" Command="{Binding RemoveSelectedMemberCommand}"></Button>
-            </StackLayout>
-            <StackLayout x:Name="StackLayoutMembers">
-                <StackLayout>
+            <StackLayout x:Name="StackLayoutSelectedMembers" Margin="36">
+                    <ListView x:Name="ListViewSelectedMembers" ItemsSource="{Binding SelectedMembers}"
+                              SelectedItem="{Binding SelectedMemberToRemove}"
+                              ItemTapped="ListViewSelectedMembers_OnItemTapped">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <views:MemberViewCell FontAttributes="Bold"></views:MemberViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
                     <StackLayout Orientation="Horizontal">
-                        <Label Text="Suche nach Name: " WidthRequest="128" VerticalOptions="Center"></Label>
-                        <Entry Text="{Binding SearchText}" WidthRequest="256"></Entry>
+                        <Label Text="Ausgewählt:"></Label>
+                        <Label Text="{Binding SelectedMembers.Count}"></Label>
                     </StackLayout>
+            </StackLayout>
+            <StackLayout x:Name="StackLayoutButtons" Orientation="Horizontal" VerticalOptions="Center">
+                <Button x:Name="ButtonRemoveSelectedMember" Text="->" TextColor="DarkRed" Command="{Binding RemoveSelectedMemberCommand}"
+                        HeightRequest="128">
+                </Button>
+                <Button x:Name="ButtonAddSelectedMember" Text="&lt;-" TextColor="DarkGreen" Command="{Binding AddSelectedMemberCommand}"
+                        HeightRequest="128">
+                </Button>
+            </StackLayout>
+            <StackLayout x:Name="StackLayoutMembers" Margin="36">
+                <StackLayout x:Name="StackLayoutFilters">
                     <expandable:ExpandableView x:Name="ExpandableViewFilters">
                         <expandable:ExpandableView.PrimaryView>
-                            <views:LabeledSwitch x:Name="LabeledSwitchShowFilters" Text="Filter anzeigen: " PropertyChanged="LabeledSwitchShowFilters_OnPropertyChanged"></views:LabeledSwitch>
+                            <StackLayout></StackLayout>
                         </expandable:ExpandableView.PrimaryView>
                         <expandable:ExpandableView.SecondaryViewTemplate>
                             <DataTemplate>
                                 <StackLayout>
-                                    <BoxView 
-                                        HeightRequest="2" 
-                                        BackgroundColor="Black" 
+                                    <BoxView
+                                        HeightRequest="2"
+                                        BackgroundColor="Black"
                                         HorizontalOptions="FillAndExpand" />
-                                    <views:LabeledSwitch Text="Aktive Mitglieder: " IsToggled="{Binding OnlyActiveMembers, Mode=TwoWay}"></views:LabeledSwitch>
-                                    <views:LabeledSwitch Text="Nur Trainer: " IsToggled="{Binding OnlyTrainers, Mode=TwoWay}"></views:LabeledSwitch>
+                                    <views:LabeledSwitch Text="Aktive Mitglieder: "
+                                                         IsToggled="{Binding OnlyActiveMembers, Mode=TwoWay}">
+                                    </views:LabeledSwitch>
+                                    <views:LabeledSwitch Text="Nur Trainer: "
+                                                         IsToggled="{Binding OnlyTrainers, Mode=TwoWay}">
+                                    </views:LabeledSwitch>
                                     <StackLayout Orientation="Horizontal">
-                                        <views:LabeledSwitch Text="Zuletzt anwesend: " IsToggled="{Binding OnlyLastAttendees}"></views:LabeledSwitch>
+                                        <views:LabeledSwitch Text="Zuletzt anwesend: "
+                                                             IsToggled="{Binding OnlyLastAttendees}">
+                                        </views:LabeledSwitch>
 
-                                        <Label Margin="16,0,0,0" Text="innerhalb von" VerticalOptions="Center"></Label>
-                                        <Label Text="{Binding OnlyLastAttendeesMonths}" FontAttributes="Bold" VerticalOptions="Center"></Label>
+                                        <Label Margin="16,0,0,0" Text="in" VerticalOptions="Center"></Label>
+                                        <Label Text="{Binding OnlyLastAttendeesMonths}" FontAttributes="Bold"
+                                               VerticalOptions="Center">
+                                        </Label>
                                         <Label Text="Monat(en)" VerticalOptions="Center"></Label>
                                         <Stepper Value="{Binding OnlyLastAttendeesMonths}"></Stepper>
                                     </StackLayout>
                                     <views:LabeledSwitch Text="Kinder:" IsToggled="{Binding WithChildren}"></views:LabeledSwitch>
                                     <views:LabeledSwitch Text="Jugendliche:" IsToggled="{Binding WithTeenagers}"></views:LabeledSwitch>
                                     <views:LabeledSwitch Text="Erwachsene:" IsToggled="{Binding WithAdults}"></views:LabeledSwitch>
-                                    <BoxView 
-                                HeightRequest="2" 
-                                BackgroundColor="Black" 
-                                HorizontalOptions="FillAndExpand" />
+                                    <BoxView
+                                        HeightRequest="2"
+                                        BackgroundColor="Black"
+                                        HorizontalOptions="FillAndExpand" />
                                     <Label />
                                 </StackLayout>
                             </DataTemplate>
                         </expandable:ExpandableView.SecondaryViewTemplate>
                     </expandable:ExpandableView>
                 </StackLayout>
-                <ListView x:Name="ListViewMembers" ItemsSource="{Binding Members}" SelectedItem="{Binding SelectedMember}" ItemTapped="ListViewMembers_OnItemTapped">
+                <ListView x:Name="ListViewMembers" ItemsSource="{Binding Members}"
+                          SelectedItem="{Binding SelectedMember}" ItemTapped="ListViewMembers_OnItemTapped">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <views:MemberViewCell></views:MemberViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-                <Button x:Name="ButtonAddSelectedMember" Text="Hinzufügen" Command="{Binding AddSelectedMemberCommand}"></Button>
+                <StackLayout>
+                    <Entry Text="{Binding SearchText}" Placeholder="Suche nach Namen" WidthRequest="256"></Entry>
+                    <views:LabeledSwitch x:Name="LabeledSwitchShowFilters" Text="Filter anzeigen: "
+                                         PropertyChanged="LabeledSwitchShowFilters_OnPropertyChanged">
+                    </views:LabeledSwitch>
+                </StackLayout>
             </StackLayout>
         </StackLayout>
-        <StackLayout x:Name="StackLayoutSaveCancel" Orientation="Horizontal">
-            <Button Text="Abbrechen" Command="{Binding CancelCommand}"></Button>
-            <Button Text="Speichern" Command="{Binding SaveCommand}"></Button>
+        <StackLayout Margin="16" x:Name="StackLayoutSaveCancel" Orientation="Horizontal">
+            <Button Text="Abbrechen" Command="{Binding CancelCommand}" HorizontalOptions="Start"></Button>
+            <Button Text="Speichern" Command="{Binding SaveCommand}" HorizontalOptions="EndAndExpand"></Button>
         </StackLayout>
     </StackLayout>
 </courseParticipation:KeyContentPage>
