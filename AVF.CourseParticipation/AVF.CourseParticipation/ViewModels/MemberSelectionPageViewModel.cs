@@ -232,6 +232,8 @@ namespace AVF.CourseParticipation.ViewModels
             var member = SelectedMember;
 
             AddSelectedMember(member);
+
+            SelectedMember = null;
         }
 
         protected void AddSelectedMember(MemberInfo member)
@@ -269,7 +271,9 @@ namespace AVF.CourseParticipation.ViewModels
 	        {
 	            SelectedMembers.Remove(SelectedMemberToRemove);
 	        }
-        }
+
+	        SelectedMemberToRemove = null;
+	    }
 
         public override async void OnNavigatedTo(INavigationParameters parameters)
         {

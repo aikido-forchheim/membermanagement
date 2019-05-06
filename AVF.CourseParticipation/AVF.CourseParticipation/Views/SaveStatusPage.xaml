@@ -8,6 +8,6 @@
         <Label Text="Erfolgreich gespeichert!"></Label>
         <Label Text="Es ist ein Fehler aufgetreten!"></Label>
         <Label Text="Vorgang abgebrochen!"></Label>
-        <Button Text="Zurück zum Kalender" Command="{Binding BackCommand}"></Button>
+        <Button Text="Zurück zum Kalender" Command="{Binding BackCommand}" Style="{StaticResource MainButtonStyle}"></Button>
     </StackLayout>
 </ContentPage>

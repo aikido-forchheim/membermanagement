@@ -94,9 +94,9 @@
                 </StackLayout>
             </StackLayout>
         </StackLayout>
-        <StackLayout Margin="16" x:Name="StackLayoutSaveCancel" Orientation="Horizontal">
-            <Button Text="Abbrechen" Command="{Binding CancelCommand}" HorizontalOptions="Start"></Button>
-            <Button Text="Speichern" Command="{Binding SaveCommand}" HorizontalOptions="EndAndExpand"></Button>
+        <StackLayout x:Name="StackLayoutSaveCancel" Orientation="Horizontal">
+            <Button Text="Abbrechen" Command="{Binding CancelCommand}" HorizontalOptions="Start" Style="{StaticResource MainButtonStyle}"></Button>
+            <Button Text="Speichern" Command="{Binding SaveCommand}" HorizontalOptions="EndAndExpand" Style="{StaticResource MainButtonStyle}"></Button>
         </StackLayout>
     </StackLayout>
 </courseParticipation:KeyContentPage>
