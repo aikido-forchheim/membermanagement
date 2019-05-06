@@ -74,7 +74,9 @@ namespace AVF.CourseParticipation.ViewModels
 	        var parameters = new NavigationParameters
 	        {
 	            { nameof(SelectedDate), SelectedDate},
-	            { nameof(SelectedCourseSelectionInfo), SelectedCourseSelectionInfo }
+	            { nameof(SelectedCourseSelectionInfo), SelectedCourseSelectionInfo },
+	            { "SelectedMembersMin", 1 },
+                { "SelectedMembersMax", 3 }
 	        };
 
 	        await NavigationService.NavigateAsync("TrainerSelectionPage", parameters);
@@ -173,8 +175,10 @@ namespace AVF.CourseParticipation.ViewModels
 	    {
 	        var parameters = new NavigationParameters
 	        {
-	            {nameof(SelectedCourseSelectionInfo), SelectedCourseSelectionInfo}
-	        };
+	            {nameof(SelectedCourseSelectionInfo), SelectedCourseSelectionInfo},
+	            { "SelectedMembersMin", 0 },
+                { "SelectedMembersMax", 999 }
+            };
 	        await NavigationService.NavigateAsync("/NavigationPage/ParticipantsSelectionPage",parameters);
 	    }
 

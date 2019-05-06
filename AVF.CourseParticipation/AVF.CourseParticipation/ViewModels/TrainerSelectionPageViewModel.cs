@@ -18,8 +18,8 @@ namespace AVF.CourseParticipation.ViewModels
         public TrainerSelectionPageViewModel(INavigationService navigationService, IRepository<Mitglied> memberRepository, ILogger logger, IRepository<TrainerErnennung> trainerAppointmentsRepository, IRepository<Training> trainingsRepository, IRepository<TrainingsTeilnahme> trainingParticipationsRepository, IPageDialogService dialogService) 
             : base(navigationService, memberRepository, logger, trainerAppointmentsRepository, trainingsRepository, trainingParticipationsRepository, dialogService)
         {
-            SaveCommand = new DelegateCommand(Save, CanSave);
             CancelCommand = new DelegateCommand(Cancel, CanCancel);
+            SaveCommand = new DelegateCommand(Save, CanSave);
             _dialogService = dialogService;
         }
 
@@ -67,10 +67,10 @@ namespace AVF.CourseParticipation.ViewModels
 
         #region SaveCommand
 
-        public ICommand SaveCommand { get; }
-
-        private async void Save()
+        protected override async void Save()
         {
+            base.Save();
+
             var trainingsRepository = TrainingsRepository;
             var selectedDate = SelectedDate;
             var courseId = SelectedCourseSelectionInfo.CourseId;
@@ -154,9 +154,11 @@ namespace AVF.CourseParticipation.ViewModels
             return newTraining;
         }
 
-        private bool CanSave()
+        protected override bool CanSave()
         {
-            return true;
+            var baseCanSave = base.CanSave();
+
+            return baseCanSave;
         }
 
         #endregion

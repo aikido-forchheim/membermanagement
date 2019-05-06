@@ -1,18 +1,17 @@
 ﻿using Prism.Commands;
-using Prism.Mvvm;
 using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using AVF.CourseParticipation.Extensions;
 using AVF.CourseParticipation.Models;
 using AVF.MemberManagement.StandardLibrary.Interfaces;
 using AVF.MemberManagement.StandardLibrary.Proxies;
 using AVF.MemberManagement.StandardLibrary.Tbo;
-using AVF.StandardLibrary.Extensions;
 using Microsoft.Extensions.Logging;
 using Prism.Services;
 using Xamarin.Forms;
@@ -177,8 +176,25 @@ namespace AVF.CourseParticipation.ViewModels
             }
 	    }
 
+	    private int _selectedMembersMax;
+
+	    public int SelectedMembersMax
+	    {
+	        get => _selectedMembersMax;
+	        set => SetProperty(ref _selectedMembersMax, value);
+	    }
+
+	    private int _selectedMembersMin;
+
+	    public int SelectedMembersMin
+	    {
+	        get => _selectedMembersMin;
+	        set => SetProperty(ref _selectedMembersMin, value);
+	    }
+
 	    public ICommand AddSelectedMemberCommand { get; }
 	    public ICommand RemoveSelectedMemberCommand { get; }
+	    public ICommand SaveCommand { get; set; }
 
         public MemberSelectionPageViewModel(INavigationService navigationService, IRepository<Mitglied> memberRepository, ILogger logger, IRepository<TrainerErnennung> trainerAppointmentsRepository, IRepository<Training> trainingsRepository, IRepository<TrainingsTeilnahme> trainingParticipationsRepository, IPageDialogService dialogService) : base(navigationService)
 	    {
@@ -189,13 +205,26 @@ namespace AVF.CourseParticipation.ViewModels
 	        _trainingParticipationsRepository = trainingParticipationsRepository;
 	        _dialogService = dialogService;
 
+            _selectedMembers.CollectionChanged += _selectedMembers_CollectionChanged;
+
 	        AddSelectedMemberCommand = new DelegateCommand(AddSelectedMember, CanAddSelectedMember).ObservesProperty(() => SelectedMember);
 	        RemoveSelectedMemberCommand = new DelegateCommand(RemoveSelectedMember, CanRemoveSelectedMember).ObservesProperty(() => SelectedMemberToRemove);
+	        SaveCommand = new DelegateCommand(Save, CanSave);
+        }
+
+	    protected virtual void Save()
+	    {
+	        
+	    }
+
+	    protected virtual void _selectedMembers_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
         }
 
         private bool CanAddSelectedMember()
         {
-            return SelectedMember != null;
+            return SelectedMember != null && SelectedMembers.Count <= SelectedMembersMax;
         }
 
 	    private void AddSelectedMember()
@@ -249,10 +278,20 @@ namespace AVF.CourseParticipation.ViewModels
             await OnNavigatedToAsync(parameters);
         }
 
-        protected async System.Threading.Tasks.Task OnNavigatedToAsync(INavigationParameters parameters)
+        protected async Task OnNavigatedToAsync(INavigationParameters parameters)
         {
             try
             {
+                if (parameters.ContainsKey(nameof(SelectedMembersMax)))
+                {
+                    SelectedMembersMax = (int) parameters[nameof(SelectedMembersMax)];
+                }
+
+                if (parameters.ContainsKey(nameof(SelectedMembersMin)))
+                {
+                    SelectedMembersMin = (int)parameters[nameof(SelectedMembersMin)];
+                }
+
                 if (parameters.ContainsKey(nameof(SelectedDate)))
                 {
                     if (DateTime.TryParse(parameters[nameof(SelectedDate)].ToString(), out var parsedDate))
@@ -281,7 +320,7 @@ namespace AVF.CourseParticipation.ViewModels
             }
         }
 
-        private async System.Threading.Tasks.Task Filter()
+        private async Task Filter()
         {
             await FilterSemaphoreSlim.WaitAsync();
 
@@ -416,6 +455,7 @@ namespace AVF.CourseParticipation.ViewModels
 
                 var orderedMembers = filteredMembers.OrderBy(orderFirstname);
 
+
                 foreach (var member in orderedMembers)
                 {
                     var memberInfo = new MemberInfo
@@ -436,5 +476,10 @@ namespace AVF.CourseParticipation.ViewModels
                 FilterSemaphoreSlim.Release();
             }
         }
+
+	    protected virtual bool CanSave()
+	    {
+	        return SelectedMembers.Count >= SelectedMembersMin && SelectedMembers.Count <= SelectedMembersMax;
+	    }
     }
 }
