@@ -3,7 +3,7 @@ using Xamarin.Forms;
 
 namespace AVF.CourseParticipation.Views
 {
-    public partial class SaveParticipantsPage : ContentPage
+    public partial class SaveParticipantsPage
     {
         public SaveParticipantsPage()
         {

@@ -21,6 +21,7 @@
                 <Setter Property="Margin" Value="24,6,24,24"></Setter>
                 <Setter Property="Padding" Value="24,10,24,10"></Setter>
                 <Setter Property="HorizontalOptions" Value="Center"></Setter>
+                <Setter Property="BackgroundColor" Value="Silver"></Setter>
             </Style>
             <Style x:Key="StartStackLayoutStyle" TargetType="StackLayout">
                 <Setter Property="Margin" Value="32,32,32,16"></Setter>

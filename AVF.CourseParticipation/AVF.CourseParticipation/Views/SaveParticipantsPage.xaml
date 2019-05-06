@@ -1,15 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<courseParticipation:KeyContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             xmlns:courseParticipation="clr-namespace:AVF.CourseParticipation;assembly=AVF.CourseParticipation"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="AVF.CourseParticipation.Views.SaveParticipantsPage">
-    <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
-        <Label Text="Neue Teilnehmer: "></Label>
-        <Label Text="Gelöschte Teilnehmer: "></Label>
-        <Button Text="Speichern" Command="{Binding SaveCommand}" Style="{StaticResource MainButtonStyle}"></Button>
-        <Button Text="Änderungen verwerfen" Command="{Binding CancelCommand}" Style="{StaticResource MainButtonStyle}"></Button>
-        <Button Text="Zurück zum Bearbeiten" Command="{Binding BackCommand}" Style="{StaticResource MainButtonStyle}"></Button>
+    <StackLayout>
+        <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="Center">
+            <Label Text="Neue Teilnehmer: "></Label>
+            <Label Text="Gelöschte Teilnehmer: "></Label>
+        </StackLayout>
+        <StackLayout Orientation="Horizontal" VerticalOptions="End">
+            <Button Text="Zurück zum Bearbeiten" Command="{Binding BackCommand}" Style="{StaticResource MainButtonStyle}" VerticalOptions="StartAndExpand" ></Button>
+            <Button Text="Änderungen verwerfen" Command="{Binding CancelCommand}" Style="{StaticResource MainButtonStyle}" VerticalOptions="CenterAndExpand"></Button>
+            <Button Text="Speichern" Command="{Binding SaveCommand}" FontAttributes="Bold" Style="{StaticResource MainButtonStyle}" VerticalOptions="EndAndExpand"></Button>
+        </StackLayout>
     </StackLayout>
-</ContentPage>
+</courseParticipation:KeyContentPage>
+    
     

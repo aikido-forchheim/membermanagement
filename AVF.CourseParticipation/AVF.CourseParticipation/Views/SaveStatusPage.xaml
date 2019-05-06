@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<courseParticipation:KeyContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             xmlns:courseParticipation="clr-namespace:AVF.CourseParticipation;assembly=AVF.CourseParticipation"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="AVF.CourseParticipation.Views.SaveStatusPage">
     <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
@@ -10,4 +11,4 @@
         <Label Text="Vorgang abgebrochen!"></Label>
         <Button Text="Zurück zum Kalender" Command="{Binding BackCommand}" Style="{StaticResource MainButtonStyle}"></Button>
     </StackLayout>
-</ContentPage>
+</courseParticipation:KeyContentPage>
