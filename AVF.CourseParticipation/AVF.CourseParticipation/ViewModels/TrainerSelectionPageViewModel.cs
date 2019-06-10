@@ -27,14 +27,33 @@ namespace AVF.CourseParticipation.ViewModels
         {
             await OnNavigatedToAsync(parameters);
 
-            AddSelectedMember(SelectedCourseSelectionInfo.MemberId);
-
-            foreach (var contrainerMemberId in SelectedCourseSelectionInfo.ContrainerMemberIds)
+            if (parameters.ContainsKey("Training") && parameters["Training"] != null)
             {
-                if (contrainerMemberId == null || !(contrainerMemberId > 0)) continue;
+                var training = (Training) parameters["Training"];
 
-                var memberId = (int)contrainerMemberId;
-                AddSelectedMember(memberId);
+                AddSelectedMember(training.Trainer);
+                AddCotrainer(training.Kotrainer1);
+                AddCotrainer(training.Kotrainer2);
+            }
+            else
+            {
+                AddSelectedMember(SelectedCourseSelectionInfo.MemberId);
+
+                foreach (var coTrainerMemberId in SelectedCourseSelectionInfo.ContrainerMemberIds)
+                {
+                    if (coTrainerMemberId == null || !(coTrainerMemberId > 0)) continue;
+
+                    var memberId = (int)coTrainerMemberId;
+                    AddSelectedMember(memberId);
+                }
+            }
+        }
+
+        private void AddCotrainer(int? memberId)
+        {
+            if (memberId != null && memberId != -1)
+            {
+                AddSelectedMember((int)memberId);
             }
         }
 

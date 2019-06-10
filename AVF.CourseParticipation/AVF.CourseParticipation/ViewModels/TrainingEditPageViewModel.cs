@@ -75,7 +75,9 @@ namespace AVF.CourseParticipation.ViewModels
 	        {
 	            { nameof(SelectedDate), SelectedDate},
 	            { nameof(SelectedCourseSelectionInfo), SelectedCourseSelectionInfo },
-	            { "SelectedMembersMin", 1 },
+                { nameof(Training), Training },
+                { nameof(TrainerInfos), TrainerInfos },
+                { "SelectedMembersMin", 1 },
                 { "SelectedMembersMax", 3 }
 	        };
 
